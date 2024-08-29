@@ -1,0 +1,609 @@
+
+{
+    "services": [
+        {
+            "id": 1,
+            "created_at": "2022-10-18 11:00:00",
+            "active_users": 100,
+            "status": 1,
+            "title": "সঠিক",
+            "image": "service1.png",
+            "description": "‘পূর্ণ’ ফন্টটি মূলত ইউনিকোডভিত্তিক ফন্ট। স্বরবর্ণ, ব্যঞ্জনবর্ণ, বিরাম চিহ্ন, ইংরেজি বর্ণ, গাণিতিক চিহ্নসহ .......",
+            "bgFrom": "#006A4E",
+            "bgTo": "#ca292d",
+            "features": [
+                {
+                    "id": 1,
+                    "title": "test",
+                    "value_type": 0,
+                    "value": 20,
+                    "status": 0
+                },
+                {
+                    "id": 2,
+                    "title": "feature 2",
+                    "value_type": 1,
+                    "value": 30,
+                    "status": 1
+                },
+                {
+                    "id": 3,
+                    "title": "feature 3",
+                    "value_type": 0,
+                    "value": 40,
+                    "status": 0
+                },
+                {
+                    "id": 4,
+                    "title": "feature 4",
+                    "value_type": 1,
+                    "value": 50,
+                    "status": 1
+                },
+                {
+                    "id": 5,
+                    "title": "feature 5",
+                    "value_type": 0,
+                    "value": 60,
+                    "status": 0
+                }
+            ],
+            "package": [
+                {
+                    "id": 1,
+                    "title": "package 1",
+                    "created_at": "2022-10-18 11:00:00",
+                    "features": [1, 2]
+                },
+                {
+                    "id": 2,
+                    "title": "package 2",
+                    "created_at": "2022-10-18 11:00:00",
+                    "features": [1, 2, 3, 4]
+                },
+                {
+                    "id": 3,
+                    "title": "package 3",
+                    "created_at": "2022-10-18 11:00:00",
+                    "features": [1, 2, 3, 4, 5]
+                }
+            ]
+        },
+        {
+            "id": 2,
+            "created_at": "2022-10-18 11:00:00",
+            "active_users": 100,
+            "status": 0,
+            "title": "জনমত",
+            "image": "service2.png",
+            "description": "‘পূর্ণ’ ফন্টটি মূলত ইউনিকোডভিত্তিক ফন্ট। স্বরবর্ণ, ব্যঞ্জনবর্ণ, বিরাম চিহ্ন, ইংরেজি বর্ণ, গাণিতিক চিহ্নসহ .......",
+            "bgFrom": "#006A4E",
+            "bgTo": "#ca292d",
+            "features": [
+                {
+                    "id": 1,
+                    "title": "feature 1",
+                    "value_type": "string",
+                    "value": 20
+                },
+                {
+                    "id": 2,
+                    "title": "feature 2",
+                    "value_type": "string",
+                    "value": 30
+                },
+                {
+                    "id": 3,
+                    "title": "feature 3",
+                    "value_type": "string",
+                    "value": 40
+                },
+                {
+                    "id": 4,
+                    "title": "feature 4",
+                    "value_type": "string",
+                    "value": 50
+                },
+                {
+                    "id": 5,
+                    "title": "feature 5",
+                    "value_type": "string",
+                    "value": 60
+                }
+            ],
+            "package": [
+                
+            ]
+        },
+        {
+            "id": 3,
+            "created_at": "2022-10-18 11:00:00",
+            "status": 1,
+            "active_users": 100,
+            "title": "ইউ বোর্ড",
+            "image": "service3.png",
+            "description": "‘পূর্ণ’ ফন্টটি মূলত ইউনিকোডভিত্তিক ফন্ট। স্বরবর্ণ, ব্যঞ্জনবর্ণ, বিরাম চিহ্ন, ইংরেজি বর্ণ, গাণিতিক চিহ্নসহ .......",
+            "bgFrom": "#006A4E",
+            "bgTo": "#ca292d",
+            "features": [
+                {
+                    "id": 1,
+                    "title": "feature 1",
+                    "value_type": "string",
+                    "value": 20
+                },
+                {
+                    "id": 2,
+                    "title": "feature 2",
+                    "value_type": "string",
+                    "value": 30
+                },
+                {
+                    "id": 3,
+                    "title": "feature 3",
+                    "value_type": "string",
+                    "value": 40
+                },
+                {
+                    "id": 4,
+                    "title": "feature 4",
+                    "value_type": "string",
+                    "value": 50
+                },
+                {
+                    "id": 5,
+                    "title": "feature 5",
+                    "value_type": "string",
+                    "value": 60
+                }
+            ],
+            "package": [
+                {
+                    "id": 1,
+                    "title": "package 1",
+                    "created_at": "2022-10-18 11:00:00",
+                    "features": [1, 2, 3, 4, 5]
+                }
+            ]
+        },
+        {
+            "id": 4,
+            "created_at": "2022-10-18 11:00:00",
+            "status": 1,
+            "active_users": 100,
+            "title": "রূপান্তর",
+            "image": "service4.png",
+            "description": "‘পূর্ণ’ ফন্টটি মূলত ইউনিকোডভিত্তিক ফন্ট। স্বরবর্ণ, ব্যঞ্জনবর্ণ, বিরাম চিহ্ন, ইংরেজি বর্ণ, গাণিতিক চিহ্নসহ .......",
+            "bgFrom": "#006A4E",
+            "bgTo": "#ca292d",
+            "features": [
+                {
+                    "id": 1,
+                    "title": "feature 1",
+                    "value_type": "string",
+                    "value": 20
+                },
+                {
+                    "id": 2,
+                    "title": "feature 2",
+                    "value_type": "string",
+                    "value": 30
+                },
+                {
+                    "id": 3,
+                    "title": "feature 3",
+                    "value_type": "string",
+                    "value": 40
+                },
+                {
+                    "id": 4,
+                    "title": "feature 4",
+                    "value_type": "string",
+                    "value": 50
+                },
+                {
+                    "id": 5,
+                    "title": "feature 5",
+                    "value_type": "string",
+                    "value": 60
+                }
+            ],
+            "package": [
+                {
+                    "id": 1,
+                    "title": "package 1",
+                    "created_at": "2022-10-18 11:00:00",
+                    "features": [1, 2, 3, 4, 5]
+                }
+            ]
+        },
+        {
+            "id": 5,
+            "created_at": "2022-10-18 11:00:00",
+            "status": 1,
+            "active_users": 100,
+            "title": "উচ্চারণ",
+            "image": "service5.png",
+            "description": "‘পূর্ণ’ ফন্টটি মূলত ইউনিকোডভিত্তিক ফন্ট। স্বরবর্ণ, ব্যঞ্জনবর্ণ, বিরাম চিহ্ন, ইংরেজি বর্ণ, গাণিতিক চিহ্নসহ .......",
+            "bgFrom": "bg-primary",
+            "bgTo": "bg-primary",
+            "features": [
+                {
+                    "id": 1,
+                    "title": "feature 1",
+                    "value_type": "string",
+                    "value": 20
+                },
+                {
+                    "id": 2,
+                    "title": "feature 2",
+                    "value_type": "string",
+                    "value": 30
+                },
+                {
+                    "id": 3,
+                    "title": "feature 3",
+                    "value_type": "string",
+                    "value": 40
+                },
+                {
+                    "id": 4,
+                    "title": "feature 4",
+                    "value_type": "string",
+                    "value": 50
+                },
+                {
+                    "id": 5,
+                    "title": "feature 5",
+                    "value_type": "string",
+                    "value": 60
+                }
+            ],
+            "package": [
+                {
+                    "id": 1,
+                    "title": "package 1",
+                    "created_at": "2022-10-18 11:00:00",
+                    "features": [1, 2, 3, 4, 5]
+                }
+            ]
+        },
+        {
+            "id": 6,
+            "created_at": "2022-10-18 11:00:00",
+            "status": 0,
+            "active_users": 100,
+            "title": "পূর্ণ",
+            "image": "service6.png",
+            "description": "‘পূর্ণ’ ফন্টটি মূলত ইউনিকোডভিত্তিক ফন্ট। স্বরবর্ণ, ব্যঞ্জনবর্ণ, বিরাম চিহ্ন, ইংরেজি বর্ণ, গাণিতিক চিহ্নসহ .......",
+            "bgFrom": "bg-primary",
+            "bgTo": "bg-primary",
+            "features": [
+                {
+                    "id": 1,
+                    "title": "feature 1",
+                    "value_type": "string",
+                    "value": 20
+                },
+                {
+                    "id": 2,
+                    "title": "feature 2",
+                    "value_type": "string",
+                    "value": 30
+                },
+                {
+                    "id": 3,
+                    "title": "feature 3",
+                    "value_type": "string",
+                    "value": 40
+                },
+                {
+                    "id": 4,
+                    "title": "feature 4",
+                    "value_type": "string",
+                    "value": 50
+                },
+                {
+                    "id": 5,
+                    "title": "feature 5",
+                    "value_type": "string",
+                    "value": 60
+                }
+            ],
+            "package": [
+                
+            ]
+        },
+        {
+            "id": 7,
+            "created_at": "2022-10-18 11:00:00",
+            "status": 1,
+            "active_users": 100,
+            "title": "কথা",
+            "image": "service6.png",
+            "description": "‘পূর্ণ’ ফন্টটি মূলত ইউনিকোডভিত্তিক ফন্ট। স্বরবর্ণ, ব্যঞ্জনবর্ণ, বিরাম চিহ্ন, ইংরেজি বর্ণ, গাণিতিক চিহ্নসহ .......",
+            "bgFrom": "bg-primary",
+            "bgTo": "bg-primary",
+            "features": [
+                {
+                    "id": 1,
+                    "title": "feature 1",
+                    "value_type": "string",
+                    "value": 20
+                },
+                {
+                    "id": 2,
+                    "title": "feature 2",
+                    "value_type": "string",
+                    "value": 30
+                },
+                {
+                    "id": 3,
+                    "title": "feature 3",
+                    "value_type": "string",
+                    "value": 40
+                },
+                {
+                    "id": 4,
+                    "title": "feature 4",
+                    "value_type": "string",
+                    "value": 50
+                },
+                {
+                    "id": 5,
+                    "title": "feature 5",
+                    "value_type": "string",
+                    "value": 60
+                }
+            ],
+            "package": [
+                {
+                    "id": 1,
+                    "title": "package 1",
+                    "created_at": "2022-10-18 11:00:00",
+                    "features": [1, 2, 3, 4, 5]
+                }
+            ]
+        },
+        {
+            "id": 8,
+            "created_at": "2022-10-18 11:00:00",
+            "status": 0,
+            "active_users": 100,
+            "title": "বর্ণ ওসিআর",
+            "image": "service6.png",
+            "description": "‘পূর্ণ’ ফন্টটি মূলত ইউনিকোডভিত্তিক ফন্ট। স্বরবর্ণ, ব্যঞ্জনবর্ণ, বিরাম চিহ্ন, ইংরেজি বর্ণ, গাণিতিক চিহ্নসহ .......",
+            "bgFrom": "bg-primary",
+            "bgTo": "bg-primary",
+            "features": [
+                {
+                    "id": 1,
+                    "title": "feature 1",
+                    "value_type": "string",
+                    "value": 20
+                },
+                {
+                    "id": 2,
+                    "title": "feature 2",
+                    "value_type": "string",
+                    "value": 30
+                },
+                {
+                    "id": 3,
+                    "title": "feature 3",
+                    "value_type": "string",
+                    "value": 40
+                },
+                {
+                    "id": 4,
+                    "title": "feature 4",
+                    "value_type": "string",
+                    "value": 50
+                },
+                {
+                    "id": 5,
+                    "title": "feature 5",
+                    "value_type": "string",
+                    "value": 60
+                }
+            ],
+            "package": [
+                
+            ]
+        },
+        {
+            "id": 9,
+            "created_at": "2022-10-18 11:00:00",
+            "status": 1,
+            "active_users": 100,
+            "title": "সঠিক",
+            "image": "service6.png",
+            "description": "‘পূর্ণ’ ফন্টটি মূলত ইউনিকোডভিত্তিক ফন্ট। স্বরবর্ণ, ব্যঞ্জনবর্ণ, বিরাম চিহ্ন, ইংরেজি বর্ণ, গাণিতিক চিহ্নসহ .......",
+            "bgFrom": "bg-primary",
+            "bgTo": "bg-primary",
+            "features": [
+                {
+                    "id": 1,
+                    "title": "feature 1",
+                    "value_type": "string",
+                    "value": 20
+                },
+                {
+                    "id": 2,
+                    "title": "feature 2",
+                    "value_type": "string",
+                    "value": 30
+                },
+                {
+                    "id": 3,
+                    "title": "feature 3",
+                    "value_type": "string",
+                    "value": 40
+                },
+                {
+                    "id": 4,
+                    "title": "feature 4",
+                    "value_type": "string",
+                    "value": 50
+                },
+                {
+                    "id": 5,
+                    "title": "feature 5",
+                    "value_type": "string",
+                    "value": 60
+                }
+            ],
+            "package": [
+                {
+                    "id": 1,
+                    "title": "package 1",
+                    "created_at": "2022-10-18 11:00:00",
+                    "features": [1, 2, 3, 4, 5]
+                }
+            ]
+        },
+        {
+            "id": 10,
+            "created_at": "2022-10-18 11:00:00",
+            "status": 1,
+            "active_users": 100,
+            "title": "সঠিক",
+            "image": "service6.png",
+            "description": "‘পূর্ণ’ ফন্টটি মূলত ইউনিকোডভিত্তিক ফন্ট। স্বরবর্ণ, ব্যঞ্জনবর্ণ, বিরাম চিহ্ন, ইংরেজি বর্ণ, গাণিতিক চিহ্নসহ .......",
+            "bgFrom": "bg-primary",
+            "bgTo": "bg-primary",
+            "features": [
+                {
+                    "id": 1,
+                    "title": "feature 1",
+                    "value_type": "string",
+                    "value": 20
+                },
+                {
+                    "id": 2,
+                    "title": "feature 2",
+                    "value_type": "string",
+                    "value": 30
+                },
+                {
+                    "id": 3,
+                    "title": "feature 3",
+                    "value_type": "string",
+                    "value": 40
+                },
+                {
+                    "id": 4,
+                    "title": "feature 4",
+                    "value_type": "string",
+                    "value": 50
+                },
+                {
+                    "id": 5,
+                    "title": "feature 5",
+                    "value_type": "string",
+                    "value": 60
+                }
+            ],
+            "package": [
+                {
+                    "id": 1,
+                    "title": "package 1",
+                    "created_at": "2022-10-18 11:00:00",
+                    "features": [1, 2, 3, 4, 5]
+                }
+            ]
+        },
+        {
+            "id": 11,
+            "created_at": "2022-10-18 11:00:00",
+            "status": 0,
+            "active_users": 100,
+            "title": "সঠিক",
+            "image": "service6.png",
+            "description": "‘পূর্ণ’ ফন্টটি মূলত ইউনিকোডভিত্তিক ফন্ট। স্বরবর্ণ, ব্যঞ্জনবর্ণ, বিরাম চিহ্ন, ইংরেজি বর্ণ, গাণিতিক চিহ্নসহ .......",
+            "bgFrom": "bg-primary",
+            "bgTo": "bg-primary",
+            "features": [
+                {
+                    "id": 1,
+                    "title": "feature 1",
+                    "value_type": "string",
+                    "value": 20
+                },
+                {
+                    "id": 2,
+                    "title": "feature 2",
+                    "value_type": "string",
+                    "value": 30
+                },
+                {
+                    "id": 3,
+                    "title": "feature 3",
+                    "value_type": "string",
+                    "value": 40
+                },
+                {
+                    "id": 4,
+                    "title": "feature 4",
+                    "value_type": "string",
+                    "value": 50
+                },
+                {
+                    "id": 5,
+                    "title": "feature 5",
+                    "value_type": "string",
+                    "value": 60
+                }
+            ],
+            "package": [
+                
+            ]
+        },
+        {
+            "id": 12,
+            "created_at": "2022-10-18 11:00:00",
+            "status": 0,
+            "active_users": 100,
+            "title": "সঠিক",
+            "image": "service6.png",
+            "description": "‘পূর্ণ’ ফন্টটি মূলত ইউনিকোডভিত্তিক ফন্ট। স্বরবর্ণ, ব্যঞ্জনবর্ণ, বিরাম চিহ্ন, ইংরেজি বর্ণ, গাণিতিক চিহ্নসহ .......",
+            "bgFrom": "bg-primary",
+            "bgTo": "bg-primary",
+            "features": [
+                {
+                    "id": 1,
+                    "title": "feature 1",
+                    "value_type": "string",
+                    "value": 20
+                },
+                {
+                    "id": 2,
+                    "title": "feature 2",
+                    "value_type": "string",
+                    "value": 30
+                },
+                {
+                    "id": 3,
+                    "title": "feature 3",
+                    "value_type": "string",
+                    "value": 40
+                },
+                {
+                    "id": 4,
+                    "title": "feature 4",
+                    "value_type": "string",
+                    "value": 50
+                },
+                {
+                    "id": 5,
+                    "title": "feature 5",
+                    "value_type": "string",
+                    "value": 60
+                }
+            ],
+            "package": [
+                
+            ]
+        }
+    ]
+}

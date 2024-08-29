@@ -1,0 +1,67 @@
+{
+    "news": [
+        {
+            "id": 1,
+            "title": "Lorem ipsum, dolor sit",
+            "description": "Lorem ipsum, dolor sit amet consectetur adipisicing elit. Aliquam placeat quo officiis molestiae, vero, quasi inventore illo obcaecati, quod ad cupiditate et atque? Eum, sint quas omnis eaque quae quos? Lorem ipsum, dolor sit amet consectetur adipisicing elit. Aliquam placeat quo officiis molestiae, vero, quasi inventore illo obcaecati, quod ad cupiditate et atque? Eum, sint quas omnis eaque quae quos? Lorem ipsum, dolor sit amet consectetur adipisicing elit. Aliquam placeat quo officiis molestiae, vero, quasi inventore illo obcaecati, quod ad cupiditate et atque? Eum, sint quas omnis eaque quae quos? Lorem ipsum, dolor sit amet consectetur adipisicing elit. Aliquam placeat quo officiis molestiae, vero, quasi inventore illo obcaecati, quod ad cupiditate et atque? Eum, sint quas omnis eaque quae quos? Lorem ipsum, dolor sit amet consectetur adipisicing elit. Aliquam placeat quo officiis molestiae, vero, quasi inventore illo obcaecati, quod ad cupiditate et atque? Eum, sint quas omnis eaque quae quos?",
+            "image": "dummy_image4.jpg",
+            "time": "25 JAN, 2023"
+        },
+        {
+            "id": 2,
+            "title": "title 2",
+            "description": "Lorem ipsum, dolor sit amet consectetur adipisicing elit. Aliquam placeat quo officiis molestiae, vero, quasi inventore illo obcaecati, quod ad cupiditate et atque? Eum, sint quas omnis eaque quae quos?",
+            "image": "home_bg.jpeg",
+            "time": "25 JAN, 2023"
+        },
+        {
+            "id": 3,
+            "title": "title 3",
+            "description": "Lorem ipsum, dolor sit amet consectetur adipisicing elit. Aliquam placeat quo officiis molestiae, vero, quasi inventore illo obcaecati, quod ad cupiditate et atque? Eum, sint quas omnis eaque quae quos?",
+            "image": "dummy_image1.jpg",
+            "time": "25 JAN, 2023"
+        },
+        {
+            "id": 4,
+            "title": "title 4",
+            "description": "Lorem ipsum, dolor sit amet consectetur adipisicing elit. Aliquam placeat quo officiis molestiae, vero, quasi inventore illo obcaecati, quod ad cupiditate et atque? Eum, sint quas omnis eaque quae quos?",
+            "image": "dummy_image1.jpg",
+            "time": "25 JAN, 2023"
+        },
+        {
+            "id": 5,
+            "title": "title 5",
+            "description": "Lorem ipsum, dolor sit amet consectetur adipisicing elit. Aliquam placeat quo officiis molestiae, vero, quasi inventore illo obcaecati, quod ad cupiditate et atque? Eum, sint quas omnis eaque quae quos?",
+            "image": "dummy_image1.jpg",
+            "time": "25 JAN, 2023"
+        },
+        {
+            "id": 6,
+            "title": "title 1",
+            "description": "Lorem ipsum, dolor sit amet consectetur adipisicing elit. Aliquam placeat quo officiis molestiae, vero, quasi inventore illo obcaecati, quod ad cupiditate et atque? Eum, sint quas omnis eaque quae quos?",
+            "image": "dummy_image1.jpg",
+            "time": "25 JAN, 2023"
+        },
+        {
+            "id": 7,
+            "title": "title 1",
+            "description": "Lorem ipsum, dolor sit amet consectetur adipisicing elit. Aliquam placeat quo officiis molestiae, vero, quasi inventore illo obcaecati, quod ad cupiditate et atque? Eum, sint quas omnis eaque quae quos?",
+            "image": "dummy_image1.jpg",
+            "time": "25 JAN, 2023"
+        },
+        {
+            "id": 8,
+            "title": "title 1",
+            "description": "description 1",
+            "image": "dummy_image1.jpg",
+            "time": "25 JAN, 2023"
+        },
+        {
+            "id": 9,
+            "title": "title 1",
+            "description": "description 1",
+            "image": "dummy_image1.jpg",
+            "time": "25 JAN, 2023"
+        }
+    ]
+}

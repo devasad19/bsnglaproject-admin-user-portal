@@ -1,0 +1,78 @@
+.swiper {
+  width: 100%;
+  height: 100%;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.swiper-slide {
+  text-align: center;
+  font-size: 18px;
+  background: #fff;
+  height: calc((100% - 60px) / 2) !important;
+
+  /* Center slide text vertically */
+  display: flex;
+}
+
+
+.swiper {
+  width: 100%;
+  height: 100%;
+}
+
+.app-and-news-slider .swiper-slide {
+  text-align: center;
+  font-size: 18px;
+  background: transparent !important;
+
+  /* Center slide text vertically */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.app-and-news-slider .swiper-slide img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  /* object-fit: cover; */
+  border-radius: 4% !important;
+}
+
+
+.home-second-slider > .swiper-wrapper {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+
+}
+
+.home-second-slider > .swiper > .swiper-wrapper {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
+
+.home-second-slider > .swiper > .swiper-wrapper > .swiper-slide {
+  width: 11em !important;
+  margin: 1em !important;
+}
+
+.app-and-news-slider .swiper > .swiper-pagination {
+  background-color: transparent !important;
+  bottom: 0 !important;
+}
+
+.app-and-news-slider .swiper > .swiper-pagination > .swiper-pagination-bullet {
+  background-color: rgb(255, 255, 255) !important;
+  height: 6px !important;
+  width: 15px !important;
+  border-radius: 0px;
+}
+
+.app-and-news-slider .swiper > .swiper-pagination > .swiper-pagination-bullet-active {
+  background-color: rgb(212, 24, 24) !important;
+}

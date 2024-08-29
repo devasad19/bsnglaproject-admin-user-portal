@@ -1,0 +1,55 @@
+{
+    "links": [
+        {
+            "id": 1,
+            "title": "প্রথম পাতা",
+            "url": "/" 
+        },
+        {
+            "id": 2,
+            "title": "সার্ভিস অ্যান্ড প্রোডাক্ট",
+            "url": "/services"
+        },
+        {
+            "id": 3,
+            "title": "গবেষণা",
+            "url": "#",
+            "subLinks": [
+                {
+                    "id": 1,
+                    "title": "কোল্যাব",
+                    "url": "/collab"        
+                }
+            ]
+        },
+        {
+            "id": 4,
+            "title": "স্ট্যান্ডার্ডস ও গাইডলাইন",
+            "url": "#",
+            "subLinks": [
+                {
+                    "id": 1,
+                    "title": "স্টাইল ওয়ার্কশপ",
+                    "url": "/style-workshop"
+                },
+                {
+                    "id": 2,
+                    "title": "ইউনিকোড ও লোকালাইজেশন",
+                    "url": "/unicode-localization"
+                }
+            ]
+        },
+        {
+            "id": 5,
+            "title": "ইভেন্টস",
+            "url": "#",
+            "subLinks": [
+                {
+                    "id": 1,
+                    "title": "gallery",
+                    "url": "/gallery"                
+                }
+            ]
+        }
+    ]
+}
