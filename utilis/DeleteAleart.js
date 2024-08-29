@@ -34,4 +34,5 @@ export const DeleteAleart =  (url) => {
             .catch((err) => console.log(err));
         }
       });
+      
 }
