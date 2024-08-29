@@ -57,7 +57,7 @@ const Home = ({ params: { id } }) => {
 
                   return (
                     <tr key={index}>
-                      <td className="text-center w-[35%] py-6 border border-l border-gray-200">
+                      <td className="text-center w-[40%] py-6 border border-l border-gray-200">
                         <div>
                           <h1 className="text-16 font-semibold">
                             {fItem?.name}
@@ -68,10 +68,10 @@ const Home = ({ params: { id } }) => {
                         return (
                           <td
                             key={planIndex}
-                            className="border border-gray-200 w-12 h-12"
+                            className="border border-gray-200 w-12 h-36"
                           >
-                            <div className="text-center">
-                              <h1 className="text-16 font-semibold">
+                            <div className="text-center flex items-center justify-center">
+                              <h1 className="text-16 font-semibold w-20 h-20 border border-gray-200 rounded-full flex items-center justify-center">
                                 {pItem?.limit + " " + fItem?.unit}
                               </h1>
                             </div>
@@ -82,7 +82,7 @@ const Home = ({ params: { id } }) => {
                         (_, emptyIndex) => (
                           <td
                             key={`empty-${emptyIndex}`}
-                            className="border border-gray-200 w-12 h-12"
+                            className="border border-gray-200 w-12 h-36"
                           ></td>
                         )
                       )}

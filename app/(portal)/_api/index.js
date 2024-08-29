@@ -191,6 +191,8 @@ export const paymentPostApi = async (paymentInfo)=>{
 export const getAllOrdersApi = async () =>{
   try {
     const orders = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/all/orders`);
+    // console.log("order Api:",orders);
+    
     return orders.data;
   } catch (error) {
     console.log(error);

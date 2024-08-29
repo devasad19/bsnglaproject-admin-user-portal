@@ -6,10 +6,13 @@ import Skeleton from "react-loading-skeleton";
 const Home = (): JSX.Element => {
   const [orders, setOrders] = useState([]);
 
+  const totalNumberOfPage = Math.ceil(orders?.length / 10);
+  const pageNumberArr = Array.from({ length: totalNumberOfPage }, (_, i) => i + 1);
+
   const loadOrders = async () => {
     try {
       const ordersData = await getAllOrdersApi();
-      setOrders(ordersData?.data?.data);
+      setOrders(ordersData?.data);
     } catch (error) {
       console.error("Failed to load orders:", error);
     }
@@ -25,6 +28,20 @@ const Home = (): JSX.Element => {
     <section>
       <h3 className="text-32 font-mono font-bold text-[#151D48] pb-5">Bills</h3>
       <div className="w-full overflow-x-auto bg-white p-7 rounded-md">
+        <div className="w-full flex items-center justify-between py-4">
+          <div>
+            <input type="text" placeholder="Search" className="w-48 border border-primary focus:outline-none rounded-md px-2 py-2" />
+          </div>
+          <div>
+            <select name="" id="" className="w-14 border border-primary focus:outline-none rounded-md px-2 py-1">
+              <option value="5">5</option>
+              <option value="10">10</option>
+              <option value="20">20</option>
+              <option value="40">40</option>
+              <option value="80">80</option>
+            </select>
+          </div>
+        </div>
         <table className="w-full">
           <thead className="border-b   border-gray-200 rounded  bg-primary text-white  h-10 text-12 lg:text-16">
             <tr>
@@ -106,37 +123,17 @@ const Home = (): JSX.Element => {
             <button className="p-1 active:scale-90 transition-all duration-400 rounded-md border border-gray-300 bg-primary text-white">
               Prev
             </button>
-            <button className="px-2 py-1 active:scale-90 transition-all duration-400 rounded-md border border-gray-300 bg-primary text-white">
-              1
-            </button>
-            <button className="px-2 py-1 active:scale-90 transition-all duration-400 rounded-md border border-gray-300 ">
-              2
-            </button>
-            <button className="px-2 py-1 active:scale-90 transition-all duration-400 rounded-md border border-gray-300 ">
-              3
-            </button>
+            {
+              pageNumberArr.map((item:number, index) => (
+                <button key={item} className="px-2 py-1 active:scale-90 transition-all duration-400 rounded-md border border-gray-300 ">
+                  {item}
+                </button>
+              ))
+            }
+            
             <span>...</span>
-            {/* <button className="px-2 py-1 active:scale-90 transition-all duration-400 rounded-md border border-gray-300 ">
-                2
-              </button>
-              <button className="px-2 py-1 active:scale-90 transition-all duration-400 rounded-md border border-gray-300 ">
-                2
-              </button>
-              <button className="px-2 py-1 active:scale-90 transition-all duration-400 rounded-md border border-gray-300 ">
-                2
-              </button>
-              <button className="px-2 py-1 active:scale-90 transition-all duration-400 rounded-md border border-gray-300 ">
-                2
-              </button> */}
-            <button className="px-2 py-1 active:scale-90 transition-all duration-400 rounded-md border border-gray-300 ">
-              8
-            </button>
-            <button className="px-2 py-1 active:scale-90 transition-all duration-400 rounded-md border border-gray-300 ">
-              9
-            </button>
-            <button className="px-2 py-1 active:scale-90 transition-all duration-400 rounded-md border border-gray-300 ">
-              10
-            </button>
+          
+            
             <button className="p-1 active:scale-90 transition-all duration-400 rounded-md border border-gray-300 bg-primary text-white">
               Next
             </button>

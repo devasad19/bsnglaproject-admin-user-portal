@@ -20,16 +20,19 @@ const Home = ({ params: { id } }: { params: { id: string } }): JSX.Element => {
   };
 
   const singleOrder = async () => {
-    const res = await getSingleOrderByIdApi(id)
-    setOrder(res.data)
+    const res = await getSingleOrderByIdApi(id);
+    setOrder(res.data);
   };
 
   useEffect(() => {
-    singleOrder()
+    singleOrder();
   }, [id]);
 
-  console.log({order});
-  
+  console.log({ order });
+
+  const plan = JSON.parse(order?.plans || "[]");
+  console.log({ plan });
+
   const DownloadInvoice = () => {};
   return (
     <div>
@@ -104,35 +107,24 @@ const Home = ({ params: { id } }: { params: { id: string } }): JSX.Element => {
                 </thead>
                 <tbody>
                   {/* First row with service details */}
-                  <tr>
-                    <td
-                      rowSpan={3}
-                      className="border border-gray-500 align-middle"
-                    >
-                      1
-                    </td>
-                    <td className="border  border-gray-500">validaty</td>
-                      <td className="border border-gray-500">day</td>
-                      <td className="border border-gray-500">10</td>
-                      <td className="border border-gray-500">1</td>
-                      <td className="border border-gray-500">10</td>
-                  </tr>
-                  <tr>
-                    
-                    <td className="border  border-gray-500">validaty</td>
-                      <td className="border border-gray-500">day</td>
-                      <td className="border border-gray-500">10</td>
-                      <td className="border border-gray-500">1</td>
-                      <td className="border border-gray-500">10</td>
-                  </tr>
-                  <tr>
-                    
-                    <td className="border  border-gray-500">validaty</td>
-                      <td className="border border-gray-500">day</td>
-                      <td className="border border-gray-500">10</td>
-                      <td className="border border-gray-500">1</td>
-                      <td className="border border-gray-500">10</td>
-                  </tr>
+                  {plan?.map((p: any, i: number) => (
+                    <tr key={i}>
+                      {i == 0 && (
+                        <td
+                          rowSpan={plan.length}
+                          className="border border-gray-500 align-middle"
+                        >
+                          1
+                        </td>
+                      )}
+
+                      <td className="border  border-gray-500">{p?.name}</td>
+                      <td className="border border-gray-500">{p?.unit}</td>
+                      <td className="border border-gray-500">{p?.price}</td>
+                      <td className="border border-gray-500">{p?.data}</td>
+                      <td className="border border-gray-500">{p?.price}</td>
+                    </tr>
+                  ))}
 
                   {/* Second row with total */}
                   <tr>
@@ -142,7 +134,7 @@ const Home = ({ params: { id } }: { params: { id: string } }): JSX.Element => {
                     >
                       Total
                     </td>
-                    <td className="border border-gray-500">10</td>
+                    <td className="border border-gray-500">{order?.total}</td>
                   </tr>
                 </tbody>
               </table>
