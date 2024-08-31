@@ -3,12 +3,43 @@
 import Image from "next/image";
 import { relative_image_path } from "@/helper";
 import { useEffect, useState } from "react";
-import { getFeaturesByServiceId, getSingleService } from "@/app/(portal)/_api";
+import {
+  getFeaturesByServiceId,
+  getSingleOrderByServiceId,
+  getSingleService,
+} from "@/app/(portal)/_api";
 const Home = ({ params: { id } }) => {
   const [service, setService] = useState({});
   const [features, setFeatures] = useState([]);
+  const [orderData, setOrderData] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
-  console.log("id", id);
+  const [selectedPrices, setSelectedPrices] = useState([]);
+  const [activePlans, setActivePlans] = useState([]);
+  const [selectedFeatureInfo, setSelectedFeatureInfo] = useState([]);
+
+  const handlePlanClick = (featureIndex, price, planIndex, planName) => {
+    const selectIndexFeatureData = features[featureIndex];
+    setActivePlans((prevActivePlans) => {
+      const updatedPlans = [...prevActivePlans];
+      updatedPlans[featureIndex] = planIndex; // Set the active plan for this feature
+      return updatedPlans;
+    });
+    setSelectedFeatureInfo((prevData) => {
+      const updatedData = [...prevData];
+      updatedData[featureIndex] = { selectIndexFeatureData, price, planName };
+      return updatedData;
+    });
+    // console.log("selectIndexFeatureData : ", selectIndexFeatureData);
+
+    // Update the selected price for the clicked plan
+    // setSelectedPlan({ featureIndex, planIndex});
+    setSelectedPrices((prevPrices) => {
+      const updatedPrices = [...prevPrices];
+      updatedPrices[featureIndex] = price;
+      return updatedPrices;
+    });
+  };
+  // console.log("id", id);
   useEffect(() => {
     setIsLoading(true);
     getSingleService(id)
@@ -17,12 +48,26 @@ const Home = ({ params: { id } }) => {
     getFeaturesByServiceId(id).then(
       (data) => (setIsLoading(false), setFeatures(data?.data))
     );
+    getSingleOrderByServiceId(id).then(
+      (data) => (setIsLoading(false), setOrderData(data?.data))
+    );
   }, [id]);
-  console.log({ service, features });
+  // console.log({ service, features });
   const maxPlanLength = Math.max(
     ...features.map((fItem) => JSON.parse(fItem.plans || "[]").length)
   );
-  console.log({ maxPlanLength });
+  // console.log({ orderData });
+
+  const ordersPlans = JSON.parse(orderData?.plans || "[]");
+  const TotalAmountOld = ordersPlans.reduce(
+    (acc, curr) => acc + (Number(curr.price) || 0),
+    0
+  );
+
+  const updatedTotalAmount = selectedPrices.reduce(
+    (sum, price) => sum + (Number(price) || 0),
+    0
+  );
 
   return (
     <section>
@@ -47,16 +92,16 @@ const Home = ({ params: { id } }) => {
                 <tr className="text-center">
                   <th className="py-4">Feature Name</th>
                   <th colSpan={5} className="py-4">
-                    Plan
+                    Plans
                   </th>
                 </tr>
               </thead>
               <tbody>
-                {features.map((fItem, index) => {
+                {features.map((fItem, fIndex) => {
                   let plans = JSON.parse(fItem.plans || "[]");
 
                   return (
-                    <tr key={index}>
+                    <tr key={fIndex}>
                       <td className="text-center w-[40%] py-6 border border-l border-gray-200">
                         <div>
                           <h1 className="text-16 font-semibold">
@@ -64,33 +109,102 @@ const Home = ({ params: { id } }) => {
                           </h1>
                         </div>
                       </td>
+
                       {plans.map((pItem, planIndex) => {
+                        // Check if any item in ordersPlans matches the current plan item
+                        let isSelected;
+                        isSelected = ordersPlans?.some(
+                          (opItem) =>
+                            opItem?.data === pItem?.limit &&
+                            opItem?.price === pItem?.validaty
+                        );
+                        console.log("selected  up to here:", isSelected);
+
+                        if (activePlans[fIndex]) {
+                          isSelected = activePlans[fIndex] === planIndex;
+                        }
+
+                        console.log("selected  down to here:", isSelected);
+
                         return (
                           <td
                             key={planIndex}
-                            className="border border-gray-200 w-12 h-36"
+                            className="border border-gray-200 w-12 h-28"
                           >
                             <div className="text-center flex items-center justify-center">
-                              <h1 className="text-16 font-semibold w-20 h-20 border border-gray-200 rounded-full flex items-center justify-center">
+                              <h1
+                                onClick={() =>
+                                  handlePlanClick(
+                                    fIndex,
+                                    pItem?.validaty || 0,
+                                    planIndex,
+                                    pItem?.limit || 0
+                                  )
+                                }
+                                className={`text-16 font-semibold w-20 h-20 border ${
+                                  isSelected
+                                    ? "border-primary"
+                                    : "border-gray-200"
+                                } rounded-full flex items-center justify-center cursor-pointer`}
+                              >
                                 {pItem?.limit + " " + fItem?.unit}
                               </h1>
                             </div>
                           </td>
                         );
                       })}
+
                       {Array.from({ length: maxPlanLength - plans.length }).map(
                         (_, emptyIndex) => (
                           <td
                             key={`empty-${emptyIndex}`}
-                            className="border border-gray-200 w-12 h-36"
+                            className="border border-gray-200 w-12 h-28"
                           ></td>
                         )
                       )}
                     </tr>
                   );
                 })}
+
+                {/* <tr>
+                  <td
+                    colSpan={maxPlanLength}
+                    className="text-center  py-6 border border-l border-gray-200"
+                  >
+                    Total  Amount
+                  </td>
+                  <td className="text-center  py-6 border border-l border-gray-200">
+                    {TotalAmountOld}
+                  </td>
+                </tr> */}
+                
               </tbody>
             </table>
+            <div className="w-full bg-green-500 text-white flex items-center justify-between py-4">
+              <div className="w-[60%] flex items-center justify-center">
+                <h1 className="text-16 font-semibold">Total Amount:</h1>
+              </div>
+              <div className="w-[40%] flex items-center justify-center">
+                <h1 className="text-16 font-semibold">{TotalAmountOld}</h1>
+              </div>
+            </div>
+            {updatedTotalAmount > 0 && (
+              <div className="w-full bg-green-500 text-white flex items-center justify-between py-4">
+                <div className="w-[60%] flex items-center justify-center">
+                  <h1 className="text-16 font-semibold">
+                    Total Updated Amount:
+                  </h1>
+                </div>
+                <div className="w-[40%] flex items-center justify-center">
+                  <h1 className="text-16 font-semibold">
+                    {updatedTotalAmount}{" "}
+                    <button className="mt-1 bg-primary text-white rounded px-2 py-1">
+                      Update
+                    </button>
+                  </h1>
+                </div>
+              </div>
+            )}
           </div>
         </div>
       </div>

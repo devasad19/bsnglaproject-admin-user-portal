@@ -211,3 +211,16 @@ export const getSingleOrderByIdApi = async (id) =>{
     return error;
   }
 }
+
+
+// get single order by service id
+export const getSingleOrderByServiceId = async (serviceId) =>{
+  try{
+    const singleOrderByserviceId = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/order/by-service-id/${serviceId}`);
+    return singleOrderByserviceId.data;
+  }
+  catch(error){
+    console.log(error);
+    return error;
+  }
+}
