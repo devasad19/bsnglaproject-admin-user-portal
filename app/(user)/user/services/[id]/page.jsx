@@ -2,7 +2,7 @@
 "use client";
 import Image from "next/image";
 import { relative_image_path } from "@/helper";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import {
   getFeaturesByServiceId,
   getSingleOrderByServiceId,
@@ -16,6 +16,10 @@ const Home = ({ params: { id } }) => {
   const [selectedPrices, setSelectedPrices] = useState([]);
   const [activePlans, setActivePlans] = useState([]);
   const [selectedFeatureInfo, setSelectedFeatureInfo] = useState([]);
+  const [index, setIndex] = useState({});
+  const [totalPrice, setTotalPrice] = useState(0);
+  const [error, setError] = useState("");
+  // const [isLoading,setIsLoading] = useState(false);
 
   const handlePlanClick = (featureIndex, price, planIndex, planName) => {
     const selectIndexFeatureData = features[featureIndex];
@@ -41,21 +45,49 @@ const Home = ({ params: { id } }) => {
   };
   // console.log("id", id);
   useEffect(() => {
-    setIsLoading(true);
-    getSingleService(id)
-      .then((data) => (setIsLoading(false), setService(data)))
-      .catch((err) => console.log(err));
-    getFeaturesByServiceId(id).then(
-      (data) => (setIsLoading(false), setFeatures(data?.data))
-    );
-    getSingleOrderByServiceId(id).then(
-      (data) => (setIsLoading(false), setOrderData(data?.data))
-    );
+    try {
+      setIsLoading(true);
+      getSingleService(id)
+        .then((data) => (setIsLoading(false), setService(data)))
+        .catch((err) => console.log(err));
+      getFeaturesByServiceId(id).then(
+        (data) => (setIsLoading(false), setFeatures(data?.data))
+      );
+      getSingleOrderByServiceId(id).then(
+        (data) => (setIsLoading(false), setOrderData(data?.data))
+      );
+    } catch (error) {
+      setError("Failed to load data. Please try again later.");
+    } finally {
+      setIsLoading(false); // End loading
+    }
+    // setIsLoading(true);
+    // getSingleService(id)
+    //   .then((data) => (setIsLoading(false), setService(data)))
+    //   .catch((err) => console.log(err));
+    // getFeaturesByServiceId(id).then(
+    //   (data) => (setIsLoading(false), setFeatures(data?.data))
+    // );
+    // getSingleOrderByServiceId(id).then(
+    //   (data) => (setIsLoading(false), setOrderData(data?.data))
+    // );
   }, [id]);
+
+  if (error) {
+    return (
+      <div>
+        <p>{error}</p>
+        {/* Optionally, you can show default data or fallback UI here */}
+      </div>
+    );
+  }
   // console.log({ service, features });
-  const maxPlanLength = Math.max(
-    ...features.map((fItem) => JSON.parse(fItem.plans || "[]").length)
-  );
+  if (features?.length > 0) {
+    const maxPlanLength = Math.max(
+      ...features?.map((fItem) => JSON.parse(fItem.plans || "[]").length)
+    );
+  }
+
   // console.log({ orderData });
 
   const ordersPlans = JSON.parse(orderData?.plans || "[]");
@@ -69,6 +101,38 @@ const Home = ({ params: { id } }) => {
     0
   );
 
+  if(features && features?.length > 0){
+    useEffect(() => {
+      const initialActivePlans = [];
+      const initialSelectedPrices = [];
+      let initialTotalPrice = 0;
+  
+      if (features?.length > 0) {
+        features?.forEach((fItem, fIndex) => {
+          const plans = JSON.parse(fItem?.plans || "[]");
+          plans?.forEach((pItem, pIndex) => {
+            const matchingOrder = ordersPlans?.find(
+              (element) =>
+                element?.data === pItem?.limit &&
+                element?.price === pItem?.validaty
+            );
+            if (matchingOrder) {
+              initialActivePlans[fIndex] = pIndex;
+              initialSelectedPrices[fIndex] = pItem?.validaty;
+              initialTotalPrice += pItem?.validaty || 0;
+            }
+          });
+        });
+      }
+  
+      setActivePlans(initialActivePlans || []);
+      setSelectedPrices(initialSelectedPrices || 0);
+      setTotalPrice(initialTotalPrice || 0);
+    }, [features]);
+  }
+
+  // console.log({ features });
+
   return (
     <section>
       <div className="flex flex-col lg:flex-row gap-2 bg-white p-4 rounded mb-5">
@@ -80,8 +144,8 @@ const Home = ({ params: { id } }) => {
           alt="Bangla"
         />
         <div>
-          <h3 className="text-20 font-medium"> {service?.name}</h3>
-          <p>{service?.des}</p>
+          <h3 className="text-20 font-medium"> {service?.name || ""}</h3>
+          <p>{service?.des || ""}</p>
         </div>
       </div>
       <div className="max-[768px]:w-[165vw] lg:w-auto flex justify-center items-center overflow-x-auto">
@@ -97,90 +161,68 @@ const Home = ({ params: { id } }) => {
                 </tr>
               </thead>
               <tbody>
-                {features.map((fItem, fIndex) => {
-                  let plans = JSON.parse(fItem.plans || "[]");
+                {features && features?.length > 0 ? (
+                  features.map((fItem, fIndex) => {
+                    let plans = JSON.parse(fItem.plans || "[]");
+                    return (
+                      <tr key={fIndex}>
+                        <td className="text-center w-[40%] py-6 border border-l border-gray-200">
+                          <div>
+                            <h1 className="text-16 font-semibold">
+                              {fItem?.name}
+                            </h1>
+                          </div>
+                        </td>
 
-                  return (
-                    <tr key={fIndex}>
-                      <td className="text-center w-[40%] py-6 border border-l border-gray-200">
-                        <div>
-                          <h1 className="text-16 font-semibold">
-                            {fItem?.name}
-                          </h1>
-                        </div>
-                      </td>
+                        {plans.map((pItem, planIndex) => {
+                          let isSelected = activePlans[fIndex] === planIndex;
+                          return (
+                            <td
+                              key={planIndex}
+                              className="border border-gray-200 w-12 h-28"
+                            >
+                              <div className="text-center flex items-center justify-center">
+                                <h1
+                                  onClick={() =>
+                                    handlePlanClick(
+                                      fIndex,
+                                      pItem?.validaty || 0,
+                                      planIndex,
+                                      pItem?.limit || 0
+                                    )
+                                  }
+                                  className={`text-16 font-semibold w-20 h-20 border ${
+                                    isSelected
+                                      ? "border-primary"
+                                      : "border-gray-200"
+                                  } rounded-full flex items-center justify-center cursor-pointer`}
+                                >
+                                  {pItem?.limit + " " + fItem?.unit}
+                                </h1>
+                              </div>
+                            </td>
+                          );
+                        })}
 
-                      {plans.map((pItem, planIndex) => {
-                        // Check if any item in ordersPlans matches the current plan item
-                        let isSelected;
-                        isSelected = ordersPlans?.some(
-                          (opItem) =>
-                            opItem?.data === pItem?.limit &&
-                            opItem?.price === pItem?.validaty
-                        );
-                        console.log("selected  up to here:", isSelected);
-
-                        if (activePlans[fIndex]) {
-                          isSelected = activePlans[fIndex] === planIndex;
-                        }
-
-                        console.log("selected  down to here:", isSelected);
-
-                        return (
-                          <td
-                            key={planIndex}
-                            className="border border-gray-200 w-12 h-28"
-                          >
-                            <div className="text-center flex items-center justify-center">
-                              <h1
-                                onClick={() =>
-                                  handlePlanClick(
-                                    fIndex,
-                                    pItem?.validaty || 0,
-                                    planIndex,
-                                    pItem?.limit || 0
-                                  )
-                                }
-                                className={`text-16 font-semibold w-20 h-20 border ${
-                                  isSelected
-                                    ? "border-primary"
-                                    : "border-gray-200"
-                                } rounded-full flex items-center justify-center cursor-pointer`}
-                              >
-                                {pItem?.limit + " " + fItem?.unit}
-                              </h1>
-                            </div>
-                          </td>
-                        );
-                      })}
-
-                      {Array.from({ length: maxPlanLength - plans.length }).map(
-                        (_, emptyIndex) => (
+                        {Array.from({
+                          length: maxPlanLength - plans.length,
+                        }).map((_, emptyIndex) => (
                           <td
                             key={`empty-${emptyIndex}`}
                             className="border border-gray-200 w-12 h-28"
                           ></td>
-                        )
-                      )}
-                    </tr>
-                  );
-                })}
-
-                {/* <tr>
-                  <td
-                    colSpan={maxPlanLength}
-                    className="text-center  py-6 border border-l border-gray-200"
-                  >
-                    Total  Amount
-                  </td>
-                  <td className="text-center  py-6 border border-l border-gray-200">
-                    {TotalAmountOld}
-                  </td>
-                </tr> */}
-                
+                        ))}
+                      </tr>
+                    );
+                  })
+                ) : (
+                  <tr>
+                    <td>Somethind went worng</td>
+                  </tr>
+                )}
               </tbody>
             </table>
-            <div className="w-full bg-green-500 text-white flex items-center justify-between py-4">
+            <div className="w-full bg-green-100 text-gray-700 flex items-center justify-between py-4">
               <div className="w-[60%] flex items-center justify-center">
                 <h1 className="text-16 font-semibold">Total Amount:</h1>
               </div>
@@ -188,8 +230,8 @@ const Home = ({ params: { id } }) => {
                 <h1 className="text-16 font-semibold">{TotalAmountOld}</h1>
               </div>
             </div>
-            {updatedTotalAmount > 0 && (
-              <div className="w-full bg-green-500 text-white flex items-center justify-between py-4">
+            {updatedTotalAmount != TotalAmountOld && updatedTotalAmount > 0 && (
+              <div className="w-full bg-green-100 text-gray-700  boreder-t border-gray-00 flex items-center justify-between py-4">
                 <div className="w-[60%] flex items-center justify-center">
                   <h1 className="text-16 font-semibold">
                     Total Updated Amount:
