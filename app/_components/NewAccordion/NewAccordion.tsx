@@ -33,7 +33,7 @@ export const NewAccordion: React.FC<NewAccordionProps> = ({
             animate="open"
             exit="closed"
             variants={accordionVariants}
-            className="accordion-content bg-[#D2F0DD]  flex flex-col items-center justify-center gap-2 p-1 pb-2  px-2"
+            className="accordion-content bg-[#E8F2EC]  flex flex-col items-center justify-center gap-2 p-1 py-2   px-2"
           >
           
            {children}
