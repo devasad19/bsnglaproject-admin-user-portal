@@ -1,7 +1,7 @@
 export type ModalType = {
     setPreviewSrc?:any | null ,
-    id: string,
-    trigger: string,
+    id?: string,
+    trigger?: string,
     triggerSize?: string,
     title: string,
     children: JSX.Element,
