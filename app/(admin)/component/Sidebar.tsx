@@ -354,9 +354,9 @@ const Sidebar = () => {
                         pathname: "/admin/setting/frontend-setting",
                       }}
                       shallow
-                      className={`text-14 hover:text-primary ${
+                      className={`text-14 hover:bg-green-500 px-2 py-1 rounded hover:text-white ${
                         pathname.includes("/admin/setting/frontend-setting")
-                          ? "text-primary font-semibold"
+                          ? "bg-green-500 text-white font-semibold"
                           : "text-black"
                       }`}
                     >
@@ -367,9 +367,9 @@ const Sidebar = () => {
                         pathname: "/admin/setting/user-setting",
                       }}
                       shallow
-                      className={`text-14 hover:text-primary ${
+                      className={`text-14 hover:bg-green-500 px-2 py-1 rounded hover:text-white ${
                         pathname.includes("/admin/setting/user-setting")
-                          ? "text-primary font-semibold"
+                          ? "bg-green-500 text-white font-semibold"
                           : "text-black"
                       }`}
                     >
@@ -449,9 +449,9 @@ const Sidebar = () => {
                         pathname: "/admin/user-list",
                       }}
                       shallow
-                      className={`text-14 hover:text-primary ${
+                      className={`text-14 hover:bg-green-500 px-2 py-1 rounded hover:text-white ${
                         pathname.includes("/admin/user-list")
-                          ? "text-primary font-semibold"
+                          ? "bg-green-500 text-white font-semibold"
                           : "text-black"
                       }`}
                     >
@@ -462,9 +462,9 @@ const Sidebar = () => {
                         pathname: "/admin/manage-role",
                       }}
                       shallow
-                      className={`text-14 hover:text-primary ${
+                      className={`text-14 hover:bg-green-500 px-2 py-1 rounded hover:text-white ${
                         pathname.includes("/admin/manage-role")
-                          ? "text-primary font-semibold"
+                          ? "bg-green-500 text-white font-semibold"
                           : "text-black"
                       }`}
                     >
@@ -475,9 +475,9 @@ const Sidebar = () => {
                         pathname: "/admin/permission-management",
                       }}
                       shallow
-                      className={`text-14 hover:text-primary ${
+                      className={`text-14 hover:bg-green-500 px-2 py-1 rounded hover:text-white ${
                         pathname.includes("/admin/permission-management")
-                          ? "text-primary font-semibold"
+                          ? "bg-green-500 text-white font-semibold"
                           : "text-black"
                       }`}
                     >

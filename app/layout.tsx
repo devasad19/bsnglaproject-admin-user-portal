@@ -4,7 +4,7 @@ import "./globals.css";
 import { ToastContainer, Zoom } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { type ChildrenType } from "@/types/ChildrenType";
-// import '@smastrom/react-rating/style.css'
+import '@smastrom/react-rating/style.css'
 import  ContextProvider  from "../ContextProvider/ContextProvider";
 const inter = Inter({ subsets: ["latin"] });
 export const metadata = {

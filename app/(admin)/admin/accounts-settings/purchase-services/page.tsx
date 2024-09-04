@@ -1,12 +1,14 @@
 "use client"
 import { getServices } from '@/app/(portal)/_api';
+import axios from 'axios';
 import Image from 'next/image'
 import Link from 'next/link'
-import React, { useEffect, useState } from 'react'
+import React, { use, useEffect, useState } from 'react'
 import Skeleton from 'react-loading-skeleton';
 
 const purchaaseServicePage = () =>{
     const [services, setServices] = useState([]);
+    const [parChaseService, setParChaseService] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   // const services = await getServices();
 
@@ -17,7 +19,18 @@ const purchaaseServicePage = () =>{
       .catch((err) => console.log(err));
   }, []);
 
-  console.log("services", services);
+
+  useEffect(() => {
+    try {
+      axios.get(`${process.env.NEXT_PUBLIC_API_URL}/all/payments?page=${1}&limit=${10}`).then((res) => {
+        setParChaseService(res.data);
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  }, []);
+
+  console.log({parChaseService});
   return (
     <section>
     <div className="flex flex-wrap justify-between">
