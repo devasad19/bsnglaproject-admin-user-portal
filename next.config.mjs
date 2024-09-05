@@ -10,7 +10,7 @@ const nextConfig = {
           },
           {
             protocol: 'http',
-            hostname: '10.106.18.175', // Corrected the hostname
+            hostname: '10.106.22.36', // Corrected the hostname
             port: '' // No need to specify port if it's the default (80 for HTTP or 443 for HTTPS)
             
           },

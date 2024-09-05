@@ -33,17 +33,12 @@ const Home = ({ params: { id } }) => {
       updatedData[featureIndex] = { selectIndexFeatureData, price, planName };
       return updatedData;
     });
-    // console.log("selectIndexFeatureData : ", selectIndexFeatureData);
-
-    // Update the selected price for the clicked plan
-    // setSelectedPlan({ featureIndex, planIndex});
     setSelectedPrices((prevPrices) => {
       const updatedPrices = [...prevPrices];
       updatedPrices[featureIndex] = price;
       return updatedPrices;
     });
   };
-  // console.log("id", id);
   useEffect(() => {
     try {
       setIsLoading(true);
@@ -61,35 +56,14 @@ const Home = ({ params: { id } }) => {
     } finally {
       setIsLoading(false); // End loading
     }
-    // setIsLoading(true);
-    // getSingleService(id)
-    //   .then((data) => (setIsLoading(false), setService(data)))
-    //   .catch((err) => console.log(err));
-    // getFeaturesByServiceId(id).then(
-    //   (data) => (setIsLoading(false), setFeatures(data?.data))
-    // );
-    // getSingleOrderByServiceId(id).then(
-    //   (data) => (setIsLoading(false), setOrderData(data?.data))
-    // );
   }, [id]);
 
-  if (error) {
-    return (
-      <div>
-        <p>{error}</p>
-        {/* Optionally, you can show default data or fallback UI here */}
-      </div>
-    );
-  }
-  // console.log({ service, features });
-  if (features?.length > 0) {
+  
+ 
+  
     const maxPlanLength = Math.max(
       ...features?.map((fItem) => JSON.parse(fItem.plans || "[]").length)
     );
-  }
-
-  // console.log({ orderData });
-
   const ordersPlans = JSON.parse(orderData?.plans || "[]");
   const TotalAmountOld = ordersPlans.reduce(
     (acc, curr) => acc + (Number(curr.price) || 0),
@@ -100,8 +74,6 @@ const Home = ({ params: { id } }) => {
     (sum, price) => sum + (Number(price) || 0),
     0
   );
-
-  if(features && features?.length > 0){
     useEffect(() => {
       const initialActivePlans = [];
       const initialSelectedPrices = [];
@@ -129,7 +101,7 @@ const Home = ({ params: { id } }) => {
       setSelectedPrices(initialSelectedPrices || 0);
       setTotalPrice(initialTotalPrice || 0);
     }, [features]);
-  }
+  
 
   // console.log({ features });
 
