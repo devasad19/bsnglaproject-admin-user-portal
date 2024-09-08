@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { modelOpen, relative_image_path } from "@/helper";
+import { modelClose, modelOpen, relative_image_path } from "@/helper";
 import Link from "next/link";
 import Modal from "@/app/_components/Modal/Modal";
 import { useRef } from "react";
@@ -247,113 +247,132 @@ const Home = () => {
               />
             </fieldset>
           </div>
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-            <div className="border border-gray-300 rounded-md">
-              <div>
-                <h3 className="bg-gradient-to-r from-indigo-500 to-blue-500 py-3 text-center rounded-t-md">
-                  Setting 1
-                </h3>
-              </div>
-              <ul className="p-2">
-                <li className="flex items-center gap-2">
-                  <input type="checkbox" />
-                  <label htmlFor="">lorem 1</label>
-                </li>
-                <li className="flex items-center gap-2">
-                  <input type="checkbox" />
-                  <label htmlFor="">lorem 2</label>
-                </li>
-                <li className="flex items-center gap-2">
-                  <input type="checkbox" />
-                  <label htmlFor="">lorem 3</label>
-                </li>
-              </ul>
-            </div>
-            <div className="border border-gray-300 rounded-md">
-              <div>
-                <h3 className="bg-gradient-to-r from-indigo-500 to-blue-500 py-3 text-center rounded-t-md">
-                  Setting 1
-                </h3>
-              </div>
-              <ul className="p-2">
-                <li className="flex items-center gap-2">
-                  <input type="checkbox" />
-                  <label htmlFor="">lorem 1</label>
-                </li>
-                <li className="flex items-center gap-2">
-                  <input type="checkbox" />
-                  <label htmlFor="">lorem 2</label>
-                </li>
-                <li className="flex items-center gap-2">
-                  <input type="checkbox" />
-                  <label htmlFor="">lorem 3</label>
-                </li>
-              </ul>
-            </div>
-            <div className="border border-gray-300 rounded-md">
-              <div>
-                <h3 className="bg-gradient-to-r from-indigo-500 to-blue-500 py-3 text-center rounded-t-md">
-                  Setting 1
-                </h3>
-              </div>
-              <ul className="p-2">
-                <li className="flex items-center gap-2">
-                  <input type="checkbox" />
-                  <label htmlFor="">lorem 1</label>
-                </li>
-                <li className="flex items-center gap-2">
-                  <input type="checkbox" />
-                  <label htmlFor="">lorem 2</label>
-                </li>
-                <li className="flex items-center gap-2">
-                  <input type="checkbox" />
-                  <label htmlFor="">lorem 3</label>
-                </li>
-              </ul>
-            </div>
-            <div className="border border-gray-300 rounded-md">
-              <div>
-                <h3 className="bg-gradient-to-r from-indigo-500 to-blue-500 py-3 text-center rounded-t-md">
-                  Setting 1
-                </h3>
-              </div>
-              <ul className="p-2">
-                <li className="flex items-center gap-2">
-                  <input type="checkbox" />
-                  <label htmlFor="">lorem 1</label>
-                </li>
-                <li className="flex items-center gap-2">
-                  <input type="checkbox" />
-                  <label htmlFor="">lorem 2</label>
-                </li>
-                <li className="flex items-center gap-2">
-                  <input type="checkbox" />
-                  <label htmlFor="">lorem 3</label>
-                </li>
-              </ul>
-            </div>
-            <div className="border border-gray-300 rounded-md">
-              <div>
-                <h3 className="bg-gradient-to-r from-indigo-500 to-blue-500 py-3 text-center rounded-t-md">
-                  Setting 1
-                </h3>
-              </div>
-              <ul className="p-2">
-                <li className="flex items-center gap-2">
-                  <input type="checkbox" />
-                  <label htmlFor="">lorem 1</label>
-                </li>
-                <li className="flex items-center gap-2">
-                  <input type="checkbox" />
-                  <label htmlFor="">lorem 2</label>
-                </li>
-                <li className="flex items-center gap-2">
-                  <input type="checkbox" />
-                  <label htmlFor="">lorem 3</label>
-                </li>
-              </ul>
+          <div className="pt-6 flex justify-end">
+            <div className="flex items-center gap-4">
+              <button
+                type="button"
+                className="btn"
+                onClick={() => {
+                  modelClose(addModal, addModelForm);
+                }}
+              >
+                Cancel
+              </button>
+              <button
+                type="submit"
+                className="bg-blue-500 text-white px-4 py-3 rounded-md"
+              >
+                Create
+              </button>
             </div>
           </div>
+          {/* <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+            <div className="border border-gray-300 rounded-md">
+              <div>
+                <h3 className="bg-gradient-to-r from-indigo-500 to-blue-500 py-3 text-center rounded-t-md">
+                  Setting 1
+                </h3>
+              </div>
+              <ul className="p-2">
+                <li className="flex items-center gap-2">
+                  <input type="checkbox" />
+                  <label htmlFor="">lorem 1</label>
+                </li>
+                <li className="flex items-center gap-2">
+                  <input type="checkbox" />
+                  <label htmlFor="">lorem 2</label>
+                </li>
+                <li className="flex items-center gap-2">
+                  <input type="checkbox" />
+                  <label htmlFor="">lorem 3</label>
+                </li>
+              </ul>
+            </div>
+            <div className="border border-gray-300 rounded-md">
+              <div>
+                <h3 className="bg-gradient-to-r from-indigo-500 to-blue-500 py-3 text-center rounded-t-md">
+                  Setting 1
+                </h3>
+              </div>
+              <ul className="p-2">
+                <li className="flex items-center gap-2">
+                  <input type="checkbox" />
+                  <label htmlFor="">lorem 1</label>
+                </li>
+                <li className="flex items-center gap-2">
+                  <input type="checkbox" />
+                  <label htmlFor="">lorem 2</label>
+                </li>
+                <li className="flex items-center gap-2">
+                  <input type="checkbox" />
+                  <label htmlFor="">lorem 3</label>
+                </li>
+              </ul>
+            </div>
+            <div className="border border-gray-300 rounded-md">
+              <div>
+                <h3 className="bg-gradient-to-r from-indigo-500 to-blue-500 py-3 text-center rounded-t-md">
+                  Setting 1
+                </h3>
+              </div>
+              <ul className="p-2">
+                <li className="flex items-center gap-2">
+                  <input type="checkbox" />
+                  <label htmlFor="">lorem 1</label>
+                </li>
+                <li className="flex items-center gap-2">
+                  <input type="checkbox" />
+                  <label htmlFor="">lorem 2</label>
+                </li>
+                <li className="flex items-center gap-2">
+                  <input type="checkbox" />
+                  <label htmlFor="">lorem 3</label>
+                </li>
+              </ul>
+            </div>
+            <div className="border border-gray-300 rounded-md">
+              <div>
+                <h3 className="bg-gradient-to-r from-indigo-500 to-blue-500 py-3 text-center rounded-t-md">
+                  Setting 1
+                </h3>
+              </div>
+              <ul className="p-2">
+                <li className="flex items-center gap-2">
+                  <input type="checkbox" />
+                  <label htmlFor="">lorem 1</label>
+                </li>
+                <li className="flex items-center gap-2">
+                  <input type="checkbox" />
+                  <label htmlFor="">lorem 2</label>
+                </li>
+                <li className="flex items-center gap-2">
+                  <input type="checkbox" />
+                  <label htmlFor="">lorem 3</label>
+                </li>
+              </ul>
+            </div>
+            <div className="border border-gray-300 rounded-md">
+              <div>
+                <h3 className="bg-gradient-to-r from-indigo-500 to-blue-500 py-3 text-center rounded-t-md">
+                  Setting 1
+                </h3>
+              </div>
+              <ul className="p-2">
+                <li className="flex items-center gap-2">
+                  <input type="checkbox" />
+                  <label htmlFor="">lorem 1</label>
+                </li>
+                <li className="flex items-center gap-2">
+                  <input type="checkbox" />
+                  <label htmlFor="">lorem 2</label>
+                </li>
+                <li className="flex items-center gap-2">
+                  <input type="checkbox" />
+                  <label htmlFor="">lorem 3</label>
+                </li>
+              </ul>
+            </div>
+          </div> */}
         </form>
       </Modal>
       {/* add modal end */}

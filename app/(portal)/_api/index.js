@@ -186,6 +186,16 @@ export const paymentPostApi = async (paymentInfo)=>{
   }
 }
 
+// get all payment api
+export const getAllPaymentAPi = async (page,limit)=>{
+  try {
+    const paymentRes = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/all/payments?page=${page}&limit=${limit}`);
+    return paymentRes.data;
+  } catch (error) {
+    console.log(error);
+    return error;
+  }
+}
 
 // get all orders api 
 export const getAllOrdersApi = async () =>{
