@@ -27,8 +27,6 @@ const Home = () => {
   } = useForm();
 
  
-  
-
   const onSubmitService = async (data) => {
     // const linksArray = data.link.map((linkValue) => ({
     //   link: linkValue,
