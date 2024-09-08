@@ -224,3 +224,32 @@ export const getSingleOrderByServiceId = async (serviceId) =>{
     return error;
   }
 }
+
+
+
+   /* user management section all api is here */
+
+  //  1.create user api
+
+  export const createUserApi = async (userData)=>{
+    try {
+      const user = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/user/create`,userData);
+      return user.data;
+    } catch (error) {
+      console.log(error);
+      return error;
+    }
+  }
+
+
+  // 2. get all users api
+
+  export const getAllUsersApi = async ()=>{
+    try {
+      const users = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/users`);
+      return users.data;
+    } catch (error) {
+      console.log(error);
+      return error;
+    }
+  }
