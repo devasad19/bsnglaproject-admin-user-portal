@@ -1,44 +1,67 @@
 "use client";
-import { getAllOrdersApi } from "@/app/(portal)/_api";
+import { getAllOrdersApi, getAllPaymentAPi } from "@/app/(portal)/_api";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import Skeleton from "react-loading-skeleton";
 const Home = (): JSX.Element => {
-  const [orders, setOrders] = useState([]);
+  const [payments, setPayments] = useState([]);
+  const [totalPaymentLength, setTotalPaymentLength] = useState(0);
+  const [limit, setLimit] = useState(10);
+  const [page, setPage] = useState(1);
 
-  const totalNumberOfPage = Math.ceil(orders?.length / 10);
-  const pageNumberArr = Array.from({ length: totalNumberOfPage }, (_, i) => i + 1);
+  const totalNumberOfPage = Math.ceil(totalPaymentLength / limit);
+  const pageNumberArr = Array.from(
+    { length: totalNumberOfPage },
+    (_, i) => i + 1
+  );
 
-  const loadOrders = async () => {
+  const loadPayments = async () => {
     try {
-      const ordersData = await getAllOrdersApi();
-      setOrders(ordersData?.data);
+      const paymentsData = await getAllPaymentAPi(page, limit);
+      setPayments(paymentsData?.data);
+      setTotalPaymentLength(paymentsData?.total);
     } catch (error) {
       console.error("Failed to load orders:", error);
     }
   };
 
   useEffect(() => {
-    loadOrders();
-  }, []);
+    loadPayments();
+  }, [page, limit]);
 
-  console.log({ orders });
-
+  console.log({ limit, page });
   return (
     <section>
       <h3 className="text-32 font-mono font-bold text-[#151D48] pb-5">Bills</h3>
       <div className="w-full overflow-x-auto bg-white p-7 rounded-md">
         <div className="w-full flex items-center justify-between py-4">
           <div>
-            <input type="text" placeholder="Search" className="w-48 border border-primary focus:outline-none rounded-md px-2 py-2" />
+            <input
+              type="text"
+              placeholder="Search"
+              className="w-48 border border-primary focus:outline-none rounded-md px-2 py-2"
+            />
           </div>
           <div>
-            <select name="" id="" className="w-14 border border-primary focus:outline-none rounded-md px-2 py-1">
-              <option value="5">5</option>
-              <option value="10">10</option>
-              <option value="20">20</option>
-              <option value="40">40</option>
-              <option value="80">80</option>
+            <select
+              onChange={(e) => setLimit(Number(e.target.value))}
+              className="w-20 border border-primary focus:outline-none rounded-md px-2 py-1"
+            >
+              <option selected={limit === 5} value="5">
+                5
+              </option>
+              <option selected={limit === 10} value="10">
+                10
+              </option>
+              <option selected={limit === 20} value="20">
+                20
+              </option>
+              <option selected={limit === 40} value="40">
+                40
+              </option>
+              <option selected={limit === 80} value="80">
+                80
+              </option>
             </select>
           </div>
         </div>
@@ -55,8 +78,8 @@ const Home = (): JSX.Element => {
             </tr>
           </thead>
           <tbody className="[&>tr]:border-b [&>tr]:border-gray-200 [&>tr]:text-left [&>tr]:h-12">
-            {orders?.length > 0 ? (
-              orders?.map((item: any, index: number) => (
+            {payments?.length > 0 ? (
+              payments?.map((item: any, index: number) => (
                 <tr key={index}>
                   <td className="px-2 border-r border-gray-200">
                     <Link
@@ -89,11 +112,7 @@ const Home = (): JSX.Element => {
                     Basic
                   </td>
                   <td className="px-2 border-r border-gray-200 text-center">
-                    {item?.user?.first_name +
-                      " " +
-                      item?.user?.middle_name +
-                      " " +
-                      item?.user?.last_name}
+                    {item?.user?.name}
                   </td>
                   <td className="px-2 border-r border-gray-200 text-center">
                     {new Date(item?.created_at).toLocaleDateString("en-GB", {
@@ -120,23 +139,37 @@ const Home = (): JSX.Element => {
         </table>
         <div className="pt-10 flex justify-center">
           <div className="flex items-center gap-2">
-            <button className="p-1 active:scale-90 transition-all duration-400 rounded-md border border-gray-300 bg-primary text-white">
-              Prev
-            </button>
-            {
-              pageNumberArr.map((item:number, index) => (
-                <button key={item} className="px-2 py-1 active:scale-90 transition-all duration-400 rounded-md border border-gray-300 ">
-                  {item}
-                </button>
-              ))
-            }
-            
+            {page !== 1 && (
+              <button
+                onClick={() => setPage(page - 1)}
+                className="p-1 active:scale-90 transition-all duration-400 rounded-md border border-gray-300 bg-primary text-white"
+              >
+                Prev
+              </button>
+            )}
+
+            {pageNumberArr.map((item: number, index) => (
+              <button
+                key={item}
+                onClick={() => setPage(item)}
+                className={`px-2 py-1 active:scale-90 transition-all duration-400 rounded-md border  ${
+                  page == item ? "border-green-800" : "border-gray-300"
+                }`}
+              >
+                {item}
+              </button>
+            ))}
+
             <span>...</span>
-          
-            
-            <button className="p-1 active:scale-90 transition-all duration-400 rounded-md border border-gray-300 bg-primary text-white">
-              Next
-            </button>
+
+            {page !== totalNumberOfPage && (
+              <button
+                onClick={() => setPage(page + 1)}
+                className="p-1 active:scale-90 transition-all duration-400 rounded-md border border-gray-300 bg-primary text-white"
+              >
+                Next
+              </button>
+            )}
           </div>
         </div>
       </div>
