@@ -58,52 +58,48 @@ const Home = ({ params: { id } }) => {
     }
   }, [id]);
 
-  
- 
-  
-    const maxPlanLength = Math.max(
-      ...features?.map((fItem) => JSON.parse(fItem.plans || "[]").length)
-    );
+  const maxPlanLength = Math.max(
+    ...features?.map((fItem) => JSON.parse(fItem?.plans || "[]").length)
+  );
   const ordersPlans = JSON.parse(orderData?.plans || "[]");
-  const TotalAmountOld = ordersPlans.reduce(
-    (acc, curr) => acc + (Number(curr.price) || 0),
+  const TotalAmountOld = ordersPlans?.reduce(
+    (acc, curr) => acc + (Number(curr?.price) || 0),
     0
   );
 
-  const updatedTotalAmount = selectedPrices.reduce(
+  const updatedTotalAmount = selectedPrices?.reduce(
     (sum, price) => sum + (Number(price) || 0),
     0
   );
-    useEffect(() => {
-      const initialActivePlans = [];
-      const initialSelectedPrices = [];
-      let initialTotalPrice = 0;
-  
-      if (features?.length > 0) {
-        features?.forEach((fItem, fIndex) => {
-          const plans = JSON.parse(fItem?.plans || "[]");
-          plans?.forEach((pItem, pIndex) => {
-            const matchingOrder = ordersPlans?.find(
-              (element) =>
-                element?.data === pItem?.limit &&
-                element?.price === pItem?.validaty
-            );
-            if (matchingOrder) {
-              initialActivePlans[fIndex] = pIndex;
-              initialSelectedPrices[fIndex] = pItem?.validaty;
-              initialTotalPrice += pItem?.validaty || 0;
-            }
-          });
-        });
-      }
-  
-      setActivePlans(initialActivePlans || []);
-      setSelectedPrices(initialSelectedPrices || 0);
-      setTotalPrice(initialTotalPrice || 0);
-    }, [features]);
-  
+  useEffect(() => {
+    const initialActivePlans = [];
+    const initialSelectedPrices = [];
+    let initialTotalPrice = 0;
 
-  // console.log({ features });
+    if (features?.length > 0) {
+      features?.forEach((fItem, fIndex) => {
+        const plans = JSON.parse(fItem?.plans || "[]");
+        plans?.forEach((pItem, pIndex) => {
+          const matchingOrder = ordersPlans?.find(
+            (element) =>
+              element?.data === pItem?.limit &&
+              element?.price === pItem?.validaty
+          );
+          if (matchingOrder) {
+            initialActivePlans[fIndex] = pIndex;
+            initialSelectedPrices[fIndex] = pItem?.validaty;
+            initialTotalPrice += pItem?.validaty || 0;
+          }
+        });
+      });
+    }
+
+    setActivePlans(initialActivePlans || []);
+    setSelectedPrices(initialSelectedPrices || 0);
+    setTotalPrice(initialTotalPrice || 0);
+  }, [features]);
+
+  console.log({ features });
 
   return (
     <section>
@@ -134,7 +130,7 @@ const Home = ({ params: { id } }) => {
               </thead>
               <tbody>
                 {features && features?.length > 0 ? (
-                  features.map((fItem, fIndex) => {
+                  features?.map((fItem, fIndex) => {
                     let plans = JSON.parse(fItem.plans || "[]");
                     return (
                       <tr key={fIndex}>
@@ -146,35 +142,38 @@ const Home = ({ params: { id } }) => {
                           </div>
                         </td>
 
-                        {plans.map((pItem, planIndex) => {
-                          let isSelected = activePlans[fIndex] === planIndex;
-                          return (
-                            <td
-                              key={planIndex}
-                              className="border border-gray-200 w-12 h-28"
-                            >
-                              <div className="text-center flex items-center justify-center">
-                                <h1
-                                  onClick={() =>
-                                    handlePlanClick(
-                                      fIndex,
-                                      pItem?.validaty || 0,
-                                      planIndex,
-                                      pItem?.limit || 0
-                                    )
-                                  }
-                                  className={`text-16 font-semibold w-20 h-20 border ${
-                                    isSelected
-                                      ? "border-primary"
-                                      : "border-gray-200"
-                                  } rounded-full flex items-center justify-center cursor-pointer`}
+                        {plans.length > 0
+                          ? plans?.map((pItem, planIndex) => {
+                              let isSelected =
+                                activePlans[fIndex] === planIndex;
+                              return (
+                                <td
+                                  key={planIndex}
+                                  className="border border-gray-200 w-12 h-28"
                                 >
-                                  {pItem?.limit + " " + fItem?.unit}
-                                </h1>
-                              </div>
-                            </td>
-                          );
-                        })}
+                                  <div className="text-center flex items-center justify-center">
+                                    <h1
+                                      onClick={() =>
+                                        handlePlanClick(
+                                          fIndex,
+                                          pItem?.validaty || 0,
+                                          planIndex,
+                                          pItem?.limit || 0
+                                        )
+                                      }
+                                      className={`text-16 font-semibold w-20 h-20 border ${
+                                        isSelected
+                                          ? "border-primary"
+                                          : "border-gray-200"
+                                      } rounded-full flex items-center justify-center cursor-pointer`}
+                                    >
+                                      {pItem?.limit + " " + fItem?.unit}
+                                    </h1>
+                                  </div>
+                                </td>
+                              );
+                            })
+                          : (<span className="text-center">No Data</span>)}
 
                         {Array.from({
                           length: maxPlanLength - plans.length,
