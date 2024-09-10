@@ -87,13 +87,14 @@ const Home = ({ params }) => {
     }));
   };
 
-  const featureByService = async () => {
-    const data = await getFeaturesByServiceId(params?.id);
-    return data;
-  };
+  
 
   useEffect(() => {
     setIsLoading(true);
+    const featureByService = async () => {
+      const data = await getFeaturesByServiceId(params?.id);
+      return data;
+    };
     getSingleService(params.id)
       .then((data) => (setIsLoading(false), setService(data)))
       .catch((err) => console.log(err));
@@ -107,7 +108,7 @@ const Home = ({ params }) => {
       const featurePlans = JSON.parse(featureUpdateItem?.plans);
       setUpdateFeaturePlan(featurePlans);
     }
-  }, [isUpdate]);
+  }, [isUpdate, featureUpdateItem?.plans]);
 
   const handleCreateFeature = () => {
     modelOpen(featureModal);

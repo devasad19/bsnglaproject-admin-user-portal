@@ -14,24 +14,23 @@ const Home = (): JSX.Element => {
   const [page, setPage] = useState<number>(1);
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  const loadActivityLogs = async () => {
-    setIsLoading(true);
-    try {
-      const activityData = await getAllActivityLogsApi(page, limit);
-      setActivityLogs(activityData?.data);
-      setTotalActivity(activityData?.total);
-      setIsLoading(false);
-    } catch (error) {
-      console.error("Failed to load orders:", error);
-      setIsLoading(false);
-    }
-  };
   useEffect(() => {
+    const loadActivityLogs = async () => {
+      setIsLoading(true);
+      try {
+        const activityData = await getAllActivityLogsApi(page, limit);
+        setActivityLogs(activityData?.data);
+        setTotalActivity(activityData?.total);
+        setIsLoading(false);
+      } catch (error) {
+        console.error("Failed to load orders:", error);
+        setIsLoading(false);
+      }
+    };
+  
     loadActivityLogs();
   }, [page, limit]);
-  
   const totalPaginationCalculate = PaginationTotalPage(totalActivity, limit);
-
   return (
     <section className="bg-white p-4">
       <div className="flex flex-col lg:flex-row lg:justify-between lg:items-center gap-4 lg:gap-0 pb-5">
