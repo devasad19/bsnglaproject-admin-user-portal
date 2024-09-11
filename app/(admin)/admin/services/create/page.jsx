@@ -26,12 +26,20 @@ const Home = () => {
   } = useForm();
 
   const onSubmitService = async (data) => {
-    const linksArray = data.link.map((linkValue) => ({
+    const linksArray = data?.key?.map((linkValue) => ({
       link: linkValue,
     }));
+    const valueArr = data?.url?.map((linkValue) => ({
+      url: linkValue,
+    }));
 
-    console.log("linksArray", linksArray);
-    
+    const combinedArray = linksArray?.map((linkObj, index) => ({
+      link: linkObj.link,
+      url: valueArr?.[index]?.url,
+    }));
+
+    console.log({ combinedArray });
+
     setIsLoading(true);
     const { name, des, link, status, image, tutorial, documentation, support } =
       data;
@@ -64,7 +72,6 @@ const Home = () => {
 
     console.log(Object.entries(formData));
     return;
-    
 
     const uploadRes = await uploadServiceData(formData);
     console.log("uploadRes", uploadRes);
@@ -343,54 +350,69 @@ const Home = () => {
                   <div key={index} className="p-2 bg-neutral-100">
                     <div>
                       <div className="flex gap-2">
-                        <div className="flex w-full items-center gap-4">
-                        <fieldset className="w-[30%] flex flex-col border rounded-md px-2">
-                          <legend>
-                            <label
-                              htmlFor="key"
-                              className="after:content-['_*'] after:text-red-500"
-                            >
-                              key
-                            </label>
-                          </legend>
-                          <input
-                            type="text"
-                            id={`key${index}`}
-                            {...register(`key.${index}`, {
-                              required: "Link is required",
-                              maxLength: {
-                                value: 30,
-                                message: "Link cannot exceed 30 characters",
-                              },
-                            })}
-                            placeholder="Enter Url Key"
-                            className="outline-none p-2 "
-                            // onChange={(e) => setLink(e.target.value)}
-                          />
-                        </fieldset>
-                        <fieldset className="w-[70%] flex flex-col border rounded-md px-2">
-                          <legend>
-                            <label
-                              htmlFor="url"
-                              className="after:content-['_*'] after:text-red-500"
-                            >
-                              url
-                            </label>
-                          </legend>
-                          <input
-                            type="text"
-                            id={`url${index}`}
-                            {...register(`url.${index}`, {
-                              required: "Link is required",
-                              maxLength: {
-                                value: 30,
-                                message: "Link cannot exceed 30 characters",
-                              },
-                            })}
-                            placeholder="Enter Link"
-                            className="outline-none p-2 "
-                          />
-                        </fieldset>
+                        <div className="flex w-full  items-center justify-between">
+                          <div className="w-[25%] overflow-hidden">
+                            <fieldset className="w-full flex flex-col border rounded-md px-2">
+                              <legend>
+                                <label
+                                  htmlFor="key"
+                                  className="after:content-['_*'] after:text-red-500"
+                                >
+                                  key
+                                </label>
+                              </legend>
+                              <input
+                                type="text"
+                                id={`key${index}`}
+                                {...register(`key.${index}`, {
+                                  required: "key is required",
+                                  maxLength: {
+                                    value: 30,
+                                    message: "Link cannot exceed 30 characters",
+                                  },
+                                })}
+                                placeholder="Enter Url Key"
+                                className="outline-none p-2 "
+                                // onChange={(e) => setLink(e.target.value)}
+                              />
+                            </fieldset>
+                            {errors.key?.[index] && (
+                              <p className="text-red-500 text-12 px-2 pt-1">
+                                {errors.key?.[index]?.message}
+                              </p>
+                            )}
+                          </div>
+
+                          <div className="w-[65%]">
+                            <fieldset className="w-full flex flex-col border rounded-md px-2">
+                              <legend>
+                                <label
+                                  htmlFor="url"
+                                  className="after:content-['_*'] after:text-red-500"
+                                >
+                                  url
+                                </label>
+                              </legend>
+                              <input
+                                type="text"
+                                id={`url${index}`}
+                                {...register(`url.${index}`, {
+                                  required: "Link is required",
+                                  maxLength: {
+                                    value: 30,
+                                    message: "Link cannot exceed 30 characters",
+                                  },
+                                })}
+                                placeholder="Enter Link"
+                                className="outline-none p-2 "
+                              />
+                            </fieldset>
+                            {errors.url?.[index] && (
+                              <p className="text-red-500 text-12 px-2 pt-1">
+                                {errors.url?.[index]?.message}
+                              </p>
+                            )}
+                          </div>
                         </div>
                         <div className="mt-3">
                           <button
@@ -414,7 +436,7 @@ const Home = () => {
                           </button>
                         </div>
                       </div>
-                      
+
                       {errors.link?.[index] && (
                         <p className="text-red-500 text-12 px-2 pt-1">
                           {errors.link[index]?.message}
