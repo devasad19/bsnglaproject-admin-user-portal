@@ -34,8 +34,8 @@ const Home = () => {
     }));
 
     const combinedArray = linksArray?.map((linkObj, index) => ({
-      link: linkObj.link,
-      url: valueArr?.[index]?.url,
+      key: linkObj.link,
+      value: valueArr?.[index]?.url,
     }));
 
     console.log({ combinedArray });
@@ -63,17 +63,22 @@ const Home = () => {
     // Append your data to the FormData object
     formData.append("name", name);
     formData.append("des", des);
-    formData.append("link", link);
+    formData.append("main_url", link);
     formData.append("status", status);
     formData.append("img", image[0]);
-    formData.append("tutorial", tutorial[0]);
+    formData.append("others_link", JSON.stringify(combinedArray));
+    formData.append("tutorial", tutorial[0] || '');
     formData.append("documentation", documentation);
     formData.append("support", support);
+    
+    
+    // console.log(Object.fromEntries(formData));
+    //  return;
 
-    console.log(Object.entries(formData));
-    return;
-
+    // console.log("url links uploads");
+    
     const uploadRes = await uploadServiceData(formData);
+    
     console.log("uploadRes", uploadRes);
 
     if (uploadRes.status === true) {

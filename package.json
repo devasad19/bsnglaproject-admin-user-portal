@@ -15,6 +15,7 @@
     "chart.js": "^4.4.2",
     "cors": "^2.8.5",
     "framer-motion": "^11.3.24",
+    "js-cookie": "^3.0.5",
     "next": "14.1.4",
     "react": "^18",
     "react-chartjs-2": "^5.2.0",
@@ -29,6 +30,7 @@
     "swiper": "^11.0.7"
   },
   "devDependencies": {
+    "@types/js-cookie": "^3.0.6",
     "@types/node": "^20.12.12",
     "@types/react": "^18.3.2",
     "autoprefixer": "^10.0.1",
