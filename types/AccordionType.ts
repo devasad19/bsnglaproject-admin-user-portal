@@ -1,6 +1,6 @@
 export type AccordionType = {
-    icon?: JSX.Element;
+    icon?: any;
     title: string;
-    children: JSX.Element;
+    children: any;
     active?: boolean;
 }

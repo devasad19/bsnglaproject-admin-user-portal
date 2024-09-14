@@ -30,7 +30,7 @@
     ".next/types/**/*.ts",
     "**/*.ts",
     "**/*.tsx"
-, "helper/index.js", "app/(portal)/component/Forgotpass/Forgotpass.jsx", "app/(portal)/component/Signup/Signup.jsx"  ],
+, "helper/index.js", "app/(portal)/component/Forgotpass/Forgotpass.jsx", "app/(portal)/component/Signup/Signup.jsx", "withRoleBaseAuth/WithReleBaseAuth.jsx"  ],
   "exclude": [
     "node_modules"
   ],

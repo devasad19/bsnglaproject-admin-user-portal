@@ -324,13 +324,13 @@ const Home = () => {
                   </td>
                   <td className="text-center border-r border-gray-200">
                     <Link
-                      href={item?.link}
+                      href={item?.main_url}
                       target="_blank"
                       rel="noopener noreferrer"
                       shallow
                       className="text-blue-600"
                     >
-                      {item?.link}
+                      {item?.main_url || ""}
                     </Link>
                   </td>
                   <td

@@ -8,7 +8,7 @@ import { useEffect, useState } from "react";
 import Skeleton from "react-loading-skeleton";
 
 
-const Home = async () => {
+const Home =  () => {
   // const services = await getServices();
   const [services, setServices] = useState([]);
   const [isLoading, setIsLoading] = useState(false);

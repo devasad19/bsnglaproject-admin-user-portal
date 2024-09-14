@@ -3,13 +3,13 @@ import { getServices } from '@/app/(portal)/_api';
 import axios from 'axios';
 import Image from 'next/image'
 import Link from 'next/link'
-import React, { use, useEffect, useState } from 'react'
+import {  useEffect, useState } from 'react'
 import Skeleton from 'react-loading-skeleton';
 
-const purchaaseServicePage = () =>{
-    const [services, setServices] = useState([]);
-    const [parChaseService, setParChaseService] = useState([]);
-  const [isLoading, setIsLoading] = useState(false);
+const PurchaaseServicePage = () =>{
+    const [services, setServices] = useState<any>([]);
+    const [parChaseService, setParChaseService] = useState<any>([]);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   // const services = await getServices();
 
   useEffect(() => {
@@ -58,7 +58,7 @@ const purchaaseServicePage = () =>{
                   </td>
                 </tr>
               )}
-          {services?.map((item:any, index) => (
+          {services?.map((item:any, index:number) => (
             <tr key={index}>
               <td className="px-2">
                 <Link
@@ -139,4 +139,4 @@ const purchaaseServicePage = () =>{
   )
 }
 
-export default purchaaseServicePage
+export default PurchaaseServicePage

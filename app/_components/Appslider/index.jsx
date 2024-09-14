@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useRef, useState } from "react";
+import React, { useState } from "react";
 // Import Swiper React components
 import { Swiper, SwiperSlide } from "swiper/react";
 import { relative_image_path } from "../../../helper/index";
@@ -14,6 +14,7 @@ import "./styles.css";
 
 // import required modules
 import { Pagination, Navigation, Autoplay, Grid } from "swiper/modules";
+import Image from "next/image";
 
 const AppSlider = () => {
   const [sliders, setSliders] = useState([
@@ -55,8 +56,10 @@ const AppSlider = () => {
           {sliders?.map((item, index) => (
             <SwiperSlide key={index}>
               <div className=" duration-700 ease-in-out !w-full !h-[500px]">
-                <img
+                <Image
                   className=""
+                  width={1000}
+                  height={1000}
                   src={relative_image_path(item?.image_url)}
                   alt="2nd Slider Image"
                 />

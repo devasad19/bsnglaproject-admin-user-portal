@@ -5,7 +5,7 @@ import Image from "next/image";
 import NewUpdatedModal from "@/app/_components/Modal/NewUpdatedModal";
 import { useRef, useState } from "react";
 
-const Home = async () => {
+const Home = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const toggleModal = () => {
     setIsModalOpen(!isModalOpen);

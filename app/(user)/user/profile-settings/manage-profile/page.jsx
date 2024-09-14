@@ -50,6 +50,7 @@ const Home = () => {
             width={1000}
             height={1000}
             src={relative_image_path("dummy_image1.jpg")}
+            alt="Profile Picture"
           />
           <div className="text-gray-500">
             <p>{formInputs?.username}</p>

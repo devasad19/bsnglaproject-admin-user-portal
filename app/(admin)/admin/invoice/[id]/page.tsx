@@ -19,16 +19,17 @@ const Home = ({ params: { id } }: { params: { id: string } }): JSX.Element => {
     window.location.reload();
   };
 
-  const singleOrder = async () => {
-    const res = await getSingleOrderByIdApi(id);
-    setOrder(res.data);
-  };
+ 
 
   useEffect(() => {
+    const singleOrder = async () => {
+      const res = await getSingleOrderByIdApi(id);
+      setOrder(res.data);
+    };
     singleOrder();
   }, [id]);
 
-  console.log({ order });
+  // console.log({ order });
 
   const plan = JSON.parse(order?.plans || "[]");
   console.log({ plan });

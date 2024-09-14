@@ -6,7 +6,7 @@ import { relative_image_path } from "@/helper";
 import { getServices } from "@/app/(portal)/_api";
 import { useEffect, useState } from "react";
 import Skeleton from "react-loading-skeleton";
-const Home = async () => {
+const Home =  () => {
   const [services, setServices] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   // const services = await getServices();

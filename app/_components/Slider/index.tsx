@@ -14,6 +14,7 @@ import "./styles.css";
 // import required modules
 import { Pagination, Navigation, Autoplay, Grid } from "swiper/modules";
 import { type SliderType } from "@/types/SliderType";
+import Image from "next/image";
 
 export default function Slider({sliders}: SliderType): React.JSX.Element {
   return (
@@ -40,9 +41,11 @@ export default function Slider({sliders}: SliderType): React.JSX.Element {
         {sliders?.map((item: any, index: number) => (
           <SwiperSlide key={index}>
             <div className=" duration-700 ease-in-out !w-full !h-[25vh] lg:!h-[79vh]">
-              <img
+              <Image
                 className=""
                 src={relative_image_path(item?.image_url)}
+                width={1920}
+                height={1080}
                 alt="Slider Image"
                 loading="eager"
               />

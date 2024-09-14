@@ -1,5 +1,5 @@
 "use client";
-import { getAllOrdersApi, getAllPaymentAPi } from "@/app/(portal)/_api";
+import { getAllPaymentAPi } from "@/app/(portal)/_api";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import Skeleton from "react-loading-skeleton";
@@ -15,21 +15,20 @@ const Home = (): JSX.Element => {
     (_, i) => i + 1
   );
 
-  const loadPayments = async () => {
-    try {
-      const paymentsData = await getAllPaymentAPi(page, limit);
-      setPayments(paymentsData?.data);
-      setTotalPaymentLength(paymentsData?.total);
-    } catch (error) {
-      console.error("Failed to load orders:", error);
-    }
-  };
-
   useEffect(() => {
+    const loadPayments = async () => {
+      try {
+        const paymentsData = await getAllPaymentAPi(page, limit);
+        setPayments(paymentsData?.data);
+        setTotalPaymentLength(paymentsData?.total);
+      } catch (error) {
+        console.error("Failed to load orders:", error);
+      }
+    };
     loadPayments();
   }, [page, limit]);
 
-  console.log({ limit, page });
+  // console.log({ limit, page });
   return (
     <section>
       <h3 className="text-32 font-mono font-bold text-[#151D48] pb-5">Bills</h3>
