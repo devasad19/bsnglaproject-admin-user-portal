@@ -38,7 +38,7 @@ const ContextProvider = ({ children }: any) => {
           },
         })
         .then((res) => {
-          console.log("GLobal Context :", res.data.data);
+          // console.log("GLobal Context :", res.data.data);
           setUser(res.data.data);
           setLoading(false);
         })
