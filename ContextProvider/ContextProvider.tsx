@@ -29,9 +29,10 @@ export const MyContext = createContext<TContextType | undefined>(undefined);
     setLoading(true);
     const token = Cookies.get("token");
     const user:string | undefined =  Cookies.get("user");
-    const userInfo = JSON.parse(user ?? "");
+    // const userInfo = JSON.parse(user ?? "");
+    const userInfo = {};
     if (token && userInfo) {
-      axios.get(`${process.env.NEXT_PUBLIC_API_URL}/user/details/${userInfo.id}`,{
+      axios.get(`${process.env.NEXT_PUBLIC_API_URL}/user/details/${userInfo?.id}`,{
         headers: {
           Authorization: `Bearer ${token}`,
         },
