@@ -21,9 +21,12 @@ const Home = () => {
   const [refetch, setRefetch] = useState(false);
   const [serviceValidation, setServiceValidation] = useState({
     name: "",
-    des: "",
-    link: "",
-    img: "",
+    description: "",
+    sub_title: "",
+    distribution: "",
+    visit_link: "",
+    component: "",
+    release_date: "",
   });
 
   useEffect(() => {
@@ -37,7 +40,7 @@ const Home = () => {
 
   // delete service in this function
   const handleDelete = (id) => {
-    console.log("id", id);
+    // console.log("id", id);
     if (id) {
       Swal.fire({
         title: "Are you sure?",
@@ -91,7 +94,15 @@ const Home = () => {
     serviceUpdateModal(item);
   };
 
-  const validationUpdateServiceForm = (name, description, link) => {
+  const validationUpdateServiceForm = (
+    name,
+    description,
+    sub_title,
+    distribution,
+    visit_link,
+    component,
+    release_date
+  ) => {
     let errors = {};
 
     // Validate Name
@@ -105,14 +116,14 @@ const Home = () => {
     if (description?.length === 0) {
       errors.des = "Description is required.";
     } else if (description?.length > 300) {
-      errors.des = "Description cannot exceed 300 characters.";
+      errors.description = "Description cannot exceed 300 characters.";
     }
 
     // Validate Link
-    if (link?.length === 0) {
-      errors.link = "Link is required.";
-    } else if (link?.length > 30) {
-      errors.link = "Link cannot exceed 30 characters.";
+    if (sub_title?.length === 0) {
+      errors.sub_title = "sub_title is required.";
+    } else if (sub_title?.length > 30) {
+      errors.sub_title = "sub_title cannot exceed 30 characters.";
     }
 
     // Set errors in state
@@ -123,113 +134,179 @@ const Home = () => {
   };
 
   // edit service in this function
+  // const handleServiceUpdate = async (e) => {
+  //   e.preventDefault();
+  //   let name = e.target.name.value;
+  //   let description = e.target.des.value;
+  //   let img = e.target.img.files[0];
+  //   let link = e.target.link.value;
+  //   let status = e.target.status.value;
+  //   let tutorial = e.target.tutorial.files[0];
+  //   let documentation = e.target.documentation.value;
+  //   let support = e.target.support.value;
+  //   const validation = validationUpdateServiceForm(name, description, link);
+  //   console.log(
+  //     "submit data :",
+  //     name,
+  //     description,
+  //     img,
+  //     link,
+  //     status,
+  //     tutorial,
+  //     documentation,
+  //     support
+  //   );
+  //   if (!validation) {
+  //     return;
+  //   }
+  //   // Create FormData object to hold the data
+  //   if (!img && !tutorial) {
+  //     console.log("update  img nai and tutorial nai");
+
+  //     let updateDataInfo = {
+  //       name: name,
+  //       des: description,
+  //       link: link,
+  //       status: status,
+  //       documentation: documentation,
+  //       support: support,
+  //     };
+  //     let updateData = await updateAnService(serviceUpdate?.id, updateDataInfo);
+  //     if (updateData?.status === true) {
+  //       toast.success("Service updated successfully");
+  //       setRefetch(!refetch);
+  //     } else {
+  //       console.error("Update failed:", updateData?.message);
+  //     }
+  //   }
+
+  //   if (!img && tutorial) {
+  //     console.log("update  img nai and tutorial ase");
+  //     let fromData = new FormData();
+  //     fromData.append("name", name);
+  //     fromData.append("des", description);
+  //     fromData.append("link", link);
+  //     fromData.append("status", status);
+  //     fromData.append("documentation", documentation);
+  //     fromData.append("support", support);
+  //     fromData.append("img", img || "");
+  //     fromData.append("tutorial", tutorial);
+  //     let updateData = await updateAnService(serviceUpdate?.id, fromData);
+  //     if (updateData?.status === true) {
+  //       toast.success("Service updated successfully");
+  //       setRefetch(!refetch);
+  //     } else {
+  //       console.error("Update failed:", updateData?.message);
+  //     }
+  //   }
+
+  //   if (!tutorial && img) {
+  //     console.log("update  img ase and tutorial nai");
+
+  //     let fromData = new FormData();
+  //     fromData.append("name", name);
+  //     fromData.append("des", description);
+  //     fromData.append("link", link);
+  //     fromData.append("status", status);
+  //     fromData.append("documentation", documentation);
+  //     fromData.append("support", support);
+  //     fromData.append("tutorial", tutorial || "");
+  //     fromData.append("img", img);
+  //     console.log("fromData:", fromData);
+
+  //     let updateData = await updateAnService(serviceUpdate?.id, fromData);
+  //     if (updateData?.status === true) {
+  //       toast.success("Service updated successfully");
+  //       setRefetch(!refetch);
+  //     } else {
+  //       console.error("Update failed:", updateData?.message);
+  //     }
+  //   }
+  //   if (img && tutorial) {
+  //     console.log("update  img ase and tutorial ase");
+  //     let fromData = new FormData();
+  //     fromData.append("name", name);
+  //     fromData.append("des", description);
+  //     fromData.append("link", link);
+  //     fromData.append("status", status);
+  //     fromData.append("documentation", documentation);
+  //     fromData.append("support", support);
+  //     fromData.append("img", img);
+  //     fromData.append("tutorial", tutorial);
+  //     let updateData = await updateAnService(serviceUpdate?.id, fromData);
+  //     if (updateData?.status === true) {
+  //       toast.success("Service updated successfully");
+  //       setRefetch(!refetch);
+  //     } else {
+  //       console.error("Update failed:", updateData?.message);
+  //     }
+  //   }
+  //   if (serviceForm.current) {
+  //     serviceForm.current.reset(); // Reset the form fields
+  //   }
+  //   if (serviceModal.current) {
+  //     serviceModal.current.close();
+  //   }
+  //   setPreviewSrc(null);
+  // };
+
   const handleServiceUpdate = async (e) => {
     e.preventDefault();
     let name = e.target.name.value;
-    let description = e.target.des.value;
-    let img = e.target.img.files[0];
-    let link = e.target.link.value;
-    let status = e.target.status.value;
-    let tutorial = e.target.tutorial.files[0];
-    let documentation = e.target.documentation.value;
-    let support = e.target.support.value;
-    const validation = validationUpdateServiceForm(name, description, link);
-    console.log(
-      "submit data :",
+    let description = e.target.description.value;
+    let logo = e.target.logo.files[0];
+    let sub_title = e.target.sub_title.value;
+    let distribution = e.target.distribution.value;
+    let visit_link = e.target.visit_link.value;
+    let component = e.target.component.value;
+    let paid_status = e.target.paid_status.value;
+    let production_status = e.target.production_status.value;
+    let release_date = e.target.release_date.value;
+    let type = e.target.type.value;
+    let visit_type = e.target.visit_type.value;
+
+    const validation = validationUpdateServiceForm(
       name,
       description,
-      img,
-      link,
-      status,
-      tutorial,
-      documentation,
-      support
+      sub_title,
+      distribution,
+      visit_link,
+      component,
+      release_date
     );
+
     if (!validation) {
       return;
     }
     // Create FormData object to hold the data
-    if (!img && !tutorial) {
-      console.log("update  img nai and tutorial nai");
+    console.log({
+      name,
+      description,
+      logo,
+      sub_title,
+      distribution,
+      visit_link,
+      component,
+      paid_status,
+      production_status,
+      release_date,
+      type,
+      visit_type,
+    });
+    let fromData = new FormData();
+    fromData.append("name", name);  
+    fromData.append("description", description);
+    fromData.append("logo", );
+    fromData.append("sub_title", sub_title);
+    fromData.append("distribution", distribution);
+    fromData.append("visit_link", visit_link);
+    fromData.append("component", component);
+    fromData.append("paid_status", paid_status);
+    fromData.append("production_status", production_status);
+    fromData.append("release_date", release_date);
+    fromData.append("type", type);
+    
 
-      let updateDataInfo = {
-        name: name,
-        des: description,
-        link: link,
-        status: status,
-        documentation: documentation,
-        support: support,
-      };
-      let updateData = await updateAnService(serviceUpdate?.id, updateDataInfo);
-      if (updateData?.status === true) {
-        toast.success("Service updated successfully");
-        setRefetch(!refetch);
-      } else {
-        console.error("Update failed:", updateData?.message);
-      }
-    }
-
-    if (!img && tutorial) {
-      console.log("update  img nai and tutorial ase");
-      let fromData = new FormData();
-      fromData.append("name", name);
-      fromData.append("des", description);
-      fromData.append("link", link);
-      fromData.append("status", status);
-      fromData.append("documentation", documentation);
-      fromData.append("support", support);
-      fromData.append("img", img || "");
-      fromData.append("tutorial", tutorial);
-      let updateData = await updateAnService(serviceUpdate?.id, fromData);
-      if (updateData?.status === true) {
-        toast.success("Service updated successfully");
-        setRefetch(!refetch);
-      } else {
-        console.error("Update failed:", updateData?.message);
-      }
-    }
-
-    if (!tutorial && img) {
-      console.log("update  img ase and tutorial nai");
-
-      let fromData = new FormData();
-      fromData.append("name", name);
-      fromData.append("des", description);
-      fromData.append("link", link);
-      fromData.append("status", status);
-      fromData.append("documentation", documentation);
-      fromData.append("support", support);
-      fromData.append("tutorial", tutorial || "");
-      fromData.append("img", img);
-      console.log("fromData:", fromData);
-
-      let updateData = await updateAnService(serviceUpdate?.id, fromData);
-      if (updateData?.status === true) {
-        toast.success("Service updated successfully");
-        setRefetch(!refetch);
-      } else {
-        console.error("Update failed:", updateData?.message);
-      }
-    }
-    if (img && tutorial) {
-      console.log("update  img ase and tutorial ase");
-      let fromData = new FormData();
-      fromData.append("name", name);
-      fromData.append("des", description);
-      fromData.append("link", link);
-      fromData.append("status", status);
-      fromData.append("documentation", documentation);
-      fromData.append("support", support);
-      fromData.append("img", img);
-      fromData.append("tutorial", tutorial);
-      let updateData = await updateAnService(serviceUpdate?.id, fromData);
-      if (updateData?.status === true) {
-        toast.success("Service updated successfully");
-        setRefetch(!refetch);
-      } else {
-        console.error("Update failed:", updateData?.message);
-      }
-    }
     if (serviceForm.current) {
       serviceForm.current.reset(); // Reset the form fields
     }
@@ -239,7 +316,7 @@ const Home = () => {
     setPreviewSrc(null);
   };
 
-  console.log("service data: ", services);
+  // console.log("service data: ", services);
 
   // console.log("validation body: ", serviceValidation);
 
@@ -305,7 +382,7 @@ const Home = () => {
                       <span className="flex items-center gap-3">
                         <Image
                           className="w-10 h-10 rounded-md"
-                          src={`${process.env.NEXT_PUBLIC_IMAGE_URL}${item?.img}`}
+                          src={`${process.env.NEXT_PUBLIC_IMAGE_URL}${item?.logo}`}
                           height={1000}
                           width={1000}
                           alt="Bangla"
@@ -318,22 +395,23 @@ const Home = () => {
                     </Link>
                   </td>
                   <td className="text-center border-r border-gray-200">
-                    {item?.des?.length > 25
-                      ? item?.des?.substring(0, 25) + "..."
-                      : item?.des}
+                    {item?.description?.length > 25
+                      ? item?.description?.substring(0, 25) + "..."
+                      : item?.description}
                   </td>
                   <td className="text-center border-r border-gray-200">
                     <Link
-                      href={item?.main_url}
+                      href={item?.visit_link || ""}
                       target="_blank"
                       rel="noopener noreferrer"
                       shallow
                       className="text-blue-600"
                     >
-                      {item?.main_url || ""}
+                      {item?.visit_link || ""}
                     </Link>
                   </td>
-                  <td
+                  <td></td>
+                  {/* <td
                     className={`text-center border-r border-gray-200 ${
                       item?.status === "1" && "text-green-500"
                     } ${item?.status === "2" && "text-red-500"} ${
@@ -343,7 +421,7 @@ const Home = () => {
                     {item?.status === "1" && "Active"}
                     {item?.status === "2" && "Inactive"}
                     {item?.status === "3" && "Archeive"}
-                  </td>
+                  </td> */}
                   <td className="text-center border-r border-gray-200">0</td>
                   <td className="">
                     <div className="w-full flex items-center justify-center gap-2">
@@ -411,7 +489,7 @@ const Home = () => {
         </div>
       </section>
       {/* service edit modal */}
-      <Modal
+      {/* <Modal
         modalForm={serviceForm}
         modalRef={serviceModal}
         title={"Update Service"}
@@ -622,6 +700,317 @@ const Home = () => {
                 <option value="3" selected={serviceUpdate?.status === "3"}>
                   archeive
                 </option>
+              </select>
+            </fieldset>
+          </div>
+
+          <div className="modal-action">
+            <div className="flex items-center gap-4">
+              <button
+                type="button"
+                className="btn"
+                onClick={() => {
+                  setServiceValidation({});
+                  modelClose(serviceModal, serviceForm);
+                  setPreviewSrc(null);
+                  setTutorialVideo(null);
+                }}
+              >
+                Cancel
+              </button>
+              <button
+                type="submit"
+                className="bg-blue-500 text-white px-4 py-3 rounded-md"
+              >
+                Update
+              </button>
+            </div>
+          </div>
+        </form>
+      </Modal> */}
+
+      <Modal
+        modalForm={serviceForm}
+        modalRef={serviceModal}
+        title={"Update Service"}
+        setPreviewSrc={setPreviewSrc}
+        setTutorialVideo={setTutorialVideo}
+        setServiceValidation={setServiceValidation}
+        // Pass handleSubmit to subFunc
+      >
+        <form
+          onSubmit={handleServiceUpdate}
+          className="flex flex-col gap-2"
+          ref={serviceForm}
+        >
+          <div>
+            <fieldset className="w-full border border-gray-300 rounded-md px-2">
+              <legend>
+                <label>Name</label>
+              </legend>
+              <input
+                type="text"
+                name="name"
+                // onChange={e => validationUpdateServiceForm(e.target.value, )}
+                placeholder="Update name of the service"
+                defaultValue={serviceUpdate?.name}
+                className="outline-none w-full text-14"
+              />
+            </fieldset>
+            {serviceValidation?.name && (
+              <p className="text-red-500 px-2 text-10 pt-1">
+                {serviceValidation?.name}
+              </p>
+            )}
+          </div>
+          <div>
+            <fieldset className="w-full border border-gray-300 rounded-md px-2">
+              <legend>
+                <label>Sub Title</label>
+              </legend>
+              <input
+                type="text"
+                name="sub_title"
+                placeholder="Update name of the service"
+                defaultValue={serviceUpdate?.sub_title}
+                className="outline-none w-full text-14"
+              />
+            </fieldset>
+            {serviceValidation?.sub_title && (
+              <p className="text-red-500 px-2 text-10 pt-1">
+                {serviceValidation?.sub_title}
+              </p>
+            )}
+          </div>
+          <div>
+            <fieldset className="w-full border border-gray-300 rounded-md px-2">
+              <legend>
+                <label>Description</label>
+              </legend>
+              <textarea
+                name="description"
+                placeholder="Update description"
+                onChange={(e) => validationUpdateServiceForm(e.target.value)}
+                className="outline-none w-full text-14"
+                defaultValue={serviceUpdate?.description}
+              ></textarea>
+            </fieldset>
+            {serviceValidation?.description && (
+              <p className="text-red-500 px-2 text-10 pt-1">
+                {serviceValidation?.description}
+              </p>
+            )}
+          </div>
+          <div>
+            <fieldset className="w-full border border-gray-300 rounded-md px-2">
+              <legend>
+                <label>Distribution</label>
+              </legend>
+              <textarea
+                name="distribution"
+                placeholder="Update description"
+                onChange={(e) => validationUpdateServiceForm(e.target.value)}
+                className="outline-none w-full text-14"
+                defaultValue={serviceUpdate?.distribution}
+              ></textarea>
+            </fieldset>
+            {serviceValidation?.distribution && (
+              <p className="text-red-500 px-2 text-10 pt-1">
+                {serviceValidation?.distribution}
+              </p>
+            )}
+          </div>
+          <div>
+            <fieldset className="w-full border border-gray-300 rounded-md px-2">
+              <legend>
+                <label>Component</label>
+              </legend>
+              <textarea
+                name="component"
+                placeholder="Update component"
+                onChange={(e) => validationUpdateServiceForm(e.target.value)}
+                className="outline-none w-full text-14"
+                defaultValue={serviceUpdate?.component}
+              ></textarea>
+            </fieldset>
+            {serviceValidation?.component && (
+              <p className="text-red-500 px-2 text-10 pt-1">
+                {serviceValidation?.component}
+              </p>
+            )}
+          </div>
+
+          <div>
+            <fieldset className="w-full border border-gray-300 rounded-md px-2">
+              <legend>
+                <label>Visit Link</label>
+              </legend>
+              <input
+                type="text"
+                name="visit_link"
+                // onChange={e => validationUpdateServiceForm(e.target.value)}
+                placeholder="Update name of the service"
+                defaultValue={serviceUpdate?.visit_link}
+                className="outline-none w-full text-14"
+              />
+            </fieldset>
+            {serviceValidation?.visit_link && (
+              <p className="text-red-500 px-2 text-10 pt-1">
+                {serviceValidation?.visit_link}
+              </p>
+            )}
+          </div>
+
+          <div>
+            <fieldset className="w-full border border-gray-300 rounded-md px-2">
+              <legend>
+                <label>Logo</label>
+              </legend>
+              <input
+                id="file"
+                type="file"
+                onChange={(e) => {
+                  setPreviewSrc(e.target.files[0]);
+                }}
+                name="logo"
+                accept="image/*"
+                className="p-2"
+              />
+              {previewSrc ? (
+                <Image
+                  src={URL.createObjectURL(previewSrc)}
+                  className="w-60 h-48 rounded-md my-2"
+                  height={1000}
+                  width={1000}
+                  alt="Preview"
+                />
+              ) : (
+                serviceUpdate?.logo && (
+                  <Image
+                    src={`${process.env.NEXT_PUBLIC_IMAGE_URL}${serviceUpdate?.logo}`}
+                    className="w-60 h-48 rounded-md my-2"
+                    height={1000}
+                    width={1000}
+                    alt="Service Image"
+                  />
+                )
+              )}
+            </fieldset>
+            {serviceValidation?.logo && (
+              <p className="text-red-500 px-2 text-10 pt-1">
+                {serviceValidation?.logo}
+              </p>
+            )}
+          </div>
+          <div>
+            <fieldset className="flex flex-col border rounded-md px-2">
+              <legend>
+                <label
+                  htmlFor="ServiceName"
+                  className="after:content-['_*'] after:text-red-500"
+                >
+                  Type
+                </label>
+              </legend>
+
+              <select
+                name="type"
+                id="status"
+                defaultValue={serviceUpdate?.type}
+                className="outline-none p-2 bg-white"
+              >
+                <option value="Application">Application</option>
+                <option value="Plugin">Plugin</option>
+                <option value="Mobile Apps">Mobile Apps</option>
+                <option value="Datasets">Data Sets</option>
+                <option value="Tools">Tools</option>
+                <option value="Papers">Papers</option>
+              </select>
+            </fieldset>
+          </div>
+          <div>
+            <fieldset className="flex flex-col border rounded-md px-2">
+              <legend>
+                <label
+                  htmlFor="ServiceName"
+                  className="after:content-['_*'] after:text-red-500"
+                >
+                  Production Status
+                </label>
+              </legend>
+
+              <select
+                name="production_status"
+                defaultValue={serviceUpdate?.production_status}
+                className="outline-none p-2 bg-white"
+              >
+                <option value="Live">Live</option>
+                <option value="Beta">Beta</option>
+                <option value="On Test">On Test</option>
+              </select>
+            </fieldset>
+          </div>
+          <div>
+            <fieldset className="flex flex-col border rounded-md px-2">
+              <legend>
+                <label
+                  htmlFor="ServiceName"
+                  className="after:content-['_*'] after:text-red-500"
+                >
+                  Release Date
+                </label>
+              </legend>
+
+              <input
+                type="date"
+                name="release_date"
+                defaultValue={serviceUpdate?.release_date}
+                className="outline-none p-2 bg-white"
+              />
+            </fieldset>
+          </div>
+          <div>
+            <fieldset className="flex flex-col border rounded-md px-2">
+              <legend>
+                <label
+                  htmlFor="ServiceName"
+                  className="after:content-['_*'] after:text-red-500"
+                >
+                  Paid Status
+                </label>
+              </legend>
+
+              <select
+                defaultValue={serviceUpdate?.paid_status}
+                name="paid_status"
+                className="outline-none p-2 bg-white"
+              >
+                <option value="Free">Free</option>
+                <option value="Pro">Pro</option>
+              </select>
+            </fieldset>
+          </div>
+
+          <div>
+            <fieldset className="flex flex-col border rounded-md px-2">
+              <legend>
+                <label
+                  htmlFor="ServiceName"
+                  className="after:content-['_*'] after:text-red-500"
+                >
+                  Button
+                </label>
+              </legend>
+
+              <select
+                name="visit_type"
+                id=""
+                className="outline-none p-2 bg-white"
+                defaultValue={serviceUpdate?.visit_type}
+              >
+                <option value="Download">Download</option>
+                <option value="Visit">Visit</option>
+                <option value="Subscribe">Subscribe</option>
               </select>
             </fieldset>
           </div>
