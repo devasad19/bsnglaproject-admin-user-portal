@@ -279,24 +279,24 @@ const Home = () => {
       return;
     }
     // Create FormData object to hold the data
-    console.log({
-      name,
-      description,
-      logo,
-      sub_title,
-      distribution,
-      visit_link,
-      component,
-      paid_status,
-      production_status,
-      release_date,
-      type,
-      visit_type,
-    });
+    // console.log({
+    //   name,
+    //   description,
+    //   logo,
+    //   sub_title,
+    //   distribution,
+    //   visit_link,
+    //   component,
+    //   paid_status,
+    //   production_status,
+    //   release_date,
+    //   type,
+    //   visit_type,
+    // });
     let fromData = new FormData();
-    fromData.append("name", name);  
+    fromData.append("name", name);
     fromData.append("description", description);
-    fromData.append("logo", );
+    fromData.append("logo", logo || "");
     fromData.append("sub_title", sub_title);
     fromData.append("distribution", distribution);
     fromData.append("visit_link", visit_link);
@@ -305,7 +305,18 @@ const Home = () => {
     fromData.append("production_status", production_status);
     fromData.append("release_date", release_date);
     fromData.append("type", type);
-    
+    fromData.append("visit_type", visit_type);
+
+    let updateData = await updateAnService(serviceUpdate?.id, fromData);
+    console.log({ updateData });
+
+    if (updateData?.status === true) {
+      toast.success("Service updated successfully");
+      setRefetch(!refetch);
+    } else {
+      toast.error("Service Updated Failed");
+      console.error("Update failed:", updateData?.message);
+    }
 
     if (serviceForm.current) {
       serviceForm.current.reset(); // Reset the form fields
@@ -919,12 +930,39 @@ const Home = () => {
                 defaultValue={serviceUpdate?.type}
                 className="outline-none p-2 bg-white"
               >
-                <option value="Application">Application</option>
-                <option value="Plugin">Plugin</option>
-                <option value="Mobile Apps">Mobile Apps</option>
-                <option value="Datasets">Data Sets</option>
-                <option value="Tools">Tools</option>
-                <option value="Papers">Papers</option>
+                <option
+                  selected={serviceUpdate?.type == "Application"}
+                  value="Application"
+                >
+                  Application
+                </option>
+                <option
+                  selected={serviceUpdate?.type == "Plugin"}
+                  value="Plugin"
+                >
+                  Plugin
+                </option>
+                <option
+                  selected={serviceUpdate?.type == "Mobile Apps"}
+                  value="Mobile Apps"
+                >
+                  Mobile Apps
+                </option>
+                <option
+                  selected={serviceUpdate?.type == "Datasets"}
+                  value="Datasets"
+                >
+                  Data Sets
+                </option>
+                <option selected={serviceUpdate?.type == "Tools"} value="Tools">
+                  Tools
+                </option>
+                <option
+                  selected={serviceUpdate?.type == "Papers"}
+                  value="Papers"
+                >
+                  Papers
+                </option>
               </select>
             </fieldset>
           </div>
@@ -944,9 +982,24 @@ const Home = () => {
                 defaultValue={serviceUpdate?.production_status}
                 className="outline-none p-2 bg-white"
               >
-                <option value="Live">Live</option>
-                <option value="Beta">Beta</option>
-                <option value="On Test">On Test</option>
+                <option
+                  selected={serviceUpdate?.production_status == "Live"}
+                  value="Live"
+                >
+                  Live
+                </option>
+                <option
+                  selected={serviceUpdate?.production_status == "Beta"}
+                  value="Beta"
+                >
+                  Beta
+                </option>
+                <option
+                  selected={serviceUpdate?.production_status == "On Test"}
+                  value="On Test"
+                >
+                  On Test
+                </option>
               </select>
             </fieldset>
           </div>
@@ -985,8 +1038,18 @@ const Home = () => {
                 name="paid_status"
                 className="outline-none p-2 bg-white"
               >
-                <option value="Free">Free</option>
-                <option value="Pro">Pro</option>
+                <option
+                  selected={serviceUpdate?.paid_status == "Free"}
+                  value="Free"
+                >
+                  Free
+                </option>
+                <option
+                  selected={serviceUpdate?.paid_status == "Pro"}
+                  value="Pro"
+                >
+                  Pro
+                </option>
               </select>
             </fieldset>
           </div>
@@ -1008,9 +1071,24 @@ const Home = () => {
                 className="outline-none p-2 bg-white"
                 defaultValue={serviceUpdate?.visit_type}
               >
-                <option value="Download">Download</option>
-                <option value="Visit">Visit</option>
-                <option value="Subscribe">Subscribe</option>
+                <option
+                  selected={serviceUpdate?.visit_type == "Download"}
+                  value="Download"
+                >
+                  Download
+                </option>
+                <option
+                  selected={serviceUpdate?.visit_type == "Visit"}
+                  value="Visit"
+                >
+                  Visit
+                </option>
+                <option
+                  selected={serviceUpdate?.visit_type == "Subscribe"}
+                  value="Subscribe"
+                >
+                  Subscribe
+                </option>
               </select>
             </fieldset>
           </div>
