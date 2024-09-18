@@ -3,9 +3,10 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
+import axios from "axios";
 import { useForm } from "react-hook-form";
 import { uploadServiceData } from "@/app/(portal)/_api";
-import Image from "next/image";
+import { tr } from "@faker-js/faker";
 
 const Home = () => {
   const router = useRouter();
@@ -25,21 +26,11 @@ const Home = () => {
     formState: { errors },
   } = useForm();
 
+ 
   const onSubmitService = async (data) => {
-    const linksArray = data?.key?.map((linkValue) => ({
-      link: linkValue,
-    }));
-    const valueArr = data?.url?.map((linkValue) => ({
-      url: linkValue,
-    }));
-
-    const combinedArray = linksArray?.map((linkObj, index) => ({
-      key: linkObj.link,
-      value: valueArr?.[index]?.url,
-    }));
-
-    console.log({ combinedArray });
-
+    // const linksArray = data.link.map((linkValue) => ({
+    //   link: linkValue,
+    // }));
     setIsLoading(true);
     const { name, des, link, status, image, tutorial, documentation, support } =
       data;
@@ -63,22 +54,14 @@ const Home = () => {
     // Append your data to the FormData object
     formData.append("name", name);
     formData.append("des", des);
-    formData.append("main_url", link);
+    formData.append("link", link);
     formData.append("status", status);
     formData.append("img", image[0]);
-    formData.append("others_link", JSON.stringify(combinedArray));
-    formData.append("tutorial", tutorial[0] || '');
+    formData.append("tutorial", tutorial[0]);
     formData.append("documentation", documentation);
     formData.append("support", support);
-    
-    
-    // console.log(Object.fromEntries(formData));
-    //  return;
 
-    // console.log("url links uploads");
-    
     const uploadRes = await uploadServiceData(formData);
-    
     console.log("uploadRes", uploadRes);
 
     if (uploadRes.status === true) {
@@ -116,7 +99,7 @@ const Home = () => {
                       htmlFor="ServiceName"
                       className="after:content-['_*'] after:text-red-500"
                     >
-                      Resoource Name
+                      Name
                     </label>
                   </legend>
                   <input
@@ -129,7 +112,7 @@ const Home = () => {
                     })}
                     id="ServiceName"
                     type="text"
-                    placeholder="Resoource Name"
+                    placeholder="Service Name"
                     className="outline-none p-2"
                   />
                 </fieldset>
@@ -139,121 +122,119 @@ const Home = () => {
                   </p>
                 )}
               </div>
-
               <div>
                 <fieldset className="flex flex-col border rounded-md px-2">
                   <legend>
                     <label
-                      htmlFor="ServiceName"
-                      className="after:content-['_*'] after:text-red-500"
-                    >
-                      Resoource Sub Title
-                    </label>
-                  </legend>
-                  <input
-                    {...register("name", {
-                      required: "Name is required",
-                      maxLength: {
-                        value: 30,
-                        message: "Name cannot exceed 30 characters",
-                      },
-                    })}
-                    id="ServiceName"
-                    type="text"
-                    placeholder="Resoource Sub Title"
-                    className="outline-none p-2"
-                  />
-                </fieldset>
-                {errors.name && (
-                  <p className="text-red-500 text-12 px-2 pt-1">
-                    {errors.name.message}
-                  </p>
-                )}
-              </div>
-
-              <div>
-                <fieldset className="flex flex-col border rounded-md px-2">
-                  <legend>
-                    <label
-                      htmlFor="ServiceName"
+                      htmlFor="description"
                       className="after:content-['_*'] after:text-red-500"
                     >
                       Description
                     </label>
                   </legend>
-
                   <textarea
-                    name="description"
-                    id=""
-                    className="outline-none p-2"
+                    {...register("des", {
+                      required: "Description is required",
+                      maxLength: {
+                        value: 300,
+                        message: "Description cannot exceed 300 characters",
+                      },
+                    })}
+                    id="description"
                     placeholder="Description"
+                    className="outline-none p-2"
+                    onChange={(e) => setDes(e.target.value)}
                   ></textarea>
                 </fieldset>
-                {errors.name && (
+                {errors.des && (
                   <p className="text-red-500 text-12 px-2 pt-1">
-                    {errors.name.message}
+                    {errors.des.message}
                   </p>
                 )}
               </div>
-
               <div>
                 <fieldset className="flex flex-col border rounded-md px-2">
                   <legend>
                     <label
-                      htmlFor="ServiceName"
+                      htmlFor="documentation"
                       className="after:content-['_*'] after:text-red-500"
                     >
-                      Type
+                      Documentation
                     </label>
                   </legend>
-
-                  <select
-                    name="type"
-                    id=""
-                    className="outline-none p-2 bg-white"
-                  >
-                    <option value="application">Application</option>
-                    <option value="plugin">Plugin</option>
-                    <option value="mobile_apps">Mobile Apps</option>
-                    <option value="data_sets">Data Sets</option>
-                    <option value="tools">Tools</option>
-                    <option value="papers">Papers</option>
-                  </select>
+                  <textarea
+                    {...register("documentation", {
+                      required: "Documentation is required",
+                      maxLength: {
+                        value: 300,
+                        message: "Documentation cannot exceed 300 characters",
+                      },
+                    })}
+                    id="description"
+                    placeholder="Documentation"
+                    className="outline-none p-2"
+                    // onChange={(e) => setDes(e.target.value)}
+                  ></textarea>
                 </fieldset>
-                {errors.name && (
+                {errors.documentation && (
                   <p className="text-red-500 text-12 px-2 pt-1">
-                    {errors.name.message}
+                    {errors.documentation.message}
                   </p>
                 )}
               </div>
-
               <div>
                 <fieldset className="flex flex-col border rounded-md px-2">
                   <legend>
                     <label
-                      htmlFor="ServiceName"
+                      htmlFor="support"
                       className="after:content-['_*'] after:text-red-500"
                     >
-                      Distribution
+                      Support
                     </label>
                   </legend>
-
-                  <select
-                    name="type"
-                    id=""
-                    className="outline-none p-2 bg-white"
-                  >
-                    <option value="web">Web</option>
-                    <option value="windows">Windows</option>
-                    <option value="linux">Linux</option>
-                    <option value="mac">Mac</option>
-                    <option value="ios">IOS</option>
-                    <option value="android">Android</option>
-                  </select>
+                  <textarea
+                    {...register("support", {
+                      required: "Suppoort is required",
+                      maxLength: {
+                        value: 300,
+                        message: "Support cannot exceed 300 characters",
+                      },
+                    })}
+                    id="support"
+                    placeholder="Support"
+                    className="outline-none p-2"
+                    // onChange={(e) => setDes(e.target.value)}
+                  ></textarea>
                 </fieldset>
-                {errors.name && (
+                {errors.support && (
                   <p className="text-red-500 text-12 px-2 pt-1">
-                    {errors.name.message}
+                    {errors.support.message}
+                  </p>
+                )}
+              </div>
+              <div>
+                <fieldset className="flex flex-col border rounded-md p-2">
+                  <legend>
+                    <label
+                      htmlFor="file"
+                      className="after:content-['_*'] after:text-red-500"
+                    >
+                      Service Icon
+                    </label>
+                  </legend>
+                  <input
+                    {...register("image", { required: "image is required" })}
+                    id="file"
+                    type="file"
+                    onChange={(e) => {
+                      setServiceImg(e.target.files[0]);
+                    }}
+                    accept="image/png, image/jpeg, image/jpg"
+                  />
+                </fieldset>
+                {errors.image && (
+                  <p className="text-red-500 text-12 px-2 pt-1">
+                    {errors.image.message}
                   </p>
                 )}
               </div>
@@ -266,16 +247,15 @@ const Home = () => {
                 />
               )}
               <div>
-                <fieldset className="flex flex-col border rounded-md px-2">
+                <fieldset className="flex flex-col border rounded-md p-2">
                   <legend>
                     <label
-                      htmlFor="ServiceName"
+                      htmlFor="file"
                       className="after:content-['_*'] after:text-red-500"
                     >
-                      Release Date
+                      Tutorial
                     </label>
                   </legend>
-
                   <input
                     {...register("tutorial", { required: "Video is required" })}
                     id="file"
@@ -286,12 +266,20 @@ const Home = () => {
                     accept="video/mp4, video/ogg, video/avi"
                   />
                 </fieldset>
-                {errors.name && (
+                {errors.tutorial && (
                   <p className="text-red-500 text-12 px-2 pt-1">
-                    {errors.name.message}
+                    {errors.tutorial.message}
                   </p>
                 )}
               </div>
+
+              {tutorialVideo && (
+                <video
+                  src={URL.createObjectURL(tutorialVideo)}
+                  className="w-80 h-48 rounded-md"
+                  controls
+                />
+              )}
 
               <div>
                 <fieldset className="flex flex-col border rounded-md px-2">
@@ -303,18 +291,23 @@ const Home = () => {
                       Link
                     </label>
                   </legend>
-
                   <input
+                    id="ServiceName"
                     type="text"
-                    name="release_date"
-                    id=""
-                    className="w-full outline-none p-2"
-                    placeholder="Enter Component"
+                    {...register("link", {
+                      required: "Link is required",
+                      maxLength: {
+                        value: 30,
+                        message: "Link cannot exceed 30 characters",
+                      },
+                    })}
+                    placeholder="Service Link"
+                    className="outline-none p-2"
                   />
                 </fieldset>
-                {errors.name && (
+                {errors.link && (
                   <p className="text-red-500 text-12 px-2 pt-1">
-                    {errors.name.message}
+                    {errors.link.message}
                   </p>
                 )}
               </div>
@@ -400,76 +393,43 @@ const Home = () => {
               <div>
                 <fieldset className="flex flex-col border rounded-md px-2">
                   <legend>
-                    <label
-                      htmlFor="ServiceName"
-                      className="after:content-['_*'] after:text-red-500"
-                    >
-                      Button
-                    </label>
+                    <label htmlFor="status">Status</label>
                   </legend>
-
                   <select
-                    name="type"
-                    id=""
-                    className="outline-none p-2 bg-white"
+                    {...register("status", { required: "status is required" })}
+                    id="status"
+                    className="uppercase bg-white outline-none p-2"
+                    onChange={(e) => setStatus(e.target.value)}
                   >
-                    <option value="download">Download</option>
-                    <option value="visit">Visit</option>
-                    <option value="subscribe">Subscribe</option>
+                    <option value="1">active</option>
+                    <option value="2">inactive</option>
+                    <option value="3">archeive</option>
                   </select>
                 </fieldset>
-                {errors.name && (
+                {errors.status && (
                   <p className="text-red-500 text-12 px-2 pt-1">
-                    {errors.name.message}
+                    {errors.status.message}
                   </p>
                 )}
               </div>
-
-              <div>
-                <fieldset className="flex flex-col border rounded-md px-2">
-                  <legend>
-                    <label
-                      htmlFor="ServiceName"
-                      className="after:content-['_*'] after:text-red-500"
-                    >
-                      Visit
-                    </label>
-                  </legend>
-
-                  <input
-                    type="text"
-                    name="release_date"
-                    id=""
-                    className="w-full outline-none p-2"
-                    placeholder="Enter Link"
-                  />
-                </fieldset>
-                {errors.name && (
-                  <p className="text-red-500 text-12 px-2 pt-1">
-                    {errors.name.message}
-                  </p>
-                )}
-              </div>
-
               <div className="flex justify-between">
                 <p className="text-14">
                   <span className="text-red-500">*</span> Required
                 </p>
-                {isLoading ? (
-                  <button
+                {
+                  isLoading ? (<button
                     type="button"
                     className="px-4 py-2 bg-violet-700 text-white active:scale-90 transition-all duration-400 rounded-md"
                   >
                     Loading...
-                  </button>
-                ) : (
-                  <button
+                  </button>):<button
                     type="submit"
                     className="px-4 py-2 bg-violet-700 text-white active:scale-90 transition-all duration-400 rounded-md"
                   >
                     Create
                   </button>
-                )}
+                }
+                
               </div>
             </div>
           </form>
