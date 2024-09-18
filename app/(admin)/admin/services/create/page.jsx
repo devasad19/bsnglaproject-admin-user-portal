@@ -25,9 +25,6 @@ const Home = () => {
     formState: { errors },
   } = useForm();
 
-  
-
- 
   const onSubmitService = async (data) => {
     const linksArray = data?.key?.map((linkValue) => ({
       link: linkValue,
@@ -95,8 +92,6 @@ const Home = () => {
     }
   };
 
-  // console.log('links: ',links);
-  // console.log({ links });
 
   return (
     <>
@@ -120,7 +115,7 @@ const Home = () => {
                       htmlFor="ServiceName"
                       className="after:content-['_*'] after:text-red-500"
                     >
-                      Name
+                      Resoource Name
                     </label>
                   </legend>
                   <input
@@ -133,7 +128,38 @@ const Home = () => {
                     })}
                     id="ServiceName"
                     type="text"
-                    placeholder="Service Name"
+                    placeholder="Resoource Name"
+                    className="outline-none p-2"
+                  />
+                </fieldset>
+                {errors.name && (
+                  <p className="text-red-500 text-12 px-2 pt-1">
+                    {errors.name.message}
+                  </p>
+                )}
+              </div>
+
+              <div>
+                <fieldset className="flex flex-col border rounded-md px-2">
+                  <legend>
+                    <label
+                      htmlFor="ServiceName"
+                      className="after:content-['_*'] after:text-red-500"
+                    >
+                      Resoource Sub Title
+                    </label>
+                  </legend>
+                  <input
+                    {...register("name", {
+                      required: "Name is required",
+                      maxLength: {
+                        value: 30,
+                        message: "Name cannot exceed 30 characters",
+                      },
+                    })}
+                    id="ServiceName"
+                    type="text"
+                    placeholder="Resoource Sub Title"
                     className="outline-none p-2"
                   />
                 </fieldset>
@@ -147,163 +173,26 @@ const Home = () => {
                 <fieldset className="flex flex-col border rounded-md px-2">
                   <legend>
                     <label
-                      htmlFor="description"
+                      htmlFor="ServiceName"
                       className="after:content-['_*'] after:text-red-500"
                     >
                       Description
                     </label>
                   </legend>
+
                   <textarea
-                    {...register("des", {
-                      required: "Description is required",
-                      maxLength: {
-                        value: 300,
-                        message: "Description cannot exceed 300 characters",
-                      },
-                    })}
-                    id="description"
+                    name="description"
+                    id=""
+                    className="outline-none p-2"
                     placeholder="Description"
-                    className="outline-none p-2"
-                    onChange={(e) => setDes(e.target.value)}
                   ></textarea>
                 </fieldset>
-                {errors.des && (
+                {errors.name && (
                   <p className="text-red-500 text-12 px-2 pt-1">
-                    {errors.des.message}
+                    {errors.name.message}
                   </p>
                 )}
               </div>
-              <div>
-                <fieldset className="flex flex-col border rounded-md px-2">
-                  <legend>
-                    <label
-                      htmlFor="documentation"
-                      className="after:content-['_*'] after:text-red-500"
-                    >
-                      Documentation
-                    </label>
-                  </legend>
-                  <textarea
-                    {...register("documentation", {
-                      required: "Documentation is required",
-                      maxLength: {
-                        value: 300,
-                        message: "Documentation cannot exceed 300 characters",
-                      },
-                    })}
-                    id="description"
-                    placeholder="Documentation"
-                    className="outline-none p-2"
-                    // onChange={(e) => setDes(e.target.value)}
-                  ></textarea>
-                </fieldset>
-                {errors.documentation && (
-                  <p className="text-red-500 text-12 px-2 pt-1">
-                    {errors.documentation.message}
-                  </p>
-                )}
-              </div>
-              <div>
-                <fieldset className="flex flex-col border rounded-md px-2">
-                  <legend>
-                    <label
-                      htmlFor="support"
-                      className="after:content-['_*'] after:text-red-500"
-                    >
-                      Support
-                    </label>
-                  </legend>
-                  <textarea
-                    {...register("support", {
-                      required: "Suppoort is required",
-                      maxLength: {
-                        value: 300,
-                        message: "Support cannot exceed 300 characters",
-                      },
-                    })}
-                    id="support"
-                    placeholder="Support"
-                    className="outline-none p-2"
-                    // onChange={(e) => setDes(e.target.value)}
-                  ></textarea>
-                </fieldset>
-                {errors.support && (
-                  <p className="text-red-500 text-12 px-2 pt-1">
-                    {errors.support.message}
-                  </p>
-                )}
-              </div>
-              <div>
-                <fieldset className="flex flex-col border rounded-md p-2">
-                  <legend>
-                    <label
-                      htmlFor="file"
-                      className="after:content-['_*'] after:text-red-500"
-                    >
-                      Service Icon
-                    </label>
-                  </legend>
-                  <input
-                    {...register("image", { required: "image is required" })}
-                    id="file"
-                    type="file"
-                    onChange={(e) => {
-                      setServiceImg(e.target.files[0]);
-                    }}
-                    accept="image/png, image/jpeg, image/jpg"
-                  />
-                </fieldset>
-                {errors.image && (
-                  <p className="text-red-500 text-12 px-2 pt-1">
-                    {errors.image.message}
-                  </p>
-                )}
-              </div>
-
-              {serviceImg && (
-                <Image
-                  src={URL.createObjectURL(serviceImg)}
-                  className="w-80 h-48 rounded-md"
-                  height={200}
-                  width={200}
-                  alt="Preview"
-                />
-              )}
-              <div>
-                <fieldset className="flex flex-col border rounded-md p-2">
-                  <legend>
-                    <label
-                      htmlFor="file"
-                      className="after:content-['_*'] after:text-red-500"
-                    >
-                      Tutorial
-                    </label>
-                  </legend>
-                  <input
-                    // {...register("tutorial", { required: "Video is required" })}
-                    {...register("tutorial")}
-                    id="file"
-                    type="file"
-                    onChange={(e) => {
-                      setTutorialVideo(e.target.files[0]);
-                    }}
-                    accept="video/mp4, video/ogg, video/avi"
-                  />
-                </fieldset>
-                {errors.tutorial && (
-                  <p className="text-red-500 text-12 px-2 pt-1">
-                    {errors.tutorial.message}
-                  </p>
-                )}
-              </div>
-
-              {tutorialVideo && (
-                <video
-                  src={URL.createObjectURL(tutorialVideo)}
-                  className="w-80 h-48 rounded-md"
-                  controls
-                />
-              )}
 
               <div>
                 <fieldset className="flex flex-col border rounded-md px-2">
@@ -312,170 +201,245 @@ const Home = () => {
                       htmlFor="ServiceName"
                       className="after:content-['_*'] after:text-red-500"
                     >
-                      Main Url
+                      Type
                     </label>
                   </legend>
-                  <input
-                    id="ServiceName"
-                    type="text"
-                    {...register("link", {
-                      required: "Link is required",
-                      maxLength: {
-                        value: 30,
-                        message: "Link cannot exceed 30 characters",
-                      },
-                    })}
-                    placeholder="Service Link"
-                    className="outline-none p-2"
-                  />
+
+                  <select
+                    name="type"
+                    id=""
+                    className="outline-none p-2 bg-white"
+                  >
+                    <option value="application">Application</option>
+                    <option value="plugin">Plugin</option>
+                    <option value="mobile_apps">Mobile Apps</option>
+                    <option value="data_sets">Data Sets</option>
+                    <option value="tools">Tools</option>
+                    <option value="papers">Papers</option>
+                  </select>
                 </fieldset>
-                {errors.link && (
+                {errors.name && (
                   <p className="text-red-500 text-12 px-2 pt-1">
-                    {errors.link.message}
+                    {errors.name.message}
                   </p>
                 )}
               </div>
-              <div className="border border-gray-300 rounded">
-                <div className="bg-gray-300 flex items-center justify-between p-2">
-                  <h3 className="text-primary font-semibold">Add Links</h3>
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setLinks([...links, { name: "", link: "" }]);
-                    }}
-                    className="bg-primary text-white px-4 py-2 rounded"
-                  >
-                    <svg
-                      className="w-4 h-4 fill-current"
-                      xmlns="http://www.w3.org/2000/svg"
-                      viewBox="0 0 448 512"
-                    >
-                      <path d="M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32V224H48c-17.7 0-32 14.3-32 32s14.3 32 32 32H192V432c0 17.7 14.3 32 32 32s32-14.3 32-32V288H400c17.7 0 32-14.3 32-32s-14.3-32-32-32H256V80z" />
-                    </svg>
-                  </button>
-                </div>
-                {links.map((item, index) => (
-                  <div key={index} className="p-2 bg-neutral-100">
-                    <div>
-                      <div className="flex gap-2">
-                        <div className="flex w-full  items-center justify-between">
-                          <div className="w-[25%] overflow-hidden">
-                            <fieldset className="w-full flex flex-col border rounded-md px-2">
-                              <legend>
-                                <label
-                                  htmlFor="key"
-                                  className="after:content-['_*'] after:text-red-500"
-                                >
-                                  key
-                                </label>
-                              </legend>
-                              <input
-                                type="text"
-                                id={`key${index}`}
-                                {...register(`key.${index}`, {
-                                  required: "key is required",
-                                  maxLength: {
-                                    value: 30,
-                                    message: "Link cannot exceed 30 characters",
-                                  },
-                                })}
-                                placeholder="Enter Url Key"
-                                className="outline-none p-2 "
-                                // onChange={(e) => setLink(e.target.value)}
-                              />
-                            </fieldset>
-                            {errors.key?.[index] && (
-                              <p className="text-red-500 text-12 px-2 pt-1">
-                                {errors.key?.[index]?.message}
-                              </p>
-                            )}
-                          </div>
 
-                          <div className="w-[65%]">
-                            <fieldset className="w-full flex flex-col border rounded-md px-2">
-                              <legend>
-                                <label
-                                  htmlFor="url"
-                                  className="after:content-['_*'] after:text-red-500"
-                                >
-                                  url
-                                </label>
-                              </legend>
-                              <input
-                                type="text"
-                                id={`url${index}`}
-                                {...register(`url.${index}`, {
-                                  required: "Link is required",
-                                  maxLength: {
-                                    value: 30,
-                                    message: "Link cannot exceed 30 characters",
-                                  },
-                                })}
-                                placeholder="Enter Link"
-                                className="outline-none p-2 "
-                              />
-                            </fieldset>
-                            {errors.url?.[index] && (
-                              <p className="text-red-500 text-12 px-2 pt-1">
-                                {errors.url?.[index]?.message}
-                              </p>
-                            )}
-                          </div>
-                        </div>
-                        <div className="mt-3">
-                          <button
-                            type="button"
-                            onClick={() => {
-                              setLinks(() => {
-                                return links.filter(
-                                  (item, index2) => index !== index2
-                                );
-                              });
-                            }}
-                            className="border border-primary bg-primary text-white mt-2 px-2 py-1 rounded"
-                          >
-                            <svg
-                              className="w-6 h-6 fill-current"
-                              xmlns="http://www.w3.org/2000/svg"
-                              viewBox="0 0 448 512"
-                            >
-                              <path d="M432 256c0 17.7-14.3 32-32 32L48 288c-17.7 0-32-14.3-32-32s14.3-32 32-32l352 0c17.7 0 32 14.3 32 32z" />
-                            </svg>
-                          </button>
-                        </div>
-                      </div>
-
-                      {errors.link?.[index] && (
-                        <p className="text-red-500 text-12 px-2 pt-1">
-                          {errors.link[index]?.message}
-                        </p>
-                      )}
-                    </div>
-                  </div>
-                ))}
-              </div>
               <div>
                 <fieldset className="flex flex-col border rounded-md px-2">
                   <legend>
-                    <label htmlFor="status">Status</label>
+                    <label
+                      htmlFor="ServiceName"
+                      className="after:content-['_*'] after:text-red-500"
+                    >
+                      Distribution
+                    </label>
                   </legend>
+
                   <select
-                    {...register("status", { required: "status is required" })}
-                    id="status"
-                    className="uppercase bg-white outline-none p-2"
-                    onChange={(e) => setStatus(e.target.value)}
+                    name="type"
+                    id=""
+                    className="outline-none p-2 bg-white"
                   >
-                    <option value="1">active</option>
-                    <option value="2">inactive</option>
-                    <option value="3">archeive</option>
+                    <option value="web">Web</option>
+                    <option value="windows">Windows</option>
+                    <option value="linux">Linux</option>
+                    <option value="mac">Mac</option>
+                    <option value="ios">IOS</option>
+                    <option value="android">Android</option>
                   </select>
                 </fieldset>
-                {errors.status && (
+                {errors.name && (
                   <p className="text-red-500 text-12 px-2 pt-1">
-                    {errors.status.message}
+                    {errors.name.message}
                   </p>
                 )}
               </div>
+
+              <div>
+                <fieldset className="flex flex-col border rounded-md px-2">
+                  <legend>
+                    <label
+                      htmlFor="ServiceName"
+                      className="after:content-['_*'] after:text-red-500"
+                    >
+                      Production Status
+                    </label>
+                  </legend>
+
+                  <select
+                    name="type"
+                    id=""
+                    className="outline-none p-2 bg-white"
+                  >
+                    <option value="live">Live</option>
+                    <option value="beta">Beta</option>
+                    <option value="on_test">On Test</option>
+                  </select>
+                </fieldset>
+                {errors.name && (
+                  <p className="text-red-500 text-12 px-2 pt-1">
+                    {errors.name.message}
+                  </p>
+                )}
+              </div>
+
+              <div>
+                <fieldset className="flex flex-col border rounded-md px-2">
+                  <legend>
+                    <label
+                      htmlFor="ServiceName"
+                      className="after:content-['_*'] after:text-red-500"
+                    >
+                      Release Date
+                    </label>
+                  </legend>
+
+                  <input
+                    type="date"
+                    name="release_date"
+                    id=""
+                    className="w-full outline-none p-2"
+                  />
+                </fieldset>
+                {errors.name && (
+                  <p className="text-red-500 text-12 px-2 pt-1">
+                    {errors.name.message}
+                  </p>
+                )}
+              </div>
+
+              <div>
+                <fieldset className="flex flex-col border rounded-md px-2">
+                  <legend>
+                    <label
+                      htmlFor="ServiceName"
+                      className="after:content-['_*'] after:text-red-500"
+                    >
+                      Component
+                    </label>
+                  </legend>
+
+                  <input
+                    type="text"
+                    name="release_date"
+                    id=""
+                    className="w-full outline-none p-2"
+                    placeholder="Enter Component"
+                  />
+                </fieldset>
+                {errors.name && (
+                  <p className="text-red-500 text-12 px-2 pt-1">
+                    {errors.name.message}
+                  </p>
+                )}
+              </div>
+
+              <div>
+                <fieldset className="flex flex-col border rounded-md px-2">
+                  <legend>
+                    <label
+                      htmlFor="ServiceName"
+                      className="after:content-['_*'] after:text-red-500"
+                    >
+                      Logo Image
+                    </label>
+                  </legend>
+                  <input
+                    type="file"
+                    name="logo"
+                    id=""
+                    className="w-full outline-none p-2"
+                  />
+                </fieldset>
+                {errors.name && (
+                  <p className="text-red-500 text-12 px-2 pt-1">
+                    {errors.name.message}
+                  </p>
+                )}
+              </div>
+
+              <div>
+                <fieldset className="flex flex-col border rounded-md px-2">
+                  <legend>
+                    <label
+                      htmlFor="ServiceName"
+                      className="after:content-['_*'] after:text-red-500"
+                    >
+                      Label Top
+                    </label>
+                  </legend>
+
+                  <select
+                    name="type"
+                    id=""
+                    className="outline-none p-2 bg-white"
+                  >
+                    <option value="live">Free</option>
+                    <option value="beta">Pro</option>
+                  </select>
+                </fieldset>
+                {errors.name && (
+                  <p className="text-red-500 text-12 px-2 pt-1">
+                    {errors.name.message}
+                  </p>
+                )}
+              </div>
+
+              <div>
+                <fieldset className="flex flex-col border rounded-md px-2">
+                  <legend>
+                    <label
+                      htmlFor="ServiceName"
+                      className="after:content-['_*'] after:text-red-500"
+                    >
+                      Button
+                    </label>
+                  </legend>
+
+                  <select
+                    name="type"
+                    id=""
+                    className="outline-none p-2 bg-white"
+                  >
+                    <option value="download">Download</option>
+                    <option value="visit">Visit</option>
+                    <option value="subscribe">Subscribe</option>
+                  </select>
+                </fieldset>
+                {errors.name && (
+                  <p className="text-red-500 text-12 px-2 pt-1">
+                    {errors.name.message}
+                  </p>
+                )}
+              </div>
+
+              <div>
+                <fieldset className="flex flex-col border rounded-md px-2">
+                  <legend>
+                    <label
+                      htmlFor="ServiceName"
+                      className="after:content-['_*'] after:text-red-500"
+                    >
+                      Visit
+                    </label>
+                  </legend>
+
+                  <input
+                    type="text"
+                    name="release_date"
+                    id=""
+                    className="w-full outline-none p-2"
+                    placeholder="Enter Link"
+                  />
+                </fieldset>
+                {errors.name && (
+                  <p className="text-red-500 text-12 px-2 pt-1">
+                    {errors.name.message}
+                  </p>
+                )}
+              </div>
+
               <div className="flex justify-between">
                 <p className="text-14">
                   <span className="text-red-500">*</span> Required
