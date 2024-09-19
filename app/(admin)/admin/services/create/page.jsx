@@ -41,50 +41,42 @@ const Home = () => {
     setIsLoading(true);
     // const { name, des, link, status, image, tutorial, documentation, support } =
     //   data;
+    
     const {
       component,
       description,
       distribution,
       logo,
       name,
-      paid_status,
       production_status,
       release_date,
       sub_title,
       type,
       visit_link,
       visit_type,
+      resource_file
     } = data;
 
-    // return;
-    // const dataSubmited = {
-    //   name,
-    //   des,
-    //   // link: linksArray,
-    //   status,
-    //   link: mainlink,
-    //   img: serviceImg,
-    //   tutorial: tutorialVideo,
-    //   documentation: documentation,
-    //   support: support,
-    // };
-    // console.log("ceate service", dataSubmited);
-    // return;
-
-    // Create a FormData object
+    let paid_status  = {
+      free: data.free ? 1 : 0,
+      pro: data.pro ? 1 : 0,
+    };
+    
+   
     const formData = new FormData();
     formData.append("name", name);
     formData.append("description", description);
     formData.append("component", component);
     formData.append("distribution", distribution);
     formData.append("logo", logo[0]);
-    formData.append("paid_status", paid_status);
+    formData.append("paid_status", JSON.stringify(paid_status));
     formData.append("production_status", production_status);
     formData.append("release_date", release_date);
     formData.append("type", type);
     formData.append("sub_title", sub_title);
-    formData.append("visit_link", visit_link);
+    formData.append("visit_link", visit_link || "");
     formData.append("visit_type", visit_type);
+    formData.append("resource_file", resource_file[0] || "");
 
     // Append your data to the FormData object
     // formData.append("name", name);
@@ -117,7 +109,7 @@ const Home = () => {
     }
   };
 
-  console.log({ showItem });
+  // console.log({ showItem });
 
   return (
     <>
@@ -410,6 +402,7 @@ const Home = () => {
                       <input
                         type="checkbox"
                         name="free"
+                        {...register('free')}
                         id=""
                         className="w-4 h-4"
                         value={"Free"}
@@ -419,7 +412,7 @@ const Home = () => {
                     <div className="space-x-2">
                       <input
                         type="checkbox"
-                        name="pro"
+                        {...register('pro')}
                         id=""
                         className="w-4 h-4"
                         value={"Pro"}
@@ -555,7 +548,7 @@ const Home = () => {
                       htmlFor="ServiceName"
                       className="after:content-['_*'] after:text-red-500"
                     >
-                      Button
+                      user access
                     </label>
                   </legend>
 
@@ -618,7 +611,7 @@ const Home = () => {
                     </legend>
 
                     <input
-                      {...register("resource_download", { required: "resource_download is required" })}
+                      {...register("resource_file", { required: "resource_file is required" })}
                       id="file"
                       type="file"
                       onChange={(e) => {
@@ -628,9 +621,9 @@ const Home = () => {
                       accept="image/*"
                     />
                   </fieldset>
-                  {errors.resource_download && (
+                  {errors.resource_file && (
                     <p className="text-red-500 text-12 px-2 pt-1">
-                      {errors.resource_download.message}
+                      {errors.resource_file.message}
                     </p>
                   )}
                 </div>
