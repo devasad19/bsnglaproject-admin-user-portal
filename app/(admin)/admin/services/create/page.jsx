@@ -209,7 +209,7 @@ const Home = () => {
                   </legend>
 
                   <textarea
-                    {...register('description', {
+                    {...register("description", {
                       required: "description is required",
                       maxLength: {
                         value: 300,
@@ -240,7 +240,7 @@ const Home = () => {
                   </legend>
 
                   <select
-                   {...register('type', { required: "Type is required" })}
+                    {...register("type", { required: "Type is required" })}
                     className="outline-none p-2 bg-white"
                   >
                     <option value="Application">Application</option>
@@ -270,7 +270,9 @@ const Home = () => {
                   </legend>
 
                   <select
-                    {...register('production_status', { required: "Production Status is required" })}
+                    {...register("production_status", {
+                      required: "Production Status is required",
+                    })}
                     className="outline-none p-2 bg-white"
                   >
                     <option value="Live">Live</option>
@@ -296,7 +298,9 @@ const Home = () => {
                   </legend>
 
                   <select
-                    {...register('distribution', { required: "Distribution is required" })}
+                    {...register("distribution", {
+                      required: "Distribution is required",
+                    })}
                     className="outline-none p-2 bg-white"
                   >
                     <option value="web">Web</option>
@@ -326,10 +330,11 @@ const Home = () => {
 
                   <input
                     type="date"
-                    {...register('release_date', { required: "Release Date is required" })}
+                    {...register("release_date", {
+                      required: "Release Date is required",
+                    })}
                     className="outline-none p-2 bg-white"
                   />
-                    
                 </fieldset>
                 {errors.release_date && (
                   <p className="text-red-500 text-12 px-2 pt-1">
@@ -382,17 +387,39 @@ const Home = () => {
                       htmlFor="ServiceName"
                       className="after:content-['_*'] after:text-red-500"
                     >
-                     Paid Status
+                      Paid Status
                     </label>
                   </legend>
+                  <div className="flex gap-2 p-2">
+                    <div className="space-x-2">
+                      <input
+                        type="checkbox"
+                        name="free"
+                        id=""
+                        className="w-4 h-4"
+                        value={"Free"}
+                      />
+                      <label htmlFor="free">Free</label>
+                    </div>
+                    <div className="space-x-2">
+                      <input
+                        type="checkbox"
+                        name="pro"
+                        id=""
+                        className="w-4 h-4"
+                        value={"Pro"}
+                      />
+                      <label htmlFor="pro">Pro</label>
+                    </div>
+                  </div>
 
-                  <select
+                  {/* <select
                     {...register('paid_status', { required: "Paid Status is required" })}
                     className="outline-none p-2 bg-white"
                   >
                     <option value="Free">Free</option>
                     <option value="Pro">Pro</option>
-                  </select>
+                  </select> */}
                 </fieldset>
                 {errors.paid_status && (
                   <p className="text-red-500 text-12 px-2 pt-1">
@@ -413,11 +440,12 @@ const Home = () => {
 
                   <input
                     type="text"
-                    {...register('component', { required: "Components is required" })}
+                    {...register("component", {
+                      required: "Components is required",
+                    })}
                     className="outline-none p-2 bg-white"
                     placeholder="Enter Components"
                   />
-                    
                 </fieldset>
                 {errors.component && (
                   <p className="text-red-500 text-12 px-2 pt-1">
@@ -433,14 +461,15 @@ const Home = () => {
                       htmlFor="ServiceName"
                       className="after:content-['_*'] after:text-red-500"
                     >
-                     Visit Link
+                      Visit Link
                     </label>
                   </legend>
 
                   <input
                     type="text"
-                    {...register('visit_link', { required: "Visit Link is required" })}
-                   
+                    {...register("visit_link", {
+                      required: "Visit Link is required",
+                    })}
                     className="w-full outline-none p-2"
                     placeholder="Enter Link"
                   />
@@ -542,7 +571,9 @@ const Home = () => {
                   </legend>
 
                   <select
-                   {...register('visit_type', { required: "Button is required" })}
+                    {...register("visit_type", {
+                      required: "Button is required",
+                    })}
                     id=""
                     className="outline-none p-2 bg-white"
                   >
@@ -557,8 +588,6 @@ const Home = () => {
                   </p>
                 )}
               </div>
-
-             
 
               <div className="flex justify-between">
                 <p className="text-14">
