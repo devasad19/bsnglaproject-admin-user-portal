@@ -69,6 +69,7 @@ const Home = () => {
     const sliderRe = await AddSLiderApi(fromData);
     console.log(sliderRe);
     if (sliderRe.status) {
+      setFetchAPi(!fetchApi);
       reset();
       modelClose(sliderAddModal, sliderAddForm);
       toast.success("Slider Added Successfully");
