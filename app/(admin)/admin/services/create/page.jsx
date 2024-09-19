@@ -9,14 +9,12 @@ import Image from "next/image";
 
 const Home = () => {
   const router = useRouter();
-  const [name, setName] = useState("");
-  const [des, setDes] = useState("");
-  const [link, setLink] = useState("");
   const [status, setStatus] = useState("");
   const [serviceImg, setServiceImg] = useState(null);
   const [tutorialVideo, setTutorialVideo] = useState(null);
   const [links, setLinks] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [showItem, setShowItem] = useState("");
 
   const {
     register,
@@ -43,20 +41,22 @@ const Home = () => {
     setIsLoading(true);
     // const { name, des, link, status, image, tutorial, documentation, support } =
     //   data;
-  const{component,
-    description,
-    distribution,
-    logo,
-    name,
-    paid_status,
-    production_status,
-    release_date,
-    sub_title,
-    type,
-    visit_link,
-    visit_type} = data
-    
-// return;
+    const {
+      component,
+      description,
+      distribution,
+      logo,
+      name,
+      paid_status,
+      production_status,
+      release_date,
+      sub_title,
+      type,
+      visit_link,
+      visit_type,
+    } = data;
+
+    // return;
     // const dataSubmited = {
     //   name,
     //   des,
@@ -78,14 +78,13 @@ const Home = () => {
     formData.append("component", component);
     formData.append("distribution", distribution);
     formData.append("logo", logo[0]);
-    formData.append("paid_status", paid_status)
+    formData.append("paid_status", paid_status);
     formData.append("production_status", production_status);
     formData.append("release_date", release_date);
     formData.append("type", type);
     formData.append("sub_title", sub_title);
     formData.append("visit_link", visit_link);
     formData.append("visit_type", visit_type);
-
 
     // Append your data to the FormData object
     // formData.append("name", name);
@@ -97,15 +96,14 @@ const Home = () => {
     // formData.append("tutorial", tutorial[0] || '');
     // formData.append("documentation", documentation);
     // formData.append("support", support);
-    
-    
+
     // console.log(Object.fromEntries(formData));
     //  return;
 
     // console.log("url links uploads");
-    
+
     const uploadRes = await uploadServiceData(formData);
-    
+
     console.log("uploadRes", uploadRes);
 
     if (uploadRes.status === true) {
@@ -119,7 +117,7 @@ const Home = () => {
     }
   };
 
-  // console.log('links: ',links);
+  console.log({ showItem });
 
   return (
     <>
@@ -158,8 +156,8 @@ const Home = () => {
                             return "Description cannot exceed 8 words";
                           }
                           return true;
-                        }
-                      }
+                        },
+                      },
                     })}
                     type="text"
                     placeholder="Resoource Name"
@@ -189,9 +187,12 @@ const Home = () => {
                       validate: {
                         maxWords: (value) => {
                           const wordCount = value.trim().split(/\s+/).length;
-                          return wordCount <= 10 || "Description cannot exceed 10 words";
-                        }
-                      }
+                          return (
+                            wordCount <= 10 ||
+                            "Description cannot exceed 10 words"
+                          );
+                        },
+                      },
                     })}
                     id="sub_tile"
                     type="text"
@@ -218,14 +219,17 @@ const Home = () => {
                   </legend>
 
                   <textarea
-                    {...register('description', {
+                    {...register("description", {
                       required: "description is required",
                       validate: {
                         maxWords: (value) => {
                           const wordCount = value.trim().split(/\s+/).length;
-                          return wordCount <= 80 || "Description cannot exceed 80 words";
-                        }
-                      }
+                          return (
+                            wordCount <= 80 ||
+                            "Description cannot exceed 80 words"
+                          );
+                        },
+                      },
                     })}
                     id=""
                     className="outline-none p-2"
@@ -251,7 +255,7 @@ const Home = () => {
                   </legend>
 
                   <select
-                   {...register('type', { required: "Type is required" })}
+                    {...register("type", { required: "Type is required" })}
                     className="outline-none p-2 bg-white"
                   >
                     <option value="Application">Application</option>
@@ -281,7 +285,9 @@ const Home = () => {
                   </legend>
 
                   <select
-                    {...register('production_status', { required: "Production Status is required" })}
+                    {...register("production_status", {
+                      required: "Production Status is required",
+                    })}
                     className="outline-none p-2 bg-white"
                   >
                     <option value="Live">Live</option>
@@ -307,7 +313,9 @@ const Home = () => {
                   </legend>
 
                   <select
-                    {...register('distribution', { required: "Distribution is required" })}
+                    {...register("distribution", {
+                      required: "Distribution is required",
+                    })}
                     className="outline-none p-2 bg-white"
                   >
                     <option value="web">Web</option>
@@ -337,10 +345,11 @@ const Home = () => {
 
                   <input
                     type="date"
-                    {...register('release_date', { required: "Release Date is required" })}
+                    {...register("release_date", {
+                      required: "Release Date is required",
+                    })}
                     className="outline-none p-2 bg-white"
                   />
-                    
                 </fieldset>
                 {errors.release_date && (
                   <p className="text-red-500 text-12 px-2 pt-1">
@@ -393,17 +402,39 @@ const Home = () => {
                       htmlFor="ServiceName"
                       className="after:content-['_*'] after:text-red-500"
                     >
-                     Paid Status
+                      Paid Status
                     </label>
                   </legend>
+                  <div className="flex gap-2 p-2">
+                    <div className="space-x-2">
+                      <input
+                        type="checkbox"
+                        name="free"
+                        id=""
+                        className="w-4 h-4"
+                        value={"Free"}
+                      />
+                      <label htmlFor="free">Free</label>
+                    </div>
+                    <div className="space-x-2">
+                      <input
+                        type="checkbox"
+                        name="pro"
+                        id=""
+                        className="w-4 h-4"
+                        value={"Pro"}
+                      />
+                      <label htmlFor="pro">Pro</label>
+                    </div>
+                  </div>
 
-                  <select
+                  {/* <select
                     {...register('paid_status', { required: "Paid Status is required" })}
                     className="outline-none p-2 bg-white"
                   >
                     <option value="Free">Free</option>
                     <option value="Pro">Pro</option>
-                  </select>
+                  </select> */}
                 </fieldset>
                 {errors.paid_status && (
                   <p className="text-red-500 text-12 px-2 pt-1">
@@ -424,11 +455,12 @@ const Home = () => {
 
                   <input
                     type="text"
-                    {...register('component', { required: "Components is required" })}
+                    {...register("component", {
+                      required: "Components is required",
+                    })}
                     className="outline-none p-2 bg-white"
                     placeholder="Enter Components"
                   />
-                    
                 </fieldset>
                 {errors.component && (
                   <p className="text-red-500 text-12 px-2 pt-1">
@@ -437,31 +469,6 @@ const Home = () => {
                 )}
               </div>
 
-              <div>
-                <fieldset className="flex flex-col border rounded-md px-2">
-                  <legend>
-                    <label
-                      htmlFor="ServiceName"
-                      className="after:content-['_*'] after:text-red-500"
-                    >
-                     Visit Link
-                    </label>
-                  </legend>
-
-                  <input
-                    type="text"
-                    {...register('visit_link', { required: "Visit Link is required" })}
-                   
-                    className="w-full outline-none p-2"
-                    placeholder="Enter Link"
-                  />
-                </fieldset>
-                {errors.visit_link && (
-                  <p className="text-red-500 text-12 px-2 pt-1">
-                    {errors.visit_link.message}
-                  </p>
-                )}
-              </div>
               {/* <div className="border border-gray-300 rounded">
               <div className="bg-gray-300 flex items-center justify-between p-2">
                 <h3 className="text-primary font-semibold">Add Links</h3>
@@ -553,7 +560,10 @@ const Home = () => {
                   </legend>
 
                   <select
-                   {...register('visit_type', { required: "Button is required" })}
+                    {...register("visit_type", {
+                      required: "Button is required",
+                    })}
+                    onChange={(e) => setShowItem(e.target.value)}
                     id=""
                     className="outline-none p-2 bg-white"
                   >
@@ -568,8 +578,63 @@ const Home = () => {
                   </p>
                 )}
               </div>
+              {showItem == "Visit" || showItem == "Subscribe" ? (
+                <div>
+                  <fieldset className="flex flex-col border rounded-md px-2">
+                    <legend>
+                      <label
+                        htmlFor="ServiceName"
+                        className="after:content-['_*'] after:text-red-500"
+                      >
+                        {showItem} Link
+                      </label>
+                    </legend>
 
-             
+                    <input
+                      type="text"
+                      {...register("visit_link", {
+                        required: "Visit Link is required",
+                      })}
+                      className="w-full outline-none p-2"
+                      placeholder="Enter Link"
+                    />
+                  </fieldset>
+                  {errors.visit_link && (
+                    <p className="text-red-500 text-12 px-2 pt-1">
+                      {errors.visit_link.message}
+                    </p>
+                  )}
+                </div>
+              ) : (
+                <div>
+                  <fieldset className="flex flex-col border rounded-md px-2">
+                    <legend>
+                      <label
+                        htmlFor="ServiceName"
+                        className="after:content-['_*'] after:text-red-500"
+                      >
+                        Resource Download
+                      </label>
+                    </legend>
+
+                    <input
+                      {...register("resource_download", { required: "resource_download is required" })}
+                      id="file"
+                      type="file"
+                      onChange={(e) => {
+                        setServiceImg(e.target.files[0]);
+                      }}
+                      // accept="video/mp4, video/ogg, video/avi"
+                      accept="image/*"
+                    />
+                  </fieldset>
+                  {errors.resource_download && (
+                    <p className="text-red-500 text-12 px-2 pt-1">
+                      {errors.resource_download.message}
+                    </p>
+                  )}
+                </div>
+              )}
 
               <div className="flex justify-between">
                 <p className="text-14">

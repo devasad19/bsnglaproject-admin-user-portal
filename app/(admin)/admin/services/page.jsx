@@ -1032,8 +1032,30 @@ const Home = () => {
                   Paid Status
                 </label>
               </legend>
+              <div className="flex gap-2 p-2">
+                <div className="space-x-2">
+                  <input
+                    type="checkbox"
+                    name="free"
+                    id=""
+                    className="w-4 h-4"
+                    value={"Free"}
+                  />
+                  <label htmlFor="free">Free</label>
+                </div>
+                <div className="space-x-2">
+                  <input
+                    type="checkbox"
+                    name="pro"
+                    id=""
+                    className="w-4 h-4"
+                    value={"Pro"}
+                  />
+                  <label htmlFor="pro">Pro</label>
+                </div>
+              </div>
 
-              <select
+              {/* <select
                 defaultValue={serviceUpdate?.paid_status}
                 name="paid_status"
                 className="outline-none p-2 bg-white"
@@ -1050,7 +1072,7 @@ const Home = () => {
                 >
                   Pro
                 </option>
-              </select>
+              </select> */}
             </fieldset>
           </div>
 
