@@ -1,25 +1,21 @@
-"use client"
-import { TUser } from '@/types/user/User';
-import axios from 'axios';
-import Cookies from 'js-cookie';
-import { cookies } from 'next/headers';
-import React, { useEffect, useState } from 'react'
-import { createContext } from 'react'
+"use client";
+import { TUser } from "@/types/user/User";
+import axios from "axios";
+import Cookies from "js-cookie";
+import React, { useEffect, useState } from "react";
+import { createContext } from "react";
 
-type TContextType ={
-  
-  setFeatureSelectedInfoAll?:any;
-  featureSelectedInfoAll?:any;
-  featureTotalPrice?:any;
-  setFeatureTotalPrice?:any;
-  user:TUser | {}
-
-}
-
+type TContextType = {
+  setFeatureSelectedInfoAll?: any;
+  featureSelectedInfoAll?: any;
+  featureTotalPrice?: any;
+  setFeatureTotalPrice?: any;
+  user: TUser | {};
+};
 
 export const MyContext = createContext<TContextType | undefined>(undefined);
 
- const ContextProvider = ({children}:any)=> {
+const ContextProvider = ({ children }: any) => {
   const [featureSelectedInfoAll, setFeatureSelectedInfoAll] = useState<any>([]);
   const [featureTotalPrice, setFeatureTotalPrice] = useState<number>(0);
   const [loading, setLoading] = useState<boolean>(false);
@@ -48,18 +44,16 @@ export const MyContext = createContext<TContextType | undefined>(undefined);
     }
   }, []);
 
-    const contextValue:TContextType ={
-        setFeatureSelectedInfoAll,
-        featureSelectedInfoAll,
-        setFeatureTotalPrice,
-        featureTotalPrice,
-        user
-    }
+  const contextValue: TContextType = {
+    setFeatureSelectedInfoAll,
+    featureSelectedInfoAll,
+    setFeatureTotalPrice,
+    featureTotalPrice,
+    user,
+  };
   return (
-    <MyContext.Provider value={contextValue}>
-      {children}
-    </MyContext.Provider>
-  )
-}
+    <MyContext.Provider value={contextValue}>{children}</MyContext.Provider>
+  );
+};
 
-export default ContextProvider
+export default ContextProvider;

@@ -1,5 +1,9 @@
 
 import axios from "axios";
+import Cookies from "js-cookie";
+
+
+const  token = Cookies.get("token");
 
 /* ...............service api start here...................*/
 
@@ -249,7 +253,11 @@ export const getSingleOrderByServiceId = async (serviceId) =>{
 
   export const createUserApi = async (userData)=>{
     try {
-      const user = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/user/create`,userData);
+      const user = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/user/create`,userData,{
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
       return user.data;
     } catch (error) {
       console.log(error);

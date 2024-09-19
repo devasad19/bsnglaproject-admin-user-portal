@@ -1,7 +1,6 @@
 'use client';
 
 import { useState } from "react";
-import Modal from "@/app/_components/Modal/Modal";
 import Link from "next/link";
 import Image from "next/image";
 import { relative_image_path } from "@/helper";
@@ -9,6 +8,7 @@ import { relative_image_path } from "@/helper";
 
 const Home = () => {
   const [btnToggle, setBtnToggle] = useState(false);
+
     return (
       <section className="bg-white rounded-lg p-4 shadow-lg min-h-screen">
         <div className=" w-full inline-flex flex-col lg:flex-row justify-between pb-6">
@@ -33,12 +33,87 @@ const Home = () => {
             </h3>
           </div>
           <div>
-            <Modal trigger={"Upload Banner"} title={"Add Banner"}>
+            <button
+              className="bg-blue-500 px-4 py-2 rounded text-white"
+              onClick={() => document.getElementById("my_modal_1").showModal()}
+            >
+              Add Slider
+            </button>
+            <dialog id="my_modal_1" className="modal">
+              <div className="modal-box bg-white">
+                <h3 className="font-bold text-lg pb-3">Add New Slider</h3>
+                <div>
+                  <form action="#" className="grid grid-cols-1 gap-2">
+                    <fieldset className="border border-gray-300 flex flex-col px-2 rounded">
+                      <legend>
+                        <label
+                          htmlFor="slider_image"
+                          className="text-14  bg-white px-2"
+                        >
+                          Select Slider Image:
+                        </label>
+                      </legend>
+                      <input
+                        type="file"
+                        name="slider_image"
+                        id="slider_image"
+                        className="p-2 w-full"
+                      />
+                    </fieldset>
+                    <fieldset className="border border-gray-300 flex flex-col px-2 rounded">
+                      <legend>
+                        <label
+                          htmlFor="slider_description"
+                          className="text-14 bg-white px-2"
+                        >
+                          Add Slider Description:
+                        </label>
+                      </legend>
+                      <textarea
+                        name="slider_description"
+                        id="slider_description"
+                        placeholder="Enter Slider Description"
+                        className="outline-none text-14 p-2 w-full"
+                      ></textarea>
+                    </fieldset>
+                    <fieldset className="border border-gray-300 flex flex-col px-2 rounded">
+                      <legend>
+                        <label
+                          htmlFor="slider_status"
+                          className="text-14 p-2 bg-white"
+                        >
+                          Select Slider Status:
+                        </label>
+                      </legend>
+                      <select
+                        name="slider_status"
+                        id="slider_status"
+                        className="text-14 p-2 bg-white"
+                      >
+                        <option value="1">Active</option>
+                        <option value="2">Inactive</option>
+                      </select>
+                    </fieldset>
+                  </form>
+                </div>
+                <div className="modal-action">
+                  <form method="dialog" className="flex gap-2">
+                    <button className="bg-red-500 px-4 py-2 rounded text-white">
+                      Cancel
+                    </button>
+                    <button className="bg-blue-500 px-4 py-2 rounded text-white">
+                      Submit
+                    </button>
+                  </form>
+                </div>
+              </div>
+            </dialog>
+            {/* <Modal trigger={"Upload Banner"} title={"Add Banner"}>
               <div className="flex items-center gap-4 mt-2">
                 <p>Select Image: </p>
                 <input type="file" name="" id="" />
               </div>
-            </Modal>
+            </Modal> */}
           </div>
         </div>
         <div className="w-full overflow-hidden">
@@ -92,7 +167,12 @@ const Home = () => {
                 </td>
                 <td>
                   <div className="space-x-3">
-                    <button className="border border-gray-300 p-1 rounded-md">
+                    <button
+                      className="border border-gray-300 p-1 rounded-md"
+                      onClick={() =>
+                        document.getElementById("my_modal_2").showModal()
+                      }
+                    >
                       <svg
                         className="w-6 h-6 fill-gray-500"
                         xmlns="http://www.w3.org/2000/svg"
@@ -101,6 +181,77 @@ const Home = () => {
                         <path d="M441 58.9L453.1 71c9.4 9.4 9.4 24.6 0 33.9L424 134.1 377.9 88 407 58.9c9.4-9.4 24.6-9.4 33.9 0zM209.8 256.2L344 121.9 390.1 168 255.8 302.2c-2.9 2.9-6.5 5-10.4 6.1l-58.5 16.7 16.7-58.5c1.1-3.9 3.2-7.5 6.1-10.4zM373.1 25L175.8 222.2c-8.7 8.7-15 19.4-18.3 31.1l-28.6 100c-2.4 8.4-.1 17.4 6.1 23.6s15.2 8.5 23.6 6.1l100-28.6c11.8-3.4 22.5-9.7 31.1-18.3L487 138.9c28.1-28.1 28.1-73.7 0-101.8L474.9 25C446.8-3.1 401.2-3.1 373.1 25zM88 64C39.4 64 0 103.4 0 152V424c0 48.6 39.4 88 88 88H360c48.6 0 88-39.4 88-88V312c0-13.3-10.7-24-24-24s-24 10.7-24 24V424c0 22.1-17.9 40-40 40H88c-22.1 0-40-17.9-40-40V152c0-22.1 17.9-40 40-40H200c13.3 0 24-10.7 24-24s-10.7-24-24-24H88z" />
                       </svg>
                     </button>
+                    <dialog id="my_modal_2" className="modal">
+                      <div className="modal-box bg-white">
+                        <h3 className="font-bold text-lg text-left pb-3">
+                          Edit Slider
+                        </h3>
+                        <div>
+                          <form action="#" className="grid grid-cols-1 gap-2">
+                            <fieldset className="border border-gray-300 flex flex-col px-2 rounded">
+                              <legend>
+                                <label
+                                  htmlFor="slider_image"
+                                  className="text-14  bg-white px-2"
+                                >
+                                  Select Slider Image:
+                                </label>
+                              </legend>
+                              <input
+                                type="file"
+                                name="slider_image"
+                                id="slider_image"
+                                className="p-2 w-full"
+                              />
+                            </fieldset>
+                            <fieldset className="border border-gray-300 flex flex-col px-2 rounded">
+                              <legend>
+                                <label
+                                  htmlFor="slider_description"
+                                  className="text-14 bg-white px-2"
+                                >
+                                  Add Slider Description:
+                                </label>
+                              </legend>
+                              <textarea
+                                name="slider_description"
+                                id="slider_description"
+                                placeholder="Enter Slider Description"
+                                className="outline-none text-14 p-2 w-full"
+                              ></textarea>
+                            </fieldset>
+                            <fieldset className="border border-gray-300 flex flex-col px-2 rounded">
+                              <legend>
+                                <label
+                                  htmlFor="slider_status"
+                                  className="text-14 p-2 bg-white"
+                                >
+                                  Select Slider Status:
+                                </label>
+                              </legend>
+                              <select
+                                name="slider_status"
+                                id="slider_status"
+                                className="text-14 p-2 bg-white"
+                              >
+                                <option value="1">Active</option>
+                                <option value="2">Inactive</option>
+                              </select>
+                            </fieldset>
+                          </form>
+                        </div>
+                        <div className="modal-action">
+                          <form method="dialog" className="flex gap-2">
+                            <button className="bg-red-500 px-4 py-2 rounded text-white">
+                              Cancel
+                            </button>
+                            <button className="bg-blue-500 px-4 py-2 rounded text-white">
+                              Submit
+                            </button>
+                          </form>
+                        </div>
+                      </div>
+                    </dialog>
                     <button className="border border-gray-300 p-1 rounded-md">
                       <svg
                         className="w-6 h-6 fill-gray-500"
@@ -153,7 +304,12 @@ const Home = () => {
                 </td>
                 <td>
                   <div className="space-x-3">
-                    <button className="border border-gray-300 p-1 rounded-md">
+                    <button
+                      className="border border-gray-300 p-1 rounded-md"
+                      onClick={() =>
+                        document.getElementById("my_modal_3").showModal()
+                      }
+                    >
                       <svg
                         className="w-6 h-6 fill-gray-500"
                         xmlns="http://www.w3.org/2000/svg"
@@ -162,6 +318,77 @@ const Home = () => {
                         <path d="M441 58.9L453.1 71c9.4 9.4 9.4 24.6 0 33.9L424 134.1 377.9 88 407 58.9c9.4-9.4 24.6-9.4 33.9 0zM209.8 256.2L344 121.9 390.1 168 255.8 302.2c-2.9 2.9-6.5 5-10.4 6.1l-58.5 16.7 16.7-58.5c1.1-3.9 3.2-7.5 6.1-10.4zM373.1 25L175.8 222.2c-8.7 8.7-15 19.4-18.3 31.1l-28.6 100c-2.4 8.4-.1 17.4 6.1 23.6s15.2 8.5 23.6 6.1l100-28.6c11.8-3.4 22.5-9.7 31.1-18.3L487 138.9c28.1-28.1 28.1-73.7 0-101.8L474.9 25C446.8-3.1 401.2-3.1 373.1 25zM88 64C39.4 64 0 103.4 0 152V424c0 48.6 39.4 88 88 88H360c48.6 0 88-39.4 88-88V312c0-13.3-10.7-24-24-24s-24 10.7-24 24V424c0 22.1-17.9 40-40 40H88c-22.1 0-40-17.9-40-40V152c0-22.1 17.9-40 40-40H200c13.3 0 24-10.7 24-24s-10.7-24-24-24H88z" />
                       </svg>
                     </button>
+                    <dialog id="my_modal_3" className="modal">
+                      <div className="modal-box bg-white">
+                        <h3 className="font-bold text-lg text-left pb-3">
+                          Edit Slider
+                        </h3>
+                        <div>
+                          <form action="#" className="grid grid-cols-1 gap-2">
+                            <fieldset className="border border-gray-300 flex flex-col px-2 rounded">
+                              <legend>
+                                <label
+                                  htmlFor="slider_image"
+                                  className="text-14  bg-white px-2"
+                                >
+                                  Select Slider Image:
+                                </label>
+                              </legend>
+                              <input
+                                type="file"
+                                name="slider_image"
+                                id="slider_image"
+                                className="p-2 w-full"
+                              />
+                            </fieldset>
+                            <fieldset className="border border-gray-300 flex flex-col px-2 rounded">
+                              <legend>
+                                <label
+                                  htmlFor="slider_description"
+                                  className="text-14 bg-white px-2"
+                                >
+                                  Add Slider Description:
+                                </label>
+                              </legend>
+                              <textarea
+                                name="slider_description"
+                                id="slider_description"
+                                placeholder="Enter Slider Description"
+                                className="outline-none text-14 p-2 w-full"
+                              ></textarea>
+                            </fieldset>
+                            <fieldset className="border border-gray-300 flex flex-col px-2 rounded">
+                              <legend>
+                                <label
+                                  htmlFor="slider_status"
+                                  className="text-14 p-2 bg-white"
+                                >
+                                  Select Slider Status:
+                                </label>
+                              </legend>
+                              <select
+                                name="slider_status"
+                                id="slider_status"
+                                className="text-14 p-2 bg-white"
+                              >
+                                <option value="1">Active</option>
+                                <option value="2">Inactive</option>
+                              </select>
+                            </fieldset>
+                          </form>
+                        </div>
+                        <div className="modal-action">
+                          <form method="dialog" className="flex gap-2">
+                            <button className="bg-red-500 px-4 py-2 rounded text-white">
+                              Cancel
+                            </button>
+                            <button className="bg-blue-500 px-4 py-2 rounded text-white">
+                              Submit
+                            </button>
+                          </form>
+                        </div>
+                      </div>
+                    </dialog>
                     <button className="border border-gray-300 p-1 rounded-md">
                       <svg
                         className="w-6 h-6 fill-gray-500"
@@ -214,7 +441,12 @@ const Home = () => {
                 </td>
                 <td>
                   <div className="space-x-3">
-                    <button className="border border-gray-300 p-1 rounded-md">
+                    <button
+                      className="border border-gray-300 p-1 rounded-md"
+                      onClick={() =>
+                        document.getElementById("my_modal_4").showModal()
+                      }
+                    >
                       <svg
                         className="w-6 h-6 fill-gray-500"
                         xmlns="http://www.w3.org/2000/svg"
@@ -223,6 +455,77 @@ const Home = () => {
                         <path d="M441 58.9L453.1 71c9.4 9.4 9.4 24.6 0 33.9L424 134.1 377.9 88 407 58.9c9.4-9.4 24.6-9.4 33.9 0zM209.8 256.2L344 121.9 390.1 168 255.8 302.2c-2.9 2.9-6.5 5-10.4 6.1l-58.5 16.7 16.7-58.5c1.1-3.9 3.2-7.5 6.1-10.4zM373.1 25L175.8 222.2c-8.7 8.7-15 19.4-18.3 31.1l-28.6 100c-2.4 8.4-.1 17.4 6.1 23.6s15.2 8.5 23.6 6.1l100-28.6c11.8-3.4 22.5-9.7 31.1-18.3L487 138.9c28.1-28.1 28.1-73.7 0-101.8L474.9 25C446.8-3.1 401.2-3.1 373.1 25zM88 64C39.4 64 0 103.4 0 152V424c0 48.6 39.4 88 88 88H360c48.6 0 88-39.4 88-88V312c0-13.3-10.7-24-24-24s-24 10.7-24 24V424c0 22.1-17.9 40-40 40H88c-22.1 0-40-17.9-40-40V152c0-22.1 17.9-40 40-40H200c13.3 0 24-10.7 24-24s-10.7-24-24-24H88z" />
                       </svg>
                     </button>
+                    <dialog id="my_modal_4" className="modal">
+                      <div className="modal-box bg-white">
+                        <h3 className="font-bold text-lg text-left pb-3">
+                          Edit Slider
+                        </h3>
+                        <div>
+                          <form action="#" className="grid grid-cols-1 gap-2">
+                            <fieldset className="border border-gray-300 flex flex-col px-2 rounded">
+                              <legend>
+                                <label
+                                  htmlFor="slider_image"
+                                  className="text-14  bg-white px-2"
+                                >
+                                  Select Slider Image:
+                                </label>
+                              </legend>
+                              <input
+                                type="file"
+                                name="slider_image"
+                                id="slider_image"
+                                className="p-2 w-full"
+                              />
+                            </fieldset>
+                            <fieldset className="border border-gray-300 flex flex-col px-2 rounded">
+                              <legend>
+                                <label
+                                  htmlFor="slider_description"
+                                  className="text-14 bg-white px-2"
+                                >
+                                  Add Slider Description:
+                                </label>
+                              </legend>
+                              <textarea
+                                name="slider_description"
+                                id="slider_description"
+                                placeholder="Enter Slider Description"
+                                className="outline-none text-14 p-2 w-full"
+                              ></textarea>
+                            </fieldset>
+                            <fieldset className="border border-gray-300 flex flex-col px-2 rounded">
+                              <legend>
+                                <label
+                                  htmlFor="slider_status"
+                                  className="text-14 p-2 bg-white"
+                                >
+                                  Select Slider Status:
+                                </label>
+                              </legend>
+                              <select
+                                name="slider_status"
+                                id="slider_status"
+                                className="text-14 p-2 bg-white"
+                              >
+                                <option value="1">Active</option>
+                                <option value="2">Inactive</option>
+                              </select>
+                            </fieldset>
+                          </form>
+                        </div>
+                        <div className="modal-action">
+                          <form method="dialog" className="flex gap-2">
+                            <button className="bg-red-500 px-4 py-2 rounded text-white">
+                              Cancel
+                            </button>
+                            <button className="bg-blue-500 px-4 py-2 rounded text-white">
+                              Submit
+                            </button>
+                          </form>
+                        </div>
+                      </div>
+                    </dialog>
                     <button className="border border-gray-300 p-1 rounded-md">
                       <svg
                         className="w-6 h-6 fill-gray-500"
@@ -275,7 +578,12 @@ const Home = () => {
                 </td>
                 <td>
                   <div className="space-x-3">
-                    <button className="border border-gray-300 p-1 rounded-md">
+                    <button
+                      className="border border-gray-300 p-1 rounded-md"
+                      onClick={() =>
+                        document.getElementById("my_modal_5").showModal()
+                      }
+                    >
                       <svg
                         className="w-6 h-6 fill-gray-500"
                         xmlns="http://www.w3.org/2000/svg"
@@ -284,6 +592,77 @@ const Home = () => {
                         <path d="M441 58.9L453.1 71c9.4 9.4 9.4 24.6 0 33.9L424 134.1 377.9 88 407 58.9c9.4-9.4 24.6-9.4 33.9 0zM209.8 256.2L344 121.9 390.1 168 255.8 302.2c-2.9 2.9-6.5 5-10.4 6.1l-58.5 16.7 16.7-58.5c1.1-3.9 3.2-7.5 6.1-10.4zM373.1 25L175.8 222.2c-8.7 8.7-15 19.4-18.3 31.1l-28.6 100c-2.4 8.4-.1 17.4 6.1 23.6s15.2 8.5 23.6 6.1l100-28.6c11.8-3.4 22.5-9.7 31.1-18.3L487 138.9c28.1-28.1 28.1-73.7 0-101.8L474.9 25C446.8-3.1 401.2-3.1 373.1 25zM88 64C39.4 64 0 103.4 0 152V424c0 48.6 39.4 88 88 88H360c48.6 0 88-39.4 88-88V312c0-13.3-10.7-24-24-24s-24 10.7-24 24V424c0 22.1-17.9 40-40 40H88c-22.1 0-40-17.9-40-40V152c0-22.1 17.9-40 40-40H200c13.3 0 24-10.7 24-24s-10.7-24-24-24H88z" />
                       </svg>
                     </button>
+                    <dialog id="my_modal_5" className="modal">
+                      <div className="modal-box bg-white">
+                        <h3 className="font-bold text-lg text-left pb-3">
+                          Edit Slider
+                        </h3>
+                        <div>
+                          <form action="#" className="grid grid-cols-1 gap-2">
+                            <fieldset className="border border-gray-300 flex flex-col px-2 rounded">
+                              <legend>
+                                <label
+                                  htmlFor="slider_image"
+                                  className="text-14  bg-white px-2"
+                                >
+                                  Select Slider Image:
+                                </label>
+                              </legend>
+                              <input
+                                type="file"
+                                name="slider_image"
+                                id="slider_image"
+                                className="p-2 w-full"
+                              />
+                            </fieldset>
+                            <fieldset className="border border-gray-300 flex flex-col px-2 rounded">
+                              <legend>
+                                <label
+                                  htmlFor="slider_description"
+                                  className="text-14 bg-white px-2"
+                                >
+                                  Add Slider Description:
+                                </label>
+                              </legend>
+                              <textarea
+                                name="slider_description"
+                                id="slider_description"
+                                placeholder="Enter Slider Description"
+                                className="outline-none text-14 p-2 w-full"
+                              ></textarea>
+                            </fieldset>
+                            <fieldset className="border border-gray-300 flex flex-col px-2 rounded">
+                              <legend>
+                                <label
+                                  htmlFor="slider_status"
+                                  className="text-14 p-2 bg-white"
+                                >
+                                  Select Slider Status:
+                                </label>
+                              </legend>
+                              <select
+                                name="slider_status"
+                                id="slider_status"
+                                className="text-14 p-2 bg-white"
+                              >
+                                <option value="1">Active</option>
+                                <option value="2">Inactive</option>
+                              </select>
+                            </fieldset>
+                          </form>
+                        </div>
+                        <div className="modal-action">
+                          <form method="dialog" className="flex gap-2">
+                            <button className="bg-red-500 px-4 py-2 rounded text-white">
+                              Cancel
+                            </button>
+                            <button className="bg-blue-500 px-4 py-2 rounded text-white">
+                              Submit
+                            </button>
+                          </form>
+                        </div>
+                      </div>
+                    </dialog>
                     <button className="border border-gray-300 p-1 rounded-md">
                       <svg
                         className="w-6 h-6 fill-gray-500"
@@ -336,7 +715,12 @@ const Home = () => {
                 </td>
                 <td>
                   <div className="space-x-3">
-                    <button className="border border-gray-300 p-1 rounded-md">
+                    <button
+                      className="border border-gray-300 p-1 rounded-md"
+                      onClick={() =>
+                        document.getElementById("my_modal_6").showModal()
+                      }
+                    >
                       <svg
                         className="w-6 h-6 fill-gray-500"
                         xmlns="http://www.w3.org/2000/svg"
@@ -345,6 +729,77 @@ const Home = () => {
                         <path d="M441 58.9L453.1 71c9.4 9.4 9.4 24.6 0 33.9L424 134.1 377.9 88 407 58.9c9.4-9.4 24.6-9.4 33.9 0zM209.8 256.2L344 121.9 390.1 168 255.8 302.2c-2.9 2.9-6.5 5-10.4 6.1l-58.5 16.7 16.7-58.5c1.1-3.9 3.2-7.5 6.1-10.4zM373.1 25L175.8 222.2c-8.7 8.7-15 19.4-18.3 31.1l-28.6 100c-2.4 8.4-.1 17.4 6.1 23.6s15.2 8.5 23.6 6.1l100-28.6c11.8-3.4 22.5-9.7 31.1-18.3L487 138.9c28.1-28.1 28.1-73.7 0-101.8L474.9 25C446.8-3.1 401.2-3.1 373.1 25zM88 64C39.4 64 0 103.4 0 152V424c0 48.6 39.4 88 88 88H360c48.6 0 88-39.4 88-88V312c0-13.3-10.7-24-24-24s-24 10.7-24 24V424c0 22.1-17.9 40-40 40H88c-22.1 0-40-17.9-40-40V152c0-22.1 17.9-40 40-40H200c13.3 0 24-10.7 24-24s-10.7-24-24-24H88z" />
                       </svg>
                     </button>
+                    <dialog id="my_modal_6" className="modal">
+                      <div className="modal-box bg-white">
+                        <h3 className="font-bold text-lg text-left pb-3">
+                          Edit Slider
+                        </h3>
+                        <div>
+                          <form action="#" className="grid grid-cols-1 gap-2">
+                            <fieldset className="border border-gray-300 flex flex-col px-2 rounded">
+                              <legend>
+                                <label
+                                  htmlFor="slider_image"
+                                  className="text-14  bg-white px-2"
+                                >
+                                  Select Slider Image:
+                                </label>
+                              </legend>
+                              <input
+                                type="file"
+                                name="slider_image"
+                                id="slider_image"
+                                className="p-2 w-full"
+                              />
+                            </fieldset>
+                            <fieldset className="border border-gray-300 flex flex-col px-2 rounded">
+                              <legend>
+                                <label
+                                  htmlFor="slider_description"
+                                  className="text-14 bg-white px-2"
+                                >
+                                  Add Slider Description:
+                                </label>
+                              </legend>
+                              <textarea
+                                name="slider_description"
+                                id="slider_description"
+                                placeholder="Enter Slider Description"
+                                className="outline-none text-14 p-2 w-full"
+                              ></textarea>
+                            </fieldset>
+                            <fieldset className="border border-gray-300 flex flex-col px-2 rounded">
+                              <legend>
+                                <label
+                                  htmlFor="slider_status"
+                                  className="text-14 p-2 bg-white"
+                                >
+                                  Select Slider Status:
+                                </label>
+                              </legend>
+                              <select
+                                name="slider_status"
+                                id="slider_status"
+                                className="text-14 p-2 bg-white"
+                              >
+                                <option value="1">Active</option>
+                                <option value="2">Inactive</option>
+                              </select>
+                            </fieldset>
+                          </form>
+                        </div>
+                        <div className="modal-action">
+                          <form method="dialog" className="flex gap-2">
+                            <button className="bg-red-500 px-4 py-2 rounded text-white">
+                              Cancel
+                            </button>
+                            <button className="bg-blue-500 px-4 py-2 rounded text-white">
+                              Submit
+                            </button>
+                          </form>
+                        </div>
+                      </div>
+                    </dialog>
                     <button className="border border-gray-300 p-1 rounded-md">
                       <svg
                         className="w-6 h-6 fill-gray-500"
@@ -357,7 +812,7 @@ const Home = () => {
                   </div>
                 </td>
               </tr>
-              <tr className="h-16">
+              {/* <tr className="h-16">
                 <td>
                   <span className="border border-gray-300 px-2 py-1 rounded-md">
                     6
@@ -661,7 +1116,7 @@ const Home = () => {
                     </button>
                   </div>
                 </td>
-              </tr>
+              </tr> */}
             </tbody>
           </table>
         </div>
