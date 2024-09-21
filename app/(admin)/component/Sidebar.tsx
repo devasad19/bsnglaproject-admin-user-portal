@@ -97,7 +97,7 @@ const Sidebar = () => {
                 isOpen ? "[&>li]:px-3" : ""
               }`}
             >
-              <li
+              {/* <li
                 className={`hover:bg-primary group ${
                   pathname == "/admin" ? "bg-primary" : ""
                 }`}
@@ -126,7 +126,7 @@ const Sidebar = () => {
                   </span>
                   <span className={isOpen ? "block" : "hidden"}>Dashboard</span>
                 </Link>
-              </li>
+              </li> */}
               <li
                 className={`hover:bg-primary group ${
                   pathname === "/admin/services" ||
@@ -165,7 +165,7 @@ const Sidebar = () => {
                   </span>
                 </Link>
               </li>
-              <li
+              {/* <li
                 className={`hover:bg-primary group ${
                   pathname == "/admin/bill" ? "bg-primary" : ""
                 }`}
@@ -260,7 +260,7 @@ const Sidebar = () => {
                     Manage Citizen
                   </span>
                 </Link>
-              </li>
+              </li> */}
               {/* <li
                 className={`hover:bg-[#E9FFD9] flex  gap-2 ${
                   pathname.includes("/admin/setting") && "bg-[#E9FFD9]"
@@ -364,7 +364,7 @@ const Sidebar = () => {
                     >
                       Front-end Settings
                     </Link>
-                    <Link
+                    {/* <Link
                       href={{
                         pathname: "/admin/setting/user-setting",
                       }}
@@ -376,12 +376,12 @@ const Sidebar = () => {
                       }`}
                     >
                       User Settings
-                    </Link>
+                    </Link> */}
                   </div>
                 </NewAccordion>
               )}
 
-              <li
+              {/* <li
                 onClick={() => toggleAccordionSub("alc")}
                 className={`hover:bg-primary  group flex items-center  justify-between ${
                   (pathname.includes("user-list") ||
@@ -545,7 +545,7 @@ const Sidebar = () => {
                     <path d="M201.4 374.6c12.5 12.5 32.8 12.5 45.3 0l160-160c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L224 306.7 86.6 169.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l160 160z" />
                   </svg>
                 </span>
-              </li>
+              </li> */}
               {isOpen && (
                 <NewAccordion isOpen={isToggleOpen.accountsSettings}>
                   <div className="ms-3 flex flex-col">
@@ -688,7 +688,7 @@ const Sidebar = () => {
                   </Accordion>
                 )}
               </li> */}
-              <li
+              {/* <li
                 className={`hover:bg-primary group ${
                   pathname == "/admin/documentation" ? "bg-primary" : ""
                 }`}
@@ -828,7 +828,7 @@ const Sidebar = () => {
                     Service Settings
                   </span>
                 </Link>
-              </li>
+              </li> */}
             </ul>
           </div>
         </div>
@@ -843,8 +843,8 @@ const Sidebar = () => {
                 alt="Bangla"
               />
               <div>
-                <h3>Abir</h3>
-                <p className="text-12">Admin</p>
+                <h3>Admin</h3>
+                <p className="text-12">user</p>
               </div>
             </div>
           )}
