@@ -149,10 +149,17 @@ const Home = () => {
                   <input
                     {...register("name", {
                       required: "Name is required",
-                      maxLength: {
-                        value: 30,
-                        message: "Name cannot exceed 30 characters",
-                      },
+                      validate: {
+                        wordCount: (value) => {
+                          const wordCount = value.trim().split(/\s+/).length;
+                          if (wordCount < 3) {
+                            return "Description must have at least 3 words";
+                          } else if (wordCount > 8) {
+                            return "Description cannot exceed 8 words";
+                          }
+                          return true;
+                        }
+                      }
                     })}
                     type="text"
                     placeholder="Resoource Name"
@@ -179,10 +186,12 @@ const Home = () => {
                   <input
                     {...register("sub_title", {
                       required: "Sub Title is required",
-                      maxLength: {
-                        value: 30,
-                        message: "Sub title cannot exceed 30 characters",
-                      },
+                      validate: {
+                        maxWords: (value) => {
+                          const wordCount = value.trim().split(/\s+/).length;
+                          return wordCount <= 10 || "Description cannot exceed 10 words";
+                        }
+                      }
                     })}
                     id="sub_tile"
                     type="text"
@@ -196,7 +205,6 @@ const Home = () => {
                   </p>
                 )}
               </div>
-
               <div>
                 <fieldset className="flex flex-col border rounded-md px-2">
                   <legend>
@@ -211,10 +219,12 @@ const Home = () => {
                   <textarea
                     {...register("description", {
                       required: "description is required",
-                      maxLength: {
-                        value: 300,
-                        message: "description cannot exceed 300 characters",
-                      },
+                      validate: {
+                        maxWords: (value) => {
+                          const wordCount = value.trim().split(/\s+/).length;
+                          return wordCount <= 80 || "Description cannot exceed 80 words";
+                        }
+                      }
                     })}
                     id=""
                     className="outline-none p-2"

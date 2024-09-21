@@ -24,28 +24,23 @@ const ContextProvider = ({ children }: any) => {
   useEffect(() => {
     setLoading(true);
     const token = Cookies.get("token");
-    const user: string | undefined = Cookies.get("user");
-    let userInfo;
-    if (user) {
-      userInfo = JSON?.parse(user ?? "");
-    }
-    // const userInfo = JSON?.parse(user ?? "");
+    const user:string | undefined =  Cookies.get("user");
+    // const userInfo = JSON.parse(user ?? "");
+    const userInfo = {};
     if (token && userInfo) {
-      axios
-        .get(`${process.env.NEXT_PUBLIC_API_URL}/user/details/${userInfo.id}`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        })
-        .then((res) => {
-          // console.log("GLobal Context :", res.data.data);
-          setUser(res.data.data);
-          setLoading(false);
-        })
-        .catch((err) => {
-          setLoading(false);
-          // console.log(err);
-        });
+      axios.get(`${process.env.NEXT_PUBLIC_API_URL}/user/details/${userInfo?.id}`,{
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .then((res) => {
+        console.log("GLobal Context :",res.data.data);
+        setUser(res.data.data);
+        setLoading(false);
+      }).catch((err) => {
+        setLoading(false);
+        // console.log(err);
+      })
     }
   }, []);
 
