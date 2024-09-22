@@ -31,7 +31,9 @@ const Home = ({ params: { id } }: { params: { id: string } }): JSX.Element => {
 
 
   const plan = JSON.parse(order?.plans);
-  console.log({ plan });
+  
+   console.log({ plan });
+
 
   const DownloadInvoice = () => {};
   return (
