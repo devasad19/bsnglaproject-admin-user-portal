@@ -9,14 +9,12 @@ import Image from "next/image";
 
 const Home = () => {
   const router = useRouter();
-  const [name, setName] = useState("");
-  const [des, setDes] = useState("");
-  const [link, setLink] = useState("");
   const [status, setStatus] = useState("");
   const [serviceImg, setServiceImg] = useState(null);
   const [tutorialVideo, setTutorialVideo] = useState(null);
   const [links, setLinks] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [showItem, setShowItem] = useState("");
 
   const {
     register,
@@ -43,49 +41,42 @@ const Home = () => {
     setIsLoading(true);
     // const { name, des, link, status, image, tutorial, documentation, support } =
     //   data;
-  const{component,
-    description,
-    distribution,
-    logo,
-    name,
-    paid_status,
-    production_status,
-    release_date,
-    sub_title,
-    type,
-    visit_link,
-    visit_type} = data
     
-// return;
-    // const dataSubmited = {
-    //   name,
-    //   des,
-    //   // link: linksArray,
-    //   status,
-    //   link: mainlink,
-    //   img: serviceImg,
-    //   tutorial: tutorialVideo,
-    //   documentation: documentation,
-    //   support: support,
-    // };
-    // console.log("ceate service", dataSubmited);
-    // return;
+    const {
+      component,
+      description,
+      distribution,
+      logo,
+      name,
+      production_status,
+      release_date,
+      sub_title,
+      type,
+      visit_link,
+      visit_type,
+      resource_file
+    } = data;
 
-    // Create a FormData object
+    let paid_status  = {
+      free: data.free ? 1 : 0,
+      pro: data.pro ? 1 : 0,
+    };
+    
+   
     const formData = new FormData();
     formData.append("name", name);
     formData.append("description", description);
     formData.append("component", component);
     formData.append("distribution", distribution);
     formData.append("logo", logo[0]);
-    formData.append("paid_status", paid_status)
+    formData.append("paid_status", JSON.stringify(paid_status));
     formData.append("production_status", production_status);
     formData.append("release_date", release_date);
     formData.append("type", type);
     formData.append("sub_title", sub_title);
-    formData.append("visit_link", visit_link);
+    formData.append("visit_link", visit_link || "");
     formData.append("visit_type", visit_type);
-
+    formData.append("resource_file", resource_file[0] || "");
 
     // Append your data to the FormData object
     // formData.append("name", name);
@@ -97,15 +88,14 @@ const Home = () => {
     // formData.append("tutorial", tutorial[0] || '');
     // formData.append("documentation", documentation);
     // formData.append("support", support);
-    
-    
+
     // console.log(Object.fromEntries(formData));
     //  return;
 
     // console.log("url links uploads");
-    
+
     const uploadRes = await uploadServiceData(formData);
-    
+
     console.log("uploadRes", uploadRes);
 
     if (uploadRes.status === true) {
@@ -119,7 +109,7 @@ const Home = () => {
     }
   };
 
-  // console.log('links: ',links);
+  // console.log({ showItem });
 
   return (
     <>
@@ -158,8 +148,8 @@ const Home = () => {
                             return "Description cannot exceed 8 words";
                           }
                           return true;
-                        }
-                      }
+                        },
+                      },
                     })}
                     type="text"
                     placeholder="Resoource Name"
@@ -189,9 +179,12 @@ const Home = () => {
                       validate: {
                         maxWords: (value) => {
                           const wordCount = value.trim().split(/\s+/).length;
-                          return wordCount <= 10 || "Description cannot exceed 10 words";
-                        }
-                      }
+                          return (
+                            wordCount <= 10 ||
+                            "Description cannot exceed 10 words"
+                          );
+                        },
+                      },
                     })}
                     id="sub_tile"
                     type="text"
@@ -222,9 +215,12 @@ const Home = () => {
                       validate: {
                         maxWords: (value) => {
                           const wordCount = value.trim().split(/\s+/).length;
-                          return wordCount <= 80 || "Description cannot exceed 80 words";
-                        }
-                      }
+                          return (
+                            wordCount <= 80 ||
+                            "Description cannot exceed 80 words"
+                          );
+                        },
+                      },
                     })}
                     id=""
                     className="outline-none p-2"
@@ -259,6 +255,7 @@ const Home = () => {
                     <option value="Datasets">Data Sets</option>
                     <option value="Tools">Tools</option>
                     <option value="Papers">Papers</option>
+                    <option value="Font">Font</option>
                   </select>
                 </fieldset>
                 {errors.type && (
@@ -405,6 +402,7 @@ const Home = () => {
                       <input
                         type="checkbox"
                         name="free"
+                        {...register('free')}
                         id=""
                         className="w-4 h-4"
                         value={"Free"}
@@ -414,7 +412,7 @@ const Home = () => {
                     <div className="space-x-2">
                       <input
                         type="checkbox"
-                        name="pro"
+                        {...register('pro')}
                         id=""
                         className="w-4 h-4"
                         value={"Pro"}
@@ -464,32 +462,6 @@ const Home = () => {
                 )}
               </div>
 
-              <div>
-                <fieldset className="flex flex-col border rounded-md px-2">
-                  <legend>
-                    <label
-                      htmlFor="ServiceName"
-                      className="after:content-['_*'] after:text-red-500"
-                    >
-                      Visit Link
-                    </label>
-                  </legend>
-
-                  <input
-                    type="text"
-                    {...register("visit_link", {
-                      required: "Visit Link is required",
-                    })}
-                    className="w-full outline-none p-2"
-                    placeholder="Enter Link"
-                  />
-                </fieldset>
-                {errors.visit_link && (
-                  <p className="text-red-500 text-12 px-2 pt-1">
-                    {errors.visit_link.message}
-                  </p>
-                )}
-              </div>
               {/* <div className="border border-gray-300 rounded">
               <div className="bg-gray-300 flex items-center justify-between p-2">
                 <h3 className="text-primary font-semibold">Add Links</h3>
@@ -576,7 +548,7 @@ const Home = () => {
                       htmlFor="ServiceName"
                       className="after:content-['_*'] after:text-red-500"
                     >
-                      Button
+                      user access
                     </label>
                   </legend>
 
@@ -584,6 +556,7 @@ const Home = () => {
                     {...register("visit_type", {
                       required: "Button is required",
                     })}
+                    onChange={(e) => setShowItem(e.target.value)}
                     id=""
                     className="outline-none p-2 bg-white"
                   >
@@ -598,6 +571,63 @@ const Home = () => {
                   </p>
                 )}
               </div>
+              {showItem == "Visit" || showItem == "Subscribe" ? (
+                <div>
+                  <fieldset className="flex flex-col border rounded-md px-2">
+                    <legend>
+                      <label
+                        htmlFor="ServiceName"
+                        className="after:content-['_*'] after:text-red-500"
+                      >
+                        {showItem} Link
+                      </label>
+                    </legend>
+
+                    <input
+                      type="text"
+                      {...register("visit_link", {
+                        required: "Visit Link is required",
+                      })}
+                      className="w-full outline-none p-2"
+                      placeholder="Enter Link"
+                    />
+                  </fieldset>
+                  {errors.visit_link && (
+                    <p className="text-red-500 text-12 px-2 pt-1">
+                      {errors.visit_link.message}
+                    </p>
+                  )}
+                </div>
+              ) : (
+                <div>
+                  <fieldset className="flex flex-col border rounded-md px-2">
+                    <legend>
+                      <label
+                        htmlFor="ServiceName"
+                        className="after:content-['_*'] after:text-red-500"
+                      >
+                        Resource Download
+                      </label>
+                    </legend>
+
+                    <input
+                      {...register("resource_file", { required: "resource_file is required" })}
+                      id="file"
+                      type="file"
+                      onChange={(e) => {
+                        setServiceImg(e.target.files[0]);
+                      }}
+                      // accept="video/mp4, video/ogg, video/avi"
+                      accept="image/*"
+                    />
+                  </fieldset>
+                  {errors.resource_file && (
+                    <p className="text-red-500 text-12 px-2 pt-1">
+                      {errors.resource_file.message}
+                    </p>
+                  )}
+                </div>
+              )}
 
               <div className="flex justify-between">
                 <p className="text-14">

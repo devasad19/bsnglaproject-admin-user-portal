@@ -56,7 +56,7 @@ const Home = () => {
     
   }
 
-  console.log({ slider });
+  // console.log({ slider });
 
   const onSliderSubmit = async (data) => {
     console.log(data);
