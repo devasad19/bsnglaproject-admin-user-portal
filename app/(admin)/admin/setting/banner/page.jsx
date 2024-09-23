@@ -60,10 +60,13 @@ const Home = () => {
 
   const onSliderSubmit = async (data) => {
     console.log(data);
-    const { slider_image, slider_caption, slider_status } = data;
+    const { slider_image, caption_text, caption_text_link, caption_button, caption_button_link, slider_status } = data;
     let fromData = new FormData();
     fromData.append("img", slider_image[0]);
-    fromData.append("description", slider_caption);
+    fromData.append("caption_text", caption_text);
+    fromData.append("caption_text_link", caption_text_link);
+    fromData.append("caption_btn", caption_button);
+    fromData.append("caption_btn_link", caption_button_link);
     fromData.append("status", slider_status);
 
     const sliderRe = await AddSLiderApi(fromData);
@@ -99,7 +102,7 @@ const Home = () => {
             </Link>
 
             <h3 className="text-32 font-mono font-bold text-[#151D48]">
-              Banner
+              Slider List
             </h3>
           </div>
           <div>
@@ -116,7 +119,9 @@ const Home = () => {
             <thead>
               <tr className="bg-primary text-white h-16">
                 <th>Number</th>
-                <th>Picture</th>
+                <th>Banner</th>
+                <th>Caption Text and Link</th>
+                <th>Button Text and Link</th>
                 <th>Status</th>
                 <th>Action</th>
               </tr>
@@ -129,7 +134,7 @@ const Home = () => {
                   </td>
                 </tr>
               )}
-              {slider.length > 0 ? (
+              {slider?.length > 0 ? (
                 slider?.map((item, index) => (
                   <tr key={index} className="h-16">
                     <td>
@@ -146,6 +151,19 @@ const Home = () => {
                           height={1000}
                           alt="Bangla"
                         />
+                      </div>
+                    </td>
+                    <td>
+                      <div className="flex items-center justify-center">
+                        <p className="text-14 font-bold">{item?.caption_text}</p>
+                        <a
+                          href={item?.caption_text_link}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="text-14 font-bold text-blue-500"
+                        >
+                          {item?.caption_text_link}
+                        </a>
                       </div>
                     </td>
                     <td>
@@ -592,7 +610,7 @@ const Home = () => {
       <Modal
         modalForm={sliderAddForm}
         modalRef={sliderAddModal}
-        title={"Update Service"}
+        title={"Add Slider Form"}
       >
         <div>
           <form
@@ -630,15 +648,69 @@ const Home = () => {
                     htmlFor="slider_description"
                     className="text-14 bg-white px-2"
                   >
-                    Add Slider Caption:
+                    Caption Text:
                   </label>
                 </legend>
-                <textarea
-                  {...register("slider_caption")}
+                <input
+                  {...register("caption_text")}
                   id="slider_description"
                   placeholder="Enter Slider Description"
                   className="outline-none text-14 p-2 w-full"
-                ></textarea>
+                ></input>
+              </fieldset>
+            </div>
+            <div>
+              <fieldset className="border border-gray-300 flex flex-col px-2 rounded">
+                <legend>
+                  <label
+                    htmlFor="caption_text_link"
+                    className="text-14 bg-white px-2"
+                  >
+                    Caption Text Link:
+                  </label>
+                </legend>
+                <input
+                  {...register("caption_text_link")}
+                  id="caption_text_link"
+                  placeholder="https://ocr.bangla.gov.bd/details"
+                  className="outline-none text-14 p-2 w-full"
+                ></input>
+              </fieldset>
+            </div>
+            <div>
+              <fieldset className="border border-gray-300 flex flex-col px-2 rounded">
+                <legend>
+                  <label
+                    htmlFor="caption_button"
+                    className="text-14 bg-white px-2"
+                  >
+                    Caption Button Text:
+                  </label>
+                </legend>
+                <input
+                  {...register("caption_button")}
+                  id="caption_button"
+                  placeholder="Enter caption button text"
+                  className="outline-none text-14 p-2 w-full"
+                ></input>
+              </fieldset>
+            </div>
+            <div>
+              <fieldset className="border border-gray-300 flex flex-col px-2 rounded">
+                <legend>
+                  <label
+                    htmlFor="caption_button_link"
+                    className="text-14 bg-white px-2"
+                  >
+                    Caption Button Link:
+                  </label>
+                </legend>
+                <input
+                  {...register("caption_button_link")}
+                  id="caption_button_link"
+                  placeholder="https://ocr.bangla.gov.bd/service"
+                  className="outline-none text-14 p-2 w-full"
+                ></input>
               </fieldset>
             </div>
             <div>
