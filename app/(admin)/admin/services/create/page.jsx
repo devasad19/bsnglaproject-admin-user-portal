@@ -781,18 +781,25 @@ const Home = () => {
                               </label>
                             </legend>
 
-                            <input
-                              /* {...register("logo", {
-                                required: "Logo is required",
-                              })} */
-                              id="file"
-                              type="file"
-                              onChange={(e) => {
-                                setServiceImg(e.target.files[0]);
-                              }}
-                              // accept="video/mp4, video/ogg, video/avi"
-                              accept="image/*"
-                            />
+                            <textarea
+                              {...register("description", {
+                                required: "description is required",
+                                validate: {
+                                  maxWords: (value) => {
+                                    const wordCount = value
+                                      .trim()
+                                      .split(/\s+/).length;
+                                    return (
+                                      wordCount <= 80 ||
+                                      "Description cannot exceed 80 words"
+                                    );
+                                  },
+                                },
+                              })}
+                              id=""
+                              className="outline-none p-2"
+                              placeholder="API documentation"
+                            ></textarea>
                           </fieldset>
                           {errors.logo && (
                             <p className="text-red-500 text-12 px-2 pt-1">
@@ -811,18 +818,25 @@ const Home = () => {
                               </label>
                             </legend>
 
-                            <input
-                              /* {...register("logo", {
-                                required: "Logo is required",
-                              })} */
-                              id="file"
-                              type="file"
-                              onChange={(e) => {
-                                setServiceImg(e.target.files[0]);
-                              }}
-                              // accept="video/mp4, video/ogg, video/avi"
-                              accept="image/*"
-                            />
+                            <textarea
+                              {...register("description", {
+                                required: "description is required",
+                                validate: {
+                                  maxWords: (value) => {
+                                    const wordCount = value
+                                      .trim()
+                                      .split(/\s+/).length;
+                                    return (
+                                      wordCount <= 80 ||
+                                      "Description cannot exceed 80 words"
+                                    );
+                                  },
+                                },
+                              })}
+                              id=""
+                              className="outline-none p-2"
+                              placeholder="User documentation"
+                            ></textarea>
                           </fieldset>
                           {errors.logo && (
                             <p className="text-red-500 text-12 px-2 pt-1">
