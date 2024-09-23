@@ -143,9 +143,9 @@ const Home = () => {
                         wordCount: (value) => {
                           const wordCount = value.trim().split(/\s+/).length;
                           if (wordCount < 3) {
-                            return "Description must have at least 3 words";
+                            return "Resource Name must have at least 3 words";
                           } else if (wordCount > 8) {
-                            return "Description cannot exceed 8 words";
+                            return "Resource Name cannot exceed 8 words";
                           }
                           return true;
                         },
@@ -181,7 +181,7 @@ const Home = () => {
                           const wordCount = value.trim().split(/\s+/).length;
                           return (
                             wordCount <= 10 ||
-                            "Description cannot exceed 10 words"
+                            "Resource sub title cannot exceed 10 words"
                           );
                         },
                       },
