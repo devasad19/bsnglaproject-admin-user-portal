@@ -126,6 +126,8 @@ const Home = () => {
               <h1 className="text-20 font-mono font-bold text-[#151D48]">
                 Service Details
               </h1>
+
+              
               <div>
                 <fieldset className="flex flex-col border rounded-md px-2">
                   <legend>
