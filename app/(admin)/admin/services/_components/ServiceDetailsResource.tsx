@@ -25,12 +25,15 @@ const ServiceDetailsResource = () => {
     console.log(data);
     // service_id,broad_description,modules,media_images,support_address,api_docs,user_docs
     const { description,module, media_image, support_address, api_doc, user_doc } = data;
-    console.log(media_image);
-    console.log(module);
+    console.log("media Image:",media_image);
+    console.log("module:",module);
     const formData = new FormData();
     formData.append("service_id", "1");
     formData.append("broad_description", description);
-    formData.append("media_images", media_image || "");
+    for(let i = 0; i < media_image.length; i++){
+      formData.append("media_images", media_image[i]);
+    }
+    // formData.append("media_images", media_image[0] || "");
     formData.append("support_address", support_address);
     formData.append("api_docs", api_doc);
     formData.append("user_docs", user_doc);
@@ -46,7 +49,7 @@ const ServiceDetailsResource = () => {
 
   return (
     <>
-      <form onSubmit={handleSubmit(onSubmitServiceDetailsResource)}>
+      <form onSubmit={handleSubmit(onSubmitServiceDetailsResource)} >
         <div>
           <fieldset className="flex flex-col border rounded-md px-2">
             <legend>
