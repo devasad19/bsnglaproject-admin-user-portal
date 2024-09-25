@@ -19,7 +19,6 @@ const Home = ({ params: { id } }: { params: { id: string } }): JSX.Element => {
     window.location.reload();
   };
 
- 
 
   useEffect(() => {
     const singleOrder = async () => {
