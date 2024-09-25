@@ -339,33 +339,7 @@ const ServiceResource = () => {
             )}
           </div>
 
-          <div>
-            <fieldset className="flex flex-col border rounded-md px-2">
-              <legend>
-                <label
-                  htmlFor="ServiceName"
-                  className="after:content-['_*'] after:text-red-500"
-                >
-                  Status
-                </label>
-              </legend>
-
-              <select
-                {...register("status", {
-                  required: "Type is required",
-                })}
-                className="outline-none p-2 bg-white"
-              >
-                <option value="1">Publish</option>
-                <option value="0">UnPublish</option>
-              </select>
-            </fieldset>
-            {errors.type && (
-              <p className="text-red-500 text-12 px-2 pt-1">
-                {errors.type.message as string}
-              </p>
-            )}
-          </div>
+         
           {serviceImg && (
             <Image
               src={URL.createObjectURL(serviceImg)}
@@ -584,6 +558,33 @@ const ServiceResource = () => {
               </div>
             </>
           )}
+           <div>
+            <fieldset className="flex flex-col border rounded-md px-2">
+              <legend>
+                <label
+                  htmlFor="ServiceName"
+                  className="after:content-['_*'] after:text-red-500"
+                >
+                  Status
+                </label>
+              </legend>
+
+              <select
+                {...register("status", {
+                  required: "Type is required",
+                })}
+                className="outline-none p-2 bg-white"
+              >
+                <option value="1">Publish</option>
+                <option value="0">UnPublish</option>
+              </select>
+            </fieldset>
+            {errors.type && (
+              <p className="text-red-500 text-12 px-2 pt-1">
+                {errors.type.message as string}
+              </p>
+            )}
+          </div>
           <div className="flex justify-between pt-5">
             <p className="text-14">
               <span className="text-red-500">*</span> Required
