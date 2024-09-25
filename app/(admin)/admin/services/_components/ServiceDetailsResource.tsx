@@ -1,3 +1,4 @@
+import { serviceDetailsResourceApi } from "@/app/(portal)/_api/ServiceApi/ServiceApi";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
@@ -22,6 +23,25 @@ const ServiceDetailsResource = () => {
 
   const onSubmitServiceDetailsResource = async (data: any) => {
     console.log(data);
+    // service_id,broad_description,modules,media_images,support_address,api_docs,user_docs
+    const { description,module, media_image, support_address, api_doc, user_doc } = data;
+    console.log(media_image);
+    console.log(module);
+    const formData = new FormData();
+    formData.append("service_id", "1");
+    formData.append("broad_description", description);
+    formData.append("media_images", media_image || "");
+    formData.append("support_address", support_address);
+    formData.append("api_docs", api_doc);
+    formData.append("user_docs", user_doc);
+    for (let i = 0; i < module.length; i++) {
+      formData.append("modules", module[i]);
+    }
+
+    const res = await serviceDetailsResourceApi(formData);
+    console.log({res});
+    
+
   };
 
   return (
@@ -180,7 +200,7 @@ const ServiceDetailsResource = () => {
             </legend>
 
             <input
-              {...register("media_image", {
+              {...register("media_image[]", {
                 required: "Logo is required",
               })}
               id="file"
