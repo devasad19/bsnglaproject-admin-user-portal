@@ -12,20 +12,22 @@ interface CustomEditorProps {
 
 const CustomEditor: FC<CustomEditorProps> = ({ onChange, data }) => {
   return (
-    <CKEditor
-      editor={ClassicEditor}
-      data={data}
-      /* onReady={(editor) => {
-        console.log("Editor is ready to use!", editor);
-      }} */
-      onChange={onChange}
-      /* onBlur={(event, editor) => {
-        console.log("Blur.", editor);
-      }} */
-      /* onFocus={(event, editor) => {
-        console.log("Focus.", editor);
-      }} */
-    />
+    <div className="editor-container">
+      <CKEditor
+        editor={ClassicEditor}
+        data={data}
+        /* onReady={(editor) => {
+          console.log("Editor is ready to use!", editor);
+        }} */
+        onChange={onChange}
+        /* onBlur={(event, editor) => {
+          console.log("Blur.", editor);
+        }}
+        onFocus={(event, editor) => {
+          console.log("Focus.", editor);
+        }} */
+      />
+    </div>
   );
 };
 
