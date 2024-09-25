@@ -1,3 +1,4 @@
+'use client';
 import { serviceBanglaResourceApi } from "@/app/(portal)/_api/ServiceApi/ServiceApi";
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
