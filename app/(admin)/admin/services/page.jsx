@@ -10,6 +10,7 @@ import Swal from "sweetalert2";
 import Skeleton from "react-loading-skeleton";
 
 const Home = () => {
+  const [publish, setPublish] = useState(true);
   const [previewSrc, setPreviewSrc] = useState(null); // image sr
   const [tutorialVideo, setTutorialVideo] = useState(null); // video src
   const [serviceUpdate, serviceUpdateModal] = useState({}); // state for update data
@@ -369,6 +370,7 @@ const Home = () => {
                 <th className="text-center">Type</th>
                 <th className="text-center">Production Status</th>
                 <th className="text-center">Paid Status</th>
+                <th className="text-center">Publish/Unpublish</th>
                 <th className="text-center">Action</th>
               </tr>
             </thead>
@@ -422,20 +424,53 @@ const Home = () => {
                         </td>
                         <td className="text-center border-r border-gray-200">
                           <div className="flex items-center gap-2">
-                          {paidStatus?.free == 1 ? (
-                            <button className="bg-[#2F93DF] px-1 py-1 lg:px-3 lg:py-2 text-white  rounded ">
-                              Free
-                            </button>
-                          ) : (
-                            ""
-                          )}
+                            {paidStatus?.free == 1 ? (
+                              <button className="bg-[#2F93DF] px-1 py-1 lg:px-3 lg:py-2 text-white  rounded ">
+                                Free
+                              </button>
+                            ) : (
+                              ""
+                            )}
 
-                          {paidStatus?.pro == 1 && (
-                            <button className="bg-[#1AB17A] px-1 py-1 lg:px-3 lg:py-2 text-white  rounded ">
-                              Pro
-                            </button>
-                          )}
+                            {paidStatus?.pro == 1 && (
+                              <button className="bg-[#1AB17A] px-1 py-1 lg:px-3 lg:py-2 text-white  rounded ">
+                                Pro
+                              </button>
+                            )}
                           </div>
+                        </td>
+                        <td className="text-center border-r border-gray-200">
+                          {/* <label class="switch">
+                            <input type="checkbox" />
+                            <span class="slider round"></span>
+                          </label> */}
+                          <button
+                            onClick={() => setPublish(!publish)}
+                            className={`text-white px-4 py-2 rounded transition-all duration-300 ${
+                              publish ? "bg-green-700" : "bg-yellow-500"
+                            }`}
+                          >
+                            {publish ? "Published" : "Unpublished"}
+                          </button>
+
+                          {/* <button className="text-white">
+                            <span
+                              onClick={() => setPublish(1)}
+                              className={`p-2 border border-gray-500 ${
+                                publish == 1 ? "bg-primary" : "bg-gray-500"
+                              }`}
+                            >
+                              Publish
+                            </span>
+                            <span
+                              onClick={() => setPublish(0)}
+                              className={`p-2 border border-gray-500 ${
+                                publish == 0 ? "bg-primary" : "bg-gray-500"
+                              }`}
+                            >
+                              UnPublish
+                            </span>
+                          </button> */}
                         </td>
                         <td className="">
                           <div className="w-full flex items-center justify-center gap-2">
@@ -450,7 +485,6 @@ const Home = () => {
                               >
                                 View
                               </Link>
-                              
 
                               <button
                                 onClick={() => handleEdit(item)}
@@ -460,9 +494,7 @@ const Home = () => {
                               </button>
 
                               <button
-                                onClick={
-                                  () => handleDelete(item?.id)
-                                }
+                                onClick={() => handleDelete(item?.id)}
                                 className="p-1  bg-red-500 text-white active:scale-90 transition-all duration-400 rounded-md"
                               >
                                 <svg
@@ -474,7 +506,6 @@ const Home = () => {
                                 </svg>
                               </button>
                             </>
-                            
                           </div>
                         </td>
                       </tr>
