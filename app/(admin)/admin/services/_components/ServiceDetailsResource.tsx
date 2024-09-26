@@ -28,7 +28,7 @@ const ServiceDetailsResource = () => {
     // console.log(data);
     // service_id,broad_description,modules,media_images,support_address,api_docs,user_docs
     const { description,module, media_image, support_address, api_doc, user_doc } = data;
-    // console.log("media Image:",media_image);
+    console.log("media Image:",media_image);
     // console.log("module:",module);
     const formData = new FormData();
     formData.append("service_id", "1");
