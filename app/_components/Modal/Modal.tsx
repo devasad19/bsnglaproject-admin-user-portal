@@ -13,7 +13,7 @@ const Modal = ({
   return (
     <>
       <dialog ref={modalRef} className="modal bg-primary/10 relative">
-        <div className="modal-box bg-white w-10/12 max-w-[40rem]">
+        <div className="modal-box bg-white w-10/12 max-w-[50rem]">
           <div className="border-b border-gray-500 pb-4 flex items-center justify-between">
             <h3 className="font-medium text-20 text-left">{title}</h3>
             <div>

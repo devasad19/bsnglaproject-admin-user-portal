@@ -8,9 +8,9 @@ import Modal from "@/app/_components/Modal/Modal";
 import { toast } from "react-toastify";
 import Swal from "sweetalert2";
 import Skeleton from "react-loading-skeleton";
+import CustomEditor from "@/app/_components/CustomEditor/CustomEditor";
 
 const Home = () => {
-  const [publish, setPublish] = useState(true);
   const [previewSrc, setPreviewSrc] = useState(null); // image sr
   const [tutorialVideo, setTutorialVideo] = useState(null); // video src
   const [serviceUpdate, serviceUpdateModal] = useState({}); // state for update data
@@ -328,7 +328,30 @@ const Home = () => {
     setPreviewSrc(null);
   };
 
-  // console.log("service data: ", services);
+  const UpdateServicePublishStatus = async (id, status) => {
+    const result = await fetch(
+      `http://dev-bangla-dashboard.mysoftheaven.com/api/service/publish-unpublish/${id}`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ status: status }),
+      }
+    ).then((res) => res.json()).catch((err) => {
+      console.log(err);
+    });
+
+
+    if (result?.status === true) {
+      toast.success("Service status updated successfully");
+      setRefetch(!refetch);
+    } else {
+      console.error("Update failed:", result?.message);
+    }
+  }
+
+  console.log("service data: ", services);
 
   // console.log("validation body: ", serviceValidation);
 
@@ -339,7 +362,6 @@ const Home = () => {
           <h3 className="text-32 font-mono font-bold text-[#151D48] pb-5">
             Services
           </h3>
-          {/* <button onClick={() => toast.success("click me")}>click me</button> */}
           <div>
             <Link
               href={{
@@ -445,12 +467,15 @@ const Home = () => {
                             <span class="slider round"></span>
                           </label> */}
                           <button
-                            onClick={() => setPublish(!publish)}
-                            className={`text-white px-4 py-2 rounded transition-all duration-300 ${
-                              publish ? "bg-green-700" : "bg-yellow-500"
+                            onClick={() => UpdateServicePublishStatus(item?.id, item?.status == 1 ? 0 : 1)}
+                            className={`text-white px-4 py-2 rounded transition-all duration-300 w-[90%] ${
+                              item?.status == 1
+                                ? "bg-green-700"
+                                : "bg-yellow-500"
                             }`}
                           >
-                            {publish ? "Published" : "Unpublished"}
+                            {item?.status == 1 ? "Published" : "Unpublished"}
+                            {/* {publish ? "Published" : "Unpublished"} */}
                           </button>
 
                           {/* <button className="text-white">
@@ -815,13 +840,22 @@ const Home = () => {
               <legend>
                 <label>Description</label>
               </legend>
-              <textarea
+
+              {/* <textarea
                 name="description"
                 placeholder="Update description"
                 onChange={(e) => validationUpdateServiceForm(e.target.value)}
                 className="outline-none w-full text-14"
                 defaultValue={serviceUpdate?.description}
-              ></textarea>
+              ></textarea> */}
+
+              <CustomEditor
+                data={serviceUpdate?.description}
+                onChange={(event, editor) => {
+                  const data = editor.getData();
+                  validationUpdateServiceForm(data);
+                }}
+              />
             </fieldset>
             {serviceValidation?.description && (
               <p className="text-red-500 px-2 text-10 pt-1">
@@ -834,13 +868,22 @@ const Home = () => {
               <legend>
                 <label>Distribution</label>
               </legend>
-              <textarea
+
+              {/* <textarea
                 name="distribution"
                 placeholder="Update description"
                 onChange={(e) => validationUpdateServiceForm(e.target.value)}
                 className="outline-none w-full text-14"
                 defaultValue={serviceUpdate?.distribution}
-              ></textarea>
+              ></textarea> */}
+
+              <CustomEditor
+                data={serviceUpdate?.distribution}
+                onChange={(event, editor) => {
+                  const data = editor.getData();
+                  validationUpdateServiceForm(data);
+                }}
+              />
             </fieldset>
             {serviceValidation?.distribution && (
               <p className="text-red-500 px-2 text-10 pt-1">
@@ -853,13 +896,22 @@ const Home = () => {
               <legend>
                 <label>Component</label>
               </legend>
-              <textarea
+
+              {/* <textarea
                 name="component"
                 placeholder="Update component"
                 onChange={(e) => validationUpdateServiceForm(e.target.value)}
                 className="outline-none w-full text-14"
                 defaultValue={serviceUpdate?.component}
-              ></textarea>
+              ></textarea> */}
+
+              <CustomEditor
+                data={serviceUpdate?.component}
+                onChange={(event, editor) => {
+                  const data = editor.getData();
+                  validationUpdateServiceForm(data);
+                }}
+              />
             </fieldset>
             {serviceValidation?.component && (
               <p className="text-red-500 px-2 text-10 pt-1">
