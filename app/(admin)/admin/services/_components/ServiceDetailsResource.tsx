@@ -14,6 +14,7 @@ const ServiceDetailsResource = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [showItem, setShowItem] = useState([]);
   const [modulesItem, setModulesItem] = useState<string[]>([]);
+  const [mediaImages, setMediaImages] = useState<FileList | null>(null);
  
 
   const {
@@ -26,25 +27,31 @@ const ServiceDetailsResource = () => {
 
   const onSubmitServiceDetailsResource = async (data: any) => {
     console.log(data);
-    // service_id,broad_description,modules,media_images,support_address,api_docs,user_docs
     const { description,module, media_image, support_address, api_doc, user_doc } = data;
-    console.log("media Image:",media_image);
-    console.log("module:",module);
+    // console.log("media Image:",media_image);
+    // console.log("module:",module);
+
     const formData = new FormData();
     formData.append("service_id", "1");
     formData.append("broad_description", description);
-    for(let i = 0; i < media_image.length; i++){
-      // console.log("media_image:",media_image[i]);
-      
-      formData.append("media_images", media_image[i]);
+    console.log("media_image1", media_image);
+    console.log("media_image2", mediaImages);
+    console.log("module :", module[0] || "");
+    
+    
+    
+
+    if (mediaImages) {
+      Array.from(mediaImages).forEach((file) => {
+        formData.append("media_images[]", file);
+      });
+    } else {
+      formData.append("media_images[]", "");
     }
-    // formData.append("media_images", media_image[0] || "");
     formData.append("support_address", support_address);
     formData.append("api_docs", api_doc);
     formData.append("user_docs", user_doc);
-    for (let i = 0; i < module.length; i++) {
-      formData.append("modules", module[i]);
-    }
+    formData.append("modules[]", module[0] || "");
 
     const res = await serviceDetailsResourceApi(formData);
     console.log({res});
@@ -238,17 +245,16 @@ const ServiceDetailsResource = () => {
             </legend>
 
             <input
-              {...register("media_image[]", {
+              {...register("media_image", {
                 required: "Logo is required",
               })}
               id="file"
               type="file"
               onChange={(e) => {
                 if (e.target.files && e.target.files[0]) {
-                  setServiceImg(e.target.files[0]);
+                  setMediaImages(e.target.files);
                 }
               }}
-              // accept="video/mp4, video/ogg, video/avi"
               accept="image/*"
               multiple
             />

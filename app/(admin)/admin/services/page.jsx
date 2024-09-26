@@ -474,7 +474,7 @@ const Home = () => {
                                 : "bg-yellow-500"
                             }`}
                           >
-                            {item?.status == 1 ? "Published" : "Unpublished"}
+                            {item?.status == 1 ? "Publish" : "UnPublish"}
                             {/* {publish ? "Published" : "Unpublished"} */}
                           </button>
 
