@@ -1,8 +1,10 @@
+'use client';
 import { serviceBanglaResourceApi } from "@/app/(portal)/_api/ServiceApi/ServiceApi";
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
-import { useForm } from "react-hook-form";
+import { useForm, Controller } from "react-hook-form";
 import { toast } from "react-toastify";
+import CustomEditor from "@/app/_components/CustomEditor/CustomEditor";
 
 const BanglaResource = () => {
   const router = useRouter();
@@ -18,6 +20,7 @@ const BanglaResource = () => {
     handleSubmit,
     reset,
     formState: { errors },
+    control,
   } = useForm();
 
   const onSubmitBanglaResource = async (data: any) => {
@@ -139,7 +142,39 @@ const BanglaResource = () => {
                 </label>
               </legend>
 
-              <textarea
+              <Controller
+                name="description"
+                control={control}
+                defaultValue=""
+                rules={{
+                  required: "Description is required",
+                  validate: {
+                    maxWords: (value) => {
+                      const wordCount = value.trim().split(/\s+/).length;
+                      return (
+                        wordCount <= 80 || "Description cannot exceed 80 words"
+                      );
+                    },
+                  },
+                }}
+                render={({
+                  field: { onChange, value },
+                  fieldState: { error },
+                }) => (
+                  <>
+                    <CustomEditor
+                      onChange={(event: any, editor: any) => {
+                        const data = editor.getData();
+                        onChange(data);
+                      }}
+                      data={value}
+                    />
+                    {error && <p>{error.message}</p>}
+                  </>
+                )}
+              />
+
+              {/* <textarea
                 {...register("description", {
                   required: "description is required",
                   validate: {
@@ -154,13 +189,13 @@ const BanglaResource = () => {
                 id=""
                 className="outline-none p-2"
                 placeholder="Description"
-              ></textarea>
+              ></textarea> */}
             </fieldset>
-            {errors.description && (
+            {/* {errors.description && (
               <p className="text-red-500 text-12 px-2 pt-1">
                 {errors.description.message as string}
               </p>
-            )}
+            )} */}
           </div>
           {/* <div>
           <fieldset className="flex flex-col border rounded-md px-2">
@@ -199,7 +234,39 @@ const BanglaResource = () => {
                 </label>
               </legend>
 
-              <textarea
+              <Controller
+                name="broad_description"
+                control={control}
+                defaultValue=""
+                rules={{
+                  required: "Broad_description is required",
+                  validate: {
+                    maxWords: (value) => {
+                      const wordCount = value.trim().split(/\s+/).length;
+                      return (
+                        wordCount <= 80 || "Description cannot exceed 80 words"
+                      );
+                    },
+                  },
+                }}
+                render={({
+                  field: { onChange, value },
+                  fieldState: { error },
+                }) => (
+                  <>
+                    <CustomEditor
+                      onChange={(event: any, editor: any) => {
+                        const data = editor.getData();
+                        onChange(data);
+                      }}
+                      data={value}
+                    />
+                    {error && <p>{error.message}</p>}
+                  </>
+                )}
+              />
+
+              {/* <textarea
                 {...register("broad_description", {
                   required: "Broad_description is required",
                   validate: {
@@ -214,13 +281,13 @@ const BanglaResource = () => {
                 id=""
                 className="outline-none p-2"
                 placeholder="Board Description"
-              ></textarea>
+              ></textarea> */}
             </fieldset>
-            {errors.broad_description && (
+            {/* {errors.broad_description && (
               <p className="text-red-500 text-12 px-2 pt-1">
                 {errors.broad_description.message as string}
               </p>
-            )}
+            )} */}
           </div>
           <div>
             <fieldset className="flex flex-col border rounded-md px-2">

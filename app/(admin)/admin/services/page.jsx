@@ -8,6 +8,7 @@ import Modal from "@/app/_components/Modal/Modal";
 import { toast } from "react-toastify";
 import Swal from "sweetalert2";
 import Skeleton from "react-loading-skeleton";
+import CustomEditor from "@/app/_components/CustomEditor/CustomEditor";
 
 const Home = () => {
   const [previewSrc, setPreviewSrc] = useState(null); // image sr
@@ -327,7 +328,30 @@ const Home = () => {
     setPreviewSrc(null);
   };
 
-  // console.log("service data: ", services);
+  const UpdateServicePublishStatus = async (id, status) => {
+    const result = await fetch(
+      `http://dev-bangla-dashboard.mysoftheaven.com/api/service/publish-unpublish/${id}`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ status: status }),
+      }
+    ).then((res) => res.json()).catch((err) => {
+      console.log(err);
+    });
+
+
+    if (result?.status === true) {
+      toast.success("Service status updated successfully");
+      setRefetch(!refetch);
+    } else {
+      console.error("Update failed:", result?.message);
+    }
+  }
+
+  console.log("service data: ", services);
 
   // console.log("validation body: ", serviceValidation);
 
@@ -338,7 +362,6 @@ const Home = () => {
           <h3 className="text-32 font-mono font-bold text-[#151D48] pb-5">
             Services
           </h3>
-          {/* <button onClick={() => toast.success("click me")}>click me</button> */}
           <div>
             <Link
               href={{
@@ -369,6 +392,7 @@ const Home = () => {
                 <th className="text-center">Type</th>
                 <th className="text-center">Production Status</th>
                 <th className="text-center">Paid Status</th>
+                <th className="text-center">Publish/Unpublish</th>
                 <th className="text-center">Action</th>
               </tr>
             </thead>
@@ -422,20 +446,56 @@ const Home = () => {
                         </td>
                         <td className="text-center border-r border-gray-200">
                           <div className="flex items-center gap-2">
-                          {paidStatus?.free == 1 ? (
-                            <button className="bg-[#2F93DF] px-1 py-1 lg:px-3 lg:py-2 text-white  rounded ">
-                              Free
-                            </button>
-                          ) : (
-                            ""
-                          )}
+                            {paidStatus?.free == 1 ? (
+                              <button className="bg-[#2F93DF] px-1 py-1 lg:px-3 lg:py-2 text-white  rounded ">
+                                Free
+                              </button>
+                            ) : (
+                              ""
+                            )}
 
-                          {paidStatus?.pro == 1 && (
-                            <button className="bg-[#1AB17A] px-1 py-1 lg:px-3 lg:py-2 text-white  rounded ">
-                              Pro
-                            </button>
-                          )}
+                            {paidStatus?.pro == 1 && (
+                              <button className="bg-[#1AB17A] px-1 py-1 lg:px-3 lg:py-2 text-white  rounded ">
+                                Pro
+                              </button>
+                            )}
                           </div>
+                        </td>
+                        <td className="text-center border-r border-gray-200">
+                          {/* <label class="switch">
+                            <input type="checkbox" />
+                            <span class="slider round"></span>
+                          </label> */}
+                          <button
+                            onClick={() => UpdateServicePublishStatus(item?.id, item?.status == 1 ? 0 : 1)}
+                            className={`text-white px-4 py-2 rounded transition-all duration-300 w-[90%] ${
+                              item?.status == 1
+                                ? "bg-green-700"
+                                : "bg-yellow-500"
+                            }`}
+                          >
+                            {item?.status == 1 ? "Published" : "Unpublished"}
+                            {/* {publish ? "Published" : "Unpublished"} */}
+                          </button>
+
+                          {/* <button className="text-white">
+                            <span
+                              onClick={() => setPublish(1)}
+                              className={`p-2 border border-gray-500 ${
+                                publish == 1 ? "bg-primary" : "bg-gray-500"
+                              }`}
+                            >
+                              Publish
+                            </span>
+                            <span
+                              onClick={() => setPublish(0)}
+                              className={`p-2 border border-gray-500 ${
+                                publish == 0 ? "bg-primary" : "bg-gray-500"
+                              }`}
+                            >
+                              UnPublish
+                            </span>
+                          </button> */}
                         </td>
                         <td className="">
                           <div className="w-full flex items-center justify-center gap-2">
@@ -450,7 +510,6 @@ const Home = () => {
                               >
                                 View
                               </Link>
-                              
 
                               <button
                                 onClick={() => handleEdit(item)}
@@ -460,9 +519,7 @@ const Home = () => {
                               </button>
 
                               <button
-                                onClick={
-                                  () => handleDelete(item?.id)
-                                }
+                                onClick={() => handleDelete(item?.id)}
                                 className="p-1  bg-red-500 text-white active:scale-90 transition-all duration-400 rounded-md"
                               >
                                 <svg
@@ -474,7 +531,6 @@ const Home = () => {
                                 </svg>
                               </button>
                             </>
-                            
                           </div>
                         </td>
                       </tr>
@@ -784,13 +840,22 @@ const Home = () => {
               <legend>
                 <label>Description</label>
               </legend>
-              <textarea
+
+              {/* <textarea
                 name="description"
                 placeholder="Update description"
                 onChange={(e) => validationUpdateServiceForm(e.target.value)}
                 className="outline-none w-full text-14"
                 defaultValue={serviceUpdate?.description}
-              ></textarea>
+              ></textarea> */}
+
+              <CustomEditor
+                data={serviceUpdate?.description}
+                onChange={(event, editor) => {
+                  const data = editor.getData();
+                  validationUpdateServiceForm(data);
+                }}
+              />
             </fieldset>
             {serviceValidation?.description && (
               <p className="text-red-500 px-2 text-10 pt-1">
@@ -803,13 +868,22 @@ const Home = () => {
               <legend>
                 <label>Distribution</label>
               </legend>
-              <textarea
+
+              {/* <textarea
                 name="distribution"
                 placeholder="Update description"
                 onChange={(e) => validationUpdateServiceForm(e.target.value)}
                 className="outline-none w-full text-14"
                 defaultValue={serviceUpdate?.distribution}
-              ></textarea>
+              ></textarea> */}
+
+              <CustomEditor
+                data={serviceUpdate?.distribution}
+                onChange={(event, editor) => {
+                  const data = editor.getData();
+                  validationUpdateServiceForm(data);
+                }}
+              />
             </fieldset>
             {serviceValidation?.distribution && (
               <p className="text-red-500 px-2 text-10 pt-1">
@@ -822,13 +896,22 @@ const Home = () => {
               <legend>
                 <label>Component</label>
               </legend>
-              <textarea
+
+              {/* <textarea
                 name="component"
                 placeholder="Update component"
                 onChange={(e) => validationUpdateServiceForm(e.target.value)}
                 className="outline-none w-full text-14"
                 defaultValue={serviceUpdate?.component}
-              ></textarea>
+              ></textarea> */}
+
+              <CustomEditor
+                data={serviceUpdate?.component}
+                onChange={(event, editor) => {
+                  const data = editor.getData();
+                  validationUpdateServiceForm(data);
+                }}
+              />
             </fieldset>
             {serviceValidation?.component && (
               <p className="text-red-500 px-2 text-10 pt-1">

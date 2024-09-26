@@ -1,7 +1,9 @@
+'use client';
 import { serviceDetailsResourceApi } from "@/app/(portal)/_api/ServiceApi/ServiceApi";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { useForm } from "react-hook-form";
+import { useForm, Controller } from "react-hook-form";
+import CustomEditor from "@/app/_components/CustomEditor/CustomEditor";
 
 const ServiceDetailsResource = () => {
   const router = useRouter();
@@ -19,6 +21,7 @@ const ServiceDetailsResource = () => {
     handleSubmit,
     reset,
     formState: { errors },
+    control,
   } = useForm();
 
   const onSubmitServiceDetailsResource = async (data: any) => {
@@ -63,7 +66,39 @@ const ServiceDetailsResource = () => {
               </label>
             </legend>
 
-            <textarea
+            <Controller
+              name="description"
+              control={control}
+              defaultValue=""
+              rules={{
+                required: "Description is required",
+                validate: {
+                  maxWords: (value) => {
+                    const wordCount = value.trim().split(/\s+/).length;
+                    return (
+                      wordCount <= 80 || "Description cannot exceed 80 words"
+                    );
+                  },
+                },
+              }}
+              render={({
+                field: { onChange, value },
+                fieldState: { error },
+              }) => (
+                <>
+                  <CustomEditor
+                    onChange={(event: any, editor: any) => {
+                      const data = editor.getData();
+                      onChange(data);
+                    }}
+                    data={value}
+                  />
+                  {error && <p>{error.message}</p>}
+                </>
+              )}
+            />
+
+            {/* <textarea
               {...register("description", {
                 required: "description is required",
                 validate: {
@@ -78,13 +113,13 @@ const ServiceDetailsResource = () => {
               id=""
               className="outline-none p-2"
               placeholder="Description"
-            ></textarea>
+            ></textarea> */}
           </fieldset>
-          {errors.description && (
+          {/* {errors.description && (
             <p className="text-red-500 text-12 px-2 pt-1">
               {errors.description.message as string}
             </p>
-          )}
+          )} */}
         </div>
 
         <div className="my-3">
@@ -158,8 +193,6 @@ const ServiceDetailsResource = () => {
             ))}
           </div>
         </div>
-
-        
 
         {/* <div>
           <fieldset className="flex flex-col border rounded-md px-2">
@@ -264,7 +297,39 @@ const ServiceDetailsResource = () => {
               </label>
             </legend>
 
-            <textarea
+            <Controller
+              name="api_doc"
+              control={control}
+              defaultValue=""
+              rules={{
+                required: "Api Document is required",
+                validate: {
+                  maxWords: (value) => {
+                    const wordCount = value.trim().split(/\s+/).length;
+                    return (
+                      wordCount <= 80 || "Api Documents cannot exceed 80 words"
+                    );
+                  },
+                },
+              }}
+              render={({
+                field: { onChange, value },
+                fieldState: { error },
+              }) => (
+                <>
+                  <CustomEditor
+                    onChange={(event: any, editor: any) => {
+                      const data = editor.getData();
+                      onChange(data);
+                    }}
+                    data={value}
+                  />
+                  {error && <p>{error.message}</p>}
+                </>
+              )}
+            />
+
+            {/* <textarea
               {...register("api_doc", {
                 required: "Api Document is required",
                 validate: {
@@ -279,13 +344,13 @@ const ServiceDetailsResource = () => {
               id=""
               className="outline-none p-2"
               placeholder="API documentation"
-            ></textarea>
+            ></textarea> */}
           </fieldset>
-          {errors.api_doc && (
+          {/* {errors.api_doc && (
             <p className="text-red-500 text-12 px-2 pt-1">
               {errors.api_doc.message as string}
             </p>
-          )}
+          )} */}
         </div>
         <div>
           <fieldset className="flex flex-col border rounded-md px-2">
@@ -298,7 +363,39 @@ const ServiceDetailsResource = () => {
               </label>
             </legend>
 
-            <textarea
+            <Controller
+              name="user_doc"
+              control={control}
+              defaultValue=""
+              rules={{
+                required: "User Documents is required",
+                validate: {
+                  maxWords: (value) => {
+                    const wordCount = value.trim().split(/\s+/).length;
+                    return (
+                      wordCount <= 80 || "User Documents cannot exceed 80 words"
+                    );
+                  },
+                },
+              }}
+              render={({
+                field: { onChange, value },
+                fieldState: { error },
+              }) => (
+                <>
+                  <CustomEditor
+                    onChange={(event: any, editor: any) => {
+                      const data = editor.getData();
+                      onChange(data);
+                    }}
+                    data={value}
+                  />
+                  {error && <p>{error.message}</p>}
+                </>
+              )}
+            />
+
+            {/* <textarea
               {...register("user_doc", {
                 required: "User Documents is required",
                 validate: {
@@ -313,13 +410,13 @@ const ServiceDetailsResource = () => {
               id=""
               className="outline-none p-2"
               placeholder="User documentation"
-            ></textarea>
+            ></textarea> */}
           </fieldset>
-          {errors.user_doc && (
+          {/* {errors.user_doc && (
             <p className="text-red-500 text-12 px-2 pt-1">
               {errors.user_doc.message as string}
             </p>
-          )}
+          )} */}
         </div>
 
         <div className="flex justify-between pt-5">

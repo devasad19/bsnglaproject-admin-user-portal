@@ -1,9 +1,11 @@
+'use client';
 import { uploadServiceData } from "@/app/(portal)/_api";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
-import { useForm } from "react-hook-form";
+import { useForm, Controller } from "react-hook-form";
 import { toast } from "react-toastify";
+import CustomEditor from "@/app/_components/CustomEditor/CustomEditor";
 
 const ServiceResource = () => {
   const router = useRouter();
@@ -20,29 +22,12 @@ const ServiceResource = () => {
     handleSubmit,
     reset,
     formState: { errors },
+    control
   } = useForm();
 
-  // service Resource form
   const onSubmitServiceResource = async (data: any) => {
-    // const linksArray = data?.key?.map((linkValue) => ({
-    //   link: linkValue,
-    // }));
-    // const valueArr = data?.url?.map((linkValue) => ({
-    //   url: linkValue,
-    // }));
-
-    // const combinedArray = linksArray?.map((linkObj, index) => ({
-    //   key: linkObj.link,
-    //   value: valueArr?.[index]?.url,
-    // }));
-
-    // console.log({ combinedArray });
 
     setIsLoading(true);
-    // const { name, des, link, status, image, tutorial, documentation, support } =
-    //   data;
-    console.log(data);
-    return;
 
     const {
       component,
@@ -79,25 +64,7 @@ const ServiceResource = () => {
     formData.append("visit_type", visit_type);
     formData.append("resource_file", resource_file[0] || "");
 
-    // Append your data to the FormData object
-    // formData.append("name", name);
-    // formData.append("des", des);
-    // formData.append("main_url", link);
-    // formData.append("status", status);
-    // formData.append("img", image[0]);
-    // formData.append("others_link", JSON.stringify(combinedArray));
-    // formData.append("tutorial", tutorial[0] || '');
-    // formData.append("documentation", documentation);
-    // formData.append("support", support);
-
-    // console.log(Object.fromEntries(formData));
-    //  return;
-
-    // console.log("url links uploads");
-
     const uploadRes = await uploadServiceData(formData);
-
-    console.log("uploadRes", uploadRes);
 
     if (uploadRes.status === true) {
       setIsLoading(false);
@@ -108,6 +75,9 @@ const ServiceResource = () => {
       setIsLoading(false);
       toast.error("Service Creation Failed");
     }
+
+    // console.log('formdata: ',formData);
+    
   };
   return (
     <>
@@ -195,7 +165,39 @@ const ServiceResource = () => {
                 </label>
               </legend>
 
-              <textarea
+              <Controller
+                name="description"
+                control={control}
+                defaultValue=""
+                rules={{
+                  required: "Description is required",
+                  validate: {
+                    maxWords: (value) => {
+                      const wordCount = value.trim().split(/\s+/).length;
+                      return (
+                        wordCount <= 80 || "Description cannot exceed 80 words"
+                      );
+                    },
+                  },
+                }}
+                render={({
+                  field: { onChange, value },
+                  fieldState: { error },
+                }) => (
+                  <>
+                    <CustomEditor
+                      onChange={(event:any, editor:any) => {
+                        const data = editor.getData();
+                        onChange(data);
+                      }}
+                      data={value}
+                    />
+                    {error && <p>{error.message}</p>}
+                  </>
+                )}
+              />
+
+              {/* <textarea
                 {...register("description", {
                   required: "description is required",
                   validate: {
@@ -210,13 +212,13 @@ const ServiceResource = () => {
                 id=""
                 className="outline-none p-2"
                 placeholder="Description"
-              ></textarea>
+              ></textarea> */}
             </fieldset>
-            {errors.description && (
+            {/* {errors.description && (
               <p className="text-red-500 text-12 px-2 pt-1">
                 {errors.description.message as string}
               </p>
-            )}
+            )} */}
           </div>
 
           <div>

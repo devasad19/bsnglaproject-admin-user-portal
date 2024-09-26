@@ -3,10 +3,9 @@ import { useState } from "react";
 import ServiceResource from "../_components/ServiceResource";
 import ServiceDetailsResource from "../_components/ServiceDetailsResource";
 import BanglaResource from "../_components/BanglaResource";
+
 const Home = () => {
   const [tab, setTab] = useState(0);
-
-
   return (
     <>
       <section className="pb-10">
@@ -14,10 +13,7 @@ const Home = () => {
           Create New Service
         </h3>
         <div className="flex justify-center w-full">
-          <div
-            
-            className="bg-white p-4 w-full lg:w-[80%] overflow-hidden"
-          >
+          <div className="bg-white p-4 w-full lg:w-[80%] overflow-hidden">
             <div className="flex flex-col gap-3">
               <h1 className="text-20 font-mono font-bold text-[#151D48]">
                 Service Details
@@ -57,17 +53,17 @@ const Home = () => {
                 <div className="flex flex-col gap-4">
                   {tab == 0 && (
                     <>
-                      <ServiceResource/>
+                      <ServiceResource />
                     </>
                   )}
                   {tab == 1 && (
                     <>
-                      <ServiceDetailsResource/>
+                      <ServiceDetailsResource />
                     </>
                   )}
                   {tab == 2 && (
                     <>
-                      <BanglaResource/>
+                      <BanglaResource />
                     </>
                   )}
                 </div>
