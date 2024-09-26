@@ -51,7 +51,7 @@ const ServiceDetailsResource = () => {
     formData.append("support_address", support_address);
     formData.append("api_docs", api_doc);
     formData.append("user_docs", user_doc);
-    formData.append("modules[]", module[0] || "");
+    // formData.append("modules[]", module[0] || "");
 
     const res = await serviceDetailsResourceApi(formData);
     console.log({res});
@@ -129,7 +129,7 @@ const ServiceDetailsResource = () => {
           )} */}
         </div>
 
-        <div className="my-3">
+        {/* <div className="my-3">
           <div className="border border-gray-300 rounded">
             <div className="bg-gray-300 flex items-center justify-between p-2">
               <h3 className="text-primary font-semibold">Modules File</h3>
@@ -199,7 +199,7 @@ const ServiceDetailsResource = () => {
               </div>
             ))}
           </div>
-        </div>
+        </div> */}
 
         {/* <div>
           <fieldset className="flex flex-col border rounded-md px-2">
