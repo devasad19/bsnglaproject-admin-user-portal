@@ -31,6 +31,8 @@ const ServiceDetailsResource = () => {
     formData.append("service_id", "1");
     formData.append("broad_description", description);
     for(let i = 0; i < media_image.length; i++){
+      // console.log("media_image:",media_image[i]);
+      
       formData.append("media_images", media_image[i]);
     }
     // formData.append("media_images", media_image[0] || "");
