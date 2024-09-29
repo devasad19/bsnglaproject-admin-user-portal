@@ -57,14 +57,10 @@ const ServiceDetailsResource = () => {
 
   return (
     <>
-<<<<<<< HEAD
-      <form onSubmit={handleSubmit(onSubmitServiceDetailsResource)} >
-=======
       <form
         onSubmit={handleSubmit(onSubmitServiceDetailsResource)}
         className="flex flex-col gap-4"
       >
->>>>>>> e45fc7fa125ae3aeaae5f9981076f17e61b24461
         <div>
           <fieldset className="flex flex-col border rounded-md px-2">
             <legend>
