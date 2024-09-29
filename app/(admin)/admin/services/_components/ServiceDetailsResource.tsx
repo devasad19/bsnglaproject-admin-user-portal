@@ -461,7 +461,7 @@ const ServiceDetailsResource = () => {
                                 </div>
                                 <div className="grid grid-cols-4">
                                   <p>Module:</p>
-                                  <input type="file" />
+                                  <input type="file" className="col-span-3 " />
                                 </div>
                               </div>
 
