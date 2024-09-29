@@ -5,6 +5,28 @@ import { useState } from "react";
 import { useForm, Controller } from "react-hook-form";
 import CustomEditor from "@/app/_components/CustomEditor/CustomEditor";
 
+interface FormData {
+  description: string;
+  media_image: File;
+  support_address: string;
+  externalLinks: { label: string; link: string }[];
+  api_doc: string;
+  user_doc: string;
+  module: { label: string; image: File }[];
+  videolink: string;
+  // Add other fields as necessary
+}
+
+// type FormData = {
+//   description: string;
+//   media_image: FileList;
+//   support_address: string;
+//   api_doc: string;
+//   user_doc: string;
+//   externalLinks: { label: string; link: string }[];
+//   module: { label: string; imgage: File }[]; // Add this line
+// };
+
 const ServiceDetailsResource = () => {
   const router = useRouter();
   const [status, setStatus] = useState("");
@@ -15,6 +37,7 @@ const ServiceDetailsResource = () => {
   const [showItem, setShowItem] = useState([]);
   const [modulesItem, setModulesItem] = useState<string[]>([]);
   const [externalLinks, setExternalLinks] = useState<string[]>([]);
+  const [mediaImages, setMediaImages] = useState<FileList | null>(null);
 
   const {
     register,
@@ -22,10 +45,10 @@ const ServiceDetailsResource = () => {
     reset,
     formState: { errors },
     control,
-  } = useForm();
+  } = useForm<FormData>();
 
   const onSubmitServiceDetailsResource = async (data: any) => {
-    // console.log(data);
+    
     // service_id,broad_description,modules,media_images,support_address,api_docs,user_docs
     const {
       description,
@@ -34,22 +57,45 @@ const ServiceDetailsResource = () => {
       support_address,
       api_doc,
       user_doc,
+      externalLinks,
+      
+
     } = data;
-    console.log(media_image);
+    // console.log({module});
+    // console.log(media_image);
     console.log(module);
     const formData = new FormData();
     formData.append("service_id", "1");
     formData.append("broad_description", description);
-    for(let i = 0; i < media_image.length; i++){
-      formData.append("media_images", media_image[i]);
+
+    // console.log("media_image1", media_image);
+    // console.log("media_image2", mediaImages);
+    // console.log("module :", module[0] || "");
+
+    if (mediaImages) {
+      Array.from(mediaImages).forEach((file) => {
+        // console.log("media images file: ", file);	
+        
+        formData.append("media_images[]", file);
+      });
+    } else {
+      formData.append("media_images[]", "");
     }
-    // formData.append("media_images", media_image[0] || "");
+  let modules:any =[];
+    module.forEach((item: any) => {
+      const { label, image } = item;
+      console.log("mudules imageds:", image[0]);
+      
+      modules.push({ label: label, image: image[0] });
+    });
+    console.log("Update modules:", modules);
+
+    formData.append("modules", JSON.stringify(modules));
+    formData.append("external_links", JSON.stringify(externalLinks));
     formData.append("support_address", support_address);
     formData.append("api_docs", api_doc);
     formData.append("user_docs", user_doc);
-    for (let i = 0; i < module.length; i++) {
-      formData.append("modules", module[i]);
-    }
+    // formData.append("modules[]", module[0] || "");
 
     const res = await serviceDetailsResourceApi(formData);
     console.log({ res });
@@ -99,7 +145,11 @@ const ServiceDetailsResource = () => {
                     }}
                     data={value}
                   />
-                  {error && <p>{error.message}</p>}
+                  {errors.description && (
+                    <p className="text-red-500 text-12 px-2 pt-1">
+                      {errors.description.message as string}
+                    </p>
+                  )}
                 </>
               )}
             />
@@ -128,7 +178,7 @@ const ServiceDetailsResource = () => {
           )} */}
         </div>
 
-        <div className="my-3">
+        {/* <div className="my-3">
           <div className="border border-gray-300 rounded">
             <div className="bg-gray-300 flex items-center justify-between p-2">
               <h3 className="text-primary font-semibold">Modules File</h3>
@@ -198,7 +248,7 @@ const ServiceDetailsResource = () => {
               </div>
             ))}
           </div>
-        </div>
+        </div> */}
 
         {/* <div>
           <fieldset className="flex flex-col border rounded-md px-2">
@@ -244,17 +294,16 @@ const ServiceDetailsResource = () => {
             </legend>
 
             <input
-              {...register("media_image[]", {
+              {...register("media_image", {
                 required: "Logo is required",
               })}
               id="file"
               type="file"
               onChange={(e) => {
                 if (e.target.files && e.target.files[0]) {
-                  setServiceImg(e.target.files[0]);
+                  setMediaImages(e.target.files);
                 }
               }}
-              // accept="video/mp4, video/ogg, video/avi"
               accept="image/*"
               multiple
             />
@@ -330,7 +379,11 @@ const ServiceDetailsResource = () => {
                     }}
                     data={value}
                   />
-                  {error && <p>{error.message}</p>}
+                  {errors.api_doc && (
+                    <p className="text-red-500 text-12 px-2 pt-1">
+                      {errors.api_doc.message as string}
+                    </p>
+                  )}
                 </>
               )}
             />
@@ -402,7 +455,11 @@ const ServiceDetailsResource = () => {
                         }}
                         data={value}
                       />
-                      {error && <p>{error.message}</p>}
+                      {errors.user_doc && (
+                        <p className="text-red-500 text-12 px-2 pt-1">
+                          {errors.user_doc.message as string}
+                        </p>
+                      )}
                     </>
                   )}
                 />
@@ -446,15 +503,38 @@ const ServiceDetailsResource = () => {
                               <div className="flex flex-col gap-2">
                                 <div className="grid grid-cols-4">
                                   <p>Label:</p>
-                                  <input
-                                    type="text"
-                                    placeholder="Enter Label"
-                                    className="col-span-3 border border-black w-full px-2"
-                                  />
+                                  <div className="col-span-3">
+                                    <input
+                                      type="text"
+                                      {...register(`module.${index}.label`, {
+                                        required: "Label is required", // Validation rule
+                                      })}
+                                      placeholder="Enter Label"
+                                      className=" border border-black w-full px-2"
+                                    />
+                                    {errors.module?.[index]?.label && (
+                                      <p className="text-red-500 text-sm px-2 pt-1">
+                                        {errors.module[index]?.label?.message}
+                                      </p>
+                                    )}
+                                  </div>
                                 </div>
                                 <div className="grid grid-cols-4">
                                   <p>Module:</p>
-                                  <input type="file" className="col-span-3 " />
+                                  <div className="col-span-3">
+                                    <input
+                                      type="file"
+                                      {...register(`module.${index}.image`, {
+                                        required: "Module is required", // Validation rule
+                                      })}
+                                      className="w-full "
+                                    />
+                                    {errors.module?.[index]?.image && (
+                                      <p className="text-red-500 text-sm px-2 pt-1">
+                                        {errors.module[index]?.image?.message}
+                                      </p>
+                                    )}
+                                  </div>
                                 </div>
                               </div>
 
@@ -535,20 +615,55 @@ const ServiceDetailsResource = () => {
                               <div className="flex flex-col gap-2">
                                 <div className="grid grid-cols-4">
                                   <p>Label:</p>
-                                  <input
-                                    type="text"
-                                    placeholder="Enter Label"
-                                    className="col-span-3 border border-black w-full px-2"
-                                  />
+                                  <div className="col-span-3">
+                                    <input
+                                      type="text"
+                                      {...register(
+                                        `externalLinks.${index}.label`,
+                                        {
+                                          required: "Label is required", // Validation rule
+                                        }
+                                      )}
+                                      placeholder="Enter Label"
+                                      className=" border border-black w-full px-2"
+                                    />
+                                    {errors.externalLinks?.[index]?.label && (
+                                      <p className="text-red-500 text-sm px-2 pt-1">
+                                        {
+                                          errors.externalLinks[index]?.label
+                                            ?.message
+                                        }
+                                      </p>
+                                    )}
+                                  </div>
                                 </div>
+                                {/* Display validation message for Label */}
+
                                 <div className="grid grid-cols-4">
-                                  <p>link:</p>
-                                  <input
-                                    type="text"
-                                    placeholder="Enter Link"
-                                    className="col-span-3 border border-black w-full px-2"
-                                  />
+                                  <p>Link:</p>
+                                  <div className="col-span-3">
+                                    <input
+                                      type="text"
+                                      {...register(
+                                        `externalLinks.${index}.link`,
+                                        {
+                                          required: "Link is required", // Validation rule
+                                        }
+                                      )}
+                                      placeholder="Enter Link"
+                                      className=" border border-black w-full px-2"
+                                    />
+                                    {errors.externalLinks?.[index]?.link && (
+                                      <p className="text-red-500 text-sm px-2 pt-1">
+                                        {
+                                          errors.externalLinks[index]?.link
+                                            ?.message as string
+                                        }
+                                      </p>
+                                    )}
+                                  </div>
                                 </div>
+                                {/* Display validation message for Link */}
                               </div>
 
                               {/* <input
@@ -600,7 +715,7 @@ const ServiceDetailsResource = () => {
                   </legend>
                   <input
                     {...register("videolink", {
-                      required: "Support Address is required",
+                      required: "Video Link is required",
                     })}
                     type="text"
                     placeholder="Video Link (Youtube)"

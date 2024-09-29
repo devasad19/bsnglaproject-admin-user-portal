@@ -1,4 +1,4 @@
-'use client';
+"use client";
 import { uploadServiceData } from "@/app/(portal)/_api";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
@@ -22,11 +22,10 @@ const ServiceResource = () => {
     handleSubmit,
     reset,
     formState: { errors },
-    control
+    control,
   } = useForm();
 
   const onSubmitServiceResource = async (data: any) => {
-
     setIsLoading(true);
 
     const {
@@ -77,7 +76,6 @@ const ServiceResource = () => {
     }
 
     // console.log('formdata: ',formData);
-    
   };
   return (
     <>
@@ -167,6 +165,7 @@ const ServiceResource = () => {
 
               <Controller
                 name="description"
+                
                 control={control}
                 defaultValue=""
                 rules={{
@@ -186,13 +185,17 @@ const ServiceResource = () => {
                 }) => (
                   <>
                     <CustomEditor
-                      onChange={(event:any, editor:any) => {
+                      onChange={(event: any, editor: any) => {
                         const data = editor.getData();
                         onChange(data);
                       }}
                       data={value}
                     />
-                    {error && <p>{error.message}</p>}
+                    {errors.description && (
+                      <p className="text-red-500 text-12 px-2 pt-1">
+                        {errors.description.message as string}
+                      </p>
+                    )}
                   </>
                 )}
               />
@@ -339,7 +342,6 @@ const ServiceResource = () => {
             )}
           </div>
 
-         
           {serviceImg && (
             <Image
               src={URL.createObjectURL(serviceImg)}
@@ -558,7 +560,7 @@ const ServiceResource = () => {
               </div>
             </>
           )}
-           <div>
+          <div>
             <fieldset className="flex flex-col border rounded-md px-2">
               <legend>
                 <label
