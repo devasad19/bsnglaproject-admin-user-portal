@@ -85,12 +85,17 @@ const ServiceDetailsResource = () => {
     module.forEach((item: any) => {
       const { label, image } = item;
       console.log("mudules imageds:", image[0]);
-      
       modules.push({ label: label, image: image[0] });
     });
-    console.log("Update modules:", modules);
 
-    formData.append("modules", JSON.stringify(modules));
+
+    // for (let i = 0; i < module.length; i++) {
+    //   formData.append('modules[]', module[i]);
+    // }
+
+    console.log("Update2 modules:", modules);
+
+    formData.append("modules", modules);
     formData.append("external_links", JSON.stringify(externalLinks));
     formData.append("support_address", support_address);
     formData.append("api_docs", api_doc);
