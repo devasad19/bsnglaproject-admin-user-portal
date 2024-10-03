@@ -1,7 +1,7 @@
 import axios from "axios"
 
 export const serviceDetailsResourceApi = async (data:any)=>{
-    console.log('data from api: ', data);
+    // console.log('data from api: ', data);
     
     try {
         const res = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/store/service/details`,data);
