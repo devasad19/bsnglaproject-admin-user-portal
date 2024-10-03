@@ -5,7 +5,7 @@ import { useState } from "react";
 import { useForm, Controller } from "react-hook-form";
 import CustomEditor from "@/app/_components/CustomEditor/CustomEditor";
 
-interface FormData {
+/* interface FormData {
   description: string;
   media_image: File;
   support_address: string;
@@ -14,21 +14,71 @@ interface FormData {
   user_doc: string;
   module: { label: string; image: File }[];
   videolink: string;
-}
+} */
+
 
 
 const ServiceDetailsResource = () => {
   const router = useRouter();
-  const [status, setStatus] = useState("");
-  const [serviceImg, setServiceImg] = useState<File | null>(null);
-  const [tutorialVideo, setTutorialVideo] = useState(null);
-  const [links, setLinks] = useState([]);
-  const [isLoading, setIsLoading] = useState(false);
-  const [showItem, setShowItem] = useState([]);
-  const [modulesItem, setModulesItem] = useState<string[]>([""]);
+  const [formData, setFormData] = useState<any>({
+    description: "",
+    mediaImages: [],
+    distribution: [
+      {
+        label: "",
+        icon: "",
+      }
+    ],
+    user_doc: {
+      label: "",
+      icon: "",
+      video_link: "",
+      short_description: "",
+      module_file: [
+        {
+          label: "",
+          version: "",
+          module: ""
+        }
+      ],
+      external_links: [
+        {
+          label: "",
+          link: ""
+        }
+      ]
+    },
+
+    api_doc: {
+      label: "",
+      icon: "",
+      video_link: "",
+      short_description: "",
+      module_file: [
+        {
+          label: "",
+          version: "",
+          module: ""
+        }
+      ],
+      external_links: [
+        {
+          label: "",
+          link: ""
+        }
+      ]
+    }
+  });
+  // const [status, setStatus] = useState("");
+  // const [serviceImg, setServiceImg] = useState<File | null>(null);
+  // const [tutorialVideo, setTutorialVideo] = useState(null);
+  // const [links, setLinks] = useState([]);
+  // const [isLoading, setIsLoading] = useState(false);
+  // const [showItem, setShowItem] = useState([]);
+  /* const [modulesItem, setModulesItem] = useState<string[]>([""]);
   const [externalLinks, setExternalLinks] = useState<string[]>([""]);
   const [mediaImages, setMediaImages] = useState<FileList | null>(null);
-  const [distribution, setDistribution] = useState<string[]>([""]);
+  const [distribution, setDistribution] = useState<string[]>([""]); */
 
   /* const {
     register,
@@ -93,22 +143,89 @@ const ServiceDetailsResource = () => {
   }; */
 
 
+  const HandleFormSubmit = async (e: any) => {
+    e.preventDefault();
+
+    const payload = new FormData();
+
+    payload.append("service_id", "1");
+    payload.append("broad_description", formData.description);
+
+    if (formData.mediaImages) {
+      Array.from(formData.mediaImages).forEach((file) => {
+
+        payload.append("media_images[]", file);
+      });
+    } else {
+      payload.append("media_images[]", "");
+    }
+
+    payload.append("api_doc_label", formData.api_doc.label);
+    payload.append("api_doc_icon", formData.api_doc.icon);
+    payload.append("api_desc", formData.api_doc.short_description);
+    payload.append("api_modules", JSON.stringify(formData.api_doc.module_file));
+    payload.append("api_external_links", JSON.stringify(formData.api_doc.external_links));
+    payload.append("api_youtube_link", formData.api_doc.video_link);
+    payload.append("user_doc_label", formData.user_doc.label);
+    payload.append("user_doc_icon", formData.user_doc.icon);
+    payload.append("user_desc", formData.user_doc.short_description);
+    payload.append("user_modules", JSON.stringify(formData.user_doc.module_file));
+    payload.append("user_external_links", JSON.stringify(formData.user_doc.external_links));
+    payload.append("user_youtube_link", formData.user_doc.video_link);
+    payload.append("distribution_items", JSON.stringify(formData.distribution));
+    
+
+
+
+    /* const data = {
+      service_id: 1,
+      broad_description: formData.description,
+      api_doc_label: formData.api_doc.label,
+      api_doc_icon: formData.api_doc.icon,
+      api_desc: formData.api_doc.short_description,
+      api_modules: null,
+      api_external_links: null,
+      api_youtube_link: formData.api_doc.video_link,
+      user_doc_label: formData.user_doc.label,
+      user_doc_icon: formData.user_doc.icon,
+      user_desc: formData.user_doc.short_description,
+      user_modules: null,
+      user_external_links: null,
+      user_youtube_link: formData.user_doc.video_link,
+      media_images: formData.mediaImages,
+      distribution_items: null
+    }; */
+
+    const res = await serviceDetailsResourceApi(payload).catch((err) => {
+      console.log(err);
+    });
+
+    // console.log('submitted form data: ',data);
+    console.log('response from service details api: ',res);
+    
+    
+  };
+  
+
   return (
     <>
       <form
-        // onSubmit={handleSubmit(onSubmitServiceDetailsResource)}
+        onSubmit={HandleFormSubmit}
         className="flex flex-col gap-4"
+        encType="multipart/form-data"
       >
         <div>
           <fieldset className="flex flex-col border rounded-md px-2">
             <legend>
               <label
-                htmlFor="ServiceName"
+                htmlFor="description"
                 className="after:content-['_*'] after:text-red-500"
               >
                 Description For Details Page
               </label>
             </legend>
+
+            <textarea onChange={(e) => setFormData({ ...formData, description: e.target.value })} name="description" placeholder="Enter Description"></textarea>
 
             {/* <Controller
               name="description"
@@ -151,7 +268,7 @@ const ServiceDetailsResource = () => {
           <fieldset className="flex flex-col border rounded-md px-2">
             <legend>
               <label
-                htmlFor="ServiceName"
+                htmlFor="mediaImages"
                 className="after:content-['_*'] after:text-red-500"
               >
                 Media Images
@@ -159,25 +276,13 @@ const ServiceDetailsResource = () => {
             </legend>
 
             <input
-              {...register("media_image", {
-                required: "Logo is required",
-              })}
-              id="file"
+              onChange={(e) => setFormData({ ...formData, mediaImages: e.target.files })}
+              id="mediaImages"
               type="file"
-              onChange={(e) => {
-                if (e.target.files && e.target.files[0]) {
-                  setMediaImages(e.target.files);
-                }
-              }}
               accept="image/*"
               multiple
             />
           </fieldset>
-          {errors.media_image && (
-            <p className="text-red-500 text-12 px-2 pt-1">
-              {errors.media_image.message as string}
-            </p>
-          )}
         </div>
 
         <div className="border border-gray-300 rounded">
@@ -185,9 +290,7 @@ const ServiceDetailsResource = () => {
             <h3 className="text-primary font-semibold">Distribution</h3>
             <button
               type="button"
-              onClick={() => {
-                setDistribution([...distribution, ""]);
-              }}
+              onClick={() => setFormData({ ...formData, distribution: [...formData.distribution, { label: "", icon: "" }] })}
               className="bg-primary text-white px-4 py-2 rounded"
             >
               <svg
@@ -199,7 +302,7 @@ const ServiceDetailsResource = () => {
               </svg>
             </button>
           </div>
-          {distribution?.map((item, index) => (
+          {formData?.distribution?.map((item: any, index: any) => (
             <div key={index} className="p-2 ">
               <div>
                 <div className="flex gap-2">
@@ -220,17 +323,19 @@ const ServiceDetailsResource = () => {
                           <div className="col-span-3">
                             <input
                               type="text"
-                              {...register(`module.${index}.label`, {
-                                required: "Label is required",
-                              })}
                               placeholder="Enter Label"
-                              className=" border border-black w-full px-2"
+                              className="border border-black w-full px-2 outline-none"
+                              value={item?.label}
+                              onChange={(e) => {
+                                setFormData({
+                                  ...formData,
+                                  distribution: formData.distribution.map(
+                                    (dist: any, i: any) =>
+                                      i === index ? { ...dist, label: e.target.value } : dist
+                                  ),
+                                });
+                              }}
                             />
-                            {errors.module?.[index]?.label && (
-                              <p className="text-red-500 text-sm px-2 pt-1">
-                                {errors.module[index]?.label?.message}
-                              </p>
-                            )}
                           </div>
                         </div>
                         <div className="grid grid-cols-4">
@@ -238,16 +343,17 @@ const ServiceDetailsResource = () => {
                           <div className="col-span-3">
                             <input
                               type="file"
-                              {...register(`module.${index}.image`, {
-                                required: "Module is required",
-                              })}
-                              className="w-full "
+                              className="w-full"
+                              onChange={(e) => {
+                                setFormData({
+                                  ...formData,
+                                  distribution: formData.distribution.map(
+                                    (dist: any, i: any) =>
+                                      i === index ? { ...dist, icon: e.target.files?.[0] } : dist 
+                                  ),
+                                });
+                              }}
                             />
-                            {errors.module?.[index]?.image && (
-                              <p className="text-red-500 text-sm px-2 pt-1">
-                                {errors.module[index]?.image?.message}
-                              </p>
-                            )}
                           </div>
                         </div>
                       </div>
@@ -257,13 +363,15 @@ const ServiceDetailsResource = () => {
                     <button
                       type="button"
                       onClick={() => {
-                        if (distribution?.length != 1) {
-                          setDistribution(() => {
-                            return distribution.filter(
-                              (item, index2) => index !== index2
-                            );
-                          })
+                        if(formData.distribution.length != 1){
+                          setFormData({
+                            ...formData,
+                            distribution: formData.distribution.filter(
+                              (dist: any, i: any) => i !== index
+                            ),
+                          });
                         }
+
                       }}
                       className="border border-primary bg-primary text-white mt-2 px-2 py-1 rounded"
                     >
@@ -292,11 +400,11 @@ const ServiceDetailsResource = () => {
               <div>
                 <fieldset className="flex flex-col border rounded-md px-2">
                   <legend>
-                    <label htmlFor="user_doc_title" className="after:content-['_*'] after:text-red-500">
+                    <label htmlFor="user_doc_label" className="after:content-['_*'] after:text-red-500">
                       Label
                     </label>
                   </legend>
-                  <input type="text" placeholder="Enter user doc label" className="w-full outline-none p-2" />
+                  <input onChange={(e) => setFormData({ ...formData, user_doc: { ...formData.user_doc, label: e.target.value } })} id="user_doc_label" type="text" placeholder="Enter user doc label" className="w-full outline-none p-2" />
                 </fieldset>
               </div>
 
@@ -307,7 +415,7 @@ const ServiceDetailsResource = () => {
                       Icon
                     </label>
                   </legend>
-                  <input type="file" name="user_doc_icon" />
+                  <input onChange={(e) => setFormData({ ...formData, user_doc: { ...formData.user_doc, icon: e.target.files?.[0] } })} type="file" name="user_doc_icon" />
                 </fieldset>
               </div>
 
@@ -315,26 +423,20 @@ const ServiceDetailsResource = () => {
                 <fieldset className="flex flex-col border rounded-md px-2">
                   <legend>
                     <label
-                      htmlFor="videolink"
+                      htmlFor="video_link"
                       className="after:content-['_*'] after:text-red-500"
                     >
                       Video Link (Youtube)
                     </label>
                   </legend>
                   <input
-                    {...register("videolink", {
-                      required: "Video Link is required",
-                    })}
+                    onChange={(e) => setFormData({ ...formData, user_doc: { ...formData.user_doc, video_link: e.target.value } })}
+                    id="video_link"
                     type="text"
                     placeholder="Video Link (Youtube)"
                     className="outline-none p-2"
                   />
                 </fieldset>
-                {errors.videolink && (
-                  <p className="text-red-500 text-12 px-2 pt-1">
-                    {errors.videolink.message as string}
-                  </p>
-                )}
               </div>
 
               <fieldset className="flex flex-col border rounded-md px-2">
@@ -347,9 +449,10 @@ const ServiceDetailsResource = () => {
                   </label>
                 </legend>
 
-                <Controller
+                <textarea onChange={(e) => setFormData({ ...formData, user_doc: { ...formData.user_doc, short_description: e.target.value } })} name="user_doc_description" className="w-full outline-none p-2" placeholder="Enter user doc short description"></textarea>
+
+                {/* <Controller
                   name="user_doc"
-                  control={control}
                   defaultValue=""
                   rules={{
                     required: "User Documents is required",
@@ -375,14 +478,9 @@ const ServiceDetailsResource = () => {
                         }}
                         data={value}
                       />
-                      {errors.user_doc && (
-                        <p className="text-red-500 text-12 px-2 pt-1">
-                          {errors.user_doc.message as string}
-                        </p>
-                      )}
                     </>
                   )}
-                />
+                /> */}
               </fieldset>
 
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-2">
@@ -390,10 +488,20 @@ const ServiceDetailsResource = () => {
                   <div className="bg-gray-300 flex items-center justify-between p-2">
                     <h3 className="text-primary font-semibold">Modules File</h3>
                     <button
-                      type="button"
                       onClick={() => {
-                        setModulesItem([...modulesItem, ""]);
+                        setFormData({
+                          ...formData,
+                          user_doc: {
+                            ...formData.user_doc,
+                            module_file: [...formData.user_doc.module_file, {
+                              label: "",
+                              version: "",
+                              module: ""
+                            }],
+                          },
+                        });
                       }}
+                      type="button"
                       className="bg-primary text-white px-4 py-2 rounded"
                     >
                       <svg
@@ -405,7 +513,7 @@ const ServiceDetailsResource = () => {
                       </svg>
                     </button>
                   </div>
-                  {modulesItem?.map((item, index) => (
+                  {formData?.user_doc?.module_file?.map((item:any, index: any) => (
                     <div key={index} className="p-2 ">
                       <div>
                         <div className="flex gap-2">
@@ -425,76 +533,90 @@ const ServiceDetailsResource = () => {
                                   <p>Label:</p>
                                   <div className="col-span-3">
                                     <input
+                                    onChange={(e) => {
+                                      const newModuleFile = [...formData.user_doc.module_file];
+                                      newModuleFile[index] = {
+                                        ...newModuleFile[index],
+                                        label: e.target.value
+                                      };
+                                      setFormData({
+                                        ...formData,
+                                        user_doc: {
+                                          ...formData.user_doc,
+                                          module_file: newModuleFile
+                                        }
+                                      });
+                                    }}
+                                      value={item.label}
                                       type="text"
-                                      {...register(`module.${index}.label`, {
-                                        required: "Label is required", // Validation rule
-                                      })}
                                       placeholder="Enter Label"
                                       className=" border border-black w-full px-2"
                                     />
-                                    {errors.module?.[index]?.label && (
-                                      <p className="text-red-500 text-sm px-2 pt-1">
-                                        {errors.module[index]?.label?.message}
-                                      </p>
-                                    )}
                                   </div>
                                 </div>
                                 <div className="grid grid-cols-4">
                                   <p>Version:</p>
                                   <div className="col-span-3">
                                     <input
+                                      value={item.version}
+                                      onChange={(e) => {
+                                        const newModuleFile = [...formData.user_doc.module_file];
+                                        newModuleFile[index] = {
+                                          ...newModuleFile[index],
+                                          version: e.target.value
+                                        };
+                                        setFormData({
+                                          ...formData,
+                                          user_doc: {
+                                            ...formData.user_doc,
+                                            module_file: newModuleFile
+                                          }
+                                        });
+                                      }}
                                       type="text"
-                                      {...register(`module.${index}.label`, {
-                                        required: "Label is required", // Validation rule
-                                      })}
                                       placeholder="Enter Version"
                                       className=" border border-black w-full px-2"
                                     />
-                                    {errors.module?.[index]?.label && (
-                                      <p className="text-red-500 text-sm px-2 pt-1">
-                                        {errors.module[index]?.label?.message}
-                                      </p>
-                                    )}
                                   </div>
                                 </div>
                                 <div className="grid grid-cols-4">
                                   <p>Module:</p>
                                   <div className="col-span-3">
                                     <input
+                                      onChange={(e) => {
+                                        const newModuleFile = [...formData.user_doc.module_file];
+                                        newModuleFile[index] = {
+                                          ...newModuleFile[index],
+                                          module: e.target.value
+                                        };
+                                        setFormData({
+                                          ...formData,
+                                          user_doc: {
+                                            ...formData.user_doc,
+                                            module_file: newModuleFile
+                                          }
+                                        });
+                                      }}
                                       type="file"
-                                      {...register(`module.${index}.image`, {
-                                        required: "Module is required", // Validation rule
-                                      })}
                                       className="w-full "
                                     />
-                                    {errors.module?.[index]?.image && (
-                                      <p className="text-red-500 text-sm px-2 pt-1">
-                                        {errors.module[index]?.image?.message}
-                                      </p>
-                                    )}
                                   </div>
                                 </div>
                               </div>
-
-                              {/* <input
-                                type="file"
-                                id={`module${index}`}
-                                {...register(`module.${index}`)}
-                                placeholder="Enter Url Key"
-                                className="outline-none p-2 "
-                              /> */}
                             </fieldset>
                           </div>
                           <div className="mt-3">
                             <button
                               type="button"
                               onClick={() => {
-                                if (modulesItem.length !== 1) {
-                                  setModulesItem(() => {
-                                    return modulesItem.filter(
-                                      (item, index2) => index !== index2
-                                    );
-                                  });
+                                if (formData?.user_doc?.module_file.length != 1) {
+                                  setFormData({
+                                    ...formData,
+                                    user_doc: {
+                                      ...formData.user_doc,
+                                      module_file: formData.user_doc.module_file.filter((_, i:any) => i !== index),
+                                    },
+                                  })
                                 }
 
                               }}
@@ -522,11 +644,20 @@ const ServiceDetailsResource = () => {
                     <button
                       type="button"
                       onClick={() => {
-                        setExternalLinks([...externalLinks, ""]);
+                        setFormData({
+                          ...formData,
+                          user_doc: {
+                            ...formData.user_doc,
+                            external_links: [
+                              ...formData.user_doc.external_links,
+                              {
+                                label: "",
+                                link: ""
+                              },
+                            ],
+                          },
+                        });
                       }}
-                      /* onClick={() => {
-                        setModulesItem([...modulesItem, ""]);
-                      }} */
                       className="bg-primary text-white px-4 py-2 rounded"
                     >
                       <svg
@@ -538,7 +669,7 @@ const ServiceDetailsResource = () => {
                       </svg>
                     </button>
                   </div>
-                  {externalLinks?.map((item, index) => (
+                  {formData?.user_doc?.external_links?.map((item, index: any) => (
                     <div key={index} className="p-2 ">
                       <div>
                         <div className="flex gap-2">
@@ -558,74 +689,66 @@ const ServiceDetailsResource = () => {
                                   <p>Label:</p>
                                   <div className="col-span-3">
                                     <input
+                                      onChange={(e) => {
+                                        const newExternalLinks = [...formData.user_doc.external_links];
+                                        newExternalLinks[index] = {
+                                          ...newExternalLinks[index],
+                                          label: e.target.value
+                                        };
+                                        setFormData({
+                                          ...formData,
+                                          user_doc: {
+                                            ...formData.user_doc,
+                                            external_links: newExternalLinks
+                                          }
+                                        });
+                                      }}
                                       type="text"
-                                      {...register(
-                                        `externalLinks.${index}.label`,
-                                        {
-                                          required: "Label is required", // Validation rule
-                                        }
-                                      )}
                                       placeholder="Enter Label"
                                       className=" border border-black w-full px-2"
                                     />
-                                    {errors.externalLinks?.[index]?.label && (
-                                      <p className="text-red-500 text-sm px-2 pt-1">
-                                        {
-                                          errors.externalLinks[index]?.label
-                                            ?.message
-                                        }
-                                      </p>
-                                    )}
                                   </div>
                                 </div>
-                                {/* Display validation message for Label */}
 
                                 <div className="grid grid-cols-4">
                                   <p>Link:</p>
                                   <div className="col-span-3">
                                     <input
+                                      onChange={(e) => {
+                                        const newExternalLinks = [...formData.user_doc.external_links];
+                                        newExternalLinks[index] = {
+                                          ...newExternalLinks[index],
+                                          link: e.target.value
+                                        };
+                                        setFormData({
+                                          ...formData,
+                                          user_doc: {
+                                            ...formData.user_doc,
+                                            external_links: newExternalLinks
+                                          }
+                                        });
+                                      }}
                                       type="text"
-                                      {...register(
-                                        `externalLinks.${index}.link`,
-                                        {
-                                          required: "Link is required", // Validation rule
-                                        }
-                                      )}
                                       placeholder="Enter Link"
                                       className=" border border-black w-full px-2"
                                     />
-                                    {errors.externalLinks?.[index]?.link && (
-                                      <p className="text-red-500 text-sm px-2 pt-1">
-                                        {
-                                          errors.externalLinks[index]?.link
-                                            ?.message as string
-                                        }
-                                      </p>
-                                    )}
                                   </div>
                                 </div>
-                                {/* Display validation message for Link */}
                               </div>
-
-                              {/* <input
-                                type="file"
-                                id={`module${index}`}
-                                {...register(`module.${index}`)}
-                                placeholder="Enter Url Key"
-                                className="outline-none p-2 "
-                              /> */}
                             </fieldset>
                           </div>
                           <div className="mt-3">
                             <button
                               type="button"
                               onClick={() => {
-                                if (externalLinks?.length != 1) {
-                                  setExternalLinks(() => {
-                                    return externalLinks.filter(
-                                      (item, index2) => index !== index2
-                                    );
-                                  });
+                                if (formData?.user_doc?.external_links?.length != 1) {
+                                  setFormData({
+                                    ...formData,
+                                    user_doc: {
+                                      ...formData.user_doc,
+                                      external_links: formData.user_doc.external_links.filter((_, i:any) => i !== index),
+                                    },
+                                  })
                                 }
 
                               }}
@@ -666,7 +789,7 @@ const ServiceDetailsResource = () => {
                       Label
                     </label>
                   </legend>
-                  <input type="text" placeholder="Enter user doc label" className="w-full outline-none p-2" />
+                  <input onChange={(e) => setFormData({ ...formData, api_doc: { ...formData.api_doc, label: e.target.value } })} type="text" placeholder="Enter api doc label" className="w-full outline-none p-2" />
                 </fieldset>
               </div>
 
@@ -677,7 +800,7 @@ const ServiceDetailsResource = () => {
                       Icon
                     </label>
                   </legend>
-                  <input type="file" name="user_doc_icon" />
+                  <input onChange={(e) => setFormData({ ...formData, api_doc: { ...formData.api_doc, icon: e.target.files?.[0] } })} type="file" name="user_doc_icon" />
                 </fieldset>
               </div>
 
@@ -692,6 +815,7 @@ const ServiceDetailsResource = () => {
                     </label>
                   </legend>
                   <input
+                    onChange={(e) => setFormData({ ...formData, api_doc: { ...formData.api_doc, video_link: e.target.value } })}
                     type="text"
                     placeholder="Video Link (Youtube)"
                     className="outline-none p-2"
@@ -709,9 +833,11 @@ const ServiceDetailsResource = () => {
                   </label>
                 </legend>
 
-                <Controller
+                <textarea name="api_doc_short_desc" onChange={(e) => setFormData({ ...formData, api_doc: { ...formData.api_doc, short_description: e.target.value } })} ></textarea>
+
+                {/* <Controller
                   name="user_doc"
-                  // control={control}
+                  control={control}
                   defaultValue=""
                   rules={{
                     required: "User Documents is required",
@@ -737,14 +863,9 @@ const ServiceDetailsResource = () => {
                         }}
                         data={value}
                       />
-                      {/* {errors.user_doc && (
-                        <p className="text-red-500 text-12 px-2 pt-1">
-                          {errors.user_doc.message as string}
-                        </p>
-                      )} */}
                     </>
                   )}
-                />
+                /> */}
               </fieldset>
 
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-2">
@@ -754,7 +875,17 @@ const ServiceDetailsResource = () => {
                     <button
                       type="button"
                       onClick={() => {
-                        setModulesItem([...modulesItem, ""]);
+                        setFormData({
+                          ...formData,
+                          api_doc: {
+                            ...formData.api_doc,
+                            module_file: [...formData.api_doc.module_file, {
+                              label: "",
+                              version: "",
+                              module: ""
+                            }],
+                          },
+                        });
                       }}
                       className="bg-primary text-white px-4 py-2 rounded"
                     >
@@ -767,7 +898,7 @@ const ServiceDetailsResource = () => {
                       </svg>
                     </button>
                   </div>
-                  {modulesItem?.map((item, index) => (
+                  {formData?.api_doc?.module_file?.map((item:any, index: any) => (
                     <div key={index} className="p-2 ">
                       <div>
                         <div className="flex gap-2">
@@ -787,6 +918,21 @@ const ServiceDetailsResource = () => {
                                   <p>Label:</p>
                                   <div className="col-span-3">
                                     <input
+                                    onChange={(e) => {
+                                      const newModuleFile = [...formData.api_doc.module_file];
+                                      newModuleFile[index] = {
+                                        ...newModuleFile[index],
+                                        label: e.target.value
+                                      };
+                                      setFormData({
+                                        ...formData,
+                                        api_doc: {
+                                          ...formData.api_doc,
+                                          module_file: newModuleFile
+                                        }
+                                      });
+                                    }}
+                                      value={item.label}
                                       type="text"
                                       placeholder="Enter Label"
                                       className=" border border-black w-full px-2"
@@ -797,6 +943,21 @@ const ServiceDetailsResource = () => {
                                   <p>Version:</p>
                                   <div className="col-span-3">
                                     <input
+                                      value={item.version}
+                                      onChange={(e) => {
+                                        const newModuleFile = [...formData.api_doc.module_file];
+                                        newModuleFile[index] = {
+                                          ...newModuleFile[index],
+                                          version: e.target.value
+                                        };
+                                        setFormData({
+                                          ...formData,
+                                          api_doc: {
+                                            ...formData.api_doc,
+                                            module_file: newModuleFile
+                                          }
+                                        });
+                                      }}
                                       type="text"
                                       placeholder="Enter Version"
                                       className=" border border-black w-full px-2"
@@ -807,32 +968,40 @@ const ServiceDetailsResource = () => {
                                   <p>Module:</p>
                                   <div className="col-span-3">
                                     <input
+                                      onChange={(e) => {
+                                        const newModuleFile = [...formData.api_doc.module_file];
+                                        newModuleFile[index] = {
+                                          ...newModuleFile[index],
+                                          module: e.target.value
+                                        };
+                                        setFormData({
+                                          ...formData,
+                                          api_doc: {
+                                            ...formData.api_doc,
+                                            module_file: newModuleFile
+                                          }
+                                        });
+                                      }}
                                       type="file"
                                       className="w-full "
                                     />
                                   </div>
                                 </div>
                               </div>
-
-                              {/* <input
-                                type="file"
-                                id={`module${index}`}
-                                {...register(`module.${index}`)}
-                                placeholder="Enter Url Key"
-                                className="outline-none p-2 "
-                              /> */}
                             </fieldset>
                           </div>
                           <div className="mt-3">
                             <button
                               type="button"
                               onClick={() => {
-                                if (modulesItem.length !== 1) {
-                                  setModulesItem(() => {
-                                    return modulesItem.filter(
-                                      (item, index2) => index !== index2
-                                    );
-                                  });
+                                if (formData?.api_doc?.module_file.length != 1) {
+                                  setFormData({
+                                    ...formData,
+                                    api_doc: {
+                                      ...formData.api_doc,
+                                      module_file: formData.api_doc.module_file.filter((_, i:any) => i !== index),
+                                    },
+                                  })
                                 }
 
                               }}
@@ -860,7 +1029,19 @@ const ServiceDetailsResource = () => {
                     <button
                       type="button"
                       onClick={() => {
-                        setExternalLinks([...externalLinks, ""]);
+                        setFormData({
+                          ...formData,
+                          api_doc: {
+                            ...formData.api_doc,
+                            external_links: [
+                              ...formData.api_doc.external_links,
+                              {
+                                label: "",
+                                link: ""
+                              },
+                            ],
+                          },
+                        });
                       }}
                       className="bg-primary text-white px-4 py-2 rounded"
                     >
@@ -873,7 +1054,7 @@ const ServiceDetailsResource = () => {
                       </svg>
                     </button>
                   </div>
-                  {externalLinks?.map((item, index) => (
+                  {formData?.api_doc?.external_links?.map((item, index: any) => (
                     <div key={index} className="p-2 ">
                       <div>
                         <div className="flex gap-2">
@@ -893,6 +1074,20 @@ const ServiceDetailsResource = () => {
                                   <p>Label:</p>
                                   <div className="col-span-3">
                                     <input
+                                      onChange={(e) => {
+                                        const newExternalLinks = [...formData.api_doc.external_links];
+                                        newExternalLinks[index] = {
+                                          ...newExternalLinks[index],
+                                          label: e.target.value
+                                        };
+                                        setFormData({
+                                          ...formData,
+                                          api_doc: {
+                                            ...formData.api_doc,
+                                            external_links: newExternalLinks
+                                          }
+                                        });
+                                      }}
                                       type="text"
                                       placeholder="Enter Label"
                                       className=" border border-black w-full px-2"
@@ -904,6 +1099,20 @@ const ServiceDetailsResource = () => {
                                   <p>Link:</p>
                                   <div className="col-span-3">
                                     <input
+                                      onChange={(e) => {
+                                        const newExternalLinks = [...formData.api_doc.external_links];
+                                        newExternalLinks[index] = {
+                                          ...newExternalLinks[index],
+                                          link: e.target.value
+                                        };
+                                        setFormData({
+                                          ...formData,
+                                          api_doc: {
+                                            ...formData.api_doc,
+                                            external_links: newExternalLinks
+                                          }
+                                        });
+                                      }}
                                       type="text"
                                       placeholder="Enter Link"
                                       className=" border border-black w-full px-2"
@@ -917,12 +1126,14 @@ const ServiceDetailsResource = () => {
                             <button
                               type="button"
                               onClick={() => {
-                                if (externalLinks?.length != 1) {
-                                  setExternalLinks(() => {
-                                    return externalLinks.filter(
-                                      (item, index2) => index !== index2
-                                    );
-                                  });
+                                if (formData?.api_doc?.external_links?.length != 1) {
+                                  setFormData({
+                                    ...formData,
+                                    api_doc: {
+                                      ...formData.api_doc,
+                                      external_links: formData.api_doc.external_links.filter((_, i:any) => i !== index),
+                                    },
+                                  })
                                 }
 
                               }}
