@@ -26,7 +26,7 @@ const ServiceDetailsResource = () => {
     distribution: [
       {
         label: "",
-        icon: '',
+        icon: "",
       }
     ],
     user_doc: {
@@ -51,14 +51,14 @@ const ServiceDetailsResource = () => {
 
     api_doc: {
       label: "",
-      icon: null,
+      icon: "",
       video_link: "",
       short_description: "",
       module_file: [
         {
           label: "",
           version: "",
-          module: null
+          module: ""
         }
       ],
       external_links: [
@@ -75,10 +75,10 @@ const ServiceDetailsResource = () => {
   // const [links, setLinks] = useState([]);
   // const [isLoading, setIsLoading] = useState(false);
   // const [showItem, setShowItem] = useState([]);
-  const [modulesItem, setModulesItem] = useState<string[]>([""]);
+  /* const [modulesItem, setModulesItem] = useState<string[]>([""]);
   const [externalLinks, setExternalLinks] = useState<string[]>([""]);
   const [mediaImages, setMediaImages] = useState<FileList | null>(null);
-  const [distribution, setDistribution] = useState<string[]>([""]);
+  const [distribution, setDistribution] = useState<string[]>([""]); */
 
   /* const {
     register,
@@ -137,24 +137,89 @@ const ServiceDetailsResource = () => {
   }; */
 
 
-  console.log(formData?.user_doc?.module_file, "formData");
+  const HandleFormSubmit = async (e: any) => {
+    e.preventDefault();
+
+    const payload = new FormData();
+
+    payload.append("service_id", "1");
+    payload.append("broad_description", formData.description);
+
+    if (formData.mediaImages) {
+      Array.from(formData.mediaImages).forEach((file) => {
+
+        payload.append("media_images[]", file);
+      });
+    } else {
+      payload.append("media_images[]", "");
+    }
+
+    payload.append("api_doc_label", formData.api_doc.label);
+    payload.append("api_doc_icon", formData.api_doc.icon);
+    payload.append("api_desc", formData.api_doc.short_description);
+    payload.append("api_modules", JSON.stringify(formData.api_doc.module_file));
+    payload.append("api_external_links", JSON.stringify(formData.api_doc.external_links));
+    payload.append("api_youtube_link", formData.api_doc.video_link);
+    payload.append("user_doc_label", formData.user_doc.label);
+    payload.append("user_doc_icon", formData.user_doc.icon);
+    payload.append("user_desc", formData.user_doc.short_description);
+    payload.append("user_modules", JSON.stringify(formData.user_doc.module_file));
+    payload.append("user_external_links", JSON.stringify(formData.user_doc.external_links));
+    payload.append("user_youtube_link", formData.user_doc.video_link);
+    payload.append("distribution_items", JSON.stringify(formData.distribution));
+    
+
+
+
+    /* const data = {
+      service_id: 1,
+      broad_description: formData.description,
+      api_doc_label: formData.api_doc.label,
+      api_doc_icon: formData.api_doc.icon,
+      api_desc: formData.api_doc.short_description,
+      api_modules: null,
+      api_external_links: null,
+      api_youtube_link: formData.api_doc.video_link,
+      user_doc_label: formData.user_doc.label,
+      user_doc_icon: formData.user_doc.icon,
+      user_desc: formData.user_doc.short_description,
+      user_modules: null,
+      user_external_links: null,
+      user_youtube_link: formData.user_doc.video_link,
+      media_images: formData.mediaImages,
+      distribution_items: null
+    }; */
+
+    const res = await serviceDetailsResourceApi(payload).catch((err) => {
+      console.log(err);
+    });
+
+    // console.log('submitted form data: ',data);
+    console.log('response from service details api: ',res);
+    
+    
+  };
   
 
   return (
     <>
       <form
+        onSubmit={HandleFormSubmit}
         className="flex flex-col gap-4"
+        encType="multipart/form-data"
       >
         <div>
           <fieldset className="flex flex-col border rounded-md px-2">
             <legend>
               <label
-                htmlFor="ServiceName"
+                htmlFor="description"
                 className="after:content-['_*'] after:text-red-500"
               >
                 Description For Details Page
               </label>
             </legend>
+
+            <textarea onChange={(e) => setFormData({ ...formData, description: e.target.value })} name="description" placeholder="Enter Description"></textarea>
 
             {/* <Controller
               name="description"
@@ -378,6 +443,8 @@ const ServiceDetailsResource = () => {
                   </label>
                 </legend>
 
+                <textarea onChange={(e) => setFormData({ ...formData, user_doc: { ...formData.user_doc, short_description: e.target.value } })} name="user_doc_description" className="w-full outline-none p-2" placeholder="Enter user doc short description"></textarea>
+
                 {/* <Controller
                   name="user_doc"
                   defaultValue=""
@@ -415,6 +482,19 @@ const ServiceDetailsResource = () => {
                   <div className="bg-gray-300 flex items-center justify-between p-2">
                     <h3 className="text-primary font-semibold">Modules File</h3>
                     <button
+                      onClick={() => {
+                        setFormData({
+                          ...formData,
+                          user_doc: {
+                            ...formData.user_doc,
+                            module_file: [...formData.user_doc.module_file, {
+                              label: "",
+                              version: "",
+                              module: ""
+                            }],
+                          },
+                        });
+                      }}
                       type="button"
                       className="bg-primary text-white px-4 py-2 rounded"
                     >
@@ -427,7 +507,7 @@ const ServiceDetailsResource = () => {
                       </svg>
                     </button>
                   </div>
-                  {modulesItem?.map((item, index) => (
+                  {formData?.user_doc?.module_file?.map((item:any, index: any) => (
                     <div key={index} className="p-2 ">
                       <div>
                         <div className="flex gap-2">
@@ -447,6 +527,21 @@ const ServiceDetailsResource = () => {
                                   <p>Label:</p>
                                   <div className="col-span-3">
                                     <input
+                                    onChange={(e) => {
+                                      const newModuleFile = [...formData.user_doc.module_file];
+                                      newModuleFile[index] = {
+                                        ...newModuleFile[index],
+                                        label: e.target.value
+                                      };
+                                      setFormData({
+                                        ...formData,
+                                        user_doc: {
+                                          ...formData.user_doc,
+                                          module_file: newModuleFile
+                                        }
+                                      });
+                                    }}
+                                      value={item.label}
                                       type="text"
                                       placeholder="Enter Label"
                                       className=" border border-black w-full px-2"
@@ -457,6 +552,21 @@ const ServiceDetailsResource = () => {
                                   <p>Version:</p>
                                   <div className="col-span-3">
                                     <input
+                                      value={item.version}
+                                      onChange={(e) => {
+                                        const newModuleFile = [...formData.user_doc.module_file];
+                                        newModuleFile[index] = {
+                                          ...newModuleFile[index],
+                                          version: e.target.value
+                                        };
+                                        setFormData({
+                                          ...formData,
+                                          user_doc: {
+                                            ...formData.user_doc,
+                                            module_file: newModuleFile
+                                          }
+                                        });
+                                      }}
                                       type="text"
                                       placeholder="Enter Version"
                                       className=" border border-black w-full px-2"
@@ -467,6 +577,20 @@ const ServiceDetailsResource = () => {
                                   <p>Module:</p>
                                   <div className="col-span-3">
                                     <input
+                                      onChange={(e) => {
+                                        const newModuleFile = [...formData.user_doc.module_file];
+                                        newModuleFile[index] = {
+                                          ...newModuleFile[index],
+                                          module: e.target.value
+                                        };
+                                        setFormData({
+                                          ...formData,
+                                          user_doc: {
+                                            ...formData.user_doc,
+                                            module_file: newModuleFile
+                                          }
+                                        });
+                                      }}
                                       type="file"
                                       className="w-full "
                                     />
@@ -479,12 +603,14 @@ const ServiceDetailsResource = () => {
                             <button
                               type="button"
                               onClick={() => {
-                                if (modulesItem.length !== 1) {
-                                  setModulesItem(() => {
-                                    return modulesItem.filter(
-                                      (item, index2) => index !== index2
-                                    );
-                                  });
+                                if (formData?.user_doc?.module_file.length != 1) {
+                                  setFormData({
+                                    ...formData,
+                                    user_doc: {
+                                      ...formData.user_doc,
+                                      module_file: formData.user_doc.module_file.filter((_, i:any) => i !== index),
+                                    },
+                                  })
                                 }
 
                               }}
@@ -512,7 +638,19 @@ const ServiceDetailsResource = () => {
                     <button
                       type="button"
                       onClick={() => {
-                        setExternalLinks([...externalLinks, ""]);
+                        setFormData({
+                          ...formData,
+                          user_doc: {
+                            ...formData.user_doc,
+                            external_links: [
+                              ...formData.user_doc.external_links,
+                              {
+                                label: "",
+                                link: ""
+                              },
+                            ],
+                          },
+                        });
                       }}
                       className="bg-primary text-white px-4 py-2 rounded"
                     >
@@ -525,7 +663,7 @@ const ServiceDetailsResource = () => {
                       </svg>
                     </button>
                   </div>
-                  {externalLinks?.map((item, index) => (
+                  {formData?.user_doc?.external_links?.map((item, index: any) => (
                     <div key={index} className="p-2 ">
                       <div>
                         <div className="flex gap-2">
@@ -545,6 +683,20 @@ const ServiceDetailsResource = () => {
                                   <p>Label:</p>
                                   <div className="col-span-3">
                                     <input
+                                      onChange={(e) => {
+                                        const newExternalLinks = [...formData.user_doc.external_links];
+                                        newExternalLinks[index] = {
+                                          ...newExternalLinks[index],
+                                          label: e.target.value
+                                        };
+                                        setFormData({
+                                          ...formData,
+                                          user_doc: {
+                                            ...formData.user_doc,
+                                            external_links: newExternalLinks
+                                          }
+                                        });
+                                      }}
                                       type="text"
                                       placeholder="Enter Label"
                                       className=" border border-black w-full px-2"
@@ -556,6 +708,20 @@ const ServiceDetailsResource = () => {
                                   <p>Link:</p>
                                   <div className="col-span-3">
                                     <input
+                                      onChange={(e) => {
+                                        const newExternalLinks = [...formData.user_doc.external_links];
+                                        newExternalLinks[index] = {
+                                          ...newExternalLinks[index],
+                                          link: e.target.value
+                                        };
+                                        setFormData({
+                                          ...formData,
+                                          user_doc: {
+                                            ...formData.user_doc,
+                                            external_links: newExternalLinks
+                                          }
+                                        });
+                                      }}
                                       type="text"
                                       placeholder="Enter Link"
                                       className=" border border-black w-full px-2"
@@ -569,12 +735,14 @@ const ServiceDetailsResource = () => {
                             <button
                               type="button"
                               onClick={() => {
-                                if (externalLinks?.length != 1) {
-                                  setExternalLinks(() => {
-                                    return externalLinks.filter(
-                                      (item, index2) => index !== index2
-                                    );
-                                  });
+                                if (formData?.user_doc?.external_links?.length != 1) {
+                                  setFormData({
+                                    ...formData,
+                                    user_doc: {
+                                      ...formData.user_doc,
+                                      external_links: formData.user_doc.external_links.filter((_, i:any) => i !== index),
+                                    },
+                                  })
                                 }
 
                               }}
@@ -615,7 +783,7 @@ const ServiceDetailsResource = () => {
                       Label
                     </label>
                   </legend>
-                  <input type="text" placeholder="Enter user doc label" className="w-full outline-none p-2" />
+                  <input onChange={(e) => setFormData({ ...formData, api_doc: { ...formData.api_doc, label: e.target.value } })} type="text" placeholder="Enter api doc label" className="w-full outline-none p-2" />
                 </fieldset>
               </div>
 
@@ -626,7 +794,7 @@ const ServiceDetailsResource = () => {
                       Icon
                     </label>
                   </legend>
-                  <input type="file" name="user_doc_icon" />
+                  <input onChange={(e) => setFormData({ ...formData, api_doc: { ...formData.api_doc, icon: e.target.files?.[0] } })} type="file" name="user_doc_icon" />
                 </fieldset>
               </div>
 
@@ -641,6 +809,7 @@ const ServiceDetailsResource = () => {
                     </label>
                   </legend>
                   <input
+                    onChange={(e) => setFormData({ ...formData, api_doc: { ...formData.api_doc, video_link: e.target.value } })}
                     type="text"
                     placeholder="Video Link (Youtube)"
                     className="outline-none p-2"
@@ -657,6 +826,8 @@ const ServiceDetailsResource = () => {
                     Short Description
                   </label>
                 </legend>
+
+                <textarea name="api_doc_short_desc" onChange={(e) => setFormData({ ...formData, api_doc: { ...formData.api_doc, short_description: e.target.value } })} ></textarea>
 
                 {/* <Controller
                   name="user_doc"
@@ -698,7 +869,17 @@ const ServiceDetailsResource = () => {
                     <button
                       type="button"
                       onClick={() => {
-                        setModulesItem([...modulesItem, ""]);
+                        setFormData({
+                          ...formData,
+                          api_doc: {
+                            ...formData.api_doc,
+                            module_file: [...formData.api_doc.module_file, {
+                              label: "",
+                              version: "",
+                              module: ""
+                            }],
+                          },
+                        });
                       }}
                       className="bg-primary text-white px-4 py-2 rounded"
                     >
@@ -711,7 +892,7 @@ const ServiceDetailsResource = () => {
                       </svg>
                     </button>
                   </div>
-                  {modulesItem?.map((item, index) => (
+                  {formData?.api_doc?.module_file?.map((item:any, index: any) => (
                     <div key={index} className="p-2 ">
                       <div>
                         <div className="flex gap-2">
@@ -731,6 +912,21 @@ const ServiceDetailsResource = () => {
                                   <p>Label:</p>
                                   <div className="col-span-3">
                                     <input
+                                    onChange={(e) => {
+                                      const newModuleFile = [...formData.api_doc.module_file];
+                                      newModuleFile[index] = {
+                                        ...newModuleFile[index],
+                                        label: e.target.value
+                                      };
+                                      setFormData({
+                                        ...formData,
+                                        api_doc: {
+                                          ...formData.api_doc,
+                                          module_file: newModuleFile
+                                        }
+                                      });
+                                    }}
+                                      value={item.label}
                                       type="text"
                                       placeholder="Enter Label"
                                       className=" border border-black w-full px-2"
@@ -741,6 +937,21 @@ const ServiceDetailsResource = () => {
                                   <p>Version:</p>
                                   <div className="col-span-3">
                                     <input
+                                      value={item.version}
+                                      onChange={(e) => {
+                                        const newModuleFile = [...formData.api_doc.module_file];
+                                        newModuleFile[index] = {
+                                          ...newModuleFile[index],
+                                          version: e.target.value
+                                        };
+                                        setFormData({
+                                          ...formData,
+                                          api_doc: {
+                                            ...formData.api_doc,
+                                            module_file: newModuleFile
+                                          }
+                                        });
+                                      }}
                                       type="text"
                                       placeholder="Enter Version"
                                       className=" border border-black w-full px-2"
@@ -751,32 +962,40 @@ const ServiceDetailsResource = () => {
                                   <p>Module:</p>
                                   <div className="col-span-3">
                                     <input
+                                      onChange={(e) => {
+                                        const newModuleFile = [...formData.api_doc.module_file];
+                                        newModuleFile[index] = {
+                                          ...newModuleFile[index],
+                                          module: e.target.value
+                                        };
+                                        setFormData({
+                                          ...formData,
+                                          api_doc: {
+                                            ...formData.api_doc,
+                                            module_file: newModuleFile
+                                          }
+                                        });
+                                      }}
                                       type="file"
                                       className="w-full "
                                     />
                                   </div>
                                 </div>
                               </div>
-
-                              {/* <input
-                                type="file"
-                                id={`module${index}`}
-                                {...register(`module.${index}`)}
-                                placeholder="Enter Url Key"
-                                className="outline-none p-2 "
-                              /> */}
                             </fieldset>
                           </div>
                           <div className="mt-3">
                             <button
                               type="button"
                               onClick={() => {
-                                if (modulesItem.length !== 1) {
-                                  setModulesItem(() => {
-                                    return modulesItem.filter(
-                                      (item, index2) => index !== index2
-                                    );
-                                  });
+                                if (formData?.api_doc?.module_file.length != 1) {
+                                  setFormData({
+                                    ...formData,
+                                    api_doc: {
+                                      ...formData.api_doc,
+                                      module_file: formData.api_doc.module_file.filter((_, i:any) => i !== index),
+                                    },
+                                  })
                                 }
 
                               }}
@@ -804,7 +1023,19 @@ const ServiceDetailsResource = () => {
                     <button
                       type="button"
                       onClick={() => {
-                        setExternalLinks([...externalLinks, ""]);
+                        setFormData({
+                          ...formData,
+                          api_doc: {
+                            ...formData.api_doc,
+                            external_links: [
+                              ...formData.api_doc.external_links,
+                              {
+                                label: "",
+                                link: ""
+                              },
+                            ],
+                          },
+                        });
                       }}
                       className="bg-primary text-white px-4 py-2 rounded"
                     >
@@ -817,7 +1048,7 @@ const ServiceDetailsResource = () => {
                       </svg>
                     </button>
                   </div>
-                  {externalLinks?.map((item, index) => (
+                  {formData?.api_doc?.external_links?.map((item, index: any) => (
                     <div key={index} className="p-2 ">
                       <div>
                         <div className="flex gap-2">
@@ -837,6 +1068,20 @@ const ServiceDetailsResource = () => {
                                   <p>Label:</p>
                                   <div className="col-span-3">
                                     <input
+                                      onChange={(e) => {
+                                        const newExternalLinks = [...formData.api_doc.external_links];
+                                        newExternalLinks[index] = {
+                                          ...newExternalLinks[index],
+                                          label: e.target.value
+                                        };
+                                        setFormData({
+                                          ...formData,
+                                          api_doc: {
+                                            ...formData.api_doc,
+                                            external_links: newExternalLinks
+                                          }
+                                        });
+                                      }}
                                       type="text"
                                       placeholder="Enter Label"
                                       className=" border border-black w-full px-2"
@@ -848,6 +1093,20 @@ const ServiceDetailsResource = () => {
                                   <p>Link:</p>
                                   <div className="col-span-3">
                                     <input
+                                      onChange={(e) => {
+                                        const newExternalLinks = [...formData.api_doc.external_links];
+                                        newExternalLinks[index] = {
+                                          ...newExternalLinks[index],
+                                          link: e.target.value
+                                        };
+                                        setFormData({
+                                          ...formData,
+                                          api_doc: {
+                                            ...formData.api_doc,
+                                            external_links: newExternalLinks
+                                          }
+                                        });
+                                      }}
                                       type="text"
                                       placeholder="Enter Link"
                                       className=" border border-black w-full px-2"
@@ -861,12 +1120,14 @@ const ServiceDetailsResource = () => {
                             <button
                               type="button"
                               onClick={() => {
-                                if (externalLinks?.length != 1) {
-                                  setExternalLinks(() => {
-                                    return externalLinks.filter(
-                                      (item, index2) => index !== index2
-                                    );
-                                  });
+                                if (formData?.api_doc?.external_links?.length != 1) {
+                                  setFormData({
+                                    ...formData,
+                                    api_doc: {
+                                      ...formData.api_doc,
+                                      external_links: formData.api_doc.external_links.filter((_, i:any) => i !== index),
+                                    },
+                                  })
                                 }
 
                               }}
