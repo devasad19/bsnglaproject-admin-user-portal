@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useForm, Controller } from "react-hook-form";
 import CustomEditor from "@/app/_components/CustomEditor/CustomEditor";
+import { toast } from "react-toastify";
 
 /* interface FormData {
   description: string;
@@ -195,7 +196,14 @@ const ServiceDetailsResource = () => {
     });
 
     // console.log('submitted form data: ',data);
-    console.log('response from service details api: ',res);
+    // console.log('response from service details api: ',res)';
+
+
+    if(res?.status == true){
+      toast.success(res.message);
+    }else{
+      toast.error(res.message);
+    }
     
     
   };
