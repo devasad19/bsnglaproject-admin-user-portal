@@ -164,16 +164,31 @@ const ServiceDetailsResource = () => {
     payload.append("api_doc_label", formData.api_doc.label);
     payload.append("api_doc_icon", formData.api_doc.icon);
     payload.append("api_desc", formData.api_doc.short_description);
-    payload.append("api_modules", JSON.stringify(formData.api_doc.module_file));
+    // payload.append("api_modules", JSON.stringify(formData.api_doc.module_file));
     payload.append("api_external_links", JSON.stringify(formData.api_doc.external_links));
     payload.append("api_youtube_link", formData.api_doc.video_link);
     payload.append("user_doc_label", formData.user_doc.label);
     payload.append("user_doc_icon", formData.user_doc.icon);
     payload.append("user_desc", formData.user_doc.short_description);
-    payload.append("user_modules", JSON.stringify(formData.user_doc.module_file));
+    // payload.append("user_modules", JSON.stringify(formData.user_doc.module_file));
     payload.append("user_external_links", JSON.stringify(formData.user_doc.external_links));
     payload.append("user_youtube_link", formData.user_doc.video_link);
-    payload.append("distribution_items", JSON.stringify(formData.distribution));
+
+    formData.distribution.forEach((item: any, index: any) => {
+      payload.append(`distribution_items[${index}][label]`, item.label);
+      payload.append(`distribution_items[${index}][icon]`, item.icon);
+    });
+
+    formData.user_doc.module_file.forEach((item: any, index: any)=>{
+      payload.append(`user_modules[${index}][label]`, item.label);
+      payload.append(`user_modules[${index}][version]`, item.version);
+      payload.append(`user_modules[${index}][module]`, item.module);
+    });
+    formData.api_doc.module_file.forEach((item: any, index: any)=>{
+      payload.append(`api_modules[${index}][label]`, item.label);
+      payload.append(`api_modules[${index}][version]`, item.version);
+      payload.append(`api_modules[${index}][module]`, item.module);
+    });
     
 
 
@@ -595,7 +610,7 @@ const ServiceDetailsResource = () => {
                                         const newModuleFile = [...formData.user_doc.module_file];
                                         newModuleFile[index] = {
                                           ...newModuleFile[index],
-                                          module: e.target.value
+                                          module: e.target.files[0]
                                         };
                                         setFormData({
                                           ...formData,
@@ -980,7 +995,7 @@ const ServiceDetailsResource = () => {
                                         const newModuleFile = [...formData.api_doc.module_file];
                                         newModuleFile[index] = {
                                           ...newModuleFile[index],
-                                          module: e.target.value
+                                          module: e.target.files[0]
                                         };
                                         setFormData({
                                           ...formData,
