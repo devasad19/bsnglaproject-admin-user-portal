@@ -70,79 +70,7 @@ const ServiceDetailsResource = () => {
       ]
     }
   });
-  // const [status, setStatus] = useState("");
-  // const [serviceImg, setServiceImg] = useState<File | null>(null);
-  // const [tutorialVideo, setTutorialVideo] = useState(null);
-  // const [links, setLinks] = useState([]);
-  // const [isLoading, setIsLoading] = useState(false);
-  // const [showItem, setShowItem] = useState([]);
-  /* const [modulesItem, setModulesItem] = useState<string[]>([""]);
-  const [externalLinks, setExternalLinks] = useState<string[]>([""]);
-  const [mediaImages, setMediaImages] = useState<FileList | null>(null);
-  const [distribution, setDistribution] = useState<string[]>([""]); */
-
-  /* const {
-    register,
-    handleSubmit,
-    reset,
-    formState: { errors },
-    control,
-  } = useForm<FormData>(); */
-
-  /* const onSubmitServiceDetailsResource = async (data: any) => {
-    const {
-      description,
-      module,
-      media_image,
-      support_address,
-      api_doc,
-      user_doc,
-      externalLinks,
-
-
-    } = data;
-
-
-    const formData = new FormData();
-    formData.append("service_id", "1");
-    formData.append("broad_description", description);
-
-    if (mediaImages) {
-      Array.from(mediaImages).forEach((file) => {
-
-        formData.append("media_images[]", file);
-      });
-    } else {
-      formData.append("media_images[]", "");
-    }
-    let modules: any = [];
-    module.forEach((item: any) => {
-      const { label, image } = item;
-      console.log("mudules imageds:", image[0]);
-      modules.push({ label: label, image: image[0] });
-    });
-
-
-    // for (let i = 0; i < module.length; i++) {
-    //   formData.append('modules[]', module[i]);
-    // }
-
-    console.log("Update2 modules:", modules);
-
-    formData.append("modules", modules);
-    formData.append("external_links", JSON.stringify(externalLinks));
-    formData.append("support_address", support_address);
-    formData.append("api_docs", api_doc);
-    formData.append("user_docs", user_doc);
-
-    const res = await serviceDetailsResourceApi(formData).catch((err) => {
-      console.log(err);
-    });
-
-    console.log('response from service details api: ',res);
-    
-  }; */
-
+ 
 
   const HandleFormSubmit = async (e: any) => {
     e.preventDefault();
@@ -189,45 +117,17 @@ const ServiceDetailsResource = () => {
       payload.append(`api_modules[${index}][version]`, item.version);
       payload.append(`api_modules[${index}][module]`, item.module);
     });
-    
-console.log(formData);
-
-
-
-    /* const data = {
-      service_id: 1,
-      broad_description: formData.description,
-      api_doc_label: formData.api_doc.label,
-      api_doc_icon: formData.api_doc.icon,
-      api_desc: formData.api_doc.short_description,
-      api_modules: null,
-      api_external_links: null,
-      api_youtube_link: formData.api_doc.video_link,
-      user_doc_label: formData.user_doc.label,
-      user_doc_icon: formData.user_doc.icon,
-      user_desc: formData.user_doc.short_description,
-      user_modules: null,
-      user_external_links: null,
-      user_youtube_link: formData.user_doc.video_link,
-      media_images: formData.mediaImages,
-      distribution_items: null
-    }; */
-
+     
     const res = await serviceDetailsResourceApi(payload).catch((err) => {
       console.log(err);
     });
-
-    // console.log('submitted form data: ',data);
-    // console.log('response from service details api: ',res)';
-
-
+  
     if(res?.status == true){
       toast.success(res.message);
     }else{
       toast.error(res.message);
     }
-    
-    
+     
   };
   
 
