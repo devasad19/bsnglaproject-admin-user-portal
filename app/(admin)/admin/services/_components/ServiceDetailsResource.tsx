@@ -190,6 +190,7 @@ const ServiceDetailsResource = () => {
       payload.append(`api_modules[${index}][module]`, item.module);
     });
     
+console.log(formData);
 
 
 
