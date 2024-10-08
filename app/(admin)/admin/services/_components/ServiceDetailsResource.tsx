@@ -5,11 +5,11 @@ import { useState } from "react";
 import { useForm, Controller } from "react-hook-form";
 import CustomEditor from "@/app/_components/CustomEditor/CustomEditor";
 import { toast } from "react-toastify";
-import { layouts } from "chart.js";
 
   
 const ServiceDetailsResource = () => {
   const router = useRouter();
+  const [isLoading, setIsLoading] = useState(false);
   const [formData, setFormData] = useState<any>({
     description: "",
     mediaImages: [],
@@ -74,6 +74,8 @@ const ServiceDetailsResource = () => {
   const HandleFormSubmit = async (e: any) => {
     e.preventDefault();
 
+    setIsLoading(true);
+
     const payload = new FormData();
 
     payload.append("service_id", "1");
@@ -127,8 +129,11 @@ const ServiceDetailsResource = () => {
  
     if(res?.status == true){
       toast.success(res.message);
+      setIsLoading(false);
+      window.location.reload();
     }else{
       toast.error(res.message);
+      setIsLoading(false);
     }
     
     
@@ -1271,10 +1276,43 @@ const ServiceDetailsResource = () => {
               type="submit"
               className="px-4 py-2 bg-violet-700 text-white active:scale-90 transition-all duration-400 rounded-md"
             >
-              Create
+              {
+                isLoading ? "Loading..." : "Create"
+              }
             </button>
         </div>
       </form>
+
+
+      {isLoading && (
+        <div className="absolute inset-0 bg-white bg-opacity-75 flex items-center justify-center z-10">
+          <div className="flex flex-col items-center space-y-4">
+            {/* Loading Spinner */}
+            <svg
+              className="animate-spin h-12 w-12 text-blue-600"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+            >
+              <circle
+                className="opacity-25"
+                cx="12"
+                cy="12"
+                r="10"
+                stroke="currentColor"
+                strokeWidth="4"
+              ></circle>
+              <path
+                className="opacity-75"
+                fill="currentColor"
+                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
+              ></path>
+            </svg>
+            {/* Loading Text */}
+            <p className="text-gray-700 font-medium">Loading...</p>
+          </div>
+        </div>
+      )}
     </>
   );
 };
