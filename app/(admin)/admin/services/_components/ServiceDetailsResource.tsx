@@ -5,20 +5,9 @@ import { useState } from "react";
 import { useForm, Controller } from "react-hook-form";
 import CustomEditor from "@/app/_components/CustomEditor/CustomEditor";
 import { toast } from "react-toastify";
+import { layouts } from "chart.js";
 
-/* interface FormData {
-  description: string;
-  media_image: File;
-  support_address: string;
-  externalLinks: { label: string; link: string }[];
-  api_doc: string;
-  user_doc: string;
-  module: { label: string; image: File }[];
-  videolink: string;
-} */
-
-
-
+  
 const ServiceDetailsResource = () => {
   const router = useRouter();
   const [formData, setFormData] = useState<any>({
@@ -28,6 +17,16 @@ const ServiceDetailsResource = () => {
       {
         label: "",
         icon: "",
+      }
+    ],
+    user_characteristics: [
+      {
+        label: "",
+      }
+    ],
+    api_characteristics: [
+      {
+        label: "",
       }
     ],
     user_doc: {
@@ -70,7 +69,7 @@ const ServiceDetailsResource = () => {
       ]
     }
   });
- 
+
 
   const HandleFormSubmit = async (e: any) => {
     e.preventDefault();
@@ -93,6 +92,8 @@ const ServiceDetailsResource = () => {
     payload.append("api_doc_icon", formData.api_doc.icon);
     payload.append("api_desc", formData.api_doc.short_description);
     // payload.append("api_modules", JSON.stringify(formData.api_doc.module_file));
+    payload.append("user_characteristics", JSON.stringify(formData.api_doc.user_characteristics));
+    payload.append("api_characteristics", JSON.stringify(formData.api_doc.api_characteristics));
     payload.append("api_external_links", JSON.stringify(formData.api_doc.external_links));
     payload.append("api_youtube_link", formData.api_doc.video_link);
     payload.append("user_doc_label", formData.user_doc.label);
@@ -117,17 +118,21 @@ const ServiceDetailsResource = () => {
       payload.append(`api_modules[${index}][version]`, item.version);
       payload.append(`api_modules[${index}][module]`, item.module);
     });
-     
+    
+    console.log('data from api test22: ', formData);
+    
     const res = await serviceDetailsResourceApi(payload).catch((err) => {
       console.log(err);
     });
-  
+
+ 
     if(res?.status == true){
       toast.success(res.message);
     }else{
       toast.error(res.message);
     }
-     
+    
+    
   };
   
 
@@ -291,6 +296,180 @@ const ServiceDetailsResource = () => {
                           setFormData({
                             ...formData,
                             distribution: formData.distribution.filter(
+                              (dist: any, i: any) => i !== index
+                            ),
+                          });
+                        }
+
+                      }}
+                      className="border border-primary bg-primary text-white mt-2 px-2 py-1 rounded"
+                    >
+                      <svg
+                        className="w-6 h-6 fill-current"
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 448 512"
+                      >
+                        <path d="M432 256c0 17.7-14.3 32-32 32L48 288c-17.7 0-32-14.3-32-32s14.3-32 32-32l352 0c17.7 0 32 14.3 32 32z" />
+                      </svg>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        <div className="border border-gray-300 rounded">
+          <div className="bg-gray-300 flex items-center justify-between p-2">
+            <h3 className="text-primary font-semibold">Service User Characteristics</h3>
+            <button
+              type="button"
+              onClick={() => setFormData({ ...formData, user_characteristics: [...formData.user_characteristics, { label: "" }] })}
+              className="bg-primary text-white px-4 py-2 rounded"
+            >
+              <svg
+                className="w-4 h-4 fill-current"
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 448 512"
+              >
+                <path d="M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32V224H48c-17.7 0-32 14.3-32 32s14.3 32 32 32H192V432c0 17.7 14.3 32 32 32s32-14.3 32-32V288H400c17.7 0 32-14.3 32-32s-14.3-32-32-32H256V80z" />
+              </svg>
+            </button>
+          </div>
+          {formData?.user_characteristics?.map((item: any, index: any) => (
+            <div key={index} className="p-2 ">
+              <div>
+                <div className="flex gap-2">
+                  <div className="flex w-full  items-center justify-between">
+                    <fieldset className="w-full flex flex-col border rounded-md px-2">
+                      <legend>
+                        <label
+                          htmlFor="key"
+                          className="after:content-['_*'] after:text-red-500"
+                        >
+                          Characteristics - {index + 1}
+                        </label>
+                      </legend>
+
+                      <div className="flex flex-col gap-2">
+                        <div className="grid grid-cols-4">
+                          <p>Label:</p>
+                          <div className="col-span-3">
+                            <input
+                              type="text"
+                              placeholder="Enter Label"
+                              className="border border-black w-full px-2 mb-2 outline-none"
+                              value={item?.label}
+                              onChange={(e) => {
+                                setFormData({
+                                  ...formData,
+                                  user_characteristics: formData.user_characteristics.map(
+                                    (dist: any, i: any) =>
+                                      i === index ? { ...dist, label: e.target.value } : dist
+                                  ),
+                                });
+                              }}
+                            />
+                          </div>
+                        </div>
+                      </div>
+                    </fieldset>
+                  </div>
+                  <div className="mt-3">
+                    <button
+                      type="button"
+                      onClick={() => {
+                        if(formData.user_characteristics.length != 1){
+                          setFormData({
+                            ...formData,
+                            user_characteristics: formData.user_characteristics.filter(
+                              (dist: any, i: any) => i !== index
+                            ),
+                          });
+                        }
+
+                      }}
+                      className="border border-primary bg-primary text-white mt-2 px-2 py-1 rounded"
+                    >
+                      <svg
+                        className="w-6 h-6 fill-current"
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 448 512"
+                      >
+                        <path d="M432 256c0 17.7-14.3 32-32 32L48 288c-17.7 0-32-14.3-32-32s14.3-32 32-32l352 0c17.7 0 32 14.3 32 32z" />
+                      </svg>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        <div className="border border-gray-300 rounded">
+          <div className="bg-gray-300 flex items-center justify-between p-2">
+            <h3 className="text-primary font-semibold">Service API Characteristics</h3>
+            <button
+              type="button"
+              onClick={() => setFormData({ ...formData, api_characteristics: [...formData.api_characteristics, { label: "" }] })}
+              className="bg-primary text-white px-4 py-2 rounded"
+            >
+              <svg
+                className="w-4 h-4 fill-current"
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 448 512"
+              >
+                <path d="M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32V224H48c-17.7 0-32 14.3-32 32s14.3 32 32 32H192V432c0 17.7 14.3 32 32 32s32-14.3 32-32V288H400c17.7 0 32-14.3 32-32s-14.3-32-32-32H256V80z" />
+              </svg>
+            </button>
+          </div>
+          {formData?.api_characteristics?.map((item: any, index: any) => (
+            <div key={index} className="p-2 ">
+              <div>
+                <div className="flex gap-2">
+                  <div className="flex w-full  items-center justify-between">
+                    <fieldset className="w-full flex flex-col border rounded-md px-2">
+                      <legend>
+                        <label
+                          htmlFor="key"
+                          className="after:content-['_*'] after:text-red-500"
+                        >
+                          Characteristics - {index + 1}
+                        </label>
+                      </legend>
+
+                      <div className="flex flex-col gap-2">
+                        <div className="grid grid-cols-4">
+                          <p>Label:</p>
+                          <div className="col-span-3">
+                            <input
+                              type="text"
+                              placeholder="Enter Label"
+                              className="border border-black w-full px-2 mb-2 outline-none"
+                              value={item?.label}
+                              onChange={(e) => {
+                                setFormData({
+                                  ...formData,
+                                  api_characteristics: formData.api_characteristics.map(
+                                    (dist: any, i: any) =>
+                                      i === index ? { ...dist, label: e.target.value } : dist
+                                  ),
+                                });
+                              }}
+                            />
+                          </div>
+                        </div>
+                      </div>
+                    </fieldset>
+                  </div>
+                  <div className="mt-3">
+                    <button
+                      type="button"
+                      onClick={() => {
+                        if(formData.api_characteristics.length != 1){
+                          setFormData({
+                            ...formData,
+                            api_characteristics: formData.api_characteristics.filter(
                               (dist: any, i: any) => i !== index
                             ),
                           });
