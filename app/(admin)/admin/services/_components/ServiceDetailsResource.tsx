@@ -155,7 +155,7 @@ const ServiceDetailsResource = () => {
     if (formData.mediaImages) {
       Array.from(formData.mediaImages).forEach((file) => {
 
-        payload.append("media_images[]", file);
+        payload.append("media_images[]", file as any);
       });
     } else {
       payload.append("media_images[]", "");
@@ -189,8 +189,7 @@ const ServiceDetailsResource = () => {
       payload.append(`api_modules[${index}][version]`, item.version);
       payload.append(`api_modules[${index}][module]`, item.module);
     });
-    
-console.log(formData);
+  
 
 
 
@@ -611,7 +610,7 @@ console.log(formData);
                                         const newModuleFile = [...formData.user_doc.module_file];
                                         newModuleFile[index] = {
                                           ...newModuleFile[index],
-                                          module: e.target.files[0]
+                                          module: e.target.files?.[0]
                                         };
                                         setFormData({
                                           ...formData,
@@ -638,7 +637,7 @@ console.log(formData);
                                     ...formData,
                                     user_doc: {
                                       ...formData.user_doc,
-                                      module_file: formData.user_doc.module_file.filter((_, i:any) => i !== index),
+                                      module_file: formData.user_doc.module_file.filter((_: any, i:any) => i !== index),
                                     },
                                   })
                                 }
@@ -693,7 +692,7 @@ console.log(formData);
                       </svg>
                     </button>
                   </div>
-                  {formData?.user_doc?.external_links?.map((item, index: any) => (
+                  {formData?.user_doc?.external_links?.map((item:any, index: any) => (
                     <div key={index} className="p-2 ">
                       <div>
                         <div className="flex gap-2">
@@ -770,7 +769,7 @@ console.log(formData);
                                     ...formData,
                                     user_doc: {
                                       ...formData.user_doc,
-                                      external_links: formData.user_doc.external_links.filter((_, i:any) => i !== index),
+                                      external_links: formData.user_doc.external_links.filter((_: any, i:any) => i !== index),
                                     },
                                   })
                                 }
@@ -996,7 +995,7 @@ console.log(formData);
                                         const newModuleFile = [...formData.api_doc.module_file];
                                         newModuleFile[index] = {
                                           ...newModuleFile[index],
-                                          module: e.target.files[0]
+                                          module: e.target.files?.[0]
                                         };
                                         setFormData({
                                           ...formData,
@@ -1023,7 +1022,7 @@ console.log(formData);
                                     ...formData,
                                     api_doc: {
                                       ...formData.api_doc,
-                                      module_file: formData.api_doc.module_file.filter((_, i:any) => i !== index),
+                                      module_file: formData.api_doc.module_file.filter((_: any, i:any) => i !== index),
                                     },
                                   })
                                 }
@@ -1078,7 +1077,7 @@ console.log(formData);
                       </svg>
                     </button>
                   </div>
-                  {formData?.api_doc?.external_links?.map((item, index: any) => (
+                  {formData?.api_doc?.external_links?.map((item: any, index: any) => (
                     <div key={index} className="p-2 ">
                       <div>
                         <div className="flex gap-2">
@@ -1155,7 +1154,7 @@ console.log(formData);
                                     ...formData,
                                     api_doc: {
                                       ...formData.api_doc,
-                                      external_links: formData.api_doc.external_links.filter((_, i:any) => i !== index),
+                                      external_links: formData.api_doc.external_links.filter((_: any, i:any) => i !== index),
                                     },
                                   })
                                 }
