@@ -47,6 +47,28 @@ export const GetFileSize = (fileInput) => {
   return fileInput.size;
 };
 
+export const sanitizeYoutubeUrl = (url) => {
+  console.log('youtube from function: ',url);
+  
+
+  const equalSignIndex = url.indexOf('=');
+    
+    // Check if there is an equal sign in the URL
+    if (equalSignIndex === -1) {
+        return ''; // No equal sign found
+    }
+    
+    const secondEqualSignIndex = url.indexOf('=', equalSignIndex + 1);
+    
+    if (secondEqualSignIndex === -1) {
+        // Only one equal sign found
+        return url.slice(equalSignIndex + 1); // Return everything after the first equal sign
+    } else {
+        // Two equal signs found
+        return url.slice(equalSignIndex + 1, secondEqualSignIndex); // Return substring between the two equal signs
+    }
+}
+
 export function en2bn(englishNumber) {
   const englishToBanglaMap = {
     0: "০",

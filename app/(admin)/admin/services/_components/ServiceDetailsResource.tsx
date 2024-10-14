@@ -5,7 +5,7 @@ import { useState } from "react";
 import { useForm, Controller } from "react-hook-form";
 import CustomEditor from "@/app/_components/CustomEditor/CustomEditor";
 import { toast } from "react-toastify";
-import { CountWords, GetFileSize } from "@/helper";
+import { CountWords, GetFileSize, sanitizeYoutubeUrl } from "@/helper";
 
 
 const ServiceDetailsResource = () => {
@@ -96,11 +96,72 @@ const ServiceDetailsResource = () => {
       status: false,
       message: "",
     },
+
+    userDoc: {
+      label: {
+        status: false,
+        message: ""
+      },
+      icon: {
+        status: false,
+        message: ""
+      },
+      video: {
+        status: false,
+        message: ""
+      },
+      shortDes: {
+        status: false,
+        message: ""
+      },
+      module: {
+        status: false,
+        message: ""
+      },
+      extraLink: {
+        status: false,
+        message: ""
+      }
+    },
+
+
+    apiDoc: {
+      label: {
+        status: false,
+        message: ""
+      },
+      icon: {
+        status: false,
+        message: ""
+      },
+      video: {
+        status: false,
+        message: ""
+      },
+      shortDes: {
+        status: false,
+        message: ""
+      },
+      module: {
+        status: false,
+        message: ""
+      },
+      extraLink: {
+        status: false,
+        message: ""
+      }
+    },
+
   });
 
 
   const HandleFormSubmit = async (e: any) => {
     e.preventDefault();
+
+
+    /* console.log( 'unsanitized youtube: ',formData?.user_doc?.video_link);
+    console.log( 'sanitized youtube: ',sanitizeYoutubeUrl(formData?.user_doc?.video_link)); */
+
 
 
     if (CountWords(formData?.description) < 10 || CountWords(formData?.description) > 100) {
@@ -150,6 +211,36 @@ const ServiceDetailsResource = () => {
         }
       });
     }
+
+    if (CountWords(formData?.user_doc?.label) < 2 || CountWords(formData?.user_doc?.label > 4)) {
+      setError({ ...error, userDoc: { label: { status: true, message: "User Documentation label has to be 2 to 4 words." } } });
+    }
+
+    if (GetFileSize(formData?.user_doc?.icon) > 100000) {
+      setError({ ...error, userDoc: { icon: { status: true, message: "User Documentation icon size should be less than 100kb." } } });
+    }
+
+
+    if (CountWords(formData?.user_doc?.short_description) < 10 || CountWords(formData?.user_doc?.short_description) > 25) {
+      setError({ ...error, userDoc: { shortDes: { status: true, message: "User Documentation short description has to be 10 to 100 words." } } });
+    }
+
+
+    if (formData?.user_doc?.module_file?.length > 0) {
+      formData?.user_doc?.module_file?.map((item: any) => {
+        if (CountWords(item?.label) < 3 || CountWords(item?.label) > 5) {
+          setError({ ...error, userDoc: { module: { status: true, message: "User Documentation module file label has to be 3 to 5 words." } } });
+        } else if (typeof item?.version != "number") {
+          console.log('module version from loop: ',typeof item?.version);
+          
+          setError({ ...error, userDoc: { module: { status: true, message: "User Documentation module file version should be a number." } } });
+        } else if (GetFileSize(item?.module) > 500000) {
+          setError({ ...error, userDoc: { module: { status: true, message: "User Documentation module file size should be less than 500kb." } } });
+        }
+      })
+    }
+
+
 
 
 
@@ -639,6 +730,14 @@ const ServiceDetailsResource = () => {
                   </legend>
                   <input onChange={(e) => setFormData({ ...formData, user_doc: { ...formData.user_doc, label: e.target.value } })} id="user_doc_label" type="text" placeholder="Enter user doc label" className="w-full outline-none p-2" />
                 </fieldset>
+
+                {
+                  error?.userDoc?.label?.status && (
+                    <p className="text-red-500 text-12 px-2 pt-1">
+                      {error?.userDoc?.label?.message}
+                    </p>
+                  )
+                }
               </div>
 
               <div>
@@ -650,6 +749,13 @@ const ServiceDetailsResource = () => {
                   </legend>
                   <input onChange={(e) => setFormData({ ...formData, user_doc: { ...formData.user_doc, icon: e.target.files?.[0] } })} type="file" name="user_doc_icon" />
                 </fieldset>
+                {
+                  error?.userDoc?.icon?.status && (
+                    <p className="text-red-500 text-12 px-2 pt-1">
+                      {error?.userDoc?.icon?.message}
+                    </p>
+                  )
+                }
               </div>
 
               <div>
@@ -671,21 +777,30 @@ const ServiceDetailsResource = () => {
 
                   />
                 </fieldset>
+
+                {
+                  error?.userDoc?.video?.status && (
+                    <p className="text-red-500 text-12 px-2 pt-1">
+                      {error?.userDoc?.video?.message}
+                    </p>
+                  )
+                }
               </div>
 
-              <fieldset className="flex flex-col border rounded-md px-2">
-                <legend>
-                  <label
-                    htmlFor="ServiceName"
-                    className="after:content-['_*'] after:text-red-500"
-                  >
-                    Short Description
-                  </label>
-                </legend>
+              <div>
+                <fieldset className="flex flex-col border rounded-md px-2">
+                  <legend>
+                    <label
+                      htmlFor="ServiceName"
+                      className="after:content-['_*'] after:text-red-500"
+                    >
+                      Short Description
+                    </label>
+                  </legend>
 
-                <textarea onChange={(e) => setFormData({ ...formData, user_doc: { ...formData.user_doc, short_description: e.target.value } })} name="user_doc_description" className="w-full outline-none p-2" placeholder="Enter user doc short description" ></textarea>
+                  <textarea onChange={(e) => setFormData({ ...formData, user_doc: { ...formData.user_doc, short_description: e.target.value } })} name="user_doc_description" className="w-full outline-none p-2" placeholder="Enter user doc short description" ></textarea>
 
-                {/* <Controller
+                  {/* <Controller
                   name="user_doc"
                   defaultValue=""
                   rules={{
@@ -715,298 +830,327 @@ const ServiceDetailsResource = () => {
                     </>
                   )}
                 /> */}
-              </fieldset>
+                </fieldset>
 
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-2">
-                <div className="border border-gray-300 rounded">
-                  <div className="bg-gray-300 flex items-center justify-between p-2">
-                    <h3 className="text-primary font-semibold">Modules File</h3>
-                    <button
-                      onClick={() => {
-                        setFormData({
-                          ...formData,
-                          user_doc: {
-                            ...formData.user_doc,
-                            module_file: [...formData.user_doc.module_file, {
-                              label: "",
-                              version: "",
-                              module: ""
-                            }],
-                          },
-                        });
-                      }}
-                      type="button"
-                      className="bg-primary text-white px-4 py-2 rounded"
-                    >
-                      <svg
-                        className="w-4 h-4 fill-current"
-                        xmlns="http://www.w3.org/2000/svg"
-                        viewBox="0 0 448 512"
-                      >
-                        <path d="M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32V224H48c-17.7 0-32 14.3-32 32s14.3 32 32 32H192V432c0 17.7 14.3 32 32 32s32-14.3 32-32V288H400c17.7 0 32-14.3 32-32s-14.3-32-32-32H256V80z" />
-                      </svg>
-                    </button>
-                  </div>
-                  {formData?.user_doc?.module_file?.map((item: any, index: any) => (
-                    <div key={index} className="p-2 ">
-                      <div>
-                        <div className="flex gap-2">
-                          <div className="flex w-full  items-center justify-between">
-                            <fieldset className="w-full flex flex-col border rounded-md px-2">
-                              <legend>
-                                <label
-                                  htmlFor="key"
-                                  className="after:content-['_*'] after:text-red-500"
-                                >
-                                  Module - {index + 1}
-                                </label>
-                              </legend>
+                {
+                  error?.userDoc?.shortDes?.status && (
+                    <p className="text-red-500 text-12 px-2 pt-1">
+                      {error?.userDoc?.shortDes?.message}
+                    </p>
+                  )
+                }
+              </div>
 
-                              <div className="flex flex-col gap-2">
-                                <div className="grid grid-cols-4">
-                                  <p>Label:</p>
-                                  <div className="col-span-3">
-                                    <input
-                                      onChange={(e) => {
-                                        const newModuleFile = [...formData.user_doc.module_file];
-                                        newModuleFile[index] = {
-                                          ...newModuleFile[index],
-                                          label: e.target.value
-                                        };
-                                        setFormData({
-                                          ...formData,
-                                          user_doc: {
-                                            ...formData.user_doc,
-                                            module_file: newModuleFile
-                                          }
-                                        });
-                                      }}
-                                      value={item.label}
-                                      type="text"
-                                      placeholder="Enter Label"
-                                      className=" border border-black w-full px-2"
-
-                                    />
-                                  </div>
-                                </div>
-                                <div className="grid grid-cols-4">
-                                  <p>Version:</p>
-                                  <div className="col-span-3">
-                                    <input
-                                      value={item.version}
-                                      onChange={(e) => {
-                                        const newModuleFile = [...formData.user_doc.module_file];
-                                        newModuleFile[index] = {
-                                          ...newModuleFile[index],
-                                          version: e.target.value
-                                        };
-                                        setFormData({
-                                          ...formData,
-                                          user_doc: {
-                                            ...formData.user_doc,
-                                            module_file: newModuleFile
-                                          }
-                                        });
-                                      }}
-                                      type="text"
-                                      placeholder="Enter Version"
-                                      className=" border border-black w-full px-2"
-
-                                    />
-                                  </div>
-                                </div>
-                                <div className="grid grid-cols-4">
-                                  <p>Module:</p>
-                                  <div className="col-span-3">
-                                    <input
-                                      onChange={(e) => {
-                                        const newModuleFile = [...formData.user_doc.module_file];
-                                        newModuleFile[index] = {
-                                          ...newModuleFile[index],
-                                          module: e.target.files?.[0]
-                                        };
-                                        setFormData({
-                                          ...formData,
-                                          user_doc: {
-                                            ...formData.user_doc,
-                                            module_file: newModuleFile
-                                          }
-                                        });
-                                      }}
-                                      type="file"
-                                      className="w-full "
-
-                                    />
-                                  </div>
-                                </div>
-                              </div>
-                            </fieldset>
-                          </div>
-                          <div className="mt-3">
-                            <button
-                              type="button"
-                              onClick={() => {
-                                if (formData?.user_doc?.module_file.length != 1) {
-                                  setFormData({
-                                    ...formData,
-                                    user_doc: {
-                                      ...formData.user_doc,
-                                      module_file: formData.user_doc.module_file.filter((_: any, i: any) => i !== index),
-                                    },
-                                  })
-                                }
-
-                              }}
-                              className="border border-primary bg-primary text-white mt-2 px-2 py-1 rounded"
-                            >
-                              <svg
-                                className="w-6 h-6 fill-current"
-                                xmlns="http://www.w3.org/2000/svg"
-                                viewBox="0 0 448 512"
-                              >
-                                <path d="M432 256c0 17.7-14.3 32-32 32L48 288c-17.7 0-32-14.3-32-32s14.3-32 32-32l352 0c17.7 0 32 14.3 32 32z" />
-                              </svg>
-                            </button>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-                <div className="border border-gray-300 rounded">
-                  <div className="bg-gray-300 flex items-center justify-between p-2">
-                    <h3 className="text-primary font-semibold">
-                      External Links
-                    </h3>
-                    <button
-                      type="button"
-                      onClick={() => {
-                        setFormData({
-                          ...formData,
-                          user_doc: {
-                            ...formData.user_doc,
-                            external_links: [
-                              ...formData.user_doc.external_links,
-                              {
+              <div>
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-2">
+                  <div className="border border-gray-300 rounded">
+                    <div className="bg-gray-300 flex items-center justify-between p-2">
+                      <h3 className="text-primary font-semibold">Modules File</h3>
+                      <button
+                        onClick={() => {
+                          setFormData({
+                            ...formData,
+                            user_doc: {
+                              ...formData.user_doc,
+                              module_file: [...formData.user_doc.module_file, {
                                 label: "",
-                                link: ""
-                              },
-                            ],
-                          },
-                        });
-                      }}
-                      className="bg-primary text-white px-4 py-2 rounded"
-                    >
-                      <svg
-                        className="w-4 h-4 fill-current"
-                        xmlns="http://www.w3.org/2000/svg"
-                        viewBox="0 0 448 512"
+                                version: "",
+                                module: ""
+                              }],
+                            },
+                          });
+                        }}
+                        type="button"
+                        className="bg-primary text-white px-4 py-2 rounded"
                       >
-                        <path d="M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32V224H48c-17.7 0-32 14.3-32 32s14.3 32 32 32H192V432c0 17.7 14.3 32 32 32s32-14.3 32-32V288H400c17.7 0 32-14.3 32-32s-14.3-32-32-32H256V80z" />
-                      </svg>
-                    </button>
-                  </div>
-                  {formData?.user_doc?.external_links?.map((item: any, index: any) => (
-                    <div key={index} className="p-2 ">
-                      <div>
-                        <div className="flex gap-2">
-                          <div className="flex w-full  items-center justify-between">
-                            <fieldset className="w-full flex flex-col border rounded-md px-2">
-                              <legend>
-                                <label
-                                  htmlFor="key"
-                                // className="after:content-['_*'] after:text-red-500"
-                                >
-                                  Link - {index + 1}
-                                </label>
-                              </legend>
+                        <svg
+                          className="w-4 h-4 fill-current"
+                          xmlns="http://www.w3.org/2000/svg"
+                          viewBox="0 0 448 512"
+                        >
+                          <path d="M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32V224H48c-17.7 0-32 14.3-32 32s14.3 32 32 32H192V432c0 17.7 14.3 32 32 32s32-14.3 32-32V288H400c17.7 0 32-14.3 32-32s-14.3-32-32-32H256V80z" />
+                        </svg>
+                      </button>
+                    </div>
+                    {formData?.user_doc?.module_file?.map((item: any, index: any) => (
+                      <div key={index} className="p-2 ">
+                        <div>
+                          <div className="flex gap-2">
+                            <div className="flex w-full  items-center justify-between">
+                              <fieldset className="w-full flex flex-col border rounded-md px-2">
+                                <legend>
+                                  <label
+                                    htmlFor="key"
+                                    className="after:content-['_*'] after:text-red-500"
+                                  >
+                                    Module - {index + 1}
+                                  </label>
+                                </legend>
 
-                              <div className="flex flex-col gap-2">
-                                <div className="grid grid-cols-4">
-                                  <p>Label:</p>
-                                  <div className="col-span-3">
-                                    <input
-                                      onChange={(e) => {
-                                        const newExternalLinks = [...formData.user_doc.external_links];
-                                        newExternalLinks[index] = {
-                                          ...newExternalLinks[index],
-                                          label: e.target.value
-                                        };
-                                        setFormData({
-                                          ...formData,
-                                          user_doc: {
-                                            ...formData.user_doc,
-                                            external_links: newExternalLinks
-                                          }
-                                        });
-                                      }}
-                                      type="text"
-                                      placeholder="Enter Label"
-                                      className=" border border-black w-full px-2"
+                                <div className="flex flex-col gap-2">
+                                  <div className="grid grid-cols-4">
+                                    <p>Label:</p>
+                                    <div className="col-span-3">
+                                      <input
+                                        onChange={(e) => {
+                                          const newModuleFile = [...formData.user_doc.module_file];
+                                          newModuleFile[index] = {
+                                            ...newModuleFile[index],
+                                            label: e.target.value
+                                          };
+                                          setFormData({
+                                            ...formData,
+                                            user_doc: {
+                                              ...formData.user_doc,
+                                              module_file: newModuleFile
+                                            }
+                                          });
+                                        }}
+                                        value={item.label}
+                                        type="text"
+                                        placeholder="Enter Label"
+                                        className=" border border-black w-full px-2"
 
-                                    />
+                                      />
+                                    </div>
+                                  </div>
+                                  <div className="grid grid-cols-4">
+                                    <p>Version:</p>
+                                    <div className="col-span-3">
+                                      <input
+                                        value={item.version}
+                                        onChange={(e) => {
+                                          const newModuleFile = [...formData.user_doc.module_file];
+                                          newModuleFile[index] = {
+                                            ...newModuleFile[index],
+                                            version: parseInt(e.target.value)
+                                          };
+                                          setFormData({
+                                            ...formData,
+                                            user_doc: {
+                                              ...formData.user_doc,
+                                              module_file: newModuleFile
+                                            }
+                                          });
+                                        }}
+                                        type="number"
+                                        placeholder="Enter Version"
+                                        className=" border border-black w-full px-2"
+
+                                      />
+                                    </div>
+                                  </div>
+                                  <div className="grid grid-cols-4">
+                                    <p>Module:</p>
+                                    <div className="col-span-3">
+                                      <input
+                                        onChange={(e) => {
+                                          const newModuleFile = [...formData.user_doc.module_file];
+                                          newModuleFile[index] = {
+                                            ...newModuleFile[index],
+                                            module: e.target.files?.[0]
+                                          };
+                                          setFormData({
+                                            ...formData,
+                                            user_doc: {
+                                              ...formData.user_doc,
+                                              module_file: newModuleFile
+                                            }
+                                          });
+                                        }}
+                                        type="file"
+                                        className="w-full "
+
+                                      />
+                                    </div>
                                   </div>
                                 </div>
+                              </fieldset>
+                            </div>
+                            <div className="mt-3">
+                              <button
+                                type="button"
+                                onClick={() => {
+                                  if (formData?.user_doc?.module_file.length != 1) {
+                                    setFormData({
+                                      ...formData,
+                                      user_doc: {
+                                        ...formData.user_doc,
+                                        module_file: formData.user_doc.module_file.filter((_: any, i: any) => i !== index),
+                                      },
+                                    })
+                                  }
 
-                                <div className="grid grid-cols-4">
-                                  <p>Link:</p>
-                                  <div className="col-span-3">
-                                    <input
-                                      onChange={(e) => {
-                                        const newExternalLinks = [...formData.user_doc.external_links];
-                                        newExternalLinks[index] = {
-                                          ...newExternalLinks[index],
-                                          link: e.target.value
-                                        };
-                                        setFormData({
-                                          ...formData,
-                                          user_doc: {
-                                            ...formData.user_doc,
-                                            external_links: newExternalLinks
-                                          }
-                                        });
-                                      }}
-                                      type="text"
-                                      placeholder="Enter Link"
-                                      className=" border border-black w-full px-2"
-
-                                    />
-                                  </div>
-                                </div>
-                              </div>
-                            </fieldset>
-                          </div>
-                          <div className="mt-3">
-                            <button
-                              type="button"
-                              onClick={() => {
-                                if (formData?.user_doc?.external_links?.length != 1) {
-                                  setFormData({
-                                    ...formData,
-                                    user_doc: {
-                                      ...formData.user_doc,
-                                      external_links: formData.user_doc.external_links.filter((_: any, i: any) => i !== index),
-                                    },
-                                  })
-                                }
-
-                              }}
-                              className="border border-primary bg-primary text-white mt-2 px-2 py-1 rounded"
-                            >
-                              <svg
-                                className="w-6 h-6 fill-current"
-                                xmlns="http://www.w3.org/2000/svg"
-                                viewBox="0 0 448 512"
+                                }}
+                                className="border border-primary bg-primary text-white mt-2 px-2 py-1 rounded"
                               >
-                                <path d="M432 256c0 17.7-14.3 32-32 32L48 288c-17.7 0-32-14.3-32-32s14.3-32 32-32l352 0c17.7 0 32 14.3 32 32z" />
-                              </svg>
-                            </button>
+                                <svg
+                                  className="w-6 h-6 fill-current"
+                                  xmlns="http://www.w3.org/2000/svg"
+                                  viewBox="0 0 448 512"
+                                >
+                                  <path d="M432 256c0 17.7-14.3 32-32 32L48 288c-17.7 0-32-14.3-32-32s14.3-32 32-32l352 0c17.7 0 32 14.3 32 32z" />
+                                </svg>
+                              </button>
+                            </div>
                           </div>
                         </div>
                       </div>
+                    ))}
+
+                    {
+                      error?.userDoc?.module?.status && (
+                        <p className="text-red-500 text-12 px-2 pt-1">
+                          {error?.userDoc?.module?.message}
+                        </p>
+                      )
+                    }
+                  </div>
+                  <div className="border border-gray-300 rounded">
+                    <div className="bg-gray-300 flex items-center justify-between p-2">
+                      <h3 className="text-primary font-semibold">
+                        External Links
+                      </h3>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setFormData({
+                            ...formData,
+                            user_doc: {
+                              ...formData.user_doc,
+                              external_links: [
+                                ...formData.user_doc.external_links,
+                                {
+                                  label: "",
+                                  link: ""
+                                },
+                              ],
+                            },
+                          });
+                        }}
+                        className="bg-primary text-white px-4 py-2 rounded"
+                      >
+                        <svg
+                          className="w-4 h-4 fill-current"
+                          xmlns="http://www.w3.org/2000/svg"
+                          viewBox="0 0 448 512"
+                        >
+                          <path d="M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32V224H48c-17.7 0-32 14.3-32 32s14.3 32 32 32H192V432c0 17.7 14.3 32 32 32s32-14.3 32-32V288H400c17.7 0 32-14.3 32-32s-14.3-32-32-32H256V80z" />
+                        </svg>
+                      </button>
                     </div>
-                  ))}
+                    {formData?.user_doc?.external_links?.map((item: any, index: any) => (
+                      <div key={index} className="p-2 ">
+                        <div>
+                          <div className="flex gap-2">
+                            <div className="flex w-full  items-center justify-between">
+                              <fieldset className="w-full flex flex-col border rounded-md px-2">
+                                <legend>
+                                  <label
+                                    htmlFor="key"
+                                  // className="after:content-['_*'] after:text-red-500"
+                                  >
+                                    Link - {index + 1}
+                                  </label>
+                                </legend>
+
+                                <div className="flex flex-col gap-2">
+                                  <div className="grid grid-cols-4">
+                                    <p>Label:</p>
+                                    <div className="col-span-3">
+                                      <input
+                                        onChange={(e) => {
+                                          const newExternalLinks = [...formData.user_doc.external_links];
+                                          newExternalLinks[index] = {
+                                            ...newExternalLinks[index],
+                                            label: e.target.value
+                                          };
+                                          setFormData({
+                                            ...formData,
+                                            user_doc: {
+                                              ...formData.user_doc,
+                                              external_links: newExternalLinks
+                                            }
+                                          });
+                                        }}
+                                        type="text"
+                                        placeholder="Enter Label"
+                                        className=" border border-black w-full px-2"
+
+                                      />
+                                    </div>
+                                  </div>
+
+                                  <div className="grid grid-cols-4">
+                                    <p>Link:</p>
+                                    <div className="col-span-3">
+                                      <input
+                                        onChange={(e) => {
+                                          const newExternalLinks = [...formData.user_doc.external_links];
+                                          newExternalLinks[index] = {
+                                            ...newExternalLinks[index],
+                                            link: e.target.value
+                                          };
+                                          setFormData({
+                                            ...formData,
+                                            user_doc: {
+                                              ...formData.user_doc,
+                                              external_links: newExternalLinks
+                                            }
+                                          });
+                                        }}
+                                        type="text"
+                                        placeholder="Enter Link"
+                                        className=" border border-black w-full px-2"
+
+                                      />
+                                    </div>
+                                  </div>
+                                </div>
+                              </fieldset>
+                            </div>
+                            <div className="mt-3">
+                              <button
+                                type="button"
+                                onClick={() => {
+                                  if (formData?.user_doc?.external_links?.length != 1) {
+                                    setFormData({
+                                      ...formData,
+                                      user_doc: {
+                                        ...formData.user_doc,
+                                        external_links: formData.user_doc.external_links.filter((_: any, i: any) => i !== index),
+                                      },
+                                    })
+                                  }
+
+                                }}
+                                className="border border-primary bg-primary text-white mt-2 px-2 py-1 rounded"
+                              >
+                                <svg
+                                  className="w-6 h-6 fill-current"
+                                  xmlns="http://www.w3.org/2000/svg"
+                                  viewBox="0 0 448 512"
+                                >
+                                  <path d="M432 256c0 17.7-14.3 32-32 32L48 288c-17.7 0-32-14.3-32-32s14.3-32 32-32l352 0c17.7 0 32 14.3 32 32z" />
+                                </svg>
+                              </button>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+
+                    {
+                      error?.userDoc?.extraLink?.status && (
+                        <p className="text-red-500 text-12 px-2 pt-1">
+                          {error?.userDoc?.extraLink?.message}
+                        </p>
+                      )
+                    }
+                  </div>
                 </div>
+
+
               </div>
 
 
@@ -1030,6 +1174,10 @@ const ServiceDetailsResource = () => {
                   </legend>
                   <input onChange={(e) => setFormData({ ...formData, api_doc: { ...formData.api_doc, label: e.target.value } })} type="text" placeholder="Enter api doc label" className="w-full outline-none p-2" />
                 </fieldset>
+
+                {
+
+                }
               </div>
 
               <div>
