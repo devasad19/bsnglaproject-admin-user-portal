@@ -82,11 +82,11 @@ const ServiceDetailsResource = () => {
       formData.append("media_images[]", "");
     }
   let modules:any =[];
-    module.forEach((item: any) => {
+    module.forEach((item: any,index:number) => {
       const { label, image } = item;
-      console.log("mudules imageds:", image[0]);
-      
-      modules.push({ label: label, image: image[0] });
+      // console.log("mudules imageds:", image[0]);
+      formData.append(`modules[${index}][image]`, image);      
+      modules.push({ label: label});
     });
     console.log("Update modules:", modules);
 
