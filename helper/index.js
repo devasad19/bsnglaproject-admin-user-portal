@@ -32,6 +32,9 @@ const months = [
 
 
 export const CountWords = (str) => {
+
+  console.log('string from function: ',str);
+  
   str = str.trim();
 
   if (str.length === 0) {

@@ -162,17 +162,12 @@ const ServiceDetailsResource = () => {
     /* console.log( 'unsanitized youtube: ',formData?.user_doc?.video_link);
     console.log( 'sanitized youtube: ',sanitizeYoutubeUrl(formData?.user_doc?.video_link)); */
 
-    
-    
 
-    if (CountWords(formData?.description) < 10) {
+    if (CountWords(formData?.description) < 10 || CountWords(formData?.description) > 100) {
       setError({ ...error, description: { status: true, message: "Description has to be 10 to 100 words." } });
     }
-    
-    console.log('description after validation: ',error?.description);
 
-    console.log('short description: ',CountWords(formData?.description) < 10 );
-    
+
 
     const mediaFiles = [...formData?.mediaImages];
 
@@ -184,7 +179,7 @@ const ServiceDetailsResource = () => {
       })
     }
 
-    if (formData?.distribution?.length > 0 || formData?.distribution?.length > 10) {
+    if (formData?.distribution?.length < 1 || formData?.distribution?.length > 10) {
       setError({ ...error, distribution: { status: true, message: "Distribution has to be 1 to 10." } });
     } else {
       formData?.distribution?.map((item: any) => {
@@ -219,7 +214,7 @@ const ServiceDetailsResource = () => {
 
     /* user doc validation start */
 
-    /* if (CountWords(formData?.user_doc?.label) < 2 || CountWords(formData?.user_doc?.label > 4)) {
+    if (CountWords(formData?.user_doc?.label) < 2 || CountWords(formData?.user_doc?.label) > 4) {
       setError({ ...error, userDoc: { label: { status: true, message: "User Documentation label has to be 2 to 4 words." } } });
     }
 
@@ -243,19 +238,17 @@ const ServiceDetailsResource = () => {
           setError({ ...error, userDoc: { module: { status: true, message: "User Documentation module file size should be less than 500kb." } } });
         }
       })
-    } */
+    }
 
     /* api doc validation start */
-    /* if (CountWords(formData?.api_doc?.label) < 2 || CountWords(formData?.api_doc?.label > 4)) {
+    if (CountWords(formData?.api_doc?.label) < 2 || CountWords(formData?.api_doc?.label) > 4) {
       setError({ ...error, apiDoc: { label: { status: true, message: "User Documentation label has to be 2 to 4 words." } } });
     }
 
-    if (GetFileSize(formData?.api_doc?.icon) > 100000) {
-      setError({ ...error, apiDoc: { icon: { status: true, message: "User Documentation icon size should be less than 100kb." } } });
-    }
+    
 
 
-    if (CountWords(formData?.api_doc?.short_description) < 10 || CountWords(formData?.api_doc?.short_description) > 25) {
+    if (CountWords(formData?.api_doc?.short_description) < 10) {
       setError({ ...error, apiDoc: { shortDes: { status: true, message: "User Documentation short description has to be 10 to 100 words." } } });
     }
 
@@ -270,33 +263,37 @@ const ServiceDetailsResource = () => {
           setError({ ...error, apiDoc: { module: { status: true, message: "User Documentation module file size should be less than 500kb." } } });
         }
       })
-    } */
+    }
+
+    if (GetFileSize(formData?.api_doc?.icon) > 100000) {
+      setError({ ...error, apiDoc: { icon: { status: true, message: "User Documentation icon size should be less than 100kb." } } });
+    }
 
 
-    console.log('errors: ',error);
-    
 
 
 
 
 
-    /* setIsLoading(true);
+
+
+    setIsLoading(true);
 
     const payload = new FormData();
 
     payload.append("service_id", "1");
-    payload.append("broad_description", formData.description); */
+    payload.append("broad_description", formData.description);
 
-    /* if (formData.mediaImages) {
+    if (formData.mediaImages) {
       Array.from(formData.mediaImages).forEach((file) => {
 
         payload.append("media_images[]", file as any);
       });
     } else {
       payload.append("media_images[]", "");
-    } */
+    }
 
-    /* payload.append("api_doc_label", formData.api_doc.label);
+    payload.append("api_doc_label", formData.api_doc.label);
     payload.append("api_doc_icon", formData.api_doc.icon);
     payload.append("api_desc", formData.api_doc.short_description);
     payload.append("user_characteristics", JSON.stringify(formData.user_characteristics));
@@ -323,28 +320,29 @@ const ServiceDetailsResource = () => {
       payload.append(`api_modules[${index}][label]`, item.label);
       payload.append(`api_modules[${index}][version]`, item.version);
       payload.append(`api_modules[${index}][module]`, item.module);
-    }); */
+    });
 
 
-    /* const res = await serviceDetailsResourceApi(payload).catch((err) => {
+    const res = await serviceDetailsResourceApi(payload).catch((err) => {
       console.log(err);
-    }); */
+    });
 
 
-    /* if(res?.status == true){
+    if(res?.status == true){
       toast.success(res.message);
       setIsLoading(false);
       window.location.reload();
     }else{
       toast.error(res.message);
       setIsLoading(false);
-    } */
+    }
 
 
   };
+  
 
-  // console.log('error message: ',error?.mediaImages?.status);
-
+  console.log(formData);
+  
 
 
   return (
@@ -365,14 +363,14 @@ const ServiceDetailsResource = () => {
               </label>
             </legend>
 
-            <textarea onChange={(e) => setFormData({ ...formData, description: e.target.value })} name="description" placeholder="Enter Description" className="w-full outline-none text-14 py-1"></textarea>
+            <textarea onChange={(e) => setFormData({ ...formData, description: e.target.value })} name="description" placeholder="Enter Description" className="w-full outline-none text-14 py-1" ></textarea>
 
             {/* <Controller
               name="description"
               control={control}
               defaultValue=""
               rules={{
-                required: "Description is required",
+                : "Description is ",
                 validate: {
                   maxWords: (value) => {
                     const wordCount = value.trim().split(/\s+/).length;
@@ -429,7 +427,7 @@ const ServiceDetailsResource = () => {
               type="file"
               accept="image/*"
               multiple
-
+              
             />
           </fieldset>
 
@@ -492,6 +490,7 @@ const ServiceDetailsResource = () => {
                                   ),
                                 });
                               }}
+                              
 
                             />
                           </div>
@@ -511,6 +510,7 @@ const ServiceDetailsResource = () => {
                                   ),
                                 });
                               }}
+                              
 
                             />
                           </div>
@@ -607,6 +607,7 @@ const ServiceDetailsResource = () => {
                                   ),
                                 });
                               }}
+                              
 
                             />
                           </div>
@@ -703,6 +704,7 @@ const ServiceDetailsResource = () => {
                                   ),
                                 });
                               }}
+                              
 
                             />
                           </div>
@@ -764,7 +766,7 @@ const ServiceDetailsResource = () => {
                       Label
                     </label>
                   </legend>
-                  <input onChange={(e) => setFormData({ ...formData, user_doc: { ...formData.user_doc, label: e.target.value } })} id="user_doc_label" type="text" placeholder="Enter user doc label" className="w-full outline-none p-2" />
+                  <input onChange={(e) => setFormData({ ...formData, user_doc: { ...formData.user_doc, label: e.target.value } })} id="user_doc_label" type="text" placeholder="Enter user doc label" className="w-full outline-none p-2"  />
                 </fieldset>
 
                 {
@@ -783,7 +785,7 @@ const ServiceDetailsResource = () => {
                       Icon
                     </label>
                   </legend>
-                  <input onChange={(e) => setFormData({ ...formData, user_doc: { ...formData.user_doc, icon: e.target.files?.[0] } })} type="file" name="user_doc_icon" />
+                  <input onChange={(e) => setFormData({ ...formData, user_doc: { ...formData.user_doc, icon: e.target.files?.[0] } })} type="file" name="user_doc_icon"  />
                 </fieldset>
                 {
                   error?.userDoc?.icon?.status && (
@@ -805,12 +807,12 @@ const ServiceDetailsResource = () => {
                     </label>
                   </legend>
                   <input
-                    onChange={(e) => setFormData({ ...formData, user_doc: { ...formData.user_doc, video_link: e.target.value } })}
+                    onChange={(e) => setFormData({ ...formData, user_doc: { ...formData.user_doc, video_link: sanitizeYoutubeUrl(e.target.value) } })}
                     id="video_link"
                     type="text"
                     placeholder="Video Link (Youtube)"
                     className="outline-none p-2"
-
+                    
                   />
                 </fieldset>
 
@@ -840,7 +842,7 @@ const ServiceDetailsResource = () => {
                   name="user_doc"
                   defaultValue=""
                   rules={{
-                    required: "User Documents is required",
+                    : "User Documents is ",
                     validate: {
                       maxWords: (value) => {
                         const wordCount = value.trim().split(/\s+/).length;
@@ -946,6 +948,7 @@ const ServiceDetailsResource = () => {
                                         type="text"
                                         placeholder="Enter Label"
                                         className=" border border-black w-full px-2"
+                                        
 
                                       />
                                     </div>
@@ -972,6 +975,7 @@ const ServiceDetailsResource = () => {
                                         type="number"
                                         placeholder="Enter Version"
                                         className=" border border-black w-full px-2"
+                                        
 
                                       />
                                     </div>
@@ -996,6 +1000,7 @@ const ServiceDetailsResource = () => {
                                         }}
                                         type="file"
                                         className="w-full "
+                                        
 
                                       />
                                     </div>
@@ -1208,7 +1213,7 @@ const ServiceDetailsResource = () => {
                       Label
                     </label>
                   </legend>
-                  <input onChange={(e) => setFormData({ ...formData, api_doc: { ...formData.api_doc, label: e.target.value } })} type="text" placeholder="Enter api doc label" className="w-full outline-none p-2" />
+                  <input onChange={(e) => setFormData({ ...formData, api_doc: { ...formData.api_doc, label: e.target.value } })} type="text" placeholder="Enter api doc label" className="w-full outline-none p-2"  />
                 </fieldset>
 
                 {
@@ -1227,7 +1232,7 @@ const ServiceDetailsResource = () => {
                       Icon
                     </label>
                   </legend>
-                  <input onChange={(e) => setFormData({ ...formData, api_doc: { ...formData.api_doc, icon: e.target.files?.[0] } })} type="file" name="user_doc_icon" />
+                  <input onChange={(e) => setFormData({ ...formData, api_doc: { ...formData.api_doc, icon: e.target.files?.[0] } })} type="file" name="user_doc_icon"  />
                 </fieldset>
 
                 {
@@ -1250,10 +1255,11 @@ const ServiceDetailsResource = () => {
                     </label>
                   </legend>
                   <input
-                    onChange={(e) => setFormData({ ...formData, api_doc: { ...formData.api_doc, video_link: e.target.value } })}
+                    onChange={(e) => setFormData({ ...formData, api_doc: { ...formData.api_doc, video_link: sanitizeYoutubeUrl(e.target.value) } })}
                     type="text"
                     placeholder="Video Link (Youtube)"
                     className="outline-none p-2"
+                    
 
                   />
                 </fieldset>
@@ -1278,14 +1284,14 @@ const ServiceDetailsResource = () => {
                     </label>
                   </legend>
 
-                  <textarea name="api_doc_short_desc" onChange={(e) => setFormData({ ...formData, api_doc: { ...formData.api_doc, short_description: e.target.value } })}  ></textarea>
+                  <textarea name="api_doc_short_desc" onChange={(e) => setFormData({ ...formData, api_doc: { ...formData.api_doc, short_description: e.target.value } })}  className="w-full outline-none p-2" placeholder="Enter api doc short description" ></textarea>
 
                   {/* <Controller
                   name="user_doc"
                   control={control}
                   defaultValue=""
                   rules={{
-                    required: "User Documents is required",
+                    : "User Documents is ",
                     validate: {
                       maxWords: (value) => {
                         const wordCount = value.trim().split(/\s+/).length;
@@ -1390,6 +1396,7 @@ const ServiceDetailsResource = () => {
                                       type="text"
                                       placeholder="Enter Label"
                                       className=" border border-black w-full px-2"
+                                      
 
                                     />
                                   </div>
@@ -1403,7 +1410,7 @@ const ServiceDetailsResource = () => {
                                         const newModuleFile = [...formData.api_doc.module_file];
                                         newModuleFile[index] = {
                                           ...newModuleFile[index],
-                                          version: e.target.value
+                                          version: parseInt(e.target.value)
                                         };
                                         setFormData({
                                           ...formData,
@@ -1413,9 +1420,10 @@ const ServiceDetailsResource = () => {
                                           }
                                         });
                                       }}
-                                      type="text"
+                                      type="number"
                                       placeholder="Enter Version"
                                       className=" border border-black w-full px-2"
+                                      
 
                                     />
                                   </div>
@@ -1440,6 +1448,7 @@ const ServiceDetailsResource = () => {
                                       }}
                                       type="file"
                                       className="w-full "
+                                      
 
                                     />
                                   </div>
@@ -1479,9 +1488,9 @@ const ServiceDetailsResource = () => {
                   ))}
 
                   {
-                    error?.userDoc?.module?.status && (
+                    error?.apiDoc?.module?.status && (
                       <p className="text-red-500 text-12 px-2 pt-1">
-                        {error?.userDoc?.module?.message}
+                        {error?.apiDoc?.module?.message}
                       </p>
                     )
                   }
@@ -1636,7 +1645,7 @@ const ServiceDetailsResource = () => {
 
         <div className="flex justify-between pt-5">
           <p className="text-14">
-            <span className="text-red-500">*</span> Required
+            <span className="text-red-500">*</span> 
           </p>
           <button
             type="submit"
