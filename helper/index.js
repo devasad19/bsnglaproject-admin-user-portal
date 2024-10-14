@@ -30,6 +30,23 @@ const months = [
   "চৈত্র",
 ];
 
+
+export const CountWords = (str) => {
+  str = str.trim();
+
+  if (str.length === 0) {
+    return 0;
+  }
+
+  const words = str.split(/\s+/);
+
+  return words.length;
+};
+
+export const GetFileSize = (fileInput) => {
+  return fileInput.size;
+};
+
 export function en2bn(englishNumber) {
   const englishToBanglaMap = {
     0: "০",
@@ -163,13 +180,13 @@ export const modelClose = (modalRef, modalForm) => {
 };
 
 //model open
-export const modelOpen = (modalRef)=>{
-  if(modalRef.current) modalRef.current.showModal();
+export const modelOpen = (modalRef) => {
+  if (modalRef.current) modalRef.current.showModal();
 }
 
 
 
-export const sweetAlert = ()=>{
+export const sweetAlert = () => {
   Swal.fire({
     title: "Are you sure?",
     text: "You won't be able to revert this!",

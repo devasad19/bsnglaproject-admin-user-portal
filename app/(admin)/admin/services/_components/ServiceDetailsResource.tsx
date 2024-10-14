@@ -5,8 +5,9 @@ import { useState } from "react";
 import { useForm, Controller } from "react-hook-form";
 import CustomEditor from "@/app/_components/CustomEditor/CustomEditor";
 import { toast } from "react-toastify";
+import { CountWords, GetFileSize } from "@/helper";
 
-  
+
 const ServiceDetailsResource = () => {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
@@ -70,30 +71,107 @@ const ServiceDetailsResource = () => {
     }
   });
 
+  const [error, setError] = useState<any>({
+    description: {
+      status: false,
+      message: ""
+    },
+
+    mediaImages: {
+      status: false,
+      message: ""
+    },
+
+    distribution: {
+      status: false,
+      message: "",
+    },
+
+    userCharacter: {
+      status: false,
+      message: "",
+    },
+
+    apiCharacter: {
+      status: false,
+      message: "",
+    },
+  });
+
 
   const HandleFormSubmit = async (e: any) => {
     e.preventDefault();
 
-    setIsLoading(true);
+
+    if (CountWords(formData?.description) < 10 || CountWords(formData?.description) > 100) {
+      setError({ ...error, description: { status: true, message: "Description has to be 10 to 100 words." } });
+    }
+
+
+    const mediaFiles = [...formData?.mediaImages];
+
+    if (mediaFiles?.length > 0) {
+      mediaFiles?.map((item: any) => {
+        if (GetFileSize(item) > 500000) {
+          setError({ ...error, mediaImages: { status: true, message: "Image size should be less than 500kb." } });
+        }
+      })
+    }
+
+    if (formData?.distribution?.length > 0 || formData?.distribution?.length > 10) {
+      setError({ ...error, distribution: { status: true, message: "Distribution has to be 1 to 10." } });
+    } else {
+      formData?.distribution?.map((item: any) => {
+        if (CountWords(item?.label) < 1 || CountWords(item?.label) > 3) {
+          setError({ ...error, distribution: { status: true, message: "Distribution label has to be 1 to 3 words." } });
+        } else if (GetFileSize(item?.icon) > 80000) {
+          setError({ ...error, distribution: { status: true, message: "Distribution icon size should be less than 80kb." } });
+        }
+      });
+    }
+
+    if (formData?.user_characteristics?.length < 1 || formData?.user_characteristics?.length > 5) {
+      setError({ ...error, userCharacter: { status: true, message: "User Characteristics has to be 1 to 5." } });
+    } else {
+      formData?.user_characteristics?.map((item: any) => {
+        if (CountWords(item?.label) < 3 || CountWords(item?.label) > 5) {
+          setError({ ...error, userCharacter: { status: true, message: "User Characteristic label has to be 3 to 5 words." } });
+        }
+      });
+    }
+
+
+    if (formData?.api_characteristics?.length < 1 || formData?.api_characteristics?.length > 5) {
+      setError({ ...error, apiCharacter: { status: true, message: "API Characteristics has to be 1 to 5." } });
+    } else {
+      formData?.api_characteristics?.map((item: any) => {
+        if (CountWords(item?.label) < 3 || CountWords(item?.label) > 5) {
+          setError({ ...error, apiCharacter: { status: true, message: "API Characteristic label has to be 3 to 5 words." } });
+        }
+      });
+    }
+
+
+
+    /* setIsLoading(true);
 
     const payload = new FormData();
 
     payload.append("service_id", "1");
-    payload.append("broad_description", formData.description);
+    payload.append("broad_description", formData.description); */
 
-    if (formData.mediaImages) {
+    /* if (formData.mediaImages) {
       Array.from(formData.mediaImages).forEach((file) => {
 
         payload.append("media_images[]", file as any);
       });
     } else {
       payload.append("media_images[]", "");
-    }
+    } */
 
-    payload.append("api_doc_label", formData.api_doc.label);
+    /* payload.append("api_doc_label", formData.api_doc.label);
     payload.append("api_doc_icon", formData.api_doc.icon);
     payload.append("api_desc", formData.api_doc.short_description);
-    // payload.append("api_modules", JSON.stringify(formData.api_doc.module_file));
     payload.append("user_characteristics", JSON.stringify(formData.user_characteristics));
     payload.append("api_characteristics", JSON.stringify(formData.api_characteristics));
     payload.append("api_external_links", JSON.stringify(formData.api_doc.external_links));
@@ -101,7 +179,6 @@ const ServiceDetailsResource = () => {
     payload.append("user_doc_label", formData.user_doc.label);
     payload.append("user_doc_icon", formData.user_doc.icon);
     payload.append("user_desc", formData.user_doc.short_description);
-    // payload.append("user_modules", JSON.stringify(formData.user_doc.module_file));
     payload.append("user_external_links", JSON.stringify(formData.user_doc.external_links));
     payload.append("user_youtube_link", formData.user_doc.video_link);
 
@@ -119,26 +196,29 @@ const ServiceDetailsResource = () => {
       payload.append(`api_modules[${index}][label]`, item.label);
       payload.append(`api_modules[${index}][version]`, item.version);
       payload.append(`api_modules[${index}][module]`, item.module);
-    });
-    
-    
-    const res = await serviceDetailsResourceApi(payload).catch((err) => {
-      console.log(err);
-    });
+    }); */
 
- 
-    if(res?.status == true){
+
+    /* const res = await serviceDetailsResourceApi(payload).catch((err) => {
+      console.log(err);
+    }); */
+
+
+    /* if(res?.status == true){
       toast.success(res.message);
       setIsLoading(false);
       window.location.reload();
     }else{
       toast.error(res.message);
       setIsLoading(false);
-    }
-    
-    
+    } */
+
+
   };
-  
+
+  // console.log('error message: ',error?.mediaImages?.status);
+
+
 
   return (
     <>
@@ -158,7 +238,7 @@ const ServiceDetailsResource = () => {
               </label>
             </legend>
 
-            <textarea onChange={(e) => setFormData({ ...formData, description: e.target.value })} name="description" placeholder="Enter Description"></textarea>
+            <textarea onChange={(e) => setFormData({ ...formData, description: e.target.value })} name="description" placeholder="Enter Description" className="w-full outline-none text-14 py-1"></textarea>
 
             {/* <Controller
               name="description"
@@ -196,6 +276,14 @@ const ServiceDetailsResource = () => {
               )}
             /> */}
           </fieldset>
+
+          {
+            error?.description?.status && (
+              <p className="text-red-500 text-12 px-2 pt-1">
+                {error?.description?.message}
+              </p>
+            )
+          }
         </div>
         <div>
           <fieldset className="flex flex-col border rounded-md px-2">
@@ -214,8 +302,17 @@ const ServiceDetailsResource = () => {
               type="file"
               accept="image/*"
               multiple
+
             />
           </fieldset>
+
+          {
+            error?.mediaImages?.status && (
+              <p className="text-red-500 text-12 px-2 pt-1">
+                {error?.mediaImages?.message}
+              </p>
+            )
+          }
         </div>
 
         <div className="border border-gray-300 rounded">
@@ -268,6 +365,7 @@ const ServiceDetailsResource = () => {
                                   ),
                                 });
                               }}
+
                             />
                           </div>
                         </div>
@@ -282,10 +380,11 @@ const ServiceDetailsResource = () => {
                                   ...formData,
                                   distribution: formData.distribution.map(
                                     (dist: any, i: any) =>
-                                      i === index ? { ...dist, icon: e.target.files?.[0] } : dist 
+                                      i === index ? { ...dist, icon: e.target.files?.[0] } : dist
                                   ),
                                 });
                               }}
+
                             />
                           </div>
                         </div>
@@ -296,7 +395,7 @@ const ServiceDetailsResource = () => {
                     <button
                       type="button"
                       onClick={() => {
-                        if(formData.distribution.length != 1){
+                        if (formData.distribution.length != 1) {
                           setFormData({
                             ...formData,
                             distribution: formData.distribution.filter(
@@ -321,6 +420,14 @@ const ServiceDetailsResource = () => {
               </div>
             </div>
           ))}
+
+          {
+            error?.distribution?.status && (
+              <p className="text-red-500 text-12 px-2 pt-1">
+                {error?.distribution?.message}
+              </p>
+            )
+          }
         </div>
 
         <div className="border border-gray-300 rounded">
@@ -373,6 +480,7 @@ const ServiceDetailsResource = () => {
                                   ),
                                 });
                               }}
+
                             />
                           </div>
                         </div>
@@ -383,7 +491,7 @@ const ServiceDetailsResource = () => {
                     <button
                       type="button"
                       onClick={() => {
-                        if(formData.user_characteristics.length != 1){
+                        if (formData.user_characteristics.length != 1) {
                           setFormData({
                             ...formData,
                             user_characteristics: formData.user_characteristics.filter(
@@ -408,6 +516,14 @@ const ServiceDetailsResource = () => {
               </div>
             </div>
           ))}
+
+          {
+            error?.userCharacter?.status && (
+              <p className="text-red-500 text-12 px-2 pt-1">
+                {error?.userCharacter?.message}
+              </p>
+            )
+          }
         </div>
 
         <div className="border border-gray-300 rounded">
@@ -460,6 +576,7 @@ const ServiceDetailsResource = () => {
                                   ),
                                 });
                               }}
+
                             />
                           </div>
                         </div>
@@ -470,7 +587,7 @@ const ServiceDetailsResource = () => {
                     <button
                       type="button"
                       onClick={() => {
-                        if(formData.api_characteristics.length != 1){
+                        if (formData.api_characteristics.length != 1) {
                           setFormData({
                             ...formData,
                             api_characteristics: formData.api_characteristics.filter(
@@ -495,6 +612,15 @@ const ServiceDetailsResource = () => {
               </div>
             </div>
           ))}
+
+
+          {
+            error?.apiCharacter?.status && (
+              <p className="text-red-500 text-12 px-2 pt-1">
+                {error?.apiCharacter?.message}
+              </p>
+            )
+          }
         </div>
 
         <div>
@@ -542,6 +668,7 @@ const ServiceDetailsResource = () => {
                     type="text"
                     placeholder="Video Link (Youtube)"
                     className="outline-none p-2"
+
                   />
                 </fieldset>
               </div>
@@ -556,7 +683,7 @@ const ServiceDetailsResource = () => {
                   </label>
                 </legend>
 
-                <textarea onChange={(e) => setFormData({ ...formData, user_doc: { ...formData.user_doc, short_description: e.target.value } })} name="user_doc_description" className="w-full outline-none p-2" placeholder="Enter user doc short description"></textarea>
+                <textarea onChange={(e) => setFormData({ ...formData, user_doc: { ...formData.user_doc, short_description: e.target.value } })} name="user_doc_description" className="w-full outline-none p-2" placeholder="Enter user doc short description" ></textarea>
 
                 {/* <Controller
                   name="user_doc"
@@ -620,7 +747,7 @@ const ServiceDetailsResource = () => {
                       </svg>
                     </button>
                   </div>
-                  {formData?.user_doc?.module_file?.map((item:any, index: any) => (
+                  {formData?.user_doc?.module_file?.map((item: any, index: any) => (
                     <div key={index} className="p-2 ">
                       <div>
                         <div className="flex gap-2">
@@ -640,24 +767,25 @@ const ServiceDetailsResource = () => {
                                   <p>Label:</p>
                                   <div className="col-span-3">
                                     <input
-                                    onChange={(e) => {
-                                      const newModuleFile = [...formData.user_doc.module_file];
-                                      newModuleFile[index] = {
-                                        ...newModuleFile[index],
-                                        label: e.target.value
-                                      };
-                                      setFormData({
-                                        ...formData,
-                                        user_doc: {
-                                          ...formData.user_doc,
-                                          module_file: newModuleFile
-                                        }
-                                      });
-                                    }}
+                                      onChange={(e) => {
+                                        const newModuleFile = [...formData.user_doc.module_file];
+                                        newModuleFile[index] = {
+                                          ...newModuleFile[index],
+                                          label: e.target.value
+                                        };
+                                        setFormData({
+                                          ...formData,
+                                          user_doc: {
+                                            ...formData.user_doc,
+                                            module_file: newModuleFile
+                                          }
+                                        });
+                                      }}
                                       value={item.label}
                                       type="text"
                                       placeholder="Enter Label"
                                       className=" border border-black w-full px-2"
+
                                     />
                                   </div>
                                 </div>
@@ -683,6 +811,7 @@ const ServiceDetailsResource = () => {
                                       type="text"
                                       placeholder="Enter Version"
                                       className=" border border-black w-full px-2"
+
                                     />
                                   </div>
                                 </div>
@@ -706,6 +835,7 @@ const ServiceDetailsResource = () => {
                                       }}
                                       type="file"
                                       className="w-full "
+
                                     />
                                   </div>
                                 </div>
@@ -721,7 +851,7 @@ const ServiceDetailsResource = () => {
                                     ...formData,
                                     user_doc: {
                                       ...formData.user_doc,
-                                      module_file: formData.user_doc.module_file.filter((_: any, i:any) => i !== index),
+                                      module_file: formData.user_doc.module_file.filter((_: any, i: any) => i !== index),
                                     },
                                   })
                                 }
@@ -776,7 +906,7 @@ const ServiceDetailsResource = () => {
                       </svg>
                     </button>
                   </div>
-                  {formData?.user_doc?.external_links?.map((item:any, index: any) => (
+                  {formData?.user_doc?.external_links?.map((item: any, index: any) => (
                     <div key={index} className="p-2 ">
                       <div>
                         <div className="flex gap-2">
@@ -785,7 +915,7 @@ const ServiceDetailsResource = () => {
                               <legend>
                                 <label
                                   htmlFor="key"
-                                  className="after:content-['_*'] after:text-red-500"
+                                // className="after:content-['_*'] after:text-red-500"
                                 >
                                   Link - {index + 1}
                                 </label>
@@ -813,6 +943,7 @@ const ServiceDetailsResource = () => {
                                       type="text"
                                       placeholder="Enter Label"
                                       className=" border border-black w-full px-2"
+
                                     />
                                   </div>
                                 </div>
@@ -838,6 +969,7 @@ const ServiceDetailsResource = () => {
                                       type="text"
                                       placeholder="Enter Link"
                                       className=" border border-black w-full px-2"
+
                                     />
                                   </div>
                                 </div>
@@ -853,7 +985,7 @@ const ServiceDetailsResource = () => {
                                     ...formData,
                                     user_doc: {
                                       ...formData.user_doc,
-                                      external_links: formData.user_doc.external_links.filter((_: any, i:any) => i !== index),
+                                      external_links: formData.user_doc.external_links.filter((_: any, i: any) => i !== index),
                                     },
                                   })
                                 }
@@ -926,6 +1058,7 @@ const ServiceDetailsResource = () => {
                     type="text"
                     placeholder="Video Link (Youtube)"
                     className="outline-none p-2"
+
                   />
                 </fieldset>
               </div>
@@ -940,7 +1073,7 @@ const ServiceDetailsResource = () => {
                   </label>
                 </legend>
 
-                <textarea name="api_doc_short_desc" onChange={(e) => setFormData({ ...formData, api_doc: { ...formData.api_doc, short_description: e.target.value } })} ></textarea>
+                <textarea name="api_doc_short_desc" onChange={(e) => setFormData({ ...formData, api_doc: { ...formData.api_doc, short_description: e.target.value } })}  ></textarea>
 
                 {/* <Controller
                   name="user_doc"
@@ -1005,7 +1138,7 @@ const ServiceDetailsResource = () => {
                       </svg>
                     </button>
                   </div>
-                  {formData?.api_doc?.module_file?.map((item:any, index: any) => (
+                  {formData?.api_doc?.module_file?.map((item: any, index: any) => (
                     <div key={index} className="p-2 ">
                       <div>
                         <div className="flex gap-2">
@@ -1025,24 +1158,25 @@ const ServiceDetailsResource = () => {
                                   <p>Label:</p>
                                   <div className="col-span-3">
                                     <input
-                                    onChange={(e) => {
-                                      const newModuleFile = [...formData.api_doc.module_file];
-                                      newModuleFile[index] = {
-                                        ...newModuleFile[index],
-                                        label: e.target.value
-                                      };
-                                      setFormData({
-                                        ...formData,
-                                        api_doc: {
-                                          ...formData.api_doc,
-                                          module_file: newModuleFile
-                                        }
-                                      });
-                                    }}
+                                      onChange={(e) => {
+                                        const newModuleFile = [...formData.api_doc.module_file];
+                                        newModuleFile[index] = {
+                                          ...newModuleFile[index],
+                                          label: e.target.value
+                                        };
+                                        setFormData({
+                                          ...formData,
+                                          api_doc: {
+                                            ...formData.api_doc,
+                                            module_file: newModuleFile
+                                          }
+                                        });
+                                      }}
                                       value={item.label}
                                       type="text"
                                       placeholder="Enter Label"
                                       className=" border border-black w-full px-2"
+
                                     />
                                   </div>
                                 </div>
@@ -1068,6 +1202,7 @@ const ServiceDetailsResource = () => {
                                       type="text"
                                       placeholder="Enter Version"
                                       className=" border border-black w-full px-2"
+
                                     />
                                   </div>
                                 </div>
@@ -1091,6 +1226,7 @@ const ServiceDetailsResource = () => {
                                       }}
                                       type="file"
                                       className="w-full "
+
                                     />
                                   </div>
                                 </div>
@@ -1106,7 +1242,7 @@ const ServiceDetailsResource = () => {
                                     ...formData,
                                     api_doc: {
                                       ...formData.api_doc,
-                                      module_file: formData.api_doc.module_file.filter((_: any, i:any) => i !== index),
+                                      module_file: formData.api_doc.module_file.filter((_: any, i: any) => i !== index),
                                     },
                                   })
                                 }
@@ -1170,7 +1306,7 @@ const ServiceDetailsResource = () => {
                               <legend>
                                 <label
                                   htmlFor="key"
-                                  className="after:content-['_*'] after:text-red-500"
+                                // className="after:content-['_*'] after:text-red-500"
                                 >
                                   Link - {index + 1}
                                 </label>
@@ -1238,7 +1374,7 @@ const ServiceDetailsResource = () => {
                                     ...formData,
                                     api_doc: {
                                       ...formData.api_doc,
-                                      external_links: formData.api_doc.external_links.filter((_: any, i:any) => i !== index),
+                                      external_links: formData.api_doc.external_links.filter((_: any, i: any) => i !== index),
                                     },
                                   })
                                 }
@@ -1273,13 +1409,13 @@ const ServiceDetailsResource = () => {
             <span className="text-red-500">*</span> Required
           </p>
           <button
-              type="submit"
-              className="px-4 py-2 bg-violet-700 text-white active:scale-90 transition-all duration-400 rounded-md"
-            >
-              {
-                isLoading ? "Loading..." : "Create"
-              }
-            </button>
+            type="submit"
+            className="px-4 py-2 bg-violet-700 text-white active:scale-90 transition-all duration-400 rounded-md"
+          >
+            {
+              isLoading ? "Loading..." : "Create"
+            }
+          </button>
         </div>
       </form>
 
