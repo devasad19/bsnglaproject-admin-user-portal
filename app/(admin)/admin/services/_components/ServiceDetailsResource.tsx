@@ -162,12 +162,17 @@ const ServiceDetailsResource = () => {
     /* console.log( 'unsanitized youtube: ',formData?.user_doc?.video_link);
     console.log( 'sanitized youtube: ',sanitizeYoutubeUrl(formData?.user_doc?.video_link)); */
 
+    
+    
 
-
-    if (CountWords(formData?.description) < 10 || CountWords(formData?.description) > 100) {
+    if (CountWords(formData?.description) < 10) {
       setError({ ...error, description: { status: true, message: "Description has to be 10 to 100 words." } });
     }
+    
+    console.log('description after validation: ',error?.description);
 
+    console.log('short description: ',CountWords(formData?.description) < 10 );
+    
 
     const mediaFiles = [...formData?.mediaImages];
 
@@ -212,7 +217,9 @@ const ServiceDetailsResource = () => {
       });
     }
 
-    if (CountWords(formData?.user_doc?.label) < 2 || CountWords(formData?.user_doc?.label > 4)) {
+    /* user doc validation start */
+
+    /* if (CountWords(formData?.user_doc?.label) < 2 || CountWords(formData?.user_doc?.label > 4)) {
       setError({ ...error, userDoc: { label: { status: true, message: "User Documentation label has to be 2 to 4 words." } } });
     }
 
@@ -231,14 +238,43 @@ const ServiceDetailsResource = () => {
         if (CountWords(item?.label) < 3 || CountWords(item?.label) > 5) {
           setError({ ...error, userDoc: { module: { status: true, message: "User Documentation module file label has to be 3 to 5 words." } } });
         } else if (typeof item?.version != "number") {
-          console.log('module version from loop: ',typeof item?.version);
-          
           setError({ ...error, userDoc: { module: { status: true, message: "User Documentation module file version should be a number." } } });
         } else if (GetFileSize(item?.module) > 500000) {
           setError({ ...error, userDoc: { module: { status: true, message: "User Documentation module file size should be less than 500kb." } } });
         }
       })
+    } */
+
+    /* api doc validation start */
+    /* if (CountWords(formData?.api_doc?.label) < 2 || CountWords(formData?.api_doc?.label > 4)) {
+      setError({ ...error, apiDoc: { label: { status: true, message: "User Documentation label has to be 2 to 4 words." } } });
     }
+
+    if (GetFileSize(formData?.api_doc?.icon) > 100000) {
+      setError({ ...error, apiDoc: { icon: { status: true, message: "User Documentation icon size should be less than 100kb." } } });
+    }
+
+
+    if (CountWords(formData?.api_doc?.short_description) < 10 || CountWords(formData?.api_doc?.short_description) > 25) {
+      setError({ ...error, apiDoc: { shortDes: { status: true, message: "User Documentation short description has to be 10 to 100 words." } } });
+    }
+
+
+    if (formData?.api_doc?.module_file?.length > 0) {
+      formData?.api_doc?.module_file?.map((item: any) => {
+        if (CountWords(item?.label) < 3 || CountWords(item?.label) > 5) {
+          setError({ ...error, apiDoc: { module: { status: true, message: "User Documentation module file label has to be 3 to 5 words." } } });
+        } else if (typeof item?.version != "number") {
+          setError({ ...error, apiDoc: { module: { status: true, message: "User Documentation module file version should be a number." } } });
+        } else if (GetFileSize(item?.module) > 500000) {
+          setError({ ...error, apiDoc: { module: { status: true, message: "User Documentation module file size should be less than 500kb." } } });
+        }
+      })
+    } */
+
+
+    console.log('errors: ',error);
+    
 
 
 
@@ -1176,7 +1212,11 @@ const ServiceDetailsResource = () => {
                 </fieldset>
 
                 {
-
+                  error?.apiDoc?.label?.status && (
+                    <p className="text-red-500 text-12 px-2 pt-1">
+                      {error?.apiDoc?.label?.message}
+                    </p>
+                  )
                 }
               </div>
 
@@ -1189,6 +1229,14 @@ const ServiceDetailsResource = () => {
                   </legend>
                   <input onChange={(e) => setFormData({ ...formData, api_doc: { ...formData.api_doc, icon: e.target.files?.[0] } })} type="file" name="user_doc_icon" />
                 </fieldset>
+
+                {
+                  error?.apiDoc?.icon?.status && (
+                    <p className="text-red-500 text-12 px-2 pt-1">
+                      {error?.apiDoc?.icon?.message}
+                    </p>
+                  )
+                }
               </div>
 
               <div>
@@ -1209,21 +1257,30 @@ const ServiceDetailsResource = () => {
 
                   />
                 </fieldset>
+
+                {
+                  error?.apiDoc?.video?.status && (
+                    <p className="text-red-500 text-12 px-2 pt-1">
+                      {error?.apiDoc?.video?.message}
+                    </p>
+                  )
+                }
               </div>
 
-              <fieldset className="flex flex-col border rounded-md px-2">
-                <legend>
-                  <label
-                    htmlFor="ServiceName"
-                    className="after:content-['_*'] after:text-red-500"
-                  >
-                    Short Description
-                  </label>
-                </legend>
+              <div>
+                <fieldset className="flex flex-col border rounded-md px-2">
+                  <legend>
+                    <label
+                      htmlFor="ServiceName"
+                      className="after:content-['_*'] after:text-red-500"
+                    >
+                      Short Description
+                    </label>
+                  </legend>
 
-                <textarea name="api_doc_short_desc" onChange={(e) => setFormData({ ...formData, api_doc: { ...formData.api_doc, short_description: e.target.value } })}  ></textarea>
+                  <textarea name="api_doc_short_desc" onChange={(e) => setFormData({ ...formData, api_doc: { ...formData.api_doc, short_description: e.target.value } })}  ></textarea>
 
-                {/* <Controller
+                  {/* <Controller
                   name="user_doc"
                   control={control}
                   defaultValue=""
@@ -1254,7 +1311,16 @@ const ServiceDetailsResource = () => {
                     </>
                   )}
                 /> */}
-              </fieldset>
+                </fieldset>
+
+                {
+                  error?.apiDoc?.shortDes?.status && (
+                    <p className="text-red-500 text-12 px-2 pt-1">
+                      {error?.apiDoc?.shortDes?.message}
+                    </p>
+                  )
+                }
+              </div>
 
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-2">
                 <div className="border border-gray-300 rounded">
@@ -1411,6 +1477,14 @@ const ServiceDetailsResource = () => {
                       </div>
                     </div>
                   ))}
+
+                  {
+                    error?.userDoc?.module?.status && (
+                      <p className="text-red-500 text-12 px-2 pt-1">
+                        {error?.userDoc?.module?.message}
+                      </p>
+                    )
+                  }
                 </div>
                 <div className="border border-gray-300 rounded">
                   <div className="bg-gray-300 flex items-center justify-between p-2">
@@ -1543,6 +1617,14 @@ const ServiceDetailsResource = () => {
                       </div>
                     </div>
                   ))}
+
+                  {
+                    error?.userDoc?.extraLink?.status && (
+                      <p className="text-red-500 text-12 px-2 pt-1">
+                        {error?.userDoc?.extraLink?.message}
+                      </p>
+                    )
+                  }
                 </div>
               </div>
 
