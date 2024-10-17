@@ -7,6 +7,7 @@ import { useEffect, useState } from "react";
 
 const Home = ({ params: { id } }: { params: { id: string } }): JSX.Element => {
   const [order, setOrder] = useState<any>({});
+  const [plan, setPlan] = useState<any>();
   const { toPDF, targetRef } = usePDF({ filename: "page.pdf" });
   const PrintInvoice = (): void => {
     const PrintableDiv: any = document.getElementById("invoice");
@@ -20,18 +21,13 @@ const Home = ({ params: { id } }: { params: { id: string } }): JSX.Element => {
   };
 
 
-  useEffect(() => {
-    const singleOrder = async () => {
-      const res = await getSingleOrderByIdApi(id);
+  useEffect(()=> {
+    getSingleOrderByIdApi(id).then((res) => {
       setOrder(res.data);
-    };
-    singleOrder();
-  }, [id]);
-
-
-  const plan = JSON.parse(order?.plans);
+      setPlan(JSON.parse(res.data?.plans));
+    }).catch((err) => console.log(err));
+  },[id])
   
-   console.log({ plan });
 
 
   const DownloadInvoice = () => {};

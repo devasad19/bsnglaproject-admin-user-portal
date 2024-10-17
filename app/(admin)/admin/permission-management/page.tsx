@@ -316,6 +316,15 @@ const Home = (): JSX.Element => {
               />
             </fieldset>
           </div>
+
+          <div className="flex justify-end gap-3 mt-7">
+            <button className="bg-red-500 text-white px-4 py-2 rounded-md">
+              Cancel
+            </button>
+            <button className="bg-blue-500 text-white px-4 py-2 rounded-md">
+              Submit
+            </button>
+          </div>
         </form>
       </Modal>
 
@@ -326,53 +335,61 @@ const Home = (): JSX.Element => {
         title="প্যারেন্ট অনুমতির নাম তৈরি করুন"
       >
         <form className="pt-3" ref={permissionModalForm}>
-        <div className="pt-3 flex flex-col gap-3">
-              <fieldset className="flex flex-col border border-gray-300 rounded-md px-2">
-                <legend>
-                  <label
-                    htmlFor=""
-                    className="after:content-['_*'] after:text-red-400"
-                  >
-                    প্যারেন্ট অনুমতির নাম  
-                  </label>
-                </legend>
-                <select name="" id="" className="w-full bg-white py-2">
-                  <option value="1">parent 1</option>
-                  <option value="2">parent 2</option>
-                  <option value="3">parent 3</option>
-                </select>
-              </fieldset>
-              <fieldset className="flex flex-col border border-gray-300 rounded-md px-2">
-                <legend>
-                  <label
-                    htmlFor=""
-                    className="after:content-['_*'] after:text-red-400"
-                  >
-                    প্রদর্শনী নাম
-                  </label>
-                </legend>
-                <input
-                  type="text"
-                  className="w-full text-14 outline-none py-1"
-                  placeholder="অনুমতির প্রদর্শনী নাম লিখুন"
-                />
-              </fieldset>
-              <fieldset className="flex flex-col border border-gray-300 rounded-md px-2">
-                <legend>
-                  <label
-                    htmlFor=""
-                    className="after:content-['_*'] after:text-red-400"
-                  >
-                    অনুমতি নাম
-                  </label>
-                </legend>
-                <input
-                  type="text"
-                  className="w-full text-14 outline-none py-1"
-                  placeholder="Enter Permission Name"
-                />
-              </fieldset>
-            </div>
+          <div className="pt-3 flex flex-col gap-3">
+            <fieldset className="flex flex-col border border-gray-300 rounded-md px-2">
+              <legend>
+                <label
+                  htmlFor=""
+                  className="after:content-['_*'] after:text-red-400"
+                >
+                  প্যারেন্ট অনুমতির নাম
+                </label>
+              </legend>
+              <select name="" id="" className="w-full bg-white py-2">
+                <option value="1">parent 1</option>
+                <option value="2">parent 2</option>
+                <option value="3">parent 3</option>
+              </select>
+            </fieldset>
+            <fieldset className="flex flex-col border border-gray-300 rounded-md px-2">
+              <legend>
+                <label
+                  htmlFor=""
+                  className="after:content-['_*'] after:text-red-400"
+                >
+                  প্রদর্শনী নাম
+                </label>
+              </legend>
+              <input
+                type="text"
+                className="w-full text-14 outline-none py-1"
+                placeholder="অনুমতির প্রদর্শনী নাম লিখুন"
+              />
+            </fieldset>
+            <fieldset className="flex flex-col border border-gray-300 rounded-md px-2">
+              <legend>
+                <label
+                  htmlFor=""
+                  className="after:content-['_*'] after:text-red-400"
+                >
+                  অনুমতি নাম
+                </label>
+              </legend>
+              <input
+                type="text"
+                className="w-full text-14 outline-none py-1"
+                placeholder="Enter Permission Name"
+              />
+            </fieldset>
+          </div>
+          <div className="flex justify-end gap-3 mt-7">
+            <button className="bg-red-500 text-white px-4 py-2 rounded-md">
+              Cancel
+            </button>
+            <button className="bg-blue-500 text-white px-4 py-2 rounded-md">
+              Submit
+            </button>
+          </div>
         </form>
       </Modal>
 
