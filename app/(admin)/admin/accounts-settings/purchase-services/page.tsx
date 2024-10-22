@@ -5,40 +5,25 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { useEffect, useState } from 'react'
 import Skeleton from 'react-loading-skeleton';
+import { getSoldServices } from '@/app/(admin)/_api';
 
 const PurchaaseServicePage = () => {
   const [services, setServices] = useState<any>([]);
+  const [soldServices, setSoldServices] = useState<any>([]);
   const [parChaseService, setParChaseService] = useState<any>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   // const services = await getServices();
 
   useEffect(() => {
     getServices().then((data) => { setServices(data), setIsLoading(false) }).catch((err) => console.log(err));
-  }, []);
-  /* useEffect(() => {
-    setIsLoading(true);
-    getServices()
-      .then((data) => (setServices(data), setIsLoading(false)))
-      .catch((err) => console.log(err));
-  }, []); */
-
-
-  useEffect(() => {
-    try {
-      axios.get(`${process.env.NEXT_PUBLIC_API_URL}/all/payments?page=${1}&limit=${10}`).then((res) => {
-        setParChaseService(res.data);
-      });
-    } catch (error) {
-      console.log(error);
-    }
+    getSoldServices().then((data) => { setSoldServices(data?.data), setIsLoading(false) }).catch((err) => console.log(err));
   }, []);
 
-  console.log('services: ', services);
   return (
     <section>
       <div className="flex flex-wrap justify-between">
         <h3 className="text-32 font-mono font-bold text-[#151D48] pb-5">
-          Purchase Service List by users
+          Sold Services:
         </h3>
       </div>
       <div className="w-full overflow-x-auto bg-white p-7 rounded-md">
@@ -54,19 +39,93 @@ const PurchaaseServicePage = () => {
             </tr>
           </thead>
           <tbody className="[&>tr]:border-b [&>tr]:border-[#151D48] [&>tr]:text-left [&>tr]:h-16 text-12 lg:text-16">
-            {isLoading && (
-              <tr>
-                <td colSpan={6}>
-                  <Skeleton width="100%" count={10} height={50} />
-                </td>
-              </tr>
-            )}
-            {services?.map((item: any, index: number) => (
+            {
+              isLoading ? (
+                <tr>
+                  <td colSpan={6}>
+                    <Skeleton width="100%" count={10} height={50} />
+                  </td>
+                </tr>
+              ) : (
+                soldServices?.map((item: any, index: number) => (
+                  <tr key={index}>
+                    <td className="px-2">
+                      <Link
+                        href={{
+                          pathname: `/admin/services/${item?.id}`,
+                        }}
+                        className="flex items-center gap-2 text-14"
+                        shallow
+                      >
+                        <span className="flex items-center gap-3">
+                          <Image
+                            className="w-10 h-10 rounded-md"
+                            src={`${process.env.NEXT_PUBLIC_IMAGE_URL}${item?.logo ?? ''}`}
+                            height={1000}
+                            width={1000}
+                            alt="Bangla"
+                          />
+                          {/* {item?.name.substring(0, 15)
+                          ? item?.name.substring(0, 15)
+                          : item?.name.substring(0, 15) + "..."} */}
+                          {item?.name || " "}
+                        </span>
+                      </Link>
+                    </td>
+                    <td className="text-center">
+                      <div dangerouslySetInnerHTML={{ __html: item?.description?.length > 25 ? item?.description?.substring(0, 25) + "..." : item?.description }} />
+                      {/* {
+                        item?.description?.length > 25 ? item?.description?.substring(0, 25) + "..." : item?.description
+                      } */}
+                    </td>
+
+                    <td className="text-center">{item?.visit_link ?? "N/A"}</td>
+                    <td
+                      className={`text-center ${item?.status === "1" && "text-green-500"
+                        } ${item?.status === "0" && "text-red-500"} ${item?.status === "3" && "text-gray-500"
+                        }`}
+                    >
+                      {item?.status === "1" && "Active"}
+                      {item?.status === "0" && "Inactive"}
+                      {/* {item?.status === "3" && "Archeive"} */}
+                    </td>
+                    <td className="text-center">
+                      {new Date(item?.created_at).toLocaleDateString("en-GB", {
+                        day: "numeric",
+                        month: "long",
+                        year: "numeric",
+                      })}
+                    </td>
+                    <td className="text-center cursor-pointer">
+                      {/* <Link
+                    href={{
+                      pathname: `/services/${item?.id}`,
+                    }}
+                    className="text-14 border border-primary bg-primary hover:text-white px-2 py-1 rounded-md"
+                    shallow
+                  >
+                    <span className="text-white">Service Details</span>
+                  </Link> */}
+                      <Link
+                        href={{
+                          pathname: `/admin/accounts-settings/purchase-services/${item?.id}`,
+                        }}
+                        className="text-14 border border-primary bg-primary hover:text-white px-2 py-1 rounded-md ms-2"
+                        shallow
+                      >
+                        <span className="text-white">Details</span>
+                      </Link>
+                    </td>
+                  </tr>
+                ))
+              )
+            }
+            {/* {services?.map((item: any, index: number) => (
               <tr key={index}>
                 <td className="px-2">
                   <Link
                     href={{
-                      pathname: `/user/services/${item?.id}`,
+                      pathname: `/admin/services/${item?.id}`,
                     }}
                     className="flex items-center gap-2 text-14"
                     shallow
@@ -79,9 +138,6 @@ const PurchaaseServicePage = () => {
                         width={1000}
                         alt="Bangla"
                       />
-                      {/* {item?.name.substring(0, 15)
-                        ? item?.name.substring(0, 15)
-                        : item?.name.substring(0, 15) + "..."} */}
                       {item?.name || " "}
                     </span>
                   </Link>
@@ -102,7 +158,6 @@ const PurchaaseServicePage = () => {
                 >
                   {item?.status === "1" && "Active"}
                   {item?.status === "0" && "Inactive"}
-                  {/* {item?.status === "3" && "Archeive"} */}
                 </td>
                 <td className="text-center">
                   {new Date(item?.created_at).toLocaleDateString("en-GB", {
@@ -112,18 +167,9 @@ const PurchaaseServicePage = () => {
                   })}
                 </td>
                 <td className="text-center cursor-pointer">
-                  {/* <Link
-                  href={{
-                    pathname: `/services/${item?.id}`,
-                  }}
-                  className="text-14 border border-primary bg-primary hover:text-white px-2 py-1 rounded-md"
-                  shallow
-                >
-                  <span className="text-white">Service Details</span>
-                </Link> */}
                   <Link
                     href={{
-                      pathname: `/user/accounts-settings/purchase-services/${item?.id}`,
+                      pathname: `/admin/accounts-settings/purchase-services/${item?.id}`,
                     }}
                     className="text-14 border border-primary bg-primary hover:text-white px-2 py-1 rounded-md ms-2"
                     shallow
@@ -132,7 +178,7 @@ const PurchaaseServicePage = () => {
                   </Link>
                 </td>
               </tr>
-            ))}
+            ))} */}
           </tbody>
         </table>
       </div>

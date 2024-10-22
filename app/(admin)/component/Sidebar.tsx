@@ -486,7 +486,7 @@ const Sidebar = () => {
                       "text-white"
                     }`}
                   >
-                    Account Settings
+                    Manage Sale
                   </span>
                 </div>
 
@@ -523,7 +523,7 @@ const Sidebar = () => {
                           : "text-black"
                       }`}
                     >
-                      Purchase Services
+                      Sold Services
                     </Link>
                     {/* <Link
                       href={{
