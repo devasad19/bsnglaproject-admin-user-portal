@@ -261,8 +261,6 @@ const Sidebar = () => {
                   </span>
                 </Link>
               </li>
-
-
               <li
                 onClick={() => toggleAccordionSub("setting")}
                 className={`hover:bg-primary  group flex items-center justify-between   ${
@@ -341,7 +339,6 @@ const Sidebar = () => {
                   </div>
                 </NewAccordion>
               )}
-
               <li
                 onClick={() => toggleAccordionSub("alc")}
                 className={`hover:bg-primary  group flex items-center  justify-between ${
@@ -451,7 +448,6 @@ const Sidebar = () => {
                   </div>
                 </NewAccordion>
               )}
-
               <li
                 onClick={() => toggleAccordionSub("accounts-settings")}
                 className={`hover:bg-primary  group flex items-center  justify-between ${
@@ -543,8 +539,7 @@ const Sidebar = () => {
                   </div>
                 </NewAccordion>
               )}
-
-              {/* <li
+              <li
                 className={`hover:bg-[#E9FFD9] flex  gap-2 ${
                   (pathname.includes("user-list") ||
                     pathname.includes("manage-role") ||
@@ -595,9 +590,8 @@ const Sidebar = () => {
                     </div>
                   </NewAccordion>
                 )}
-              </li> */}
-
-              {/* <li
+              </li>
+              <li
                 className={`hover:bg-[#E9FFD9] flex  gap-2 ${
                   (pathname.includes("user-list") ||
                     pathname.includes("manage-role") ||
@@ -648,8 +642,8 @@ const Sidebar = () => {
                     </div>
                   </Accordion>
                 )}
-              </li> */}
-              {/* <li
+              </li>
+              <li
                 className={`hover:bg-primary group ${
                   pathname == "/admin/documentation" ? "bg-primary" : ""
                 }`}
@@ -789,7 +783,7 @@ const Sidebar = () => {
                     Service Settings
                   </span>
                 </Link>
-              </li> */}
+              </li>
             </ul>
           </div>
         </div>
