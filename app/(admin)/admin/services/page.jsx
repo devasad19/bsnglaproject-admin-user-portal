@@ -9,6 +9,7 @@ import { toast } from "react-toastify";
 import Swal from "sweetalert2";
 import Skeleton from "react-loading-skeleton";
 import CustomEditor from "@/app/_components/CustomEditor/CustomEditor";
+import { deleteService } from '../../_api/index';
 
 const Home = () => {
   const [previewSrc, setPreviewSrc] = useState(null); // image sr
@@ -55,33 +56,16 @@ const Home = () => {
         if (result.isConfirmed) {
           console.log("id", id);
 
-          fetch(`${process.env.NEXT_PUBLIC_API_URL}/service/${id}`, {
-            method: "DELETE",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({ id }),
-          })
-            .then((res) => res.json())
-            .then((data) => {
-              if (data.status === true) {
-                Swal.fire({
-                  title: "Deleted!",
-                  text: "Your file has been deleted.",
-                  icon: "success",
-                });
-                const filtered = services.filter((item) => item.id !== id);
-                setServices(filtered);
-              }
-              if (data.status === 500) {
-                Swal.fire({
-                  title: "Error!",
-                  text: "Something went wrong.",
-                  icon: "error",
-                });
-              }
-            })
-            .catch((err) => console.log(err));
+          const serviceDeleteData = deleteService(id).then((data) => {
+            if (data) {
+              setRefetch(!refetch);
+              Swal.fire("Deleted!", "Your file has been deleted.", "success");
+            } else {
+              Swal.fire("Error!", "Something went wrong.", "error");
+            }
+          }).catch((err) => {
+            console.log(err);
+          });
         }
       });
     }
