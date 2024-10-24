@@ -4,10 +4,8 @@ import { useRouter } from "next/navigation";
 import React, { useState, useEffect } from "react";
 import { useForm, Controller, } from "react-hook-form";
 import { toast } from "react-toastify";
-import { uploadServiceData } from "@/app/(portal)/_api";
 import CustomEditor from "@/app/_components/CustomEditor/CustomEditor";
 import { getSingleServiceResource, updateServiceResource } from "@/app/(admin)/_api";
-
 
 
 const UpdateServiceResource = ({ id }) => {
@@ -17,8 +15,6 @@ const UpdateServiceResource = ({ id }) => {
     const [status, setStatus] = useState("");
     const [serviceImg, setServiceImg] = useState(null);
     const [resourceFileImg, setResourceFileImg] = useState(null);
-    const [tutorialVideo, setTutorialVideo] = useState(null);
-    const [links, setLinks] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
     const [showItem, setShowItem] = useState("");
 
@@ -50,49 +46,38 @@ const UpdateServiceResource = ({ id }) => {
             resource_file,
         } = data;
 
-
-        console.log('inside submit function: ',data);
-
-        let paid_status = {
-            free: data.free ? 1 : 0,
-            pro: data.pro ? 1 : 0,
-        };
-
         const formData = new FormData();
         formData.append("name", name);
         formData.append("description", description);
+        formData.append("status", status);
         formData.append("component", component);
         formData.append("distribution", distribution);
-        formData.append("logo", logo[0]);
-        formData.append("paid_status", JSON.stringify(paid_status));
+        formData.append("logo", typeof logo[0] == "string" ? '' : logo[0]);
+        formData.append("paid_status", JSON.stringify(paidStatus));
         formData.append("production_status", production_status);
         formData.append("release_date", release_date);
         formData.append("type", type);
         formData.append("sub_title", sub_title);
         formData.append("visit_link", visit_link || "");
         formData.append("visit_type", visit_type);
-        formData.append("resource_file", resource_file ? resource_file[0] : "");
+        formData.append("resource_file", typeof resource_file == "string" ? '' : resource_file[0]);
 
 
-
-        const response = await updateServiceResource(formData, id);
-
-
-        console.log('service update response: ',response);
-
-        /* const uploadRes = await uploadServiceData(formData);
-
-        if (uploadRes.status === true) {
+        const response = await updateServiceResource(formData, id).then((res) => {
             setIsLoading(false);
-            toast.success("Service Created Successfully");
-            router.push("/admin/services");
-            reset();
-        } else {
-            setIsLoading(false);
-            toast.error("Service Creation Failed");
-        } */
+            console.log('api response: ', res);
 
-        // console.log('formdata: ',formData);
+            if (res?.status == true) {
+                toast.success("Service Updated Successfully");
+                router.push("/admin/services");
+                reset();
+            }else{
+                toast.error("Service Update Failed");
+            }
+        }).catch((err) => {
+            console.log(err);
+            setIsLoading(false);
+        });
     };
 
 
@@ -112,18 +97,15 @@ const UpdateServiceResource = ({ id }) => {
             setValue("visit_link", res?.data?.visit_link);
             setValue("visit_type", res?.data?.visit_type);
             setValue("resource_file", res?.data?.resource_file);
+            setValue("free", JSON.parse(res?.data?.paid_status)?.free);
+            setValue("pro", JSON.parse(res?.data?.paid_status)?.pro);
+            setValue("status", res?.data?.status);
 
             setPaidStatus(JSON.parse(res?.data?.paid_status));
         }).catch((error) => {
             console.log(error);
         });
     }, []);
-
-
-
-    console.log('data: ',serviceResource);
-
-
 
     return (
         <>
@@ -154,7 +136,6 @@ const UpdateServiceResource = ({ id }) => {
                                         },
                                     },
                                 })}
-                                // value={serviceResource?.name}
                                 type="text"
                                 placeholder="Resoource Name"
                                 className="outline-none p-2"
@@ -214,7 +195,6 @@ const UpdateServiceResource = ({ id }) => {
 
                             <Controller
                                 name="description"
-
                                 control={control}
                                 defaultValue=""
                                 rules={{
@@ -248,29 +228,7 @@ const UpdateServiceResource = ({ id }) => {
                                     </>
                                 )}
                             />
-
-                            {/* <textarea
-                {...register("description", {
-                  required: "description is required",
-                  validate: {
-                    maxWords: (value) => {
-                      const wordCount = value.trim().split(/\s+/).length;
-                      return (
-                        wordCount <= 80 || "Description cannot exceed 80 words"
-                      );
-                    },
-                  },
-                })}
-                id=""
-                className="outline-none p-2"
-                placeholder="Description"
-              ></textarea> */}
                         </fieldset>
-                        {/* {errors.description && (
-              <p className="text-red-500 text-12 px-2 pt-1">
-                {errors.description.message as string}
-              </p>
-            )} */}
                     </div>
 
                     <div>
@@ -290,13 +248,13 @@ const UpdateServiceResource = ({ id }) => {
                                 })}
                                 className="outline-none p-2 bg-white"
                             >
-                                <option selected={ serviceResource?.type == 'Application' } value="Application">Application</option>
-                                <option selected={ serviceResource?.type == 'Plugin' } value="Plugin">Plugin</option>
-                                <option selected={ serviceResource?.type == 'Mobile Apps' } value="Mobile Apps">Mobile Apps</option>
-                                <option selected={ serviceResource?.type == 'Datasets' } value="Datasets">Data Sets</option>
-                                <option selected={ serviceResource?.type == 'Tools' } value="Tools">Tools</option>
-                                <option selected={ serviceResource?.type == 'Papers' } value="Papers">Papers</option>
-                                <option selected={ serviceResource?.type == 'Font' } value="Font">Font</option>
+                                <option selected={serviceResource?.type == 'Application'} value="Application">Application</option>
+                                <option selected={serviceResource?.type == 'Plugin'} value="Plugin">Plugin</option>
+                                <option selected={serviceResource?.type == 'Mobile Apps'} value="Mobile Apps">Mobile Apps</option>
+                                <option selected={serviceResource?.type == 'Datasets'} value="Datasets">Data Sets</option>
+                                <option selected={serviceResource?.type == 'Tools'} value="Tools">Tools</option>
+                                <option selected={serviceResource?.type == 'Papers'} value="Papers">Papers</option>
+                                <option selected={serviceResource?.type == 'Font'} value="Font">Font</option>
                             </select>
                         </fieldset>
                         {errors.type && (
@@ -323,9 +281,9 @@ const UpdateServiceResource = ({ id }) => {
                                 })}
                                 className="outline-none p-2 bg-white"
                             >
-                                <option selected={ serviceResource?.production_status == 'Live' } value="Live">Live</option>
-                                <option selected={ serviceResource?.production_status == 'Beta' } value="Beta">Beta</option>
-                                <option selected={ serviceResource?.production_status == 'On Test' } value="On Test">On Test</option>
+                                <option selected={serviceResource?.production_status == 'Live'} value="Live">Live</option>
+                                <option selected={serviceResource?.production_status == 'Beta'} value="Beta">Beta</option>
+                                <option selected={serviceResource?.production_status == 'On Test'} value="On Test">On Test</option>
                             </select>
                         </fieldset>
                         {errors.production_status && (
@@ -334,37 +292,6 @@ const UpdateServiceResource = ({ id }) => {
                             </p>
                         )}
                     </div>
-                    {/* <div>
-                        <fieldset className="flex flex-col border rounded-md px-2">
-                            <legend>
-                                <label
-                                    htmlFor="ServiceName"
-                                    className="after:content-['_*'] after:text-red-500"
-                                >
-                                    Distribution
-                                </label>
-                            </legend>
-
-                            <select
-                                {...register("distribution", {
-                                    required: "Distribution is required",
-                                })}
-                                className="outline-none p-2 bg-white"
-                            >
-                                <option selected={ serviceResource?.distribution == 'web' } value="web">Web</option>
-                                <option selected={ serviceResource?.distribution == 'windows' } value="windows">Windows</option>
-                                <option selected={ serviceResource?.distribution == 'linux' } value="linux">Linux</option>
-                                <option selected={ serviceResource?.distribution == 'mac' } value="mac">Mac</option>
-                                <option selected={ serviceResource?.distribution == 'ios' } value="ios">IOS</option>
-                                <option selected={ serviceResource?.distribution == 'android' } value="android">Android</option>
-                            </select>
-                        </fieldset>
-                        {errors.distribution && (
-                            <p className="text-red-500 text-12 px-2 pt-1">
-                                {errors.distribution.message}
-                            </p>
-                        )}
-                    </div> */}
 
                     <div>
                         <fieldset className="flex flex-col border rounded-md px-2">
@@ -392,15 +319,6 @@ const UpdateServiceResource = ({ id }) => {
                         )}
                     </div>
 
-                    {serviceImg && (
-                        <Image
-                            src={URL.createObjectURL(serviceImg)}
-                            width={320}
-                            height={192}
-                            className="w-80 h-48 rounded-md"
-                            alt="Preview"
-                        />
-                    )}
                     <div>
                         <fieldset className="flex flex-col border rounded-md px-2">
                             <legend>
@@ -424,6 +342,24 @@ const UpdateServiceResource = ({ id }) => {
                                 // accept="video/mp4, video/ogg, video/avi"
                                 accept="image/*"
                             />
+
+                            {serviceImg && (
+                                <Image
+                                    src={URL.createObjectURL(serviceImg)}
+                                    width={320}
+                                    height={192}
+                                    className="w-[10em] h-[10em] rounded-md mt-3"
+                                    alt="Preview"
+                                />
+                            )}
+                            {
+                                (!serviceImg && serviceResource?.logo) && (
+                                    <div className="pt-3">
+                                        <Image src={process.env.NEXT_PUBLIC_IMAGE_URL + serviceResource?.logo} className="w-[10em] h-[10em]" width={1000} height={1000} alt="Bangla" />
+                                    </div>
+                                )
+                            }
+
                         </fieldset>
                         {errors.logo && (
                             <p className="text-red-500 text-12 px-2 pt-1">
@@ -449,7 +385,13 @@ const UpdateServiceResource = ({ id }) => {
                                         id=""
                                         className="w-4 h-4"
                                         value={"Free"}
-                                        checked={ paidStatus?.free == 1 }
+                                        checked={paidStatus?.free == 1}
+                                        onChange={() => {
+                                            setPaidStatus({
+                                                free: 1,
+                                                pro: 0,
+                                            });
+                                        }}
                                     />
                                     <label htmlFor="free">Free</label>
                                 </div>
@@ -460,7 +402,13 @@ const UpdateServiceResource = ({ id }) => {
                                         id=""
                                         className="w-4 h-4"
                                         value={"Pro"}
-                                        checked={ paidStatus?.pro == 1 }
+                                        checked={paidStatus?.pro == 1}
+                                        onChange={() => {
+                                            setPaidStatus({
+                                                free: 0,
+                                                pro: 1,
+                                            });
+                                        }}
                                     />
                                     <label htmlFor="pro">Pro</label>
                                 </div>
@@ -559,15 +507,7 @@ const UpdateServiceResource = ({ id }) => {
                         </div>
                     ) : (
                         <>
-                            {resourceFileImg && (
-                                <Image
-                                    src={URL.createObjectURL(resourceFileImg)}
-                                    width={320}
-                                    height={192}
-                                    className="w-80 h-48 rounded-md"
-                                    alt="Preview"
-                                />
-                            )}
+
                             <div>
                                 <fieldset className="flex flex-col border rounded-md px-2">
                                     <legend>
@@ -591,6 +531,24 @@ const UpdateServiceResource = ({ id }) => {
                                         // accept="video/mp4, video/ogg, video/avi"
                                         accept="image/*"
                                     />
+
+                                    {resourceFileImg && (
+                                        <Image
+                                            src={URL.createObjectURL(resourceFileImg)}
+                                            width={320}
+                                            height={192}
+                                            className="w-[10em] h-[10em] rounded-md mt-3"
+                                            alt="Preview"
+                                        />
+                                    )}
+
+                                    {
+                                        (!resourceFileImg && serviceResource?.resource_file) && (
+                                            <div className="pt-3">
+                                                <Image src={process.env.NEXT_PUBLIC_IMAGE_URL + serviceResource?.resource_file} className="w-[10em] h-[10em]" width={1000} height={1000} alt="Bangla" />
+                                            </div>
+                                        )
+                                    }
                                 </fieldset>
                                 {errors.resource_file && (
                                     <p className="text-red-500 text-12 px-2 pt-1">
@@ -612,18 +570,17 @@ const UpdateServiceResource = ({ id }) => {
                             </legend>
 
                             <select
-                                {...register("status", {
-                                    required: "Type is required",
-                                })}
+                                {...register("status")}
+                                onChange={(e) => setStatus(e.target.value)}
                                 className="outline-none p-2 bg-white"
                             >
-                                <option selected={ serviceResource?.status == "1" } value="1">Publish</option>
-                                <option selected={ serviceResource?.status == "0" } value="0">UnPublish</option>
+                                <option selected={serviceResource?.status == "1"} value="1">Publish</option>
+                                <option selected={serviceResource?.status == "0"} value="0">UnPublish</option>
                             </select>
                         </fieldset>
-                        {errors.type && (
+                        {errors.status && (
                             <p className="text-red-500 text-12 px-2 pt-1">
-                                {errors.type.message}
+                                {errors.status.message}
                             </p>
                         )}
                     </div>
@@ -644,7 +601,7 @@ const UpdateServiceResource = ({ id }) => {
                                 type="submit"
                                 className="px-4 py-2 bg-violet-700 text-white active:scale-90 transition-all duration-400 rounded-md"
                             >
-                                Create
+                                Update
                             </button>
                         )}
                     </div>
@@ -652,7 +609,6 @@ const UpdateServiceResource = ({ id }) => {
                 {isLoading && (
                     <div className="absolute inset-0 bg-white bg-opacity-75 flex items-center justify-center z-10">
                         <div className="flex flex-col items-center space-y-4">
-                            {/* Loading Spinner */}
                             <svg
                                 className="animate-spin h-12 w-12 text-blue-600"
                                 xmlns="http://www.w3.org/2000/svg"

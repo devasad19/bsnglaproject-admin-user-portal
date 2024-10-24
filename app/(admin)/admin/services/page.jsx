@@ -12,12 +12,12 @@ import CustomEditor from "@/app/_components/CustomEditor/CustomEditor";
 import { deleteService } from '../../_api/index';
 
 const Home = () => {
-  const [previewSrc, setPreviewSrc] = useState(null); // image sr
-  const [tutorialVideo, setTutorialVideo] = useState(null); // video src
-  const [serviceUpdate, serviceUpdateModal] = useState({}); // state for update data
-  const [services, setServices] = useState([]); //state for services
-  const serviceModal = useRef(null); //modal ref
-  const serviceForm = useRef(null); //form ref
+  const [previewSrc, setPreviewSrc] = useState(null);
+  const [tutorialVideo, setTutorialVideo] = useState(null);
+  const [serviceUpdate, serviceUpdateModal] = useState({});
+  const [services, setServices] = useState([]);
+  const serviceModal = useRef(null);
+  const serviceForm = useRef(null);
   const [isLoading, setIsLoading] = useState(false);
   const [fetching, setFetching] = useState(false);
   const [refetch, setRefetch] = useState(false);
@@ -38,9 +38,7 @@ const Home = () => {
       .catch((err) => console.log(err));
   }, [refetch]);
 
-  // console.log(services);
 
-  // delete service in this function
   const handleDelete = (id) => {
     // console.log("id", id);
     if (id) {
@@ -71,7 +69,7 @@ const Home = () => {
     }
   };
 
-  // onclick edit button this function will be called
+
   const handleEdit = (item) => {
     if (serviceModal?.current) {
       serviceModal.current.showModal();
@@ -90,150 +88,29 @@ const Home = () => {
   ) => {
     let errors = {};
 
-    // Validate Name
     if (name?.length === 0) {
       errors.name = "Name is required.";
     } else if (name?.length > 30) {
       errors.name = "Name cannot exceed 30 characters.";
     }
 
-    // Validate Description
+
     if (description?.length === 0) {
       errors.des = "Description is required.";
     } else if (description?.length > 300) {
       errors.description = "Description cannot exceed 300 characters.";
     }
 
-    // Validate Link
     if (sub_title?.length === 0) {
       errors.sub_title = "sub_title is required.";
     } else if (sub_title?.length > 30) {
       errors.sub_title = "sub_title cannot exceed 30 characters.";
     }
 
-    // Set errors in state
     setServiceValidation(errors);
 
-    // Return true if no errors, otherwise false
     return Object.keys(errors).length === 0;
   };
-
-  // edit service in this function
-  // const handleServiceUpdate = async (e) => {
-  //   e.preventDefault();
-  //   let name = e.target.name.value;
-  //   let description = e.target.des.value;
-  //   let img = e.target.img.files[0];
-  //   let link = e.target.link.value;
-  //   let status = e.target.status.value;
-  //   let tutorial = e.target.tutorial.files[0];
-  //   let documentation = e.target.documentation.value;
-  //   let support = e.target.support.value;
-  //   const validation = validationUpdateServiceForm(name, description, link);
-  //   console.log(
-  //     "submit data :",
-  //     name,
-  //     description,
-  //     img,
-  //     link,
-  //     status,
-  //     tutorial,
-  //     documentation,
-  //     support
-  //   );
-  //   if (!validation) {
-  //     return;
-  //   }
-  //   // Create FormData object to hold the data
-  //   if (!img && !tutorial) {
-  //     console.log("update  img nai and tutorial nai");
-
-  //     let updateDataInfo = {
-  //       name: name,
-  //       des: description,
-  //       link: link,
-  //       status: status,
-  //       documentation: documentation,
-  //       support: support,
-  //     };
-  //     let updateData = await updateAnService(serviceUpdate?.id, updateDataInfo);
-  //     if (updateData?.status === true) {
-  //       toast.success("Service updated successfully");
-  //       setRefetch(!refetch);
-  //     } else {
-  //       console.error("Update failed:", updateData?.message);
-  //     }
-  //   }
-
-  //   if (!img && tutorial) {
-  //     console.log("update  img nai and tutorial ase");
-  //     let fromData = new FormData();
-  //     fromData.append("name", name);
-  //     fromData.append("des", description);
-  //     fromData.append("link", link);
-  //     fromData.append("status", status);
-  //     fromData.append("documentation", documentation);
-  //     fromData.append("support", support);
-  //     fromData.append("img", img || "");
-  //     fromData.append("tutorial", tutorial);
-  //     let updateData = await updateAnService(serviceUpdate?.id, fromData);
-  //     if (updateData?.status === true) {
-  //       toast.success("Service updated successfully");
-  //       setRefetch(!refetch);
-  //     } else {
-  //       console.error("Update failed:", updateData?.message);
-  //     }
-  //   }
-
-  //   if (!tutorial && img) {
-  //     console.log("update  img ase and tutorial nai");
-
-  //     let fromData = new FormData();
-  //     fromData.append("name", name);
-  //     fromData.append("des", description);
-  //     fromData.append("link", link);
-  //     fromData.append("status", status);
-  //     fromData.append("documentation", documentation);
-  //     fromData.append("support", support);
-  //     fromData.append("tutorial", tutorial || "");
-  //     fromData.append("img", img);
-  //     console.log("fromData:", fromData);
-
-  //     let updateData = await updateAnService(serviceUpdate?.id, fromData);
-  //     if (updateData?.status === true) {
-  //       toast.success("Service updated successfully");
-  //       setRefetch(!refetch);
-  //     } else {
-  //       console.error("Update failed:", updateData?.message);
-  //     }
-  //   }
-  //   if (img && tutorial) {
-  //     console.log("update  img ase and tutorial ase");
-  //     let fromData = new FormData();
-  //     fromData.append("name", name);
-  //     fromData.append("des", description);
-  //     fromData.append("link", link);
-  //     fromData.append("status", status);
-  //     fromData.append("documentation", documentation);
-  //     fromData.append("support", support);
-  //     fromData.append("img", img);
-  //     fromData.append("tutorial", tutorial);
-  //     let updateData = await updateAnService(serviceUpdate?.id, fromData);
-  //     if (updateData?.status === true) {
-  //       toast.success("Service updated successfully");
-  //       setRefetch(!refetch);
-  //     } else {
-  //       console.error("Update failed:", updateData?.message);
-  //     }
-  //   }
-  //   if (serviceForm.current) {
-  //     serviceForm.current.reset(); // Reset the form fields
-  //   }
-  //   if (serviceModal.current) {
-  //     serviceModal.current.close();
-  //   }
-  //   setPreviewSrc(null);
-  // };
 
   const handleServiceUpdate = async (e) => {
     e.preventDefault();
@@ -263,21 +140,7 @@ const Home = () => {
     if (!validation) {
       return;
     }
-    // Create FormData object to hold the data
-    // console.log({
-    //   name,
-    //   description,
-    //   logo,
-    //   sub_title,
-    //   distribution,
-    //   visit_link,
-    //   component,
-    //   paid_status,
-    //   production_status,
-    //   release_date,
-    //   type,
-    //   visit_type,
-    // });
+
     let fromData = new FormData();
     fromData.append("name", name);
     fromData.append("description", description);
@@ -304,7 +167,7 @@ const Home = () => {
     }
 
     if (serviceForm.current) {
-      serviceForm.current.reset(); // Reset the form fields
+      serviceForm.current.reset();
     }
     if (serviceModal.current) {
       serviceModal.current.close();
@@ -335,9 +198,6 @@ const Home = () => {
     }
   }
 
-  console.log("service data: ", services);
-
-  // console.log("validation body: ", serviceValidation);
 
   return (
     <>
@@ -409,9 +269,6 @@ const Home = () => {
                                 width={1000}
                                 alt="Bangla"
                               />
-                              {/* {item?.name.substring(0, 15)
-                            ? item?.name.substring(0, 15)
-                            : item?.name.substring(0, 15) + "..."} */}
                               {item?.name || " "}
                             </span>
                           </Link>
@@ -446,10 +303,6 @@ const Home = () => {
                           </div>
                         </td>
                         <td className="text-center border-r border-gray-200">
-                          {/* <label class="switch">
-                            <input type="checkbox" />
-                            <span class="slider round"></span>
-                          </label> */}
                           <button
                             onClick={() => UpdateServicePublishStatus(item?.id, item?.status == 1 ? 0 : 1)}
                             className={`text-white px-4 py-2 rounded transition-all duration-300 w-[90%] ${
@@ -459,31 +312,10 @@ const Home = () => {
                             }`}
                           >
                             {item?.status == 1 ? "Publish" : "UnPublish"}
-                            {/* {publish ? "Published" : "Unpublished"} */}
                           </button>
-
-                          {/* <button className="text-white">
-                            <span
-                              onClick={() => setPublish(1)}
-                              className={`p-2 border border-gray-500 ${
-                                publish == 1 ? "bg-primary" : "bg-gray-500"
-                              }`}
-                            >
-                              Publish
-                            </span>
-                            <span
-                              onClick={() => setPublish(0)}
-                              className={`p-2 border border-gray-500 ${
-                                publish == 0 ? "bg-primary" : "bg-gray-500"
-                              }`}
-                            >
-                              UnPublish
-                            </span>
-                          </button> */}
                         </td>
                         <td className="">
                           <div className="w-full flex items-center justify-center gap-2">
-                            {/* {item?.status == 2 ? ( */}
                             <>
                               <Link
                                 href={{
@@ -495,12 +327,15 @@ const Home = () => {
                                 View
                               </Link>
 
-                              <button
-                                onClick={() => handleEdit(item)}
+                              <Link
+                                // onClick={() => handleEdit(item)}
+                                href={{
+                                  pathname: `/admin/services/edit/${item?.id}`,
+                                }}
                                 className="px-2 py-1  bg-blue-500 text-white active:scale-90 transition-all duration-400 rounded-md"
                               >
                                 Edit
-                              </button>
+                              </Link>
 
                               <button
                                 onClick={() => handleDelete(item?.id)}
@@ -525,246 +360,7 @@ const Home = () => {
           </table>
         </div>
       </section>
-      {/* service edit modal */}
-      {/* <Modal
-        modalForm={serviceForm}
-        modalRef={serviceModal}
-        title={"Update Service"}
-        setPreviewSrc={setPreviewSrc}
-        setTutorialVideo={setTutorialVideo}
-        setServiceValidation={setServiceValidation}
-        // Pass handleSubmit to subFunc
-      >
-        <form
-          onSubmit={handleServiceUpdate}
-          className="flex flex-col gap-2"
-          ref={serviceForm}
-        >
-          <div>
-            <fieldset className="w-full border border-gray-300 rounded-md px-2">
-              <legend>
-                <label>Name</label>
-              </legend>
-              <input
-                type="text"
-                name="name"
-                // onChange={e => validationUpdateServiceForm(e.target.value, )}
-                placeholder="Update name of the service"
-                defaultValue={serviceUpdate?.name}
-                className="outline-none w-full text-14"
-              />
-            </fieldset>
-            {serviceValidation?.name && (
-              <p className="text-red-500 px-2 text-10 pt-1">
-                {serviceValidation?.name}
-              </p>
-            )}
-          </div>
-          <div>
-            <fieldset className="w-full border border-gray-300 rounded-md px-2">
-              <legend>
-                <label>Description</label>
-              </legend>
-              <textarea
-                name="des"
-                placeholder="Update description"
-                onChange={(e) => validationUpdateServiceForm(e.target.value)}
-                className="outline-none w-full text-14"
-                defaultValue={serviceUpdate?.des}
-              ></textarea>
-            </fieldset>
-            {serviceValidation?.des && (
-              <p className="text-red-500 px-2 text-10 pt-1">
-                {serviceValidation?.des}
-              </p>
-            )}
-          </div>
-          <div>
-            <fieldset className="w-full border border-gray-300 rounded-md px-2">
-              <legend>
-                <label>Documentation</label>
-              </legend>
-              <textarea
-                name="documentation"
-                placeholder="Update description"
-                onChange={(e) => validationUpdateServiceForm(e.target.value)}
-                className="outline-none w-full text-14"
-                defaultValue={serviceUpdate?.documentation}
-              ></textarea>
-            </fieldset>
-            {serviceValidation?.documentation && (
-              <p className="text-red-500 px-2 text-10 pt-1">
-                {serviceValidation?.documentation}
-              </p>
-            )}
-          </div>
-          <div>
-            <fieldset className="w-full border border-gray-300 rounded-md px-2">
-              <legend>
-                <label>Support</label>
-              </legend>
-              <textarea
-                name="support"
-                placeholder="Update description"
-                onChange={(e) => validationUpdateServiceForm(e.target.value)}
-                className="outline-none w-full text-14"
-                defaultValue={serviceUpdate?.support}
-              ></textarea>
-            </fieldset>
-            {serviceValidation?.support && (
-              <p className="text-red-500 px-2 text-10 pt-1">
-                {serviceValidation?.support}
-              </p>
-            )}
-          </div>
-          <div>
-            <fieldset className="w-full border border-gray-300 rounded-md px-2">
-              <legend>
-                <label>Link</label>
-              </legend>
-              <input
-                type="text"
-                name="link"
-                // onChange={e => validationUpdateServiceForm(e.target.value)}
-                placeholder="Update name of the service"
-                defaultValue={serviceUpdate?.link}
-                className="outline-none w-full text-14"
-              />
-            </fieldset>
-            {serviceValidation?.link && (
-              <p className="text-red-500 px-2 text-10 pt-1">
-                {serviceValidation?.link}
-              </p>
-            )}
-          </div>
 
-          <div>
-            <fieldset className="w-full border border-gray-300 rounded-md px-2">
-              <legend>
-                <label>tutorial</label>
-              </legend>
-              <input
-                id="file"
-                type="file"
-                onChange={(e) => {
-                  setTutorialVideo(e.target.files[0]);
-                }}
-                name="tutorial"
-                accept="video/mp4, video/ogg, video/avi, video/webm"
-                className="p-2"
-              />
-              {tutorialVideo ? (
-                <video
-                  src={URL.createObjectURL(tutorialVideo)}
-                  controls
-                  className="w-60 h-48 rounded-md my-2"
-                />
-              ) : (
-                serviceUpdate?.tutorial && (
-                  <video
-                    src={`${process.env.NEXT_PUBLIC_IMAGE_URL}${serviceUpdate?.tutorial}`}
-                    controls
-                    className="w-60 h-48 rounded-md my-2"
-                  />
-                )
-              )}
-            </fieldset>
-            {serviceValidation?.tutorial && (
-              <p className="text-red-500 px-2 text-10 pt-1">
-                {serviceValidation?.tutorial}
-              </p>
-            )}
-          </div>
-          <div>
-            <fieldset className="w-full border border-gray-300 rounded-md px-2">
-              <legend>
-                <label>Image</label>
-              </legend>
-              <input
-                id="file"
-                type="file"
-                onChange={(e) => {
-                  setPreviewSrc(e.target.files[0]);
-                }}
-                name="img"
-                accept="image/*"
-                className="p-2"
-              />
-              {previewSrc ? (
-                <Image
-                  src={URL.createObjectURL(previewSrc)}
-                  className="w-60 h-48 rounded-md my-2"
-                  height={1000}
-                  width={1000}
-                  alt="Preview"
-                />
-              ) : (
-                serviceUpdate?.img && (
-                  <Image
-                    src={`${process.env.NEXT_PUBLIC_IMAGE_URL}${serviceUpdate?.img}`}
-                    className="w-60 h-48 rounded-md my-2"
-                    height={1000}
-                    width={1000}
-                    alt="Service Image"
-                  />
-                )
-              )}
-            </fieldset>
-            {serviceValidation?.img && (
-              <p className="text-red-500 px-2 text-10 pt-1">
-                {serviceValidation?.img}
-              </p>
-            )}
-          </div>
-
-          <div>
-            <fieldset className="flex flex-col border rounded-md px-2">
-              <legend>
-                <label htmlFor="status">Status</label>
-              </legend>
-              <select
-                name="status"
-                id="status"
-                className="uppercase bg-white outline-none p-2"
-                defaultValue={serviceUpdate?.status}
-              >
-                <option value="1" selected={serviceUpdate?.status === "1"}>
-                  active
-                </option>
-                <option value="2" selected={serviceUpdate?.status === "2"}>
-                  inactive
-                </option>
-                <option value="3" selected={serviceUpdate?.status === "3"}>
-                  archeive
-                </option>
-              </select>
-            </fieldset>
-          </div>
-
-          <div className="modal-action">
-            <div className="flex items-center gap-4">
-              <button
-                type="button"
-                className="btn"
-                onClick={() => {
-                  setServiceValidation({});
-                  modelClose(serviceModal, serviceForm);
-                  setPreviewSrc(null);
-                  setTutorialVideo(null);
-                }}
-              >
-                Cancel
-              </button>
-              <button
-                type="submit"
-                className="bg-blue-500 text-white px-4 py-3 rounded-md"
-              >
-                Update
-              </button>
-            </div>
-          </div>
-        </form>
-      </Modal> */}
 
       <Modal
         modalForm={serviceForm}
@@ -773,7 +369,6 @@ const Home = () => {
         setPreviewSrc={setPreviewSrc}
         setTutorialVideo={setTutorialVideo}
         setServiceValidation={setServiceValidation}
-        // Pass handleSubmit to subFunc
       >
         <form
           onSubmit={handleServiceUpdate}
@@ -788,7 +383,6 @@ const Home = () => {
               <input
                 type="text"
                 name="name"
-                // onChange={e => validationUpdateServiceForm(e.target.value, )}
                 placeholder="Update name of the service"
                 defaultValue={serviceUpdate?.name}
                 className="outline-none w-full text-14"
@@ -825,14 +419,6 @@ const Home = () => {
                 <label>Description</label>
               </legend>
 
-              {/* <textarea
-                name="description"
-                placeholder="Update description"
-                onChange={(e) => validationUpdateServiceForm(e.target.value)}
-                className="outline-none w-full text-14"
-                defaultValue={serviceUpdate?.description}
-              ></textarea> */}
-
               <CustomEditor
                 data={serviceUpdate?.description}
                 onChange={(event, editor) => {
@@ -852,14 +438,6 @@ const Home = () => {
               <legend>
                 <label>Distribution</label>
               </legend>
-
-              {/* <textarea
-                name="distribution"
-                placeholder="Update description"
-                onChange={(e) => validationUpdateServiceForm(e.target.value)}
-                className="outline-none w-full text-14"
-                defaultValue={serviceUpdate?.distribution}
-              ></textarea> */}
 
               <CustomEditor
                 data={serviceUpdate?.distribution}
@@ -881,13 +459,6 @@ const Home = () => {
                 <label>Component</label>
               </legend>
 
-              {/* <textarea
-                name="component"
-                placeholder="Update component"
-                onChange={(e) => validationUpdateServiceForm(e.target.value)}
-                className="outline-none w-full text-14"
-                defaultValue={serviceUpdate?.component}
-              ></textarea> */}
 
               <CustomEditor
                 data={serviceUpdate?.component}
@@ -912,7 +483,6 @@ const Home = () => {
               <input
                 type="text"
                 name="visit_link"
-                // onChange={e => validationUpdateServiceForm(e.target.value)}
                 placeholder="Update name of the service"
                 defaultValue={serviceUpdate?.visit_link}
                 className="outline-none w-full text-14"
@@ -1107,25 +677,6 @@ const Home = () => {
                   <label htmlFor="pro">Pro</label>
                 </div>
               </div>
-
-              {/* <select
-                defaultValue={serviceUpdate?.paid_status}
-                name="paid_status"
-                className="outline-none p-2 bg-white"
-              >
-                <option
-                  selected={serviceUpdate?.paid_status == "Free"}
-                  value="Free"
-                >
-                  Free
-                </option>
-                <option
-                  selected={serviceUpdate?.paid_status == "Pro"}
-                  value="Pro"
-                >
-                  Pro
-                </option>
-              </select> */}
             </fieldset>
           </div>
 

@@ -6,6 +6,7 @@ const token = Cookies.get("token");
 
 
 export const updateServiceResource = async (payload, id) => {
+  console.log('inside api call: ',payload, id);
   const res = await axios
     .post(
       `${process.env.NEXT_PUBLIC_API_URL}/service/${id}`,
