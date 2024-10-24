@@ -3,6 +3,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import Skeleton from "react-loading-skeleton";
 import { getBoughtServices } from '../../../_api';
+import Image from "next/image";
 
 
 const Home = () => {
@@ -39,7 +40,7 @@ const Home = () => {
                   <th className="text-center">Details</th>
                 </tr>
               </thead>
-              <tbody className="[&>tr]:border-b [&>tr]:border-[#151D48] [&>tr]:text-left [&>tr]:h-16 text-12 lg:text-16">
+              <tbody className="[&>tr]:border-b [&>tr]:border-[#151D48] [&>tr]:text-left [&>tr]:h-20 text-12 lg:text-16">
                 {isLoading && (
                   <tr>
                     <td colSpan={6}>
@@ -57,6 +58,7 @@ const Home = () => {
                         className="flex items-center gap-2 text-14"
                         shallow
                       >
+                        <Image src={process.env.NEXT_PUBLIC_IMAGE_URL+(item?.service?.logo)} className="w-[5em] h-[5em]" width={1000} height={1000} alt="Bangla" />
                         <span className="flex items-center gap-3">
                           {item?.service?.name || " "}
                         </span>
