@@ -92,7 +92,7 @@ const Sidebar = () => {
                   <span className={isOpen ? "block" : "hidden"}>Dashboard</span>
                 </Link>
               </li>
-              <li
+              {/* <li
                 className={`hover:bg-primary group ${
                   pathname.includes("usage") ? "bg-primary" : ""
                 }`}
@@ -122,8 +122,8 @@ const Sidebar = () => {
                     Usage history
                   </span>
                 </Link>
-              </li>
-              <li
+              </li> */}
+              {/* <li
                 className={`hover:bg-primary group ${
                   pathname.includes("/user/services") ? "bg-primary" : ""
                 }`}
@@ -155,7 +155,7 @@ const Sidebar = () => {
                   </span>
                   <span className={isOpen ? "block" : "hidden"}>Services</span>
                 </Link>
-              </li>
+              </li> */}
               <li
                 className={`hover:bg-primary group ${
                   pathname.includes("comment") ? "bg-primary" : ""
@@ -183,7 +183,7 @@ const Sidebar = () => {
                       <path d="M12 0.5C5.37188 0.5 0 4.86406 0 10.25C0 12.575 1.00313 14.7031 2.67188 16.3766C2.08594 18.7391 0.126563 20.8438 0.103125 20.8672C0 20.975 -0.028125 21.1344 0.0328125 21.275C0.09375 21.4156 0.225 21.5 0.375 21.5C3.48281 21.5 5.8125 20.0094 6.96563 19.0906C8.49844 19.6672 10.2 20 12 20C18.6281 20 24 15.6359 24 10.25C24 4.86406 18.6281 0.5 12 0.5ZM6 11.75C5.17031 11.75 4.5 11.0797 4.5 10.25C4.5 9.42031 5.17031 8.75 6 8.75C6.82969 8.75 7.5 9.42031 7.5 10.25C7.5 11.0797 6.82969 11.75 6 11.75ZM12 11.75C11.1703 11.75 10.5 11.0797 10.5 10.25C10.5 9.42031 11.1703 8.75 12 8.75C12.8297 8.75 13.5 9.42031 13.5 10.25C13.5 11.0797 12.8297 11.75 12 11.75ZM18 11.75C17.1703 11.75 16.5 11.0797 16.5 10.25C16.5 9.42031 17.1703 8.75 18 8.75C18.8297 8.75 19.5 9.42031 19.5 10.25C19.5 11.0797 18.8297 11.75 18 11.75Z" />
                     </svg>
                   </span>
-                  <span className={isOpen ? "block" : "hidden"}>Comment</span>
+                  <span className={isOpen ? "block" : "hidden"}>Service Feedback</span>
                 </Link>
               </li>
               <li

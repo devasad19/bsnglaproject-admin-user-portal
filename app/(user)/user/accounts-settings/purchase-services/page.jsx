@@ -60,13 +60,13 @@ const Home =  () => {
                   shallow
                 >
                   <span className="flex items-center gap-3">
-                    <Image
+                    {/* <Image
                       className="w-10 h-10 rounded-md"
                       src={`${process.env.NEXT_PUBLIC_IMAGE_URL}${item?.img}`}
                       height={1000}
                       width={1000}
                       alt="Bangla"
-                    />
+                    /> */}
                     {/* {item?.name.substring(0, 15)
                         ? item?.name.substring(0, 15)
                         : item?.name.substring(0, 15) + "..."} */}
