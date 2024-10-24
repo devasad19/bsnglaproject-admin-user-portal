@@ -5,6 +5,24 @@ import Cookies from "js-cookie";
 const token = Cookies.get("token");
 
 
+export const getSingleServiceDetailsResource = async (id) => {
+  try {
+    const data = await axios
+      .get(`${process.env.NEXT_PUBLIC_API_URL}/service-details/${id}`)
+      .then((res) => {
+        return res?.data;
+      }).catch((err) => {
+        console.log(err);
+        return err;
+      });
+    return data;
+  } catch (error) {
+    console.log(error);
+    return error;
+  }  
+};
+
+
 export const updateServiceResource = async (payload, id) => {
   console.log('inside api call: ',payload, id);
   const res = await axios
