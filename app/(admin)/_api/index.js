@@ -5,6 +5,25 @@ import Cookies from "js-cookie";
 const token = Cookies.get("token");
 
 
+export const getCitizenList = async () => {
+  try {
+    const data = await axios
+      .get(`${process.env.NEXT_PUBLIC_API_URL}/citizen/users`)
+      .then((res) => {
+        return res?.data;
+      }).catch((err) => {
+        console.log(err);
+        return err;
+      });
+    return data;
+  } catch (error) {
+    console.log(error);
+    return error;
+  }
+}
+
+
+
 export const getSingleServiceDetailsResource = async (id) => {
   try {
     const data = await axios
