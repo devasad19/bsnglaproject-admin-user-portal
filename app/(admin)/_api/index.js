@@ -43,7 +43,6 @@ export const getSingleServiceDetailsResource = async (id) => {
 
 
 export const updateServiceResource = async (payload, id) => {
-  console.log('inside api call: ',payload, id);
   const res = await axios
     .post(
       `${process.env.NEXT_PUBLIC_API_URL}/service/${id}`,
@@ -56,6 +55,25 @@ export const updateServiceResource = async (payload, id) => {
       return err;
     });
   return res;
+};
+
+export const updateSingleServiceResource = async (payload, id) => {
+  try{
+    const res = await axios
+      .post(
+        `${process.env.NEXT_PUBLIC_API_URL}/update/service-details-resource/${id}`,
+        payload
+      )
+      .then((res) => {
+        return res?.data;
+      }).catch((err) => {
+        console.log(err);
+        return err;
+      });
+    return res;
+  } catch(err){
+    console.log(err);
+  }
 };
 
 export const getSingleServiceResource = async (id) => {

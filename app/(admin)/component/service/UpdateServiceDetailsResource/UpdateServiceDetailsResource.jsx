@@ -5,7 +5,9 @@ import { useState, useEffect } from "react";
 import { toast } from "react-toastify";
 import { CountWords, GetFileSize, sanitizeYoutubeUrl } from "@/helper";
 import { serviceDetailsResourceApi } from "@/app/(portal)/_api/ServiceApi/ServiceApi";
-import { getSingleServiceDetailsResource } from "@/app/(admin)/_api";
+import { getSingleServiceDetailsResource, updateSingleServiceResource } from "@/app/(admin)/_api";
+import Image from "next/image";
+import { FaRegTimesCircle } from "react-icons/fa";
 
 const UpdateServiceDetailsResource = ({ id }) => {
     const router = useRouter();
@@ -163,13 +165,13 @@ const UpdateServiceDetailsResource = ({ id }) => {
         console.log( 'sanitized youtube: ',sanitizeYoutubeUrl(formData?.user_doc?.video_link)); */
 
 
-        if (CountWords(formData?.description) < 10 || CountWords(formData?.description) > 100) {
+        /* if (CountWords(formData?.description) < 10 || CountWords(formData?.description) > 100) {
             setError({ ...error, description: { status: true, message: "Description has to be 10 to 100 words." } });
-        }
+        } */
 
 
 
-        const mediaFiles = [...formData?.mediaImages];
+        /* const mediaFiles = [...formData?.mediaImages];
 
         if (mediaFiles?.length > 0) {
             mediaFiles?.map((item) => {
@@ -210,11 +212,11 @@ const UpdateServiceDetailsResource = ({ id }) => {
                     setError({ ...error, apiCharacter: { status: true, message: "API Characteristic label has to be 3 to 5 words." } });
                 }
             });
-        }
+        } */
 
         /* user doc validation start */
 
-        if (CountWords(formData?.user_doc?.label) < 2 || CountWords(formData?.user_doc?.label) > 4) {
+        /* if (CountWords(formData?.user_doc?.label) < 2 || CountWords(formData?.user_doc?.label) > 4) {
             setError({ ...error, userDoc: { label: { status: true, message: "User Documentation label has to be 2 to 4 words." } } });
         }
 
@@ -238,15 +240,12 @@ const UpdateServiceDetailsResource = ({ id }) => {
                     setError({ ...error, userDoc: { module: { status: true, message: "User Documentation module file size should be less than 500kb." } } });
                 }
             })
-        }
+        } */
 
         /* api doc validation start */
-        if (CountWords(formData?.api_doc?.label) < 2 || CountWords(formData?.api_doc?.label) > 4) {
+        /* if (CountWords(formData?.api_doc?.label) < 2 || CountWords(formData?.api_doc?.label) > 4) {
             setError({ ...error, apiDoc: { label: { status: true, message: "User Documentation label has to be 2 to 4 words." } } });
         }
-
-
-
 
         if (CountWords(formData?.api_doc?.short_description) < 10) {
             setError({ ...error, apiDoc: { shortDes: { status: true, message: "User Documentation short description has to be 10 to 100 words." } } });
@@ -267,15 +266,7 @@ const UpdateServiceDetailsResource = ({ id }) => {
 
         if (GetFileSize(formData?.api_doc?.icon) > 100000) {
             setError({ ...error, apiDoc: { icon: { status: true, message: "User Documentation icon size should be less than 100kb." } } });
-        }
-
-
-
-
-
-
-
-
+        } */
 
         setIsLoading(true);
 
@@ -323,7 +314,7 @@ const UpdateServiceDetailsResource = ({ id }) => {
         });
 
 
-        const res = await serviceDetailsResourceApi(payload).catch((err) => {
+        const res = await updateSingleServiceResource(payload, id).catch((err) => {
             console.log(err);
         });
 
@@ -341,36 +332,43 @@ const UpdateServiceDetailsResource = ({ id }) => {
     };
 
     useEffect(() => {
-        getSingleServiceDetailsResource(id).then((response)=>{
+        getSingleServiceDetailsResource(id).then((response) => {
             setServiceDetailsResource(response?.data);
+
+            // console.log('inside useeffect: ', response?.data);
 
             setFormData({
                 ...formData,
                 description: response?.data?.broad_description,
+                mediaImages: JSON.parse(response?.data?.media_images),
+                distribution: JSON.parse(response?.data?.distribution_items),
+                user_characteristics: JSON.parse(response?.data?.user_characteristics),
+                api_characteristics: JSON.parse(response?.data?.api_characteristics),
                 api_doc: {
-                    label: JSON.parse(response?.data?.api_doc_label),
+                    label: response?.data?.api_doc_label,
                     icon: response?.data?.api_doc_icon,
                     short_description: response?.data?.api_desc,
                     external_links: JSON.parse(response?.data?.api_external_links),
                     video_link: response?.data?.api_youtube_link,
                     module_file: JSON.parse(response?.data?.api_modules)
                 },
-                /* user_doc: {
+                user_doc: {
                     label: response?.data?.user_doc_label,
                     icon: response?.data?.user_doc_icon,
                     short_description: response?.data?.user_desc,
-                    external_links: response?.data?.user_external_links,
+                    external_links: JSON.parse(response?.data?.user_external_links),
                     video_link: response?.data?.user_youtube_link,
-                    module_file: response?.data?.user_modules
-                } */
-            })
-        }).catch((error)=>{
+                    module_file: JSON.parse(response?.data?.user_modules)
+                }
+            });
+        }).catch((error) => {
             console.log(error);
         })
     }, []);
 
 
-    console.log('service details resource: ',serviceDetailsResource,formData);
+    // console.log('service details resource: ',serviceDetailsResource);
+    // console.log('form data: ', formData?.mediaImages);
 
 
     return (
@@ -391,7 +389,7 @@ const UpdateServiceDetailsResource = ({ id }) => {
                             </label>
                         </legend>
 
-                        <textarea onChange={(e) => setFormData({ ...formData, description: e.target.value })} name="description" placeholder="Enter Description" className="w-full outline-none text-14 py-1" ></textarea>
+                        <textarea value={formData?.description} onChange={(e) => setFormData({ ...formData, description: e.target.value })} name="description" placeholder="Enter Description" className="w-full outline-none text-14 py-1" rows={4} ></textarea>
 
                         {/* <Controller
               name="description"
@@ -450,13 +448,65 @@ const UpdateServiceDetailsResource = ({ id }) => {
                         </legend>
 
                         <input
-                            onChange={(e) => setFormData({ ...formData, mediaImages: e.target.files })}
+                            onChange={(e) => {
+                                setFormData({
+                                    ...formData,
+                                    mediaImages: [
+                                        ...formData?.mediaImages,
+                                        ...Array.from(e.target.files),
+                                    ],
+                                });
+                            }}
                             id="mediaImages"
                             type="file"
                             accept="image/*"
                             multiple
 
                         />
+
+                        {
+                            formData?.mediaImages?.length > 0 && (
+                                <div className="flex flex-wrap gap-2">
+                                    {
+                                        formData?.mediaImages?.map((file, index) => {
+
+                                            if(typeof file == 'string'){
+                                                return (
+                                                    <div key={index} className="mt-5 relative">
+                                                        <Image
+                                                            src={process.env.NEXT_PUBLIC_IMAGE_URL + file}
+                                                            alt='Bangla'
+                                                            width={100}
+                                                            height={100}
+                                                            className="w-[5em] h-[5em]"
+                                                        />
+                                                        <button className="absolute top-0 right-0 bg-red-500 p-0.5 rounded-full" onClick={() => setFormData({ ...formData, mediaImages: formData?.mediaImages?.filter((item) => item !== file) })} type="button">
+                                                         <FaRegTimesCircle  className="w-4 h-4 text-white" />
+                                                        </button>
+                                                    </div>
+                                                )
+                                            }else if(typeof file == 'object'){
+                                                return (
+                                                    <div key={index} className="mt-5 relative">
+                                                        <Image
+                                                            src={URL.createObjectURL(file)}
+                                                            alt='Bangla'
+                                                            width={100}
+                                                            height={100}
+                                                            className="w-[5em] h-[5em]"
+                                                        />
+                                                        <button className="absolute top-0 right-0 bg-red-500 p-0.5 rounded-full" onClick={() => setFormData({ ...formData, mediaImages: formData?.mediaImages?.filter((item) => item !== file) })} type="button">
+                                                            <FaRegTimesCircle  className="w-4 h-4 text-white" />
+                                                        </button>
+                                                    </div>
+                                                )
+                                            }
+                                            
+                                        })
+                                    }
+                                </div>
+                            )
+                        }
                     </fieldset>
 
                     {
@@ -794,7 +844,7 @@ const UpdateServiceDetailsResource = ({ id }) => {
                                             Label
                                         </label>
                                     </legend>
-                                    <input onChange={(e) => setFormData({ ...formData, user_doc: { ...formData.user_doc, label: e.target.value } })} id="user_doc_label" type="text" placeholder="Enter user doc label" className="w-full outline-none p-2" />
+                                    <input value={formData?.user_doc?.label} onChange={(e) => setFormData({ ...formData, user_doc: { ...formData.user_doc, label: e.target.value } })} id="user_doc_label" type="text" placeholder="Enter user doc label" className="w-full outline-none p-2" />
                                 </fieldset>
 
                                 {
@@ -840,6 +890,7 @@ const UpdateServiceDetailsResource = ({ id }) => {
                                         type="text"
                                         placeholder="Video Link (Youtube)"
                                         className="outline-none p-2"
+                                        value={formData?.user_doc?.video_link}
 
                                     />
                                 </fieldset>
@@ -864,7 +915,7 @@ const UpdateServiceDetailsResource = ({ id }) => {
                                         </label>
                                     </legend>
 
-                                    <textarea onChange={(e) => setFormData({ ...formData, user_doc: { ...formData.user_doc, short_description: e.target.value } })} name="user_doc_description" className="w-full outline-none p-2" placeholder="Enter user doc short description" ></textarea>
+                                    <textarea value={formData?.user_doc?.short_description} onChange={(e) => setFormData({ ...formData, user_doc: { ...formData.user_doc, short_description: e.target.value } })} name="user_doc_description" className="w-full outline-none p-2" placeholder="Enter user doc short description" ></textarea>
 
                                     {/* <Controller
                   name="user_doc"
@@ -1000,7 +1051,7 @@ const UpdateServiceDetailsResource = ({ id }) => {
                                                                                         }
                                                                                     });
                                                                                 }}
-                                                                                type="number"
+                                                                                type="text"
                                                                                 placeholder="Enter Version"
                                                                                 className=" border border-black w-full px-2"
 
@@ -1145,6 +1196,7 @@ const UpdateServiceDetailsResource = ({ id }) => {
                                                                                 type="text"
                                                                                 placeholder="Enter Label"
                                                                                 className=" border border-black w-full px-2"
+                                                                                value={item.label}
 
                                                                             />
                                                                         </div>
@@ -1171,6 +1223,7 @@ const UpdateServiceDetailsResource = ({ id }) => {
                                                                                 type="text"
                                                                                 placeholder="Enter Link"
                                                                                 className=" border border-black w-full px-2"
+                                                                                value={item.link}
 
                                                                             />
                                                                         </div>
@@ -1241,7 +1294,7 @@ const UpdateServiceDetailsResource = ({ id }) => {
                                             Label
                                         </label>
                                     </legend>
-                                    <input onChange={(e) => setFormData({ ...formData, api_doc: { ...formData.api_doc, label: e.target.value } })} type="text" placeholder="Enter api doc label" className="w-full outline-none p-2" />
+                                    <input value={formData?.api_doc?.label} onChange={(e) => setFormData({ ...formData, api_doc: { ...formData.api_doc, label: e.target.value } })} type="text" placeholder="Enter api doc label" className="w-full outline-none p-2" />
                                 </fieldset>
 
                                 {
@@ -1287,8 +1340,7 @@ const UpdateServiceDetailsResource = ({ id }) => {
                                         type="text"
                                         placeholder="Video Link (Youtube)"
                                         className="outline-none p-2"
-
-
+                                        value={formData?.api_doc?.video_link}
                                     />
                                 </fieldset>
 
@@ -1312,7 +1364,7 @@ const UpdateServiceDetailsResource = ({ id }) => {
                                         </label>
                                     </legend>
 
-                                    <textarea name="api_doc_short_desc" onChange={(e) => setFormData({ ...formData, api_doc: { ...formData.api_doc, short_description: e.target.value } })} className="w-full outline-none p-2" placeholder="Enter api doc short description" ></textarea>
+                                    <textarea value={formData?.api_doc?.short_description} name="api_doc_short_desc" onChange={(e) => setFormData({ ...formData, api_doc: { ...formData.api_doc, short_description: e.target.value } })} className="w-full outline-none p-2" placeholder="Enter api doc short description" ></textarea>
 
                                     {/* <Controller
                   name="user_doc"
@@ -1386,134 +1438,136 @@ const UpdateServiceDetailsResource = ({ id }) => {
                                             </svg>
                                         </button>
                                     </div>
-                                    {formData?.api_doc?.module_file?.map((item, index) => (
-                                        <div key={index} className="p-2 ">
-                                            <div>
-                                                <div className="flex gap-2">
-                                                    <div className="flex w-full  items-center justify-between">
-                                                        <fieldset className="w-full flex flex-col border rounded-md px-2">
-                                                            <legend>
-                                                                <label
-                                                                    htmlFor="key"
-                                                                    className="after:content-['_*'] after:text-red-500"
-                                                                >
-                                                                    Module - {index + 1}
-                                                                </label>
-                                                            </legend>
+                                    {formData?.api_doc?.module_file?.map((item, index) => {
+                                        return (
+                                            <div key={index} className="p-2 ">
+                                                <div>
+                                                    <div className="flex gap-2">
+                                                        <div className="flex w-full  items-center justify-between">
+                                                            <fieldset className="w-full flex flex-col border rounded-md px-2">
+                                                                <legend>
+                                                                    <label
+                                                                        htmlFor="key"
+                                                                        className="after:content-['_*'] after:text-red-500"
+                                                                    >
+                                                                        Module - {index + 1}
+                                                                    </label>
+                                                                </legend>
 
-                                                            <div className="flex flex-col gap-2">
-                                                                <div className="grid grid-cols-4">
-                                                                    <p>Label:</p>
-                                                                    <div className="col-span-3">
-                                                                        <input
-                                                                            onChange={(e) => {
-                                                                                const newModuleFile = [...formData.api_doc.module_file];
-                                                                                newModuleFile[index] = {
-                                                                                    ...newModuleFile[index],
-                                                                                    label: e.target.value
-                                                                                };
-                                                                                setFormData({
-                                                                                    ...formData,
-                                                                                    api_doc: {
-                                                                                        ...formData.api_doc,
-                                                                                        module_file: newModuleFile
-                                                                                    }
-                                                                                });
-                                                                            }}
-                                                                            value={item.label}
-                                                                            type="text"
-                                                                            placeholder="Enter Label"
-                                                                            className=" border border-black w-full px-2"
+                                                                <div className="flex flex-col gap-2">
+                                                                    <div className="grid grid-cols-4">
+                                                                        <p>Label:</p>
+                                                                        <div className="col-span-3">
+                                                                            <input
+                                                                                onChange={(e) => {
+                                                                                    const newModuleFile = [...formData.api_doc.module_file];
+                                                                                    newModuleFile[index] = {
+                                                                                        ...newModuleFile[index],
+                                                                                        label: e.target.value
+                                                                                    };
+                                                                                    setFormData({
+                                                                                        ...formData,
+                                                                                        api_doc: {
+                                                                                            ...formData.api_doc,
+                                                                                            module_file: newModuleFile
+                                                                                        }
+                                                                                    });
+                                                                                }}
+                                                                                value={item.label}
+                                                                                type="text"
+                                                                                placeholder="Enter Label"
+                                                                                className=" border border-black w-full px-2"
 
 
-                                                                        />
+                                                                            />
+                                                                        </div>
+                                                                    </div>
+                                                                    <div className="grid grid-cols-4">
+                                                                        <p>Version:</p>
+                                                                        <div className="col-span-3">
+                                                                            <input
+                                                                                value={item.version}
+                                                                                onChange={(e) => {
+                                                                                    const newModuleFile = [...formData.api_doc.module_file];
+                                                                                    newModuleFile[index] = {
+                                                                                        ...newModuleFile[index],
+                                                                                        version: parseInt(e.target.value)
+                                                                                    };
+                                                                                    setFormData({
+                                                                                        ...formData,
+                                                                                        api_doc: {
+                                                                                            ...formData.api_doc,
+                                                                                            module_file: newModuleFile
+                                                                                        }
+                                                                                    });
+                                                                                }}
+                                                                                type="text"
+                                                                                placeholder="Enter Version"
+                                                                                className=" border border-black w-full px-2"
+
+
+                                                                            />
+                                                                        </div>
+                                                                    </div>
+                                                                    <div className="grid grid-cols-4">
+                                                                        <p>Module:</p>
+                                                                        <div className="col-span-3">
+                                                                            <input
+                                                                                onChange={(e) => {
+                                                                                    const newModuleFile = [...formData.api_doc.module_file];
+                                                                                    newModuleFile[index] = {
+                                                                                        ...newModuleFile[index],
+                                                                                        module: e.target.files?.[0]
+                                                                                    };
+                                                                                    setFormData({
+                                                                                        ...formData,
+                                                                                        api_doc: {
+                                                                                            ...formData.api_doc,
+                                                                                            module_file: newModuleFile
+                                                                                        }
+                                                                                    });
+                                                                                }}
+                                                                                type="file"
+                                                                                className="w-full "
+
+
+                                                                            />
+                                                                        </div>
                                                                     </div>
                                                                 </div>
-                                                                <div className="grid grid-cols-4">
-                                                                    <p>Version:</p>
-                                                                    <div className="col-span-3">
-                                                                        <input
-                                                                            value={item.version}
-                                                                            onChange={(e) => {
-                                                                                const newModuleFile = [...formData.api_doc.module_file];
-                                                                                newModuleFile[index] = {
-                                                                                    ...newModuleFile[index],
-                                                                                    version: parseInt(e.target.value)
-                                                                                };
-                                                                                setFormData({
-                                                                                    ...formData,
-                                                                                    api_doc: {
-                                                                                        ...formData.api_doc,
-                                                                                        module_file: newModuleFile
-                                                                                    }
-                                                                                });
-                                                                            }}
-                                                                            type="number"
-                                                                            placeholder="Enter Version"
-                                                                            className=" border border-black w-full px-2"
+                                                            </fieldset>
+                                                        </div>
+                                                        <div className="mt-3">
+                                                            <button
+                                                                type="button"
+                                                                onClick={() => {
+                                                                    if (formData?.api_doc?.module_file.length != 1) {
+                                                                        setFormData({
+                                                                            ...formData,
+                                                                            api_doc: {
+                                                                                ...formData.api_doc,
+                                                                                module_file: formData.api_doc.module_file.filter((_, i) => i !== index),
+                                                                            },
+                                                                        })
+                                                                    }
 
-
-                                                                        />
-                                                                    </div>
-                                                                </div>
-                                                                <div className="grid grid-cols-4">
-                                                                    <p>Module:</p>
-                                                                    <div className="col-span-3">
-                                                                        <input
-                                                                            onChange={(e) => {
-                                                                                const newModuleFile = [...formData.api_doc.module_file];
-                                                                                newModuleFile[index] = {
-                                                                                    ...newModuleFile[index],
-                                                                                    module: e.target.files?.[0]
-                                                                                };
-                                                                                setFormData({
-                                                                                    ...formData,
-                                                                                    api_doc: {
-                                                                                        ...formData.api_doc,
-                                                                                        module_file: newModuleFile
-                                                                                    }
-                                                                                });
-                                                                            }}
-                                                                            type="file"
-                                                                            className="w-full "
-
-
-                                                                        />
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </fieldset>
-                                                    </div>
-                                                    <div className="mt-3">
-                                                        <button
-                                                            type="button"
-                                                            onClick={() => {
-                                                                if (formData?.api_doc?.module_file.length != 1) {
-                                                                    setFormData({
-                                                                        ...formData,
-                                                                        api_doc: {
-                                                                            ...formData.api_doc,
-                                                                            module_file: formData.api_doc.module_file.filter((_, i) => i !== index),
-                                                                        },
-                                                                    })
-                                                                }
-
-                                                            }}
-                                                            className="border border-primary bg-primary text-white mt-2 px-2 py-1 rounded"
-                                                        >
-                                                            <svg
-                                                                className="w-6 h-6 fill-current"
-                                                                xmlns="http://www.w3.org/2000/svg"
-                                                                viewBox="0 0 448 512"
+                                                                }}
+                                                                className="border border-primary bg-primary text-white mt-2 px-2 py-1 rounded"
                                                             >
-                                                                <path d="M432 256c0 17.7-14.3 32-32 32L48 288c-17.7 0-32-14.3-32-32s14.3-32 32-32l352 0c17.7 0 32 14.3 32 32z" />
-                                                            </svg>
-                                                        </button>
+                                                                <svg
+                                                                    className="w-6 h-6 fill-current"
+                                                                    xmlns="http://www.w3.org/2000/svg"
+                                                                    viewBox="0 0 448 512"
+                                                                >
+                                                                    <path d="M432 256c0 17.7-14.3 32-32 32L48 288c-17.7 0-32-14.3-32-32s14.3-32 32-32l352 0c17.7 0 32 14.3 32 32z" />
+                                                                </svg>
+                                                            </button>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
-                                        </div>
-                                    ))}
+                                        )
+                                    })}
 
                                     {
                                         error?.apiDoc?.module?.status && (
@@ -1593,6 +1647,7 @@ const UpdateServiceDetailsResource = ({ id }) => {
                                                                             type="text"
                                                                             placeholder="Enter Label"
                                                                             className=" border border-black w-full px-2"
+                                                                            value={item.label}
                                                                         />
                                                                     </div>
                                                                 </div>
@@ -1618,6 +1673,7 @@ const UpdateServiceDetailsResource = ({ id }) => {
                                                                             type="text"
                                                                             placeholder="Enter Link"
                                                                             className=" border border-black w-full px-2"
+                                                                            value={item.link}
                                                                         />
                                                                     </div>
                                                                 </div>
