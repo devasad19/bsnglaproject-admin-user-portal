@@ -58,6 +58,7 @@ export const updateServiceResource = async (payload, id) => {
 };
 
 export const updateSingleServiceResource = async (payload, id) => {
+  console.log('payload before api call: ',payload);
   try{
     const res = await axios
       .post(

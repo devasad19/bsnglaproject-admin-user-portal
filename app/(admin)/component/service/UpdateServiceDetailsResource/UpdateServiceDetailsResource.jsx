@@ -8,6 +8,7 @@ import { serviceDetailsResourceApi } from "@/app/(portal)/_api/ServiceApi/Servic
 import { getSingleServiceDetailsResource, updateSingleServiceResource } from "@/app/(admin)/_api";
 import Image from "next/image";
 import { FaRegTimesCircle } from "react-icons/fa";
+import { relative_image_path } from "@/helper";
 
 const UpdateServiceDetailsResource = ({ id }) => {
     const router = useRouter();
@@ -335,8 +336,6 @@ const UpdateServiceDetailsResource = ({ id }) => {
         getSingleServiceDetailsResource(id).then((response) => {
             setServiceDetailsResource(response?.data);
 
-            // console.log('inside useeffect: ', response?.data);
-
             setFormData({
                 ...formData,
                 description: response?.data?.broad_description,
@@ -368,7 +367,7 @@ const UpdateServiceDetailsResource = ({ id }) => {
 
 
     // console.log('service details resource: ',serviceDetailsResource);
-    // console.log('form data: ', formData?.mediaImages);
+    console.log('form data: ', formData);
 
 
     return (
@@ -470,7 +469,7 @@ const UpdateServiceDetailsResource = ({ id }) => {
                                     {
                                         formData?.mediaImages?.map((file, index) => {
 
-                                            if(typeof file == 'string'){
+                                            if (typeof file == 'string') {
                                                 return (
                                                     <div key={index} className="mt-5 relative">
                                                         <Image
@@ -481,11 +480,11 @@ const UpdateServiceDetailsResource = ({ id }) => {
                                                             className="w-[5em] h-[5em]"
                                                         />
                                                         <button className="absolute top-0 right-0 bg-red-500 p-0.5 rounded-full" onClick={() => setFormData({ ...formData, mediaImages: formData?.mediaImages?.filter((item) => item !== file) })} type="button">
-                                                         <FaRegTimesCircle  className="w-4 h-4 text-white" />
+                                                            <FaRegTimesCircle className="w-4 h-4 text-white" />
                                                         </button>
                                                     </div>
                                                 )
-                                            }else if(typeof file == 'object'){
+                                            } else if (typeof file == 'object') {
                                                 return (
                                                     <div key={index} className="mt-5 relative">
                                                         <Image
@@ -496,12 +495,12 @@ const UpdateServiceDetailsResource = ({ id }) => {
                                                             className="w-[5em] h-[5em]"
                                                         />
                                                         <button className="absolute top-0 right-0 bg-red-500 p-0.5 rounded-full" onClick={() => setFormData({ ...formData, mediaImages: formData?.mediaImages?.filter((item) => item !== file) })} type="button">
-                                                            <FaRegTimesCircle  className="w-4 h-4 text-white" />
+                                                            <FaRegTimesCircle className="w-4 h-4 text-white" />
                                                         </button>
                                                     </div>
                                                 )
                                             }
-                                            
+
                                         })
                                     }
                                 </div>
@@ -593,6 +592,40 @@ const UpdateServiceDetailsResource = ({ id }) => {
                                                         />
                                                     </div>
                                                 </div>
+                                                {
+                                                    item?.icon?.length > 0 && (
+                                                        <div className="mt-5 relative w-[5em] h-[5em]">
+                                                            <Image
+                                                                src={process.env.NEXT_PUBLIC_IMAGE_URL + item?.icon}
+                                                                alt='Bangla'
+                                                                width={100}
+                                                                height={100}
+                                                                className="w-[5em] h-[5em]"
+                                                            />
+                                                            <button className="absolute top-0 right-0 bg-red-500 p-0.5 rounded-full" onClick={() => setFormData({ ...formData, distribution: formData.distribution.map((dist, i) => i === index ? { ...dist, icon: "" } : dist) })} type="button">
+                                                                <FaRegTimesCircle className="w-4 h-4 text-white" />
+                                                            </button>
+                                                        </div>
+                                                    )
+                                                }
+
+                                                {
+                                                    typeof item?.icon == "object" && (
+                                                        <div className="mt-5 relative w-[5em] h-[5em]">
+                                                            <Image
+                                                                src={URL.createObjectURL(item?.icon)}
+                                                                alt='Bangla'
+                                                                width={100}
+                                                                height={100}
+                                                                className="w-[5em] h-[5em]"
+                                                            />
+                                                            <button className="absolute top-0 right-0 bg-red-500 p-0.5 rounded-full" onClick={() => setFormData({ ...formData, distribution: formData.distribution.map((dist, i) => i === index ? { ...dist, icon: "" } : dist) })} type="button">
+                                                                <FaRegTimesCircle className="w-4 h-4 text-white" />
+                                                            </button>
+                                                        </div>
+                                                    )
+                                                }
+
                                             </div>
                                         </fieldset>
                                     </div>
@@ -864,6 +897,40 @@ const UpdateServiceDetailsResource = ({ id }) => {
                                         </label>
                                     </legend>
                                     <input onChange={(e) => setFormData({ ...formData, user_doc: { ...formData.user_doc, icon: e.target.files?.[0] } })} type="file" name="user_doc_icon" />
+
+                                    {
+                                        formData?.user_doc?.icon?.length > 0 && (
+                                            <div className="mt-5 relative w-[5em] h-[5em]">
+                                                <Image
+                                                    src={process.env.NEXT_PUBLIC_IMAGE_URL + formData?.user_doc?.icon}
+                                                    alt='Bangla'
+                                                    width={100}
+                                                    height={100}
+                                                    className="w-[5em] h-[5em]"
+                                                />
+                                                <button className="absolute top-0 right-0 bg-red-500 p-0.5 rounded-full" onClick={(e) => setFormData({ ...formData, user_doc: { ...formData.user_doc, icon: null } })} type="button">
+                                                    <FaRegTimesCircle className="w-4 h-4 text-white" />
+                                                </button>
+                                            </div>
+                                        )
+                                    }
+
+                                    {
+                                        formData?.user_doc?.icon && typeof formData?.user_doc?.icon == 'object' && (
+                                            <div className="mt-5 relative w-[5em] h-[5em]">
+                                                <Image
+                                                    src={URL.createObjectURL(formData?.user_doc?.icon)}
+                                                    alt='Bangla'
+                                                    width={100}
+                                                    height={100}
+                                                    className="w-[5em] h-[5em]"
+                                                />
+                                                <button className="absolute top-0 right-0 bg-red-500 p-0.5 rounded-full" onClick={(e) => setFormData({ ...formData, user_doc: { ...formData.user_doc, icon: null } })} type="button">
+                                                    <FaRegTimesCircle className="w-4 h-4 text-white" />
+                                                </button>
+                                            </div>
+                                        )
+                                    }
                                 </fieldset>
                                 {
                                     error?.userDoc?.icon?.status && (
@@ -916,37 +983,6 @@ const UpdateServiceDetailsResource = ({ id }) => {
                                     </legend>
 
                                     <textarea value={formData?.user_doc?.short_description} onChange={(e) => setFormData({ ...formData, user_doc: { ...formData.user_doc, short_description: e.target.value } })} name="user_doc_description" className="w-full outline-none p-2" placeholder="Enter user doc short description" ></textarea>
-
-                                    {/* <Controller
-                  name="user_doc"
-                  defaultValue=""
-                  rules={{
-                    : "User Documents is ",
-                    validate: {
-                      maxWords: (value) => {
-                        const wordCount = value.trim().split(/\s+/).length;
-                        return (
-                          wordCount <= 80 ||
-                          "User Documents cannot exceed 80 words"
-                        );
-                      },
-                    },
-                  }}
-                  render={({
-                    field: { onChange, value },
-                    fieldState: { error },
-                  }) => (
-                    <>
-                      <CustomEditor
-                        onChange={(event: any, editor: any) => {
-                          const data = editor.getData();
-                          onChange(data);
-                        }}
-                        data={value}
-                      />
-                    </>
-                  )}
-                /> */}
                                 </fieldset>
 
                                 {
@@ -1079,11 +1115,76 @@ const UpdateServiceDetailsResource = ({ id }) => {
                                                                                 }}
                                                                                 type="file"
                                                                                 className="w-full "
-
-
                                                                             />
                                                                         </div>
                                                                     </div>
+
+                                                                    {
+                                                                        item?.module?.length > 0 && (
+                                                                            item?.module?.includes('pdf') || item?.module?.includes('exe') ? (
+                                                                                item?.module?.includes('pdf') ? (
+                                                                                    <div className="mt-5 relative w-[5em] h-[5em]">
+                                                                                        <Image
+                                                                                            src={relative_image_path('pdf_file.png')}
+                                                                                            alt='Bangla'
+                                                                                            width={100}
+                                                                                            height={100}
+                                                                                            className="w-[5em] h-[5em]"
+                                                                                        />
+                                                                                        <button className="absolute top-0 right-0 bg-red-500 p-0.5 rounded-full" onClick={() => setFormData({ ...formData, distribution: formData.distribution.map((dist, i) => i === index ? { ...dist, module: "" } : dist) })} type="button">
+                                                                                            <FaRegTimesCircle className="w-4 h-4 text-white" />
+                                                                                        </button>
+                                                                                    </div>
+                                                                                ) : (
+                                                                                    <div className="mt-5 relative w-[5em] h-[5em]">
+                                                                                        <Image
+                                                                                            src={relative_image_path('exe_file.png')}
+                                                                                            alt='Bangla'
+                                                                                            width={100}
+                                                                                            height={100}
+                                                                                            className="w-[5em] h-[5em]"
+                                                                                        />
+                                                                                        <button className="absolute top-0 right-0 bg-red-500 p-0.5 rounded-full" onClick={() => setFormData({ ...formData, distribution: formData.distribution.map((dist, i) => i === index ? { ...dist, module: "" } : dist) })} type="button">
+                                                                                            <FaRegTimesCircle className="w-4 h-4 text-white" />
+                                                                                        </button>
+                                                                                    </div>
+                                                                                )
+
+                                                                            ) : (
+                                                                                <div className="mt-5 relative w-[5em] h-[5em]">
+                                                                                    <Image
+                                                                                        src={process.env.NEXT_PUBLIC_IMAGE_URL + item?.module}
+                                                                                        alt='Bangla'
+                                                                                        width={100}
+                                                                                        height={100}
+                                                                                        className="w-[5em] h-[5em]"
+                                                                                    />
+                                                                                    <button className="absolute top-0 right-0 bg-red-500 p-0.5 rounded-full" onClick={() => setFormData({ ...formData, distribution: formData.distribution.map((dist, i) => i === index ? { ...dist, module: "" } : dist) })} type="button">
+                                                                                        <FaRegTimesCircle className="w-4 h-4 text-white" />
+                                                                                    </button>
+                                                                                </div>
+                                                                            )
+
+                                                                        )
+                                                                    }
+
+                                                                    {
+                                                                        typeof item?.module == 'object' && (
+                                                                            <div className="mt-5 relative w-[5em] h-[5em]">
+                                                                                <Image
+                                                                                    src={URL.createObjectURL(item?.icon)}
+                                                                                    alt='Bangla'
+                                                                                    width={100}
+                                                                                    height={100}
+                                                                                    className="w-[5em] h-[5em]"
+                                                                                />
+                                                                                <button className="absolute top-0 right-0 bg-red-500 p-0.5 rounded-full" onClick={() => setFormData({ ...formData, distribution: formData.distribution.map((dist, i) => i === index ? { ...dist, module: "" } : dist) })} type="button">
+                                                                                    <FaRegTimesCircle className="w-4 h-4 text-white" />
+                                                                                </button>
+                                                                            </div>
+                                                                        )
+                                                                    }
+
                                                                 </div>
                                                             </fieldset>
                                                         </div>
@@ -1168,7 +1269,6 @@ const UpdateServiceDetailsResource = ({ id }) => {
                                                                 <legend>
                                                                     <label
                                                                         htmlFor="key"
-                                                                    // className="after:content-['_*'] after:text-red-500"
                                                                     >
                                                                         Link - {index + 1}
                                                                     </label>
@@ -1271,11 +1371,7 @@ const UpdateServiceDetailsResource = ({ id }) => {
                                         }
                                     </div>
                                 </div>
-
-
                             </div>
-
-
                         </div>
                     </div>
                 </div>
@@ -1295,6 +1391,7 @@ const UpdateServiceDetailsResource = ({ id }) => {
                                         </label>
                                     </legend>
                                     <input value={formData?.api_doc?.label} onChange={(e) => setFormData({ ...formData, api_doc: { ...formData.api_doc, label: e.target.value } })} type="text" placeholder="Enter api doc label" className="w-full outline-none p-2" />
+
                                 </fieldset>
 
                                 {
@@ -1314,6 +1411,40 @@ const UpdateServiceDetailsResource = ({ id }) => {
                                         </label>
                                     </legend>
                                     <input onChange={(e) => setFormData({ ...formData, api_doc: { ...formData.api_doc, icon: e.target.files?.[0] } })} type="file" name="user_doc_icon" />
+
+                                    {
+                                        formData?.api_doc?.icon?.length > 0 && (
+                                            <div className="mt-5 relative w-[5em] h-[5em]">
+                                                <Image
+                                                    src={process.env.NEXT_PUBLIC_IMAGE_URL + formData?.api_doc?.icon}
+                                                    alt='Bangla'
+                                                    width={100}
+                                                    height={100}
+                                                    className="w-[5em] h-[5em]"
+                                                />
+                                                <button className="absolute top-0 right-0 bg-red-500 p-0.5 rounded-full" onClick={(e) => setFormData({ ...formData, api_doc: { ...formData.api_doc, icon: null } })} type="button">
+                                                    <FaRegTimesCircle className="w-4 h-4 text-white" />
+                                                </button>
+                                            </div>
+                                        )
+                                    }
+
+                                    {
+                                        formData?.api_doc?.icon && typeof formData?.api_doc?.icon == 'object' && (
+                                            <div className="mt-5 relative w-[5em] h-[5em]">
+                                                <Image
+                                                    src={URL.createObjectURL(formData?.api_doc?.icon)}
+                                                    alt='Bangla'
+                                                    width={100}
+                                                    height={100}
+                                                    className="w-[5em] h-[5em]"
+                                                />
+                                                <button className="absolute top-0 right-0 bg-red-500 p-0.5 rounded-full" onClick={(e) => setFormData({ ...formData, api_doc: { ...formData.api_doc, icon: null } })} type="button">
+                                                    <FaRegTimesCircle className="w-4 h-4 text-white" />
+                                                </button>
+                                            </div>
+                                        )
+                                    }
                                 </fieldset>
 
                                 {
@@ -1534,6 +1665,72 @@ const UpdateServiceDetailsResource = ({ id }) => {
                                                                             />
                                                                         </div>
                                                                     </div>
+
+                                                                    {
+                                                                        item?.module?.length > 0 && (
+                                                                            item?.module?.includes('pdf') || item?.module?.includes('exe') ? (
+                                                                                item?.module?.includes('pdf') ? (
+                                                                                    <div className="mt-5 relative w-[5em] h-[5em]">
+                                                                                        <Image
+                                                                                            src={relative_image_path('pdf_file.png')}
+                                                                                            alt='Bangla'
+                                                                                            width={100}
+                                                                                            height={100}
+                                                                                            className="w-[5em] h-[5em]"
+                                                                                        />
+                                                                                        <button className="absolute top-0 right-0 bg-red-500 p-0.5 rounded-full" onClick={() => setFormData({ ...formData, distribution: formData.distribution.map((dist, i) => i === index ? { ...dist, module: "" } : dist) })} type="button">
+                                                                                            <FaRegTimesCircle className="w-4 h-4 text-white" />
+                                                                                        </button>
+                                                                                    </div>
+                                                                                ) : (
+                                                                                    <div className="mt-5 relative w-[5em] h-[5em]">
+                                                                                        <Image
+                                                                                            src={relative_image_path('exe_file.png')}
+                                                                                            alt='Bangla'
+                                                                                            width={100}
+                                                                                            height={100}
+                                                                                            className="w-[5em] h-[5em]"
+                                                                                        />
+                                                                                        <button className="absolute top-0 right-0 bg-red-500 p-0.5 rounded-full" onClick={() => setFormData({ ...formData, distribution: formData.distribution.map((dist, i) => i === index ? { ...dist, module: "" } : dist) })} type="button">
+                                                                                            <FaRegTimesCircle className="w-4 h-4 text-white" />
+                                                                                        </button>
+                                                                                    </div>
+                                                                                )
+
+                                                                            ) : (
+                                                                                <div className="mt-5 relative w-[5em] h-[5em]">
+                                                                                    <Image
+                                                                                        src={process.env.NEXT_PUBLIC_IMAGE_URL + item?.module}
+                                                                                        alt='Bangla'
+                                                                                        width={100}
+                                                                                        height={100}
+                                                                                        className="w-[5em] h-[5em]"
+                                                                                    />
+                                                                                    <button className="absolute top-0 right-0 bg-red-500 p-0.5 rounded-full" onClick={() => setFormData({ ...formData, distribution: formData.distribution.map((dist, i) => i === index ? { ...dist, module: "" } : dist) })} type="button">
+                                                                                        <FaRegTimesCircle className="w-4 h-4 text-white" />
+                                                                                    </button>
+                                                                                </div>
+                                                                            )
+
+                                                                        )
+                                                                    }
+
+                                                                    {
+                                                                        typeof item?.module == 'object' && (
+                                                                            <div className="mt-5 relative w-[5em] h-[5em]">
+                                                                                <Image
+                                                                                    src={URL.createObjectURL(item?.icon)}
+                                                                                    alt='Bangla'
+                                                                                    width={100}
+                                                                                    height={100}
+                                                                                    className="w-[5em] h-[5em]"
+                                                                                />
+                                                                                <button className="absolute top-0 right-0 bg-red-500 p-0.5 rounded-full" onClick={() => setFormData({ ...formData, distribution: formData.distribution.map((dist, i) => i === index ? { ...dist, module: "" } : dist) })} type="button">
+                                                                                    <FaRegTimesCircle className="w-4 h-4 text-white" />
+                                                                                </button>
+                                                                            </div>
+                                                                        )
+                                                                    }
                                                                 </div>
                                                             </fieldset>
                                                         </div>
@@ -1736,7 +1933,7 @@ const UpdateServiceDetailsResource = ({ id }) => {
                         className="px-4 py-2 bg-violet-700 text-white active:scale-90 transition-all duration-400 rounded-md"
                     >
                         {
-                            isLoading ? "Loading..." : "Create"
+                            isLoading ? "Loading..." : "Update"
                         }
                     </button>
                 </div>
@@ -1746,7 +1943,6 @@ const UpdateServiceDetailsResource = ({ id }) => {
             {isLoading && (
                 <div className="absolute inset-0 bg-white bg-opacity-75 flex items-center justify-center z-10">
                     <div className="flex flex-col items-center space-y-4">
-                        {/* Loading Spinner */}
                         <svg
                             className="animate-spin h-12 w-12 text-blue-600"
                             xmlns="http://www.w3.org/2000/svg"
@@ -1767,7 +1963,6 @@ const UpdateServiceDetailsResource = ({ id }) => {
                                 d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
                             ></path>
                         </svg>
-                        {/* Loading Text */}
                         <p className="text-gray-700 font-medium">Loading...</p>
                     </div>
                 </div>
