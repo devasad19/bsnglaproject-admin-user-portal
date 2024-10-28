@@ -20,9 +20,45 @@ export const getCitizenList = async () => {
     console.log(error);
     return error;
   }
-}
+};
 
 
+export const updateServiceBanglaResource = async (payload, id) => {
+  try {
+    const res = await axios
+      .post(
+        `${process.env.NEXT_PUBLIC_API_URL}/bn-resource/update/service/${id}`,
+        payload
+      )
+      .then((res) => {
+        return res?.data;
+      }).catch((err) => {
+        console.log(err);
+        return err;
+      });
+    return res;
+  } catch (error) {
+    console.log(error);
+    return error;
+  }
+};
+
+export const getServiceBanglaResource = async (id) => {
+  try {
+    const data = await axios
+      .get(`${process.env.NEXT_PUBLIC_API_URL}/bn-service-resource/${id}`)
+      .then((res) => {
+        return res?.data;
+      }).catch((err) => {
+        console.log(err);
+        return err;
+      });
+    return data;
+  } catch (error) {
+    console.log(error);
+    return error;
+  }
+};
 
 export const getSingleServiceDetailsResource = async (id) => {
   try {
@@ -58,7 +94,6 @@ export const updateServiceResource = async (payload, id) => {
 };
 
 export const updateSingleServiceResource = async (payload, id) => {
-  console.log('payload before api call: ',payload);
   try{
     const res = await axios
       .post(
