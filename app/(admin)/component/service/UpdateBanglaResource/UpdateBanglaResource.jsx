@@ -36,7 +36,8 @@ const UpdateBanglaResource = ({ id }) => {
             description,
             component,
             broad_description,
-            support_address,
+            user_docs,
+            api_docs
         } = data;
 
         const dataFormat = {
@@ -45,12 +46,13 @@ const UpdateBanglaResource = ({ id }) => {
             name,
             description,
             broad_description,
-            support_address,
+            user_docs,
+            api_docs
         };
 
         // const res = await serviceBanglaResourceApi(dataFormat);
 
-        const res = await updateServiceBanglaResource(dataFormat, banglaResource?.id);
+        const res = await updateServiceBanglaResource(dataFormat, id);
 
         if (res.status) {
             setIsLoading(false);
@@ -70,6 +72,8 @@ const UpdateBanglaResource = ({ id }) => {
             setValue("sub_title", res?.data?.sub_title);
             setValue("description", res?.data?.description);
             setValue("broad_description", res?.data?.broad_description);
+            setValue("user_docs", res?.data?.user_docs);
+            setValue("api_docs", res?.data?.api_docs);
 
 
         }).catch((err) => {
@@ -244,31 +248,43 @@ const UpdateBanglaResource = ({ id }) => {
                         </fieldset>
                     </div>
 
-                    {/* <div>
+
+                    <div>
                         <fieldset className="flex flex-col border rounded-md px-2">
                             <legend>
                                 <label
                                     htmlFor="ServiceName"
                                     className="after:content-['_*'] after:text-red-500"
                                 >
-                                    Support Address
+                                    User Module Description
                                 </label>
                             </legend>
-                            <input
-                                {...register("support_address", {
-                                    required: "Support Address is required",
-                                })}
-                                type="text"
-                                placeholder="Support Address"
-                                className="outline-none p-2"
-                            />
+
+                            <textarea {
+                                ...register("user_docs", {
+                                    required: "User docs is required",
+                                })
+                            } name="user_doc_description" className="w-full outline-none p-2" placeholder="Enter user doc short description" ></textarea>
                         </fieldset>
-                        {errors.support_address && (
-                            <p className="text-red-500 text-12 px-2 pt-1">
-                                {errors.support_address.message}
-                            </p>
-                        )}
-                    </div> */}
+                    </div>
+
+                    <div>
+                        <fieldset className="flex flex-col border rounded-md px-2">
+                            <legend>
+                                <label
+                                    htmlFor="ServiceName"
+                                    className="after:content-['_*'] after:text-red-500"
+                                >
+                                    API Module Description
+                                </label>
+                            </legend>
+                            <textarea {
+                                ...register("api_docs", {
+                                    required: "Api docs is required",
+                                })
+                            } name="api_doc_short_desc" className="w-full outline-none p-2" placeholder="Enter api doc short description" ></textarea>
+                        </fieldset>
+                    </div>
 
                     <div className="flex justify-between pt-5">
                         <p className="text-14">
