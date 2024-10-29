@@ -273,7 +273,7 @@ const UpdateServiceDetailsResource = ({ id }) => {
 
         const payload = new FormData();
 
-        payload.append("service_id", "1");
+        payload.append("service_id", id);
         payload.append("broad_description", formData.description);
 
         if (formData.mediaImages) {
@@ -1496,38 +1496,6 @@ const UpdateServiceDetailsResource = ({ id }) => {
                                     </legend>
 
                                     <textarea value={formData?.api_doc?.short_description} name="api_doc_short_desc" onChange={(e) => setFormData({ ...formData, api_doc: { ...formData.api_doc, short_description: e.target.value } })} className="w-full outline-none p-2" placeholder="Enter api doc short description" ></textarea>
-
-                                    {/* <Controller
-                  name="user_doc"
-                  control={control}
-                  defaultValue=""
-                  rules={{
-                    : "User Documents is ",
-                    validate: {
-                      maxWords: (value) => {
-                        const wordCount = value.trim().split(/\s+/).length;
-                        return (
-                          wordCount <= 80 ||
-                          "User Documents cannot exceed 80 words"
-                        );
-                      },
-                    },
-                  }}
-                  render={({
-                    field: { onChange, value },
-                    fieldState: { error },
-                  }) => (
-                    <>
-                      <CustomEditor
-                        onChange={(event: any, editor: any) => {
-                          const data = editor.getData();
-                          onChange(data);
-                        }}
-                        data={value}
-                      />
-                    </>
-                  )}
-                /> */}
                                 </fieldset>
 
                                 {
