@@ -624,7 +624,7 @@ const Sidebar = () => {
                   </span>
                 </Link>
               </li>
-              <li
+              {/* <li
                 className={`hover:bg-primary group ${
                   pathname == "/admin/service-setting" ? "bg-primary" : ""
                 }`}
@@ -657,7 +657,7 @@ const Sidebar = () => {
                     Service Settings
                   </span>
                 </Link>
-              </li>
+              </li> */}
             </ul>
           </div>
         </div>
