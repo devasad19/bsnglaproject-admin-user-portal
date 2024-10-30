@@ -15,7 +15,6 @@ const Home = async () => {
     data = response?.data;
   }
 
-  // console.log("user feedback response: ", data);
   return (
     <section className="bg-white p-4 rounded shadow-lg">
       <h3 className="text-24 text-slate-900 font-bold pb-5">
