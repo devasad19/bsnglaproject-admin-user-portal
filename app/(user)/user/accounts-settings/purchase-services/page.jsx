@@ -109,26 +109,6 @@ const Home = () => {
                           </li>
                         </ul>
                       </details>
-
-
-                      {/* <Link
-                        href={{
-                          pathname: `/services/${item?.id}`,
-                        }}
-                        className="text-14 border border-primary bg-primary hover:text-white px-2 py-1 rounded-md"
-                        shallow
-                      >
-                        <span className="text-white">Service Details</span>
-                      </Link>
-                      <Link
-                        href={{
-                          pathname: `/user/accounts-settings/purchase-services/${item?.id}`,
-                        }}
-                        className="text-14 border border-primary bg-primary hover:text-white px-2 py-1 rounded-md ms-2"
-                        shallow
-                      >
-                        <span className="text-white">Details</span>
-                      </Link> */}
                     </td>
                   </tr>
                 ))}
