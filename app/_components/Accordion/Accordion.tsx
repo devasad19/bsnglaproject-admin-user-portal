@@ -5,13 +5,15 @@ import { AccordionType } from "@/types/AccordionType";
 
 const Accordion = ({ icon, title, children, active }: AccordionType) => {
   const [open, setOpen] = useState(false);
+
+
   return (
-    <div className="">
+    <div className="w-full">
       <button
         onClick={() => setOpen(!open)}
-        className={`w-full flex items-center gap-2 hover:text-white ${
-          active ? 'text-white' : 'text-primary'
-        }`}
+        className={`w-full flex items-center justify-between gap-2 p-2 ${
+          active ? 'text-white ' : 'text-primary'
+        } ${ open && 'border-b border-primary' }`}
       >
         {icon ? (
           <div className="flex items-center gap-2">

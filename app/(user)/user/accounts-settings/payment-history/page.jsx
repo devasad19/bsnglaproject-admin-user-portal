@@ -19,9 +19,6 @@ const Home = () => {
     });
   }, []);
 
-
-  console.log('user orders: ', orders);
-
   return (
     <section>
       <h1 className="text-20 lg:text-32 font-mono font-bold text-[#151D48] pb-5">

@@ -341,7 +341,6 @@ const ServiceDetailsResource = () => {
   };
   
 
-  console.log(formData);
   
 
 

@@ -22,7 +22,6 @@ const Home = (): JSX.Element => {
     });
   }, []);
 
-  // console.log('all citizen: ', citizen);
 
   return (
     <section className="bg-white rounded-lg p-4 shadow-lg">

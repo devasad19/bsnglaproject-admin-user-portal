@@ -25,8 +25,7 @@ const BanglaResource = () => {
 
   const onSubmitBanglaResource = async (data: any) => {
     setIsLoading(true);
-    // service_id,sub_title,name,description,broad_description,support_address
-    // console.log(data);
+
     const {
       name,
       sub_title,

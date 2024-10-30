@@ -44,7 +44,6 @@ const Sidebar = () => {
       return prevIsToggleOpen; // Default case if neither match
     });
   };
-  // console.log("toggle:", isToggleOpen);
 
   return (
     <>

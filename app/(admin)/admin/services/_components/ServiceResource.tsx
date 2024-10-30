@@ -75,7 +75,6 @@ const ServiceResource = () => {
       toast.error("Service Creation Failed");
     }
 
-    // console.log('formdata: ',formData);
   };
   return (
     <>

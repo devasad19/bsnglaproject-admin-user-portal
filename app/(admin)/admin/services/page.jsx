@@ -40,7 +40,6 @@ const Home = () => {
 
 
   const handleDelete = (id) => {
-    // console.log("id", id);
     if (id) {
       Swal.fire({
         title: "Are you sure?",
@@ -52,7 +51,6 @@ const Home = () => {
         confirmButtonText: "Yes, delete it!",
       }).then((result) => {
         if (result.isConfirmed) {
-          console.log("id", id);
 
           const serviceDeleteData = deleteService(id).then((data) => {
             if (data) {
@@ -156,7 +154,6 @@ const Home = () => {
     fromData.append("visit_type", visit_type);
 
     let updateData = await updateAnService(serviceUpdate?.id, fromData);
-    console.log({ updateData });
 
     if (updateData?.status === true) {
       toast.success("Service updated successfully");
