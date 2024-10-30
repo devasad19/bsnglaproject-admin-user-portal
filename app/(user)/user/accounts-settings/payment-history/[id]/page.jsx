@@ -7,7 +7,10 @@ import { usePDF } from "react-to-pdf";
 import { getInvoiceDetails } from "@/app/(user)/_api";
 
 const Home = ({ params }) => {
-  const { toPDF, targetRef } = usePDF({ filename: "page.pdf" });
+  const { toPDF, targetRef } = usePDF({ 
+    filename: "page.pdf",
+    method: "save",
+   });
   const [data, setData] = useState();
   const [plan, setPlan] = useState();
   const [loading, setLoading] = useState(true);
@@ -53,7 +56,7 @@ const Home = ({ params }) => {
                     Print
                   </button>
                   <button
-                    onClick={() => toPDF()}
+                    onClick={toPDF}
                     className="bg-blue-500 text-white text-14 lg:text-16 px-2 py-1 lg:px-4 lg:py-2 rounded active:scale-75 transition-all duration-300"
                   >
                     Download
