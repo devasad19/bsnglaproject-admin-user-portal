@@ -29,50 +29,76 @@ const Home = async ({params : { id }}) => {
             </span>
           </Link>
           <h3 className="text-26 lg:text-32 font-mono font-bold text-[#151D48]">
-            Service Name: {id}
+            Service Name: 
           </h3>
         </div>
 
         <h3 className="text-28 font-bold text-[#151D48] pb-5">
-          Package Name: Package 1
+          Citizen Name: Md. Shakhawat Hossain
         </h3>
         <div className="overflow-x-auto bg-white rounded shadow-lg mb-5">
           <table className="w-full lg:table-fixed text-center">
             <thead className="h-10 bg-blue-500 text-white">
               <tr>
+                <th>Feature Name</th>
                 <th>Purchasing Date</th>
                 <th>Valid Till</th>
+                <th>Remain Days</th>
                 <th>Price</th>
                 <th>Status</th>
               </tr>
             </thead>
             <tbody>
               <tr className="h-12">
+                <td>OCR</td>
                 <td>2022-01-01</td>
                 <td>2022-01-01</td>
+                <td>60 days</td>
+                <td>1000</td>
+                <td>Active</td>
+              </tr>
+              <tr className="h-12 border-t border-black">
+                <td>Validity</td>
+                <td>2022-01-01</td>
+                <td>2022-01-01</td>
+                <td>60 days</td>
+                <td>1000</td>
+                <td>Active</td>
+              </tr>
+              <tr className="h-12 border-t border-black">
+                <td>Translator BP</td>
+                <td>2022-01-01</td>
+                <td>2022-01-01</td>
+                <td>60 days</td>
                 <td>1000</td>
                 <td>Active</td>
               </tr>
             </tbody>
           </table>
         </div>
+ 
+     
         <h3 className="text-28 font-bold text-[#151D48] pb-5">
-          Package Name: Package 2
+          Citizen Name: Md. Jobbar Hossain
         </h3>
-        <div className="overflow-x-auto bg-white rounded shadow-lg">
+        <div className="overflow-x-auto bg-white rounded shadow-lg mb-5">
           <table className="w-full lg:table-fixed text-center">
             <thead className="h-10 bg-blue-500 text-white">
               <tr>
+                <th>Feature Name</th>
                 <th>Purchasing Date</th>
                 <th>Valid Till</th>
+                <th>Remain Days</th>
                 <th>Price</th>
                 <th>Status</th>
               </tr>
             </thead>
             <tbody>
               <tr className="h-12">
+                <td>Validity</td>
                 <td>2022-01-01</td>
                 <td>2022-01-01</td>
+                <td>60 days</td>
                 <td>1000</td>
                 <td>Active</td>
               </tr>
