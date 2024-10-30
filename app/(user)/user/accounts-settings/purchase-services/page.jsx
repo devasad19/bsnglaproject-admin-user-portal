@@ -17,11 +17,12 @@ const Home = () => {
       .catch((err) => console.log(err));
   }, []);
 
+
   return (
     <section>
       <div className="flex flex-wrap justify-between">
         <h3 className="text-32 font-mono font-bold text-[#151D48] pb-5">
-          Services
+          Purchased Services
         </h3>
       </div>
 
@@ -51,18 +52,12 @@ const Home = () => {
                 {services?.map((item, index) => (
                   <tr key={index}>
                     <td className="px-2">
-                      <Link
-                        href={{
-                          pathname: `/user/services/${item?.id}`,
-                        }}
-                        className="flex items-center gap-2 text-14"
-                        shallow
-                      >
-                        <Image src={process.env.NEXT_PUBLIC_IMAGE_URL+(item?.service?.logo)} className="w-[5em] h-[5em]" width={1000} height={1000} alt="Bangla" />
+                      <div className="flex items-center gap-2 text-14">
+                        <Image src={process.env.NEXT_PUBLIC_IMAGE_URL + (item?.service?.logo)} className="w-[5em] h-[5em]" width={1000} height={1000} alt="Bangla" />
                         <span className="flex items-center gap-3">
-                          {item?.service?.name || " "}
+                          {item?.service?.name ?? ''}
                         </span>
-                      </Link>
+                      </div>
                     </td>
                     <td className="text-center">
                       <p dangerouslySetInnerHTML={{ __html: item?.service?.description?.length > 25 ? item?.service?.description?.substring(0, 25) + "..." : item?.service?.description }} />
@@ -85,7 +80,38 @@ const Home = () => {
                       })}
                     </td>
                     <td className="text-center cursor-pointer">
-                      <Link
+
+                      <details className="dropdown">
+                        <summary className="btn m-1 h-auto min-h-1 border-none bg-blue-500 px-4 py-2 rounded text-white hover:bg-blue-500 hover:text-white">Options</summary>
+                        <ul className="menu dropdown-content bg-gray-100 rounded-box z-[1] w-40 p-1 shadow-md right-0">
+                          <li>
+                            <Link target="_blank" href={process.env.NEXT_PUBLIC_LOCAL_PORTAL_URL+'/services/'+item?.service_id}>
+                              Service Details
+                            </Link>
+                          </li>
+                          <li>
+                            <Link href={{
+                              pathname: `/user/services/${item?.service_id}`
+                            }}
+                            shallow
+                            >
+                              Upgrade Package
+                            </Link>
+                          </li>
+                          <li>
+                            <Link href={{
+                              pathname: `/user/accounts-settings/purchase-services/${item?.service_id}`
+                            }}
+                              shallow
+                            >
+                              Purchase Info
+                            </Link>
+                          </li>
+                        </ul>
+                      </details>
+
+
+                      {/* <Link
                         href={{
                           pathname: `/services/${item?.id}`,
                         }}
@@ -102,7 +128,7 @@ const Home = () => {
                         shallow
                       >
                         <span className="text-white">Details</span>
-                      </Link>
+                      </Link> */}
                     </td>
                   </tr>
                 ))}
