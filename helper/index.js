@@ -31,10 +31,34 @@ const months = [
 ];
 
 
-export const CountWords = (str) => {
+export const  formatDateToDDMMYYYY = (dateString)=> {
+  // Parse the date string
+  const date = new Date(dateString);
 
-  console.log('string from function: ',str);
-  
+  // Extract day, month, and year
+  const day = String(date.getUTCDate()).padStart(2, '0');
+  const month = String(date.getUTCMonth() + 1).padStart(2, '0'); // Months are 0-indexed
+  const year = date.getUTCFullYear();
+
+  // Return the formatted date as DD-MM-YYYY
+  return `${day}-${month}-${year}`;
+}
+
+
+export const CalculateDaysBetweenDates = (date1, date2) => {
+  // Parse the dates using the ISO 8601 format
+  const parsedDate1 = new Date(date1);
+  const parsedDate2 = new Date(date2);
+
+  // Calculate the difference in milliseconds
+  const diffMs = Math.abs(parsedDate2 - parsedDate1);
+
+  // Convert milliseconds to days
+  return Math.floor(diffMs / (1000 * 60 * 60 * 24));
+}
+
+
+export const CountWords = (str) => {
   str = str.trim();
 
   if (str.length === 0) {
@@ -51,25 +75,25 @@ export const GetFileSize = (fileInput) => {
 };
 
 export const sanitizeYoutubeUrl = (url) => {
-  console.log('youtube from function: ',url);
-  
+  console.log('youtube from function: ', url);
+
 
   const equalSignIndex = url.indexOf('=');
-    
-    // Check if there is an equal sign in the URL
-    if (equalSignIndex === -1) {
-        return ''; // No equal sign found
-    }
-    
-    const secondEqualSignIndex = url.indexOf('=', equalSignIndex + 1);
-    
-    if (secondEqualSignIndex === -1) {
-        // Only one equal sign found
-        return url.slice(equalSignIndex + 1); // Return everything after the first equal sign
-    } else {
-        // Two equal signs found
-        return url.slice(equalSignIndex + 1, secondEqualSignIndex); // Return substring between the two equal signs
-    }
+
+  // Check if there is an equal sign in the URL
+  if (equalSignIndex === -1) {
+    return ''; // No equal sign found
+  }
+
+  const secondEqualSignIndex = url.indexOf('=', equalSignIndex + 1);
+
+  if (secondEqualSignIndex === -1) {
+    // Only one equal sign found
+    return url.slice(equalSignIndex + 1); // Return everything after the first equal sign
+  } else {
+    // Two equal signs found
+    return url.slice(equalSignIndex + 1, secondEqualSignIndex); // Return substring between the two equal signs
+  }
 }
 
 export function en2bn(englishNumber) {

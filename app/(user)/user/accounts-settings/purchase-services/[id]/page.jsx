@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { getServicePurchaseHistory } from "@/app/(user)/_api";
+import { formatDateToDDMMYYYY, CalculateDaysBetweenDates } from "@/helper";
 
 
 const Home = ({ params: { id } }) => {
@@ -84,17 +85,29 @@ const Home = ({ params: { id } }) => {
                           </td>
                           <td>
                             {
-                              item?.created_at?.slice(0,9)
+                              formatDateToDDMMYYYY(item?.created_at)
                             }
                           </td>
-                          <td>NA</td>
-                          <td>NA</td>
+                          <td>
+                            {
+                              formatDateToDDMMYYYY(item?.created_at)
+                            }
+                          </td>
+                          <td>
+                            {
+                              CalculateDaysBetweenDates(item?.created_at, item?.created_at)
+                            }
+                          </td>
                           <td>
                             {
                               item?.total
                             }
                           </td>
-                          <td>NA</td>
+                          <td>
+                            {
+                              CalculateDaysBetweenDates(item?.created_at, item?.created_at) > 0 ? "Active" : "Expired"
+                            }
+                          </td>
                         </tr>
                       )
                     })
