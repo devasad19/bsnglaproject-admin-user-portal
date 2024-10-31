@@ -204,7 +204,7 @@ const Home = () => {
       <section>
         <div className="flex flex-wrap justify-between">
           <h3 className="text-32 font-mono font-bold text-[#151D48] pb-5">
-            Services
+            Service List
           </h3>
           <div>
             <Link
@@ -223,15 +223,15 @@ const Home = () => {
                   <path d="M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32V224H48c-17.7 0-32 14.3-32 32s14.3 32 32 32H192V432c0 17.7 14.3 32 32 32s32-14.3 32-32V288H400c17.7 0 32-14.3 32-32s-14.3-32-32-32H256V80z" />
                 </svg>
               </span>
-              <span>Add</span>
+              <span>Create Service</span>
             </Link>
           </div>
         </div>
         <div className="w-full overflow-x-auto bg-white  rounded-md">
           <table className="w-full">
-            <thead className="border-b  border-gray-200  bg-primary text-white  h-10 text-12 lg:text-16">
+            <thead className="border-b border-gray-200  bg-primary text-white  h-10 text-12 md:text-15">
               <tr>
-                <th className="text-left px-2">Name</th>
+                <th className="text-center px-2">Name</th>
                 <th className="text-center">Sub Title</th>
                 <th className="text-center">Type</th>
                 <th className="text-center">Production Status</th>
