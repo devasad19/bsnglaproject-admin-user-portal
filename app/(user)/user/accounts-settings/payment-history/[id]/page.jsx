@@ -5,12 +5,20 @@ import Image from "next/image";
 import { relative_image_path } from "@/helper";
 import { usePDF } from "react-to-pdf";
 import { getInvoiceDetails } from "@/app/(user)/_api";
+import html2canvas from "html2canvas";
+import { jsPDF } from "jspdf";
 
 const Home = ({ params }) => {
-  const { toPDF, targetRef } = usePDF({ 
+
+  /* const doc = new jsPDF();
+
+  doc.text("Hello world!", 10, 10);
+  doc.save("a4.pdf"); */
+
+  /* const { toPDF, targetRef } = usePDF({
     filename: "page.pdf",
     method: "save",
-   });
+  }); */
   const [data, setData] = useState();
   const [plan, setPlan] = useState();
   const [loading, setLoading] = useState(true);
@@ -36,6 +44,51 @@ const Home = ({ params }) => {
   }, []);
 
 
+
+  const HandlePdfDownload = async (elementId) => {
+    const invoiceElement = document.getElementById(elementId);
+
+    if (!invoiceElement) {
+      console.error("Invoice element not found.");
+      return;
+    }
+
+    const doc = new jsPDF();
+
+    doc.html(invoiceElement, {
+      callback: (doc) => {
+        console.log(doc);
+        doc.save("invoice.pdf");
+      },
+    })
+    doc.save("a4.pdf");
+
+    // window.location.reload();
+
+    /* try {
+      
+  
+      
+      const canvas = await html2canvas(invoiceElement);
+      const imageData = canvas.toDataURL("image/png");
+  
+      const pdf = new jsPDF("p", "pt", "a4");
+      const pdfWidth = pdf.internal.pageSize.getWidth();
+      const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
+  
+      pdf.addImage(imageData, "PNG", 0, 0, pdfWidth, pdfHeight);
+      pdf.save("invoice.pdf");
+    } catch (error) {
+      console.error("Error generating PDF:", error);
+    } */
+  };
+
+
+
+
+
+
+
   return (
     <>
       {
@@ -56,7 +109,7 @@ const Home = ({ params }) => {
                     Print
                   </button>
                   <button
-                    onClick={toPDF}
+                    onClick={() => HandlePdfDownload("invoice")}
                     className="bg-blue-500 text-white text-14 lg:text-16 px-2 py-1 lg:px-4 lg:py-2 rounded active:scale-75 transition-all duration-300"
                   >
                     Download
@@ -65,7 +118,7 @@ const Home = ({ params }) => {
               </div>
               <div className="flex justify-center items-center text-14">
                 <div
-                  ref={targetRef}
+                  // ref={targetRef}
                   id="invoice"
                   className="w-2/3 bg-white p-6 shadow-lg rounded-md"
                 >
@@ -89,17 +142,17 @@ const Home = ({ params }) => {
                       </div>
                       <div className="flex flex-col gap-1">
                         <h3 className="text-20 text-red-500 font-bold">Invoice</h3>
-                        <p className="">Invoice No: { data?.invoice_no }</p>
-                        <p className="">Invoice Date: { data?.created_at }</p>
+                        <p className="">Invoice No: {data?.invoice_no}</p>
+                        <p className="">Invoice Date: {data?.created_at}</p>
                       </div>
                     </div>
                     <div className="w-full flex flex-col ">
-                      <p>Name: { data?.citizen_name }</p>
+                      <p>Name: {data?.citizen_name}</p>
                       <div className="grid grid-cols-2">
-                        <p>Phone: { data?.phone }</p>
-                        <p>Email: { data?.email }</p>
+                        <p>Phone: {data?.phone}</p>
+                        <p>Email: {data?.email}</p>
                       </div>
-                      <p>Address: { data?.address }</p>
+                      <p>Address: {data?.address}</p>
                     </div>
                   </div>
                   <div>
@@ -118,11 +171,11 @@ const Home = ({ params }) => {
                         <tbody>
                           <tr className="h-52">
                             <td className="border border-gray-500">1</td>
-                            <td className="border border-gray-500">{ data?.service_name }</td>
-                            <td className="border border-gray-500">{ data?.feature_name }</td>
-                            <td className="border border-gray-500">{ plan[0]?.price }</td>
+                            <td className="border border-gray-500">{data?.service_name}</td>
+                            <td className="border border-gray-500">{data?.feature_name}</td>
+                            <td className="border border-gray-500">{plan[0]?.price}</td>
                             <td className="border border-gray-500">1</td>
-                            <td className="border border-gray-500">{ plan[0]?.price }</td>
+                            <td className="border border-gray-500">{plan[0]?.price}</td>
                           </tr>
                           <tr className="border border-gray-500 h-10">
                             <td></td>
@@ -130,7 +183,7 @@ const Home = ({ params }) => {
                             <td></td>
                             <td></td>
                             <td className="border border-gray-500">Total</td>
-                            <td>{ data?.total }</td>
+                            <td>{data?.total}</td>
                           </tr>
                         </tbody>
                       </table>

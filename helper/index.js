@@ -31,7 +31,8 @@ const months = [
 ];
 
 
-export const  formatDateToDDMMYYYY = (dateString)=> {
+
+export const formatDateToDDMMYYYY = (dateString) => {
   // Parse the date string
   const date = new Date(dateString);
 
