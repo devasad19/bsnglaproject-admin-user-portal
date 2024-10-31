@@ -6,6 +6,7 @@ import { useForm, Controller } from "react-hook-form";
 import CustomEditor from "@/app/_components/CustomEditor/CustomEditor";
 import { toast } from "react-toastify";
 import { CountWords, GetFileSize, sanitizeYoutubeUrl } from "@/helper";
+import { link } from "fs";
 
 
 const ServiceDetailsResource = () => {
@@ -18,6 +19,7 @@ const ServiceDetailsResource = () => {
       {
         label: "",
         icon: "",
+        link: "",
       }
     ],
     user_characteristics: [
@@ -309,6 +311,7 @@ const ServiceDetailsResource = () => {
     formData.distribution.forEach((item: any, index: any) => {
       payload.append(`distribution_items[${index}][label]`, item.label);
       payload.append(`distribution_items[${index}][icon]`, item.icon);
+      payload.append(`distribution_items[${index}][link]`, item.link);
     });
 
     formData.user_doc.module_file.forEach((item: any, index: any)=>{
@@ -444,7 +447,7 @@ const ServiceDetailsResource = () => {
             <h3 className="text-primary font-semibold">Distribution</h3>
             <button
               type="button"
-              onClick={() => setFormData({ ...formData, distribution: [...formData.distribution, { label: "", icon: "" }] })}
+              onClick={() => setFormData({ ...formData, distribution: [...formData.distribution, { label: "", icon: "", link: "" }] })}
               className="bg-primary text-white px-4 py-2 rounded"
             >
               <svg
@@ -506,6 +509,26 @@ const ServiceDetailsResource = () => {
                                   distribution: formData.distribution.map(
                                     (dist: any, i: any) =>
                                       i === index ? { ...dist, icon: e.target.files?.[0] } : dist
+                                  ),
+                                });
+                              }}
+                              
+                            />
+                          </div>
+                        </div>
+                        <div className="grid grid-cols-4">
+                          <p>Link:</p>
+                          <div className="col-span-3">
+                            <input
+                              type="text"
+                              placeholder="Enter Link"
+                              className="border border-black w-full px-2 outline-none"
+                              onChange={(e) => {
+                                setFormData({
+                                  ...formData,
+                                  distribution: formData.distribution.map(
+                                    (dist: any, i: any) =>
+                                      i === index ? { ...dist, link: e.target.value } : dist
                                   ),
                                 });
                               }}

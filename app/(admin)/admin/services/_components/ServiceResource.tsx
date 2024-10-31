@@ -41,6 +41,8 @@ const ServiceResource = () => {
       visit_link,
       visit_type,
       resource_file,
+      completion_status,
+      status,
     } = data;
 
     let paid_status = {
@@ -61,6 +63,8 @@ const ServiceResource = () => {
     formData.append("sub_title", sub_title);
     formData.append("visit_link", visit_link || "");
     formData.append("visit_type", visit_type);
+    formData.append("completion_status", '1');
+    formData.append("status", status);
     formData.append("resource_file", resource_file[0] || "");
 
     const uploadRes = await uploadServiceData(formData);
@@ -577,7 +581,7 @@ const ServiceResource = () => {
                 className="outline-none p-2 bg-white"
               >
                 <option value="1">Publish</option>
-                <option value="0">UnPublish</option>
+                <option value="0">Unpublish</option>
               </select>
             </fieldset>
             {errors.type && (
