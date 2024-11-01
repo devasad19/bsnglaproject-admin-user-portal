@@ -952,7 +952,7 @@ const UpdateServiceDetailsResource = ({ id }) => {
                                         </label>
                                     </legend>
                                     <input
-                                        onChange={(e) => setFormData({ ...formData, user_doc: { ...formData.user_doc, video_link: sanitizeYoutubeUrl(e.target.value) } })}
+                                        onChange={(e) => setFormData({ ...formData, user_doc: { ...formData.user_doc, video_link: e.target.value } })}
                                         id="video_link"
                                         type="text"
                                         placeholder="Video Link (Youtube)"
@@ -1077,7 +1077,7 @@ const UpdateServiceDetailsResource = ({ id }) => {
                                                                                     const newModuleFile = [...formData.user_doc.module_file];
                                                                                     newModuleFile[index] = {
                                                                                         ...newModuleFile[index],
-                                                                                        version: parseInt(e.target.value)
+                                                                                        version: e.target.value
                                                                                     };
                                                                                     setFormData({
                                                                                         ...formData,
@@ -1100,11 +1100,14 @@ const UpdateServiceDetailsResource = ({ id }) => {
                                                                         <div className="col-span-3">
                                                                             <input
                                                                                 onChange={(e) => {
+
                                                                                     const newModuleFile = [...formData.user_doc.module_file];
+
                                                                                     newModuleFile[index] = {
                                                                                         ...newModuleFile[index],
                                                                                         module: e.target.files?.[0]
                                                                                     };
+
                                                                                     setFormData({
                                                                                         ...formData,
                                                                                         user_doc: {
@@ -1169,16 +1172,25 @@ const UpdateServiceDetailsResource = ({ id }) => {
                                                                     }
 
                                                                     {
-                                                                        typeof item?.module == 'object' && (
+                                                                        typeof item?.module === 'object' && (
                                                                             <div className="mt-5 relative w-[5em] h-[5em]">
                                                                                 <Image
-                                                                                    src={URL.createObjectURL(item?.icon)}
+                                                                                    src={item?.module instanceof Blob ? URL.createObjectURL(item.module) : '/default-image.jpg'}
                                                                                     alt='Bangla'
                                                                                     width={100}
                                                                                     height={100}
                                                                                     className="w-[5em] h-[5em]"
                                                                                 />
-                                                                                <button className="absolute top-0 right-0 bg-red-500 p-0.5 rounded-full" onClick={() => setFormData({ ...formData, distribution: formData.distribution.map((dist, i) => i === index ? { ...dist, module: "" } : dist) })} type="button">
+                                                                                <button
+                                                                                    className="absolute top-0 right-0 bg-red-500 p-0.5 rounded-full"
+                                                                                    onClick={() => setFormData({
+                                                                                        ...formData,
+                                                                                        distribution: formData.distribution.map((dist, i) =>
+                                                                                            i === index ? { ...dist, module: "" } : dist
+                                                                                        )
+                                                                                    })}
+                                                                                    type="button"
+                                                                                >
                                                                                     <FaRegTimesCircle className="w-4 h-4 text-white" />
                                                                                 </button>
                                                                             </div>
@@ -1467,7 +1479,7 @@ const UpdateServiceDetailsResource = ({ id }) => {
                                         </label>
                                     </legend>
                                     <input
-                                        onChange={(e) => setFormData({ ...formData, api_doc: { ...formData.api_doc, video_link: sanitizeYoutubeUrl(e.target.value) } })}
+                                        onChange={(e) => setFormData({ ...formData, api_doc: { ...formData.api_doc, video_link: e.target.value } })}
                                         type="text"
                                         placeholder="Video Link (Youtube)"
                                         className="outline-none p-2"
@@ -1590,7 +1602,7 @@ const UpdateServiceDetailsResource = ({ id }) => {
                                                                                     const newModuleFile = [...formData.api_doc.module_file];
                                                                                     newModuleFile[index] = {
                                                                                         ...newModuleFile[index],
-                                                                                        version: parseInt(e.target.value)
+                                                                                        version: e.target.value
                                                                                     };
                                                                                     setFormData({
                                                                                         ...formData,
@@ -1687,7 +1699,7 @@ const UpdateServiceDetailsResource = ({ id }) => {
                                                                         typeof item?.module == 'object' && (
                                                                             <div className="mt-5 relative w-[5em] h-[5em]">
                                                                                 <Image
-                                                                                    src={URL.createObjectURL(item?.icon)}
+                                                                                    src={URL.createObjectURL(item?.module)}
                                                                                     alt='Bangla'
                                                                                     width={100}
                                                                                     height={100}
