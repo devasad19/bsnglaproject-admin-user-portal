@@ -50,9 +50,21 @@ const UpdateBanglaResource = ({ id }) => {
             api_docs
         };
 
+        const form = new FormData();
+        form.append('service_id', id);
+        form.append("name", name);
+        form.append("sub_title", sub_title);
+        form.append("description", description);
+        form.append("broad_description", broad_description);
+        form.append("user_docs", user_docs);
+        form.append("api_docs", api_docs);
+
+
+        // console.log('data format: ',dataFormat);
+
         // const res = await serviceBanglaResourceApi(dataFormat);
 
-        const res = await updateServiceBanglaResource(dataFormat, id);
+        const res = await updateServiceBanglaResource(form, id);
 
         if (res.status) {
             setIsLoading(false);
@@ -60,7 +72,7 @@ const UpdateBanglaResource = ({ id }) => {
             reset();
         } else {
             setIsLoading(false);
-            toast.error("Something went wrong");
+            toast.error(res.message);
         }
     };
 
@@ -81,7 +93,7 @@ const UpdateBanglaResource = ({ id }) => {
         });
     }, []);
 
-    console.log('Bangla Resource: ', banglaResource);
+    // console.log('Bangla Resource: ', banglaResource);
 
 
     return (
@@ -101,7 +113,7 @@ const UpdateBanglaResource = ({ id }) => {
                             <input
                                 {...register("name", {
                                     required: "Name is required",
-                                    validate: {
+                                    /* validate: {
                                         wordCount: (value) => {
                                             const wordCount = value.trim().split(/\s+/).length;
                                             if (wordCount < 3) {
@@ -111,7 +123,7 @@ const UpdateBanglaResource = ({ id }) => {
                                             }
                                             return true;
                                         },
-                                    },
+                                    }, */
                                 })}
                                 type="text"
                                 placeholder="Resource Name"
@@ -137,7 +149,7 @@ const UpdateBanglaResource = ({ id }) => {
                             <input
                                 {...register("sub_title", {
                                     required: "Sub Title is required",
-                                    validate: {
+                                    /* validate: {
                                         maxWords: (value) => {
                                             const wordCount = value.trim().split(/\s+/).length;
                                             return (
@@ -145,7 +157,7 @@ const UpdateBanglaResource = ({ id }) => {
                                                 "Resource sub title cannot exceed 10 words"
                                             );
                                         },
-                                    },
+                                    }, */
                                 })}
                                 id="sub_tile"
                                 type="text"
@@ -176,14 +188,14 @@ const UpdateBanglaResource = ({ id }) => {
                                 defaultValue=""
                                 rules={{
                                     required: "Description is required",
-                                    validate: {
+                                    /* validate: {
                                         maxWords: (value) => {
                                             const wordCount = value.trim().split(/\s+/).length;
                                             return (
                                                 wordCount <= 80 || "Description cannot exceed 80 words"
                                             );
                                         },
-                                    },
+                                    }, */
                                 }}
                                 render={({
                                     field: { onChange, value },
@@ -220,14 +232,14 @@ const UpdateBanglaResource = ({ id }) => {
                                 defaultValue=""
                                 rules={{
                                     required: "Broad_description is required",
-                                    validate: {
+                                    /* validate: {
                                         maxWords: (value) => {
                                             const wordCount = value.trim().split(/\s+/).length;
                                             return (
                                                 wordCount <= 80 || "Description cannot exceed 80 words"
                                             );
                                         },
-                                    },
+                                    }, */
                                 }}
                                 render={({
                                     field: { onChange, value },
@@ -264,8 +276,13 @@ const UpdateBanglaResource = ({ id }) => {
                                 ...register("user_docs", {
                                     required: "User docs is required",
                                 })
-                            } name="user_doc_description" className="w-full outline-none p-2" placeholder="Enter user doc short description" ></textarea>
+                            } name="user_docs" id="user_docs" className="w-full outline-none p-2" placeholder="Enter user doc short description" ></textarea>
                         </fieldset>
+                        {errors.user_docs && (
+                            <p className="text-red-500 text-12 px-2 pt-1">
+                                {errors.user_docs.message}
+                            </p>
+                        )}
                     </div>
 
                     <div>
@@ -282,8 +299,14 @@ const UpdateBanglaResource = ({ id }) => {
                                 ...register("api_docs", {
                                     required: "Api docs is required",
                                 })
-                            } name="api_doc_short_desc" className="w-full outline-none p-2" placeholder="Enter api doc short description" ></textarea>
+                            } name="api_docs" id="api_docs" className="w-full outline-none p-2" placeholder="Enter api doc short description" ></textarea>
                         </fieldset>
+
+                        {errors.api_docs && (
+                            <p className="text-red-500 text-12 px-2 pt-1">
+                                {errors.api_docs.message}
+                            </p>
+                        )}
                     </div>
 
                     <div className="flex justify-between pt-5">
@@ -302,7 +325,7 @@ const UpdateBanglaResource = ({ id }) => {
                                 type="submit"
                                 className="px-4 py-2 bg-violet-700 text-white active:scale-90 transition-all duration-400 rounded-md"
                             >
-                                Create
+                                Update
                             </button>
                         )}
                     </div>
