@@ -14,7 +14,7 @@ const Sidebar = () => {
   const [isToggleOpen, setIsToggleOpen] = useState({
     setting: false,
     alc: false,
-    accountsSettings:false
+    accountsSettings: false,
   });
 
   const toggleAccordionSub = (valueName1: string) => {
@@ -23,28 +23,27 @@ const Sidebar = () => {
         return {
           setting: !prevIsToggleOpen.setting,
           alc: false,
-          accountsSettings:false
-           // Close the other accordion
+          accountsSettings: false,
+          // Close the other accordion
         };
       }
       if (valueName1 === "alc") {
         return {
           setting: false, // Close the other accordion
-          accountsSettings:false,
+          accountsSettings: false,
           alc: !prevIsToggleOpen.alc,
         };
       }
-      if(valueName1 === "accounts-settings"){
+      if (valueName1 === "accounts-settings") {
         return {
           setting: false, // Close the other accordion
           alc: false, // Close the other accordion
-          accountsSettings:!prevIsToggleOpen.accountsSettings
+          accountsSettings: !prevIsToggleOpen.accountsSettings,
         };
       }
       return prevIsToggleOpen; // Default case if neither match
     });
   };
-  // console.log("toggle:", isToggleOpen);
 
   return (
     <>
@@ -93,7 +92,7 @@ const Sidebar = () => {
               </button>
             </div>
             <ul
-              className={`[&>li]:text-slate-900  [&>li]:py-2 [&>li]:rounded-md [&>li]:transition-all [&>li]:duration-500 [&>li]:text-14 [&>li>a]:text-14 flex flex-col gap-2 ${
+              className={`[&>li]:text-slate-900  [&>li]:py-2 w-11/12 [&>li]:rounded-md [&>li]:transition-all [&>li]:duration-500 [&>li]:text-14 [&>li>a]:text-14 flex flex-col gap-2 ${
                 isOpen ? "[&>li]:px-3" : ""
               }`}
             >
@@ -165,36 +164,7 @@ const Sidebar = () => {
                   </span>
                 </Link>
               </li>
-              <li
-                className={`hover:bg-primary group ${
-                  pathname == "/admin/bill" ? "bg-primary" : ""
-                }`}
-              >
-                <Link
-                  href={{
-                    pathname: "/admin/bill",
-                  }}
-                  shallow
-                  className={`flex items-center gap-2 group-hover:text-white ${
-                    pathname == "/admin/bill" ? "text-white" : "text-primary"
-                  }`}
-                  title="Bill"
-                >
-                  <span>
-                    <svg
-                      className="w-5 h-5 fill-current"
-                      width="24"
-                      height="26"
-                      viewBox="0 0 24 26"
-                      fill="none"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <path d="M4.5 25.5C3.45833 25.5 2.57292 25.1354 1.84375 24.4062C1.11458 23.6771 0.75 22.7917 0.75 21.75V18H4.5V0.5L6.375 2.375L8.25 0.5L10.125 2.375L12 0.5L13.875 2.375L15.75 0.5L17.625 2.375L19.5 0.5L21.375 2.375L23.25 0.5V21.75C23.25 22.7917 22.8854 23.6771 22.1562 24.4062C21.4271 25.1354 20.5417 25.5 19.5 25.5H4.5ZM19.5 23C19.8542 23 20.151 22.8802 20.3906 22.6406C20.6302 22.401 20.75 22.1042 20.75 21.75V4.25H7V18H18.25V21.75C18.25 22.1042 18.3698 22.401 18.6094 22.6406C18.849 22.8802 19.1458 23 19.5 23ZM8.25 9.25V6.75H15.75V9.25H8.25ZM8.25 13V10.5H15.75V13H8.25ZM18.25 9.25C17.8958 9.25 17.599 9.13021 17.3594 8.89062C17.1198 8.65104 17 8.35417 17 8C17 7.64583 17.1198 7.34896 17.3594 7.10938C17.599 6.86979 17.8958 6.75 18.25 6.75C18.6042 6.75 18.901 6.86979 19.1406 7.10938C19.3802 7.34896 19.5 7.64583 19.5 8C19.5 8.35417 19.3802 8.65104 19.1406 8.89062C18.901 9.13021 18.6042 9.25 18.25 9.25ZM18.25 13C17.8958 13 17.599 12.8802 17.3594 12.6406C17.1198 12.401 17 12.1042 17 11.75C17 11.3958 17.1198 11.099 17.3594 10.8594C17.599 10.6198 17.8958 10.5 18.25 10.5C18.6042 10.5 18.901 10.6198 19.1406 10.8594C19.3802 11.099 19.5 11.3958 19.5 11.75C19.5 12.1042 19.3802 12.401 19.1406 12.6406C18.901 12.8802 18.6042 13 18.25 13ZM4.5 23H15.75V20.5H3.25V21.75C3.25 22.1042 3.36979 22.401 3.60938 22.6406C3.84896 22.8802 4.14583 23 4.5 23Z" />
-                    </svg>
-                  </span>
-                  <span className={isOpen ? "block" : "hidden"}>Bill</span>
-                </Link>
-              </li>
+              
               <li
                 className={`hover:bg-primary group ${
                   pathname == "/admin/user" ? "bg-primary" : ""
@@ -223,7 +193,7 @@ const Sidebar = () => {
                     </svg>
                   </span>
                   <span className={isOpen ? "block" : "hidden"}>
-                    Manage Users
+                    Manage System Users
                   </span>
                 </Link>
               </li>
@@ -261,74 +231,35 @@ const Sidebar = () => {
                   </span>
                 </Link>
               </li>
-              {/* <li
-                className={`hover:bg-[#E9FFD9] flex  gap-2 ${
-                  pathname.includes("/admin/setting") && "bg-[#E9FFD9]"
-                }`}
-              >
-                <span>
-                  <svg
-                    className="w-5 h-5"
-                    fill="#348739"
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 640 512"
-                  >
-                    <path d="M308.5 135.3c7.1-6.3 9.9-16.2 6.2-25c-2.3-5.3-4.8-10.5-7.6-15.5L304 89.4c-3-5-6.3-9.9-9.8-14.6c-5.7-7.6-15.7-10.1-24.7-7.1l-28.2 9.3c-10.7-8.8-23-16-36.2-20.9L199 27.1c-1.9-9.3-9.1-16.7-18.5-17.8C173.9 8.4 167.2 8 160.4 8h-.7c-6.8 0-13.5 .4-20.1 1.2c-9.4 1.1-16.6 8.6-18.5 17.8L115 56.1c-13.3 5-25.5 12.1-36.2 20.9L50.5 67.8c-9-3-19-.5-24.7 7.1c-3.5 4.7-6.8 9.6-9.9 14.6l-3 5.3c-2.8 5-5.3 10.2-7.6 15.6c-3.7 8.7-.9 18.6 6.2 25l22.2 19.8C32.6 161.9 32 168.9 32 176s.6 14.1 1.7 20.9L11.5 216.7c-7.1 6.3-9.9 16.2-6.2 25c2.3 5.3 4.8 10.5 7.6 15.6l3 5.2c3 5.1 6.3 9.9 9.9 14.6c5.7 7.6 15.7 10.1 24.7 7.1l28.2-9.3c10.7 8.8 23 16 36.2 20.9l6.1 29.1c1.9 9.3 9.1 16.7 18.5 17.8c6.7 .8 13.5 1.2 20.4 1.2s13.7-.4 20.4-1.2c9.4-1.1 16.6-8.6 18.5-17.8l6.1-29.1c13.3-5 25.5-12.1 36.2-20.9l28.2 9.3c9 3 19 .5 24.7-7.1c3.5-4.7 6.8-9.5 9.8-14.6l3.1-5.4c2.8-5 5.3-10.2 7.6-15.5c3.7-8.7 .9-18.6-6.2-25l-22.2-19.8c1.1-6.8 1.7-13.8 1.7-20.9s-.6-14.1-1.7-20.9l22.2-19.8zM112 176a48 48 0 1 1 96 0 48 48 0 1 1 -96 0zM504.7 500.5c6.3 7.1 16.2 9.9 25 6.2c5.3-2.3 10.5-4.8 15.5-7.6l5.4-3.1c5-3 9.9-6.3 14.6-9.8c7.6-5.7 10.1-15.7 7.1-24.7l-9.3-28.2c8.8-10.7 16-23 20.9-36.2l29.1-6.1c9.3-1.9 16.7-9.1 17.8-18.5c.8-6.7 1.2-13.5 1.2-20.4s-.4-13.7-1.2-20.4c-1.1-9.4-8.6-16.6-17.8-18.5L583.9 307c-5-13.3-12.1-25.5-20.9-36.2l9.3-28.2c3-9 .5-19-7.1-24.7c-4.7-3.5-9.6-6.8-14.6-9.9l-5.3-3c-5-2.8-10.2-5.3-15.6-7.6c-8.7-3.7-18.6-.9-25 6.2l-19.8 22.2c-6.8-1.1-13.8-1.7-20.9-1.7s-14.1 .6-20.9 1.7l-19.8-22.2c-6.3-7.1-16.2-9.9-25-6.2c-5.3 2.3-10.5 4.8-15.6 7.6l-5.2 3c-5.1 3-9.9 6.3-14.6 9.9c-7.6 5.7-10.1 15.7-7.1 24.7l9.3 28.2c-8.8 10.7-16 23-20.9 36.2L315.1 313c-9.3 1.9-16.7 9.1-17.8 18.5c-.8 6.7-1.2 13.5-1.2 20.4s.4 13.7 1.2 20.4c1.1 9.4 8.6 16.6 17.8 18.5l29.1 6.1c5 13.3 12.1 25.5 20.9 36.2l-9.3 28.2c-3 9-.5 19 7.1 24.7c4.7 3.5 9.5 6.8 14.6 9.8l5.4 3.1c5 2.8 10.2 5.3 15.5 7.6c8.7 3.7 18.6 .9 25-6.2l19.8-22.2c6.8 1.1 13.8 1.7 20.9 1.7s14.1-.6 20.9-1.7l19.8 22.2zM464 304a48 48 0 1 1 0 96 48 48 0 1 1 0-96z" />
-                  </svg>
-                </span>
-                {isOpen && (
-                  <Accordion title="Settings">
-                    <div className="bg-white flex flex-col gap-2 p-1">
-                      <Link
-                        href={{
-                          pathname: "/admin/setting/frontend-setting",
-                        }}
-                        shallow
-                        className="text-14 hover:text-primary"
-                      >
-                        Front-end Settings
-                      </Link>
-                      <Link
-                        href={{
-                          pathname: "/admin/setting/user-setting",
-                        }}
-                        shallow
-                        className="text-14 hover:text-primary"
-                      >
-                        User Settings
-                      </Link>
-                    </div>
-                  </Accordion>
-                )}
-              </li> */}
-
               <li
                 onClick={() => toggleAccordionSub("setting")}
-                className={`hover:bg-primary  group flex items-center  gap-2 ${
+                className={`hover:bg-primary  group flex items-center justify-between   ${
                   pathname.includes("/admin/setting") && "bg-primary"
                 } cursor-pointer ${
                   isToggleOpen.setting ? "border-b-2 border-primary" : ""
                 }`}
               >
-                <span className="">
-                  <svg
-                    className={`w-5 h-5 fill-current text-primary group-hover:text-white transition-colors duration-300
+                <div className="flex items-center gap-2">
+                  <span className="">
+                    <svg
+                      className={`w-5 h-5 fill-current text-primary group-hover:text-white transition-colors duration-300
                       ${pathname.includes("/admin/setting") && "text-white"}`}
-                    // fill="#348739"
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 640 512"
-                  >
-                    <path d="M308.5 135.3c7.1-6.3 9.9-16.2 6.2-25c-2.3-5.3-4.8-10.5-7.6-15.5L304 89.4c-3-5-6.3-9.9-9.8-14.6c-5.7-7.6-15.7-10.1-24.7-7.1l-28.2 9.3c-10.7-8.8-23-16-36.2-20.9L199 27.1c-1.9-9.3-9.1-16.7-18.5-17.8C173.9 8.4 167.2 8 160.4 8h-.7c-6.8 0-13.5 .4-20.1 1.2c-9.4 1.1-16.6 8.6-18.5 17.8L115 56.1c-13.3 5-25.5 12.1-36.2 20.9L50.5 67.8c-9-3-19-.5-24.7 7.1c-3.5 4.7-6.8 9.6-9.9 14.6l-3 5.3c-2.8 5-5.3 10.2-7.6 15.6c-3.7 8.7-.9 18.6 6.2 25l22.2 19.8C32.6 161.9 32 168.9 32 176s.6 14.1 1.7 20.9L11.5 216.7c-7.1 6.3-9.9 16.2-6.2 25c2.3 5.3 4.8 10.5 7.6 15.6l3 5.2c3 5.1 6.3 9.9 9.9 14.6c5.7 7.6 15.7 10.1 24.7 7.1l28.2-9.3c10.7 8.8 23 16 36.2 20.9l6.1 29.1c1.9 9.3 9.1 16.7 18.5 17.8c6.7 .8 13.5 1.2 20.4 1.2s13.7-.4 20.4-1.2c9.4-1.1 16.6-8.6 18.5-17.8l6.1-29.1c13.3-5 25.5-12.1 36.2-20.9l28.2 9.3c9 3 19 .5 24.7-7.1c3.5-4.7 6.8-9.5 9.8-14.6l3.1-5.4c2.8-5 5.3-10.2 7.6-15.5c3.7-8.7 .9-18.6-6.2-25l-22.2-19.8c1.1-6.8 1.7-13.8 1.7-20.9s-.6-14.1-1.7-20.9l22.2-19.8zM112 176a48 48 0 1 1 96 0 48 48 0 1 1 -96 0zM504.7 500.5c6.3 7.1 16.2 9.9 25 6.2c5.3-2.3 10.5-4.8 15.5-7.6l5.4-3.1c5-3 9.9-6.3 14.6-9.8c7.6-5.7 10.1-15.7 7.1-24.7l-9.3-28.2c8.8-10.7 16-23 20.9-36.2l29.1-6.1c9.3-1.9 16.7-9.1 17.8-18.5c.8-6.7 1.2-13.5 1.2-20.4s-.4-13.7-1.2-20.4c-1.1-9.4-8.6-16.6-17.8-18.5L583.9 307c-5-13.3-12.1-25.5-20.9-36.2l9.3-28.2c3-9 .5-19-7.1-24.7c-4.7-3.5-9.6-6.8-14.6-9.9l-5.3-3c-5-2.8-10.2-5.3-15.6-7.6c-8.7-3.7-18.6-.9-25 6.2l-19.8 22.2c-6.8-1.1-13.8-1.7-20.9-1.7s-14.1 .6-20.9 1.7l-19.8-22.2c-6.3-7.1-16.2-9.9-25-6.2c-5.3 2.3-10.5 4.8-15.6 7.6l-5.2 3c-5.1 3-9.9 6.3-14.6 9.9c-7.6 5.7-10.1 15.7-7.1 24.7l9.3 28.2c-8.8 10.7-16 23-20.9 36.2L315.1 313c-9.3 1.9-16.7 9.1-17.8 18.5c-.8 6.7-1.2 13.5-1.2 20.4s.4 13.7 1.2 20.4c1.1 9.4 8.6 16.6 17.8 18.5l29.1 6.1c5 13.3 12.1 25.5 20.9 36.2l-9.3 28.2c-3 9-.5 19 7.1 24.7c4.7 3.5 9.5 6.8 14.6 9.8l5.4 3.1c5 2.8 10.2 5.3 15.5 7.6c8.7 3.7 18.6 .9 25-6.2l19.8-22.2c6.8 1.1 13.8 1.7 20.9 1.7s14.1-.6 20.9-1.7l19.8 22.2zM464 304a48 48 0 1 1 0 96 48 48 0 1 1 0-96z" />
-                  </svg>
-                </span>
+                      // fill="#348739"
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 640 512"
+                    >
+                      <path d="M308.5 135.3c7.1-6.3 9.9-16.2 6.2-25c-2.3-5.3-4.8-10.5-7.6-15.5L304 89.4c-3-5-6.3-9.9-9.8-14.6c-5.7-7.6-15.7-10.1-24.7-7.1l-28.2 9.3c-10.7-8.8-23-16-36.2-20.9L199 27.1c-1.9-9.3-9.1-16.7-18.5-17.8C173.9 8.4 167.2 8 160.4 8h-.7c-6.8 0-13.5 .4-20.1 1.2c-9.4 1.1-16.6 8.6-18.5 17.8L115 56.1c-13.3 5-25.5 12.1-36.2 20.9L50.5 67.8c-9-3-19-.5-24.7 7.1c-3.5 4.7-6.8 9.6-9.9 14.6l-3 5.3c-2.8 5-5.3 10.2-7.6 15.6c-3.7 8.7-.9 18.6 6.2 25l22.2 19.8C32.6 161.9 32 168.9 32 176s.6 14.1 1.7 20.9L11.5 216.7c-7.1 6.3-9.9 16.2-6.2 25c2.3 5.3 4.8 10.5 7.6 15.6l3 5.2c3 5.1 6.3 9.9 9.9 14.6c5.7 7.6 15.7 10.1 24.7 7.1l28.2-9.3c10.7 8.8 23 16 36.2 20.9l6.1 29.1c1.9 9.3 9.1 16.7 18.5 17.8c6.7 .8 13.5 1.2 20.4 1.2s13.7-.4 20.4-1.2c9.4-1.1 16.6-8.6 18.5-17.8l6.1-29.1c13.3-5 25.5-12.1 36.2-20.9l28.2 9.3c9 3 19 .5 24.7-7.1c3.5-4.7 6.8-9.5 9.8-14.6l3.1-5.4c2.8-5 5.3-10.2 7.6-15.5c3.7-8.7 .9-18.6-6.2-25l-22.2-19.8c1.1-6.8 1.7-13.8 1.7-20.9s-.6-14.1-1.7-20.9l22.2-19.8zM112 176a48 48 0 1 1 96 0 48 48 0 1 1 -96 0zM504.7 500.5c6.3 7.1 16.2 9.9 25 6.2c5.3-2.3 10.5-4.8 15.5-7.6l5.4-3.1c5-3 9.9-6.3 14.6-9.8c7.6-5.7 10.1-15.7 7.1-24.7l-9.3-28.2c8.8-10.7 16-23 20.9-36.2l29.1-6.1c9.3-1.9 16.7-9.1 17.8-18.5c.8-6.7 1.2-13.5 1.2-20.4s-.4-13.7-1.2-20.4c-1.1-9.4-8.6-16.6-17.8-18.5L583.9 307c-5-13.3-12.1-25.5-20.9-36.2l9.3-28.2c3-9 .5-19-7.1-24.7c-4.7-3.5-9.6-6.8-14.6-9.9l-5.3-3c-5-2.8-10.2-5.3-15.6-7.6c-8.7-3.7-18.6-.9-25 6.2l-19.8 22.2c-6.8-1.1-13.8-1.7-20.9-1.7s-14.1 .6-20.9 1.7l-19.8-22.2c-6.3-7.1-16.2-9.9-25-6.2c-5.3 2.3-10.5 4.8-15.6 7.6l-5.2 3c-5.1 3-9.9 6.3-14.6 9.9c-7.6 5.7-10.1 15.7-7.1 24.7l9.3 28.2c-8.8 10.7-16 23-20.9 36.2L315.1 313c-9.3 1.9-16.7 9.1-17.8 18.5c-.8 6.7-1.2 13.5-1.2 20.4s.4 13.7 1.2 20.4c1.1 9.4 8.6 16.6 17.8 18.5l29.1 6.1c5 13.3 12.1 25.5 20.9 36.2l-9.3 28.2c-3 9-.5 19 7.1 24.7c4.7 3.5 9.5 6.8 14.6 9.8l5.4 3.1c5 2.8 10.2 5.3 15.5 7.6c8.7 3.7 18.6 .9 25-6.2l19.8-22.2c6.8 1.1 13.8 1.7 20.9 1.7s14.1-.6 20.9-1.7l19.8 22.2zM464 304a48 48 0 1 1 0 96 48 48 0 1 1 0-96z" />
+                    </svg>
+                  </span>
 
-                <span
-                  className={`text-15 text-primary group-hover:text-white  ${
-                    isOpen ? "block" : "hidden"
-                  } ${pathname.includes("/admin/setting") && "text-white"}`}
-                >
-                  Settings
-                </span>
+                  <span
+                    className={`text-15 text-primary group-hover:text-white  ${
+                      isOpen ? "block" : "hidden"
+                    } ${pathname.includes("/admin/setting") && "text-white"}`}
+                  >
+                    Frontend Settings
+                  </span>
+                </div>
 
                 <span
                   className={`transition-transform duration-300 ${
@@ -354,34 +285,33 @@ const Sidebar = () => {
                         pathname: "/admin/setting/frontend-setting",
                       }}
                       shallow
-                      className={`text-14 hover:text-primary ${
+                      className={`text-14 hover:bg-green-500 px-2 py-1 rounded hover:text-white ${
                         pathname.includes("/admin/setting/frontend-setting")
-                          ? "text-primary font-semibold"
+                          ? "bg-green-500 text-white font-semibold"
                           : "text-black"
                       }`}
                     >
-                      Front-end Settings
+                     General Settings
                     </Link>
-                    <Link
+                    {/* <Link
                       href={{
                         pathname: "/admin/setting/user-setting",
                       }}
                       shallow
-                      className={`text-14 hover:text-primary ${
+                      className={`text-14 hover:bg-green-500 px-2 py-1 rounded hover:text-white ${
                         pathname.includes("/admin/setting/user-setting")
-                          ? "text-primary font-semibold"
+                          ? "bg-green-500 text-white font-semibold"
                           : "text-black"
                       }`}
                     >
                       User Settings
-                    </Link>
+                    </Link> */}
                   </div>
                 </NewAccordion>
               )}
-
-              <li
+              {/* <li
                 onClick={() => toggleAccordionSub("alc")}
-                className={`hover:bg-primary  group flex items-center  gap-2 ${
+                className={`hover:bg-primary  group flex items-center  justify-between ${
                   (pathname.includes("user-list") ||
                     pathname.includes("manage-role") ||
                     pathname.includes("permission-management")) &&
@@ -390,35 +320,37 @@ const Sidebar = () => {
                   isToggleOpen.alc ? "border-b-2 border-primary" : ""
                 }`}
               >
-                <span className="">
-                  <svg
-                    className={`w-5 h-5 fill-current text-primary group-hover:text-white transition-colors duration-300
+                <div className="flex items-center gap-2">
+                  <span className="">
+                    <svg
+                      className={`w-5 h-5 fill-current text-primary group-hover:text-white transition-colors duration-300
                       ${
                         (pathname.includes("user-list") ||
                           pathname.includes("manage-role") ||
                           pathname.includes("permission-management")) &&
                         "text-white"
                       }`}
-                    // fill="#348739"
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 640 512"
-                  >
-                    <path d="M308.5 135.3c7.1-6.3 9.9-16.2 6.2-25c-2.3-5.3-4.8-10.5-7.6-15.5L304 89.4c-3-5-6.3-9.9-9.8-14.6c-5.7-7.6-15.7-10.1-24.7-7.1l-28.2 9.3c-10.7-8.8-23-16-36.2-20.9L199 27.1c-1.9-9.3-9.1-16.7-18.5-17.8C173.9 8.4 167.2 8 160.4 8h-.7c-6.8 0-13.5 .4-20.1 1.2c-9.4 1.1-16.6 8.6-18.5 17.8L115 56.1c-13.3 5-25.5 12.1-36.2 20.9L50.5 67.8c-9-3-19-.5-24.7 7.1c-3.5 4.7-6.8 9.6-9.9 14.6l-3 5.3c-2.8 5-5.3 10.2-7.6 15.6c-3.7 8.7-.9 18.6 6.2 25l22.2 19.8C32.6 161.9 32 168.9 32 176s.6 14.1 1.7 20.9L11.5 216.7c-7.1 6.3-9.9 16.2-6.2 25c2.3 5.3 4.8 10.5 7.6 15.6l3 5.2c3 5.1 6.3 9.9 9.9 14.6c5.7 7.6 15.7 10.1 24.7 7.1l28.2-9.3c10.7 8.8 23 16 36.2 20.9l6.1 29.1c1.9 9.3 9.1 16.7 18.5 17.8c6.7 .8 13.5 1.2 20.4 1.2s13.7-.4 20.4-1.2c9.4-1.1 16.6-8.6 18.5-17.8l6.1-29.1c13.3-5 25.5-12.1 36.2-20.9l28.2 9.3c9 3 19 .5 24.7-7.1c3.5-4.7 6.8-9.5 9.8-14.6l3.1-5.4c2.8-5 5.3-10.2 7.6-15.5c3.7-8.7 .9-18.6-6.2-25l-22.2-19.8c1.1-6.8 1.7-13.8 1.7-20.9s-.6-14.1-1.7-20.9l22.2-19.8zM112 176a48 48 0 1 1 96 0 48 48 0 1 1 -96 0zM504.7 500.5c6.3 7.1 16.2 9.9 25 6.2c5.3-2.3 10.5-4.8 15.5-7.6l5.4-3.1c5-3 9.9-6.3 14.6-9.8c7.6-5.7 10.1-15.7 7.1-24.7l-9.3-28.2c8.8-10.7 16-23 20.9-36.2l29.1-6.1c9.3-1.9 16.7-9.1 17.8-18.5c.8-6.7 1.2-13.5 1.2-20.4s-.4-13.7-1.2-20.4c-1.1-9.4-8.6-16.6-17.8-18.5L583.9 307c-5-13.3-12.1-25.5-20.9-36.2l9.3-28.2c3-9 .5-19-7.1-24.7c-4.7-3.5-9.6-6.8-14.6-9.9l-5.3-3c-5-2.8-10.2-5.3-15.6-7.6c-8.7-3.7-18.6-.9-25 6.2l-19.8 22.2c-6.8-1.1-13.8-1.7-20.9-1.7s-14.1 .6-20.9 1.7l-19.8-22.2c-6.3-7.1-16.2-9.9-25-6.2c-5.3 2.3-10.5 4.8-15.6 7.6l-5.2 3c-5.1 3-9.9 6.3-14.6 9.9c-7.6 5.7-10.1 15.7-7.1 24.7l9.3 28.2c-8.8 10.7-16 23-20.9 36.2L315.1 313c-9.3 1.9-16.7 9.1-17.8 18.5c-.8 6.7-1.2 13.5-1.2 20.4s.4 13.7 1.2 20.4c1.1 9.4 8.6 16.6 17.8 18.5l29.1 6.1c5 13.3 12.1 25.5 20.9 36.2l-9.3 28.2c-3 9-.5 19 7.1 24.7c4.7 3.5 9.5 6.8 14.6 9.8l5.4 3.1c5 2.8 10.2 5.3 15.5 7.6c8.7 3.7 18.6 .9 25-6.2l19.8-22.2c6.8 1.1 13.8 1.7 20.9 1.7s14.1-.6 20.9-1.7l19.8 22.2zM464 304a48 48 0 1 1 0 96 48 48 0 1 1 0-96z" />
-                  </svg>
-                </span>
+                      // fill="#348739"
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 640 512"
+                    >
+                      <path d="M308.5 135.3c7.1-6.3 9.9-16.2 6.2-25c-2.3-5.3-4.8-10.5-7.6-15.5L304 89.4c-3-5-6.3-9.9-9.8-14.6c-5.7-7.6-15.7-10.1-24.7-7.1l-28.2 9.3c-10.7-8.8-23-16-36.2-20.9L199 27.1c-1.9-9.3-9.1-16.7-18.5-17.8C173.9 8.4 167.2 8 160.4 8h-.7c-6.8 0-13.5 .4-20.1 1.2c-9.4 1.1-16.6 8.6-18.5 17.8L115 56.1c-13.3 5-25.5 12.1-36.2 20.9L50.5 67.8c-9-3-19-.5-24.7 7.1c-3.5 4.7-6.8 9.6-9.9 14.6l-3 5.3c-2.8 5-5.3 10.2-7.6 15.6c-3.7 8.7-.9 18.6 6.2 25l22.2 19.8C32.6 161.9 32 168.9 32 176s.6 14.1 1.7 20.9L11.5 216.7c-7.1 6.3-9.9 16.2-6.2 25c2.3 5.3 4.8 10.5 7.6 15.6l3 5.2c3 5.1 6.3 9.9 9.9 14.6c5.7 7.6 15.7 10.1 24.7 7.1l28.2-9.3c10.7 8.8 23 16 36.2 20.9l6.1 29.1c1.9 9.3 9.1 16.7 18.5 17.8c6.7 .8 13.5 1.2 20.4 1.2s13.7-.4 20.4-1.2c9.4-1.1 16.6-8.6 18.5-17.8l6.1-29.1c13.3-5 25.5-12.1 36.2-20.9l28.2 9.3c9 3 19 .5 24.7-7.1c3.5-4.7 6.8-9.5 9.8-14.6l3.1-5.4c2.8-5 5.3-10.2 7.6-15.5c3.7-8.7 .9-18.6-6.2-25l-22.2-19.8c1.1-6.8 1.7-13.8 1.7-20.9s-.6-14.1-1.7-20.9l22.2-19.8zM112 176a48 48 0 1 1 96 0 48 48 0 1 1 -96 0zM504.7 500.5c6.3 7.1 16.2 9.9 25 6.2c5.3-2.3 10.5-4.8 15.5-7.6l5.4-3.1c5-3 9.9-6.3 14.6-9.8c7.6-5.7 10.1-15.7 7.1-24.7l-9.3-28.2c8.8-10.7 16-23 20.9-36.2l29.1-6.1c9.3-1.9 16.7-9.1 17.8-18.5c.8-6.7 1.2-13.5 1.2-20.4s-.4-13.7-1.2-20.4c-1.1-9.4-8.6-16.6-17.8-18.5L583.9 307c-5-13.3-12.1-25.5-20.9-36.2l9.3-28.2c3-9 .5-19-7.1-24.7c-4.7-3.5-9.6-6.8-14.6-9.9l-5.3-3c-5-2.8-10.2-5.3-15.6-7.6c-8.7-3.7-18.6-.9-25 6.2l-19.8 22.2c-6.8-1.1-13.8-1.7-20.9-1.7s-14.1 .6-20.9 1.7l-19.8-22.2c-6.3-7.1-16.2-9.9-25-6.2c-5.3 2.3-10.5 4.8-15.6 7.6l-5.2 3c-5.1 3-9.9 6.3-14.6 9.9c-7.6 5.7-10.1 15.7-7.1 24.7l9.3 28.2c-8.8 10.7-16 23-20.9 36.2L315.1 313c-9.3 1.9-16.7 9.1-17.8 18.5c-.8 6.7-1.2 13.5-1.2 20.4s.4 13.7 1.2 20.4c1.1 9.4 8.6 16.6 17.8 18.5l29.1 6.1c5 13.3 12.1 25.5 20.9 36.2l-9.3 28.2c-3 9-.5 19 7.1 24.7c4.7 3.5 9.5 6.8 14.6 9.8l5.4 3.1c5 2.8 10.2 5.3 15.5 7.6c8.7 3.7 18.6 .9 25-6.2l19.8-22.2c6.8 1.1 13.8 1.7 20.9 1.7s14.1-.6 20.9-1.7l19.8 22.2zM464 304a48 48 0 1 1 0 96 48 48 0 1 1 0-96z" />
+                    </svg>
+                  </span>
 
-                <span
-                  className={`text-15 text-primary group-hover:text-white ${
-                    isOpen ? "block" : "hidden"
-                  } ${
-                    (pathname.includes("user-list") ||
-                      pathname.includes("manage-role") ||
-                      pathname.includes("permission-management")) &&
-                    "text-white"
-                  }`}
-                >
-                  ACL
-                </span>
+                  <span
+                    className={`text-15 text-primary group-hover:text-white ${
+                      isOpen ? "block" : "hidden"
+                    } ${
+                      (pathname.includes("user-list") ||
+                        pathname.includes("manage-role") ||
+                        pathname.includes("permission-management")) &&
+                      "text-white"
+                    }`}
+                  >
+                    ACL Manage
+                  </span>
+                </div>
 
                 <span
                   className={`transition-transform duration-300 ${
@@ -449,9 +381,9 @@ const Sidebar = () => {
                         pathname: "/admin/user-list",
                       }}
                       shallow
-                      className={`text-14 hover:text-primary ${
+                      className={`text-14 hover:bg-green-500 px-2 py-1 rounded hover:text-white ${
                         pathname.includes("/admin/user-list")
-                          ? "text-primary font-semibold"
+                          ? "bg-green-500 text-white font-semibold"
                           : "text-black"
                       }`}
                     >
@@ -462,9 +394,9 @@ const Sidebar = () => {
                         pathname: "/admin/manage-role",
                       }}
                       shallow
-                      className={`text-14 hover:text-primary ${
+                      className={`text-14 hover:bg-green-500 px-2 py-1 rounded hover:text-white ${
                         pathname.includes("/admin/manage-role")
-                          ? "text-primary font-semibold"
+                          ? "bg-green-500 text-white font-semibold"
                           : "text-black"
                       }`}
                     >
@@ -475,9 +407,9 @@ const Sidebar = () => {
                         pathname: "/admin/permission-management",
                       }}
                       shallow
-                      className={`text-14 hover:text-primary ${
+                      className={`text-14 hover:bg-green-500 px-2 py-1 rounded hover:text-white ${
                         pathname.includes("/admin/permission-management")
-                          ? "text-primary font-semibold"
+                          ? "bg-green-500 text-white font-semibold"
                           : "text-black"
                       }`}
                     >
@@ -485,37 +417,44 @@ const Sidebar = () => {
                     </Link>
                   </div>
                 </NewAccordion>
-              )}
-
-           
-
+              )} */}
               <li
                 onClick={() => toggleAccordionSub("accounts-settings")}
-                className={`hover:bg-primary  group flex items-center  gap-2 ${
+                className={`hover:bg-primary  group flex items-center  justify-between ${
                   pathname.includes("/admin/accounts-settings") && "bg-primary"
                 } cursor-pointer ${
-                  isToggleOpen.accountsSettings ? "border-b-2 border-primary" : ""
+                  isToggleOpen.accountsSettings
+                    ? "border-b-2 border-primary"
+                    : ""
                 }`}
               >
-                <span className="">
-                  <svg
-                    className={`w-5 h-5 fill-current text-primary group-hover:text-white transition-colors duration-300
-                      ${pathname.includes("/admin/accounts-settings") && "text-white"}`}
-                    // fill="#348739"
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 640 512"
-                  >
-                    <path d="M308.5 135.3c7.1-6.3 9.9-16.2 6.2-25c-2.3-5.3-4.8-10.5-7.6-15.5L304 89.4c-3-5-6.3-9.9-9.8-14.6c-5.7-7.6-15.7-10.1-24.7-7.1l-28.2 9.3c-10.7-8.8-23-16-36.2-20.9L199 27.1c-1.9-9.3-9.1-16.7-18.5-17.8C173.9 8.4 167.2 8 160.4 8h-.7c-6.8 0-13.5 .4-20.1 1.2c-9.4 1.1-16.6 8.6-18.5 17.8L115 56.1c-13.3 5-25.5 12.1-36.2 20.9L50.5 67.8c-9-3-19-.5-24.7 7.1c-3.5 4.7-6.8 9.6-9.9 14.6l-3 5.3c-2.8 5-5.3 10.2-7.6 15.6c-3.7 8.7-.9 18.6 6.2 25l22.2 19.8C32.6 161.9 32 168.9 32 176s.6 14.1 1.7 20.9L11.5 216.7c-7.1 6.3-9.9 16.2-6.2 25c2.3 5.3 4.8 10.5 7.6 15.6l3 5.2c3 5.1 6.3 9.9 9.9 14.6c5.7 7.6 15.7 10.1 24.7 7.1l28.2-9.3c10.7 8.8 23 16 36.2 20.9l6.1 29.1c1.9 9.3 9.1 16.7 18.5 17.8c6.7 .8 13.5 1.2 20.4 1.2s13.7-.4 20.4-1.2c9.4-1.1 16.6-8.6 18.5-17.8l6.1-29.1c13.3-5 25.5-12.1 36.2-20.9l28.2 9.3c9 3 19 .5 24.7-7.1c3.5-4.7 6.8-9.5 9.8-14.6l3.1-5.4c2.8-5 5.3-10.2 7.6-15.5c3.7-8.7 .9-18.6-6.2-25l-22.2-19.8c1.1-6.8 1.7-13.8 1.7-20.9s-.6-14.1-1.7-20.9l22.2-19.8zM112 176a48 48 0 1 1 96 0 48 48 0 1 1 -96 0zM504.7 500.5c6.3 7.1 16.2 9.9 25 6.2c5.3-2.3 10.5-4.8 15.5-7.6l5.4-3.1c5-3 9.9-6.3 14.6-9.8c7.6-5.7 10.1-15.7 7.1-24.7l-9.3-28.2c8.8-10.7 16-23 20.9-36.2l29.1-6.1c9.3-1.9 16.7-9.1 17.8-18.5c.8-6.7 1.2-13.5 1.2-20.4s-.4-13.7-1.2-20.4c-1.1-9.4-8.6-16.6-17.8-18.5L583.9 307c-5-13.3-12.1-25.5-20.9-36.2l9.3-28.2c3-9 .5-19-7.1-24.7c-4.7-3.5-9.6-6.8-14.6-9.9l-5.3-3c-5-2.8-10.2-5.3-15.6-7.6c-8.7-3.7-18.6-.9-25 6.2l-19.8 22.2c-6.8-1.1-13.8-1.7-20.9-1.7s-14.1 .6-20.9 1.7l-19.8-22.2c-6.3-7.1-16.2-9.9-25-6.2c-5.3 2.3-10.5 4.8-15.6 7.6l-5.2 3c-5.1 3-9.9 6.3-14.6 9.9c-7.6 5.7-10.1 15.7-7.1 24.7l9.3 28.2c-8.8 10.7-16 23-20.9 36.2L315.1 313c-9.3 1.9-16.7 9.1-17.8 18.5c-.8 6.7-1.2 13.5-1.2 20.4s.4 13.7 1.2 20.4c1.1 9.4 8.6 16.6 17.8 18.5l29.1 6.1c5 13.3 12.1 25.5 20.9 36.2l-9.3 28.2c-3 9-.5 19 7.1 24.7c4.7 3.5 9.5 6.8 14.6 9.8l5.4 3.1c5 2.8 10.2 5.3 15.5 7.6c8.7 3.7 18.6 .9 25-6.2l19.8-22.2c6.8 1.1 13.8 1.7 20.9 1.7s14.1-.6 20.9-1.7l19.8 22.2zM464 304a48 48 0 1 1 0 96 48 48 0 1 1 0-96z" />
-                  </svg>
-                </span>
+                <div className="flex items-center gap-2">
+                  <span className="">
+                    <svg
+                      className={`w-5 h-5 fill-current text-primary group-hover:text-white transition-colors duration-300
+                      ${
+                        pathname.includes("/admin/accounts-settings") &&
+                        "text-white"
+                      }`}
+                      // fill="#348739"
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 640 512"
+                    >
+                      <path d="M308.5 135.3c7.1-6.3 9.9-16.2 6.2-25c-2.3-5.3-4.8-10.5-7.6-15.5L304 89.4c-3-5-6.3-9.9-9.8-14.6c-5.7-7.6-15.7-10.1-24.7-7.1l-28.2 9.3c-10.7-8.8-23-16-36.2-20.9L199 27.1c-1.9-9.3-9.1-16.7-18.5-17.8C173.9 8.4 167.2 8 160.4 8h-.7c-6.8 0-13.5 .4-20.1 1.2c-9.4 1.1-16.6 8.6-18.5 17.8L115 56.1c-13.3 5-25.5 12.1-36.2 20.9L50.5 67.8c-9-3-19-.5-24.7 7.1c-3.5 4.7-6.8 9.6-9.9 14.6l-3 5.3c-2.8 5-5.3 10.2-7.6 15.6c-3.7 8.7-.9 18.6 6.2 25l22.2 19.8C32.6 161.9 32 168.9 32 176s.6 14.1 1.7 20.9L11.5 216.7c-7.1 6.3-9.9 16.2-6.2 25c2.3 5.3 4.8 10.5 7.6 15.6l3 5.2c3 5.1 6.3 9.9 9.9 14.6c5.7 7.6 15.7 10.1 24.7 7.1l28.2-9.3c10.7 8.8 23 16 36.2 20.9l6.1 29.1c1.9 9.3 9.1 16.7 18.5 17.8c6.7 .8 13.5 1.2 20.4 1.2s13.7-.4 20.4-1.2c9.4-1.1 16.6-8.6 18.5-17.8l6.1-29.1c13.3-5 25.5-12.1 36.2-20.9l28.2 9.3c9 3 19 .5 24.7-7.1c3.5-4.7 6.8-9.5 9.8-14.6l3.1-5.4c2.8-5 5.3-10.2 7.6-15.5c3.7-8.7 .9-18.6-6.2-25l-22.2-19.8c1.1-6.8 1.7-13.8 1.7-20.9s-.6-14.1-1.7-20.9l22.2-19.8zM112 176a48 48 0 1 1 96 0 48 48 0 1 1 -96 0zM504.7 500.5c6.3 7.1 16.2 9.9 25 6.2c5.3-2.3 10.5-4.8 15.5-7.6l5.4-3.1c5-3 9.9-6.3 14.6-9.8c7.6-5.7 10.1-15.7 7.1-24.7l-9.3-28.2c8.8-10.7 16-23 20.9-36.2l29.1-6.1c9.3-1.9 16.7-9.1 17.8-18.5c.8-6.7 1.2-13.5 1.2-20.4s-.4-13.7-1.2-20.4c-1.1-9.4-8.6-16.6-17.8-18.5L583.9 307c-5-13.3-12.1-25.5-20.9-36.2l9.3-28.2c3-9 .5-19-7.1-24.7c-4.7-3.5-9.6-6.8-14.6-9.9l-5.3-3c-5-2.8-10.2-5.3-15.6-7.6c-8.7-3.7-18.6-.9-25 6.2l-19.8 22.2c-6.8-1.1-13.8-1.7-20.9-1.7s-14.1 .6-20.9 1.7l-19.8-22.2c-6.3-7.1-16.2-9.9-25-6.2c-5.3 2.3-10.5 4.8-15.6 7.6l-5.2 3c-5.1 3-9.9 6.3-14.6 9.9c-7.6 5.7-10.1 15.7-7.1 24.7l9.3 28.2c-8.8 10.7-16 23-20.9 36.2L315.1 313c-9.3 1.9-16.7 9.1-17.8 18.5c-.8 6.7-1.2 13.5-1.2 20.4s.4 13.7 1.2 20.4c1.1 9.4 8.6 16.6 17.8 18.5l29.1 6.1c5 13.3 12.1 25.5 20.9 36.2l-9.3 28.2c-3 9-.5 19 7.1 24.7c4.7 3.5 9.5 6.8 14.6 9.8l5.4 3.1c5 2.8 10.2 5.3 15.5 7.6c8.7 3.7 18.6 .9 25-6.2l19.8-22.2c6.8 1.1 13.8 1.7 20.9 1.7s14.1-.6 20.9-1.7l19.8 22.2zM464 304a48 48 0 1 1 0 96 48 48 0 1 1 0-96z" />
+                    </svg>
+                  </span>
 
-                <span
-                  className={`text-15 text-primary group-hover:text-white  ${
-                    isOpen ? "block" : "hidden"
-                  } ${pathname.includes("/admin/accounts-settings") && "text-white"}`}
-                >
-                  Account Settings
-                </span>
+                  <span
+                    className={`text-15 text-primary group-hover:text-white  ${
+                      isOpen ? "block" : "hidden"
+                    } ${
+                      pathname.includes("/admin/accounts-settings") &&
+                      "text-white"
+                    }`}
+                  >
+                    Manage Sale
+                  </span>
+                </div>
 
                 <span
                   className={`transition-transform duration-300 ${
@@ -524,7 +463,8 @@ const Sidebar = () => {
                 >
                   <svg
                     className={`w-3 h-3 fill-current text-primary group-hover:text-white transition-colors duration-300 ${
-                      pathname.includes("/admin/accounts-settings") && "text-white"
+                      pathname.includes("/admin/accounts-settings") &&
+                      "text-white"
                     }`}
                     xmlns="http://www.w3.org/2000/svg"
                     viewBox="0 0 448 512"
@@ -534,144 +474,49 @@ const Sidebar = () => {
                 </span>
               </li>
               {isOpen && (
-                <NewAccordion isOpen={isToggleOpen.accountsSettings}>
-                  <div className="ms-3 flex flex-col">    
-                    <Link
-                      href={{
-                        pathname: "/admin/accounts-settings/purchase-services",
-                      }}
-                      shallow
-                      className={`text-14 hover:text-primary ${
-                        pathname.includes("/admin/accounts-settings/purchase-services")
-                          ? "text-primary font-semibold"
-                          : "text-black"
-                      }`}
-                    >
-                      Purchase Services
-                    </Link>
-                    <Link
-                      href={{
-                        pathname: "/admin/accounts-settings/payment-history",
-                      }}
-                      shallow
-                      className={`text-14 hover:text-primary ${
-                        pathname.includes("/admin/accounts-settings/payment-history")
-                          ? "text-primary font-semibold"
-                          : "text-black"
-                      }`}
-                    >
-                     Payment History
-                    </Link>
-                  </div>
-                </NewAccordion>
+
+
+
+<NewAccordion isOpen={isToggleOpen.accountsSettings}>
+
+             
+<div className="ms-3 flex flex-col gap-2 p-1">
+   
+  <Link
+    href={{
+      pathname: "/admin/accounts-settings/purchase-services",
+    }}
+    shallow
+    className={`text-14 hover:bg-green-500 px-2 py-1 rounded hover:text-white ${
+      pathname.includes("/admin/accounts-settings/purchase-services")
+        ? "bg-green-500 text-white font-semibold"
+        : "text-black"
+    }`}
+  >
+    Sold Services
+  </Link>
+  <Link
+    href={{
+      pathname: "/admin/bill",
+    }}
+    shallow
+    className={`text-14 hover:bg-green-500 px-2 py-1 rounded hover:text-white ${
+      pathname.includes("/admin/bill")
+        ? "bg-green-500 text-white font-semibold"
+        : "text-black"
+    }`}
+  >
+    Citizen Payments List
+  </Link>
+ 
+</div>
+</NewAccordion>
+
+
               )}
-
+               
+              
               {/* <li
-                className={`hover:bg-[#E9FFD9] flex  gap-2 ${
-                  (pathname.includes("user-list") ||
-                    pathname.includes("manage-role") ||
-                    pathname.includes("permission-management")) &&
-                  "bg-[#E9FFD9]"
-                }`}
-              >
-                <span className="mt-[10px] ">
-                  <svg
-                    className="w-5 h-5 transition-colors duration-300 text-[#348739]"
-                    fill="currentColor"
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 640 512"
-                  >
-                    <path d="M308.5 135.3c7.1-6.3 9.9-16.2 6.2-25c-2.3-5.3-4.8-10.5-7.6-15.5L304 89.4c-3-5-6.3-9.9-9.8-14.6c-5.7-7.6-15.7-10.1-24.7-7.1l-28.2 9.3c-10.7-8.8-23-16-36.2-20.9L199 27.1c-1.9-9.3-9.1-16.7-18.5-17.8C173.9 8.4 167.2 8 160.4 8h-.7c-6.8 0-13.5 .4-20.1 1.2c-9.4 1.1-16.6 8.6-18.5 17.8L115 56.1c-13.3 5-25.5 12.1-36.2 20.9L50.5 67.8c-9-3-19-.5-24.7 7.1c-3.5 4.7-6.8 9.6-9.9 14.6l-3 5.3c-2.8 5-5.3 10.2-7.6 15.6c-3.7 8.7-.9 18.6 6.2 25l22.2 19.8C32.6 161.9 32 168.9 32 176s.6 14.1 1.7 20.9L11.5 216.7c-7.1 6.3-9.9 16.2-6.2 25c2.3 5.3 4.8 10.5 7.6 15.6l3 5.2c3 5.1 6.3 9.9 9.9 14.6c5.7 7.6 15.7 10.1 24.7 7.1l28.2-9.3c10.7 8.8 23 16 36.2 20.9l6.1 29.1c1.9 9.3 9.1 16.7 18.5 17.8c6.7 .8 13.5 1.2 20.4 1.2s13.7-.4 20.4-1.2c9.4-1.1 16.6-8.6 18.5-17.8l6.1-29.1c13.3-5 25.5-12.1 36.2-20.9l28.2 9.3c9 3 19 .5 24.7-7.1c3.5-4.7 6.8-9.5 9.8-14.6l3.1-5.4c2.8-5 5.3-10.2 7.6-15.5c3.7-8.7 .9-18.6-6.2-25l-22.2-19.8c1.1-6.8 1.7-13.8 1.7-20.9s-.6-14.1-1.7-20.9l22.2-19.8zM112 176a48 48 0 1 1 96 0 48 48 0 1 1 -96 0zM504.7 500.5c6.3 7.1 16.2 9.9 25 6.2c5.3-2.3 10.5-4.8 15.5-7.6l5.4-3.1c5-3 9.9-6.3 14.6-9.8c7.6-5.7 10.1-15.7 7.1-24.7l-9.3-28.2c8.8-10.7 16-23 20.9-36.2l29.1-6.1c9.3-1.9 16.7-9.1 17.8-18.5c.8-6.7 1.2-13.5 1.2-20.4s-.4-13.7-1.2-20.4c-1.1-9.4-8.6-16.6-17.8-18.5L583.9 307c-5-13.3-12.1-25.5-20.9-36.2l9.3-28.2c3-9 .5-19-7.1-24.7c-4.7-3.5-9.6-6.8-14.6-9.9l-5.3-3c-5-2.8-10.2-5.3-15.6-7.6c-8.7-3.7-18.6-.9-25 6.2l-19.8 22.2c-6.8-1.1-13.8-1.7-20.9-1.7s-14.1 .6-20.9 1.7l-19.8-22.2c-6.3-7.1-16.2-9.9-25-6.2c-5.3 2.3-10.5 4.8-15.6 7.6l-5.2 3c-5.1 3-9.9 6.3-14.6 9.9c-7.6 5.7-10.1 15.7-7.1 24.7l9.3 28.2c-8.8 10.7-16 23-20.9 36.2L315.1 313c-9.3 1.9-16.7 9.1-17.8 18.5c-.8 6.7-1.2 13.5-1.2 20.4s.4 13.7 1.2 20.4c1.1 9.4 8.6 16.6 17.8 18.5l29.1 6.1c5 13.3 12.1 25.5 20.9 36.2l-9.3 28.2c-3 9-.5 19 7.1 24.7c4.7 3.5 9.5 6.8 14.6 9.8l5.4 3.1c5 2.8 10.2 5.3 15.5 7.6c8.7 3.7 18.6 .9 25-6.2l19.8-22.2c6.8 1.1 13.8 1.7 20.9 1.7s14.1-.6 20.9-1.7l19.8 22.2zM464 304a48 48 0 1 1 0 96 48 48 0 1 1 0-96z" />
-                  </svg>
-                </span>
-                {isOpen && (
-                  <NewAccordion title="ACL">
-                    <div className="bg-white flex flex-col gap-2 p-1">
-                      <Link
-                        href={{
-                          pathname: "/admin/user-list",
-                        }}
-                        shallow
-                        className="text-14 hover:text-primary"
-                      >
-                        User List
-                      </Link>
-                      <Link
-                        href={{
-                          pathname: "/admin/manage-role",
-                        }}
-                        shallow
-                        className="text-14 hover:text-primary"
-                      >
-                        Manage Role
-                      </Link>
-                      <Link
-                        href={{
-                          pathname: "/admin/permission-management",
-                        }}
-                        shallow
-                        className="text-14 hover:text-primary"
-                      >
-                        Permission Management
-                      </Link>
-                    </div>
-                  </NewAccordion>
-                )}
-              </li> */}
-
-              {/* <li
-                className={`hover:bg-[#E9FFD9] flex  gap-2 ${
-                  (pathname.includes("user-list") ||
-                    pathname.includes("manage-role") ||
-                    pathname.includes("permission-management")) &&
-                  "bg-[#E9FFD9]"
-                }`}
-              >
-                <span>
-                  <svg
-                    className="w-5 h-5"
-                    fill="#348739"
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 640 512"
-                  >
-                    <path d="M308.5 135.3c7.1-6.3 9.9-16.2 6.2-25c-2.3-5.3-4.8-10.5-7.6-15.5L304 89.4c-3-5-6.3-9.9-9.8-14.6c-5.7-7.6-15.7-10.1-24.7-7.1l-28.2 9.3c-10.7-8.8-23-16-36.2-20.9L199 27.1c-1.9-9.3-9.1-16.7-18.5-17.8C173.9 8.4 167.2 8 160.4 8h-.7c-6.8 0-13.5 .4-20.1 1.2c-9.4 1.1-16.6 8.6-18.5 17.8L115 56.1c-13.3 5-25.5 12.1-36.2 20.9L50.5 67.8c-9-3-19-.5-24.7 7.1c-3.5 4.7-6.8 9.6-9.9 14.6l-3 5.3c-2.8 5-5.3 10.2-7.6 15.6c-3.7 8.7-.9 18.6 6.2 25l22.2 19.8C32.6 161.9 32 168.9 32 176s.6 14.1 1.7 20.9L11.5 216.7c-7.1 6.3-9.9 16.2-6.2 25c2.3 5.3 4.8 10.5 7.6 15.6l3 5.2c3 5.1 6.3 9.9 9.9 14.6c5.7 7.6 15.7 10.1 24.7 7.1l28.2-9.3c10.7 8.8 23 16 36.2 20.9l6.1 29.1c1.9 9.3 9.1 16.7 18.5 17.8c6.7 .8 13.5 1.2 20.4 1.2s13.7-.4 20.4-1.2c9.4-1.1 16.6-8.6 18.5-17.8l6.1-29.1c13.3-5 25.5-12.1 36.2-20.9l28.2 9.3c9 3 19 .5 24.7-7.1c3.5-4.7 6.8-9.5 9.8-14.6l3.1-5.4c2.8-5 5.3-10.2 7.6-15.5c3.7-8.7 .9-18.6-6.2-25l-22.2-19.8c1.1-6.8 1.7-13.8 1.7-20.9s-.6-14.1-1.7-20.9l22.2-19.8zM112 176a48 48 0 1 1 96 0 48 48 0 1 1 -96 0zM504.7 500.5c6.3 7.1 16.2 9.9 25 6.2c5.3-2.3 10.5-4.8 15.5-7.6l5.4-3.1c5-3 9.9-6.3 14.6-9.8c7.6-5.7 10.1-15.7 7.1-24.7l-9.3-28.2c8.8-10.7 16-23 20.9-36.2l29.1-6.1c9.3-1.9 16.7-9.1 17.8-18.5c.8-6.7 1.2-13.5 1.2-20.4s-.4-13.7-1.2-20.4c-1.1-9.4-8.6-16.6-17.8-18.5L583.9 307c-5-13.3-12.1-25.5-20.9-36.2l9.3-28.2c3-9 .5-19-7.1-24.7c-4.7-3.5-9.6-6.8-14.6-9.9l-5.3-3c-5-2.8-10.2-5.3-15.6-7.6c-8.7-3.7-18.6-.9-25 6.2l-19.8 22.2c-6.8-1.1-13.8-1.7-20.9-1.7s-14.1 .6-20.9 1.7l-19.8-22.2c-6.3-7.1-16.2-9.9-25-6.2c-5.3 2.3-10.5 4.8-15.6 7.6l-5.2 3c-5.1 3-9.9 6.3-14.6 9.9c-7.6 5.7-10.1 15.7-7.1 24.7l9.3 28.2c-8.8 10.7-16 23-20.9 36.2L315.1 313c-9.3 1.9-16.7 9.1-17.8 18.5c-.8 6.7-1.2 13.5-1.2 20.4s.4 13.7 1.2 20.4c1.1 9.4 8.6 16.6 17.8 18.5l29.1 6.1c5 13.3 12.1 25.5 20.9 36.2l-9.3 28.2c-3 9-.5 19 7.1 24.7c4.7 3.5 9.5 6.8 14.6 9.8l5.4 3.1c5 2.8 10.2 5.3 15.5 7.6c8.7 3.7 18.6 .9 25-6.2l19.8-22.2c6.8 1.1 13.8 1.7 20.9 1.7s14.1-.6 20.9-1.7l19.8 22.2zM464 304a48 48 0 1 1 0 96 48 48 0 1 1 0-96z" />
-                  </svg>
-                </span>
-                {isOpen && (
-                  <Accordion title="ACL">
-                    <div className="bg-white flex flex-col gap-2 p-1">
-                      <Link
-                        href={{
-                          pathname: "/admin/user-list",
-                        }}
-                        shallow
-                        className="text-14 hover:text-primary"
-                      >
-                        User List
-                      </Link>
-                      <Link
-                        href={{
-                          pathname: "/admin/manage-role",
-                        }}
-                        shallow
-                        className="text-14 hover:text-primary"
-                      >
-                        Manage Role
-                      </Link>
-                      <Link
-                        href={{
-                          pathname: "/admin/permission-management",
-                        }}
-                        shallow
-                        className="text-14 hover:text-primary"
-                      >
-                        Permission Management
-                      </Link>
-                    </div>
-                  </Accordion>
-                )}
-              </li> */}
-              <li
                 className={`hover:bg-primary group ${
                   pathname == "/admin/documentation" ? "bg-primary" : ""
                 }`}
@@ -708,8 +553,8 @@ const Sidebar = () => {
                     Documentation
                   </span>
                 </Link>
-              </li>
-              <li
+              </li> */}
+              {/* <li
                 className={`hover:bg-primary group ${
                   pathname == "/admin/activity-logs" ? "bg-primary" : ""
                 }`}
@@ -743,7 +588,7 @@ const Sidebar = () => {
                     Activity Logs
                   </span>
                 </Link>
-              </li>
+              </li> */}
               <li
                 className={`hover:bg-primary group ${
                   pathname == "/admin/user-feedbacks" ? "bg-primary" : ""
@@ -778,7 +623,7 @@ const Sidebar = () => {
                   </span>
                 </Link>
               </li>
-              <li
+              {/* <li
                 className={`hover:bg-primary group ${
                   pathname == "/admin/service-setting" ? "bg-primary" : ""
                 }`}
@@ -811,7 +656,7 @@ const Sidebar = () => {
                     Service Settings
                   </span>
                 </Link>
-              </li>
+              </li> */}
             </ul>
           </div>
         </div>
@@ -826,8 +671,8 @@ const Sidebar = () => {
                 alt="Bangla"
               />
               <div>
-                <h3>Abir</h3>
-                <p className="text-12">Admin</p>
+                <h3>Admin</h3>
+                <p className="text-12">user</p>
               </div>
             </div>
           )}

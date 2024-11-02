@@ -6,7 +6,7 @@ import { relative_image_path } from "@/helper";
 import { getServices } from "@/app/(portal)/_api";
 import { useEffect, useState } from "react";
 import Skeleton from "react-loading-skeleton";
-const Home = async () => {
+const Home =  () => {
   const [services, setServices] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   // const services = await getServices();
@@ -58,13 +58,13 @@ const Home = async () => {
                     shallow
                   >
                     <span className="flex items-center gap-3">
-                      <Image
+                      {/* <Image
                         className="w-10 h-10 rounded-md"
                         src={`${process.env.NEXT_PUBLIC_IMAGE_URL}${item?.img}`}
                         height={1000}
                         width={1000}
                         alt="Bangla"
-                      />
+                      /> */}
                       {/* {item?.name.substring(0, 15)
                           ? item?.name.substring(0, 15)
                           : item?.name.substring(0, 15) + "..."} */}

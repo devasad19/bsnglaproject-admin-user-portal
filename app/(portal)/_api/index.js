@@ -1,7 +1,13 @@
-// import { tr } from "@faker-js/faker";
-import { tr } from "@faker-js/faker";
-import axios from "axios";
 
+import axios from "axios";
+import Cookies from "js-cookie";
+
+
+const  token = Cookies.get("token");
+
+/* ...............service api start here...................*/
+
+// 1.  upload service data api service Create
 export const uploadServiceData = async (serviceData) => {
   try {
     const service = await axios.post(
@@ -15,7 +21,7 @@ export const uploadServiceData = async (serviceData) => {
   }
 };
 
-// get all services
+//2. get all services
 export const getServices = async () => {
   try {
     const services = await fetch(
@@ -34,7 +40,7 @@ export const getServices = async () => {
   }
 };
 
-// get single service
+//3. get single service by service id
 export const getSingleService = async (id) => {
   try {
     const service = await fetch(
@@ -50,7 +56,7 @@ export const getSingleService = async (id) => {
   }
 };
 
-// update service
+//4. update service
 export const updateAnService = async (id, updateData) => {
   try {
     const service = await axios.post(
@@ -91,7 +97,10 @@ export const getMenuLinks = async () => {
   return menuLinks?.links;
 };
 
-// upload feature  data api
+
+/* ...............feature api end here...................*/
+
+//1. upload feature  data api feature Create
 export const uploadFeatureData = async (featureData) => {
   try {
     const feature = await axios.post(
@@ -105,7 +114,7 @@ export const uploadFeatureData = async (featureData) => {
   }
 };
 
-// get features by service id
+//2. get features by service id
 export const getFeaturesByServiceId = async (serviceId) => {
   try {
     const features = await axios.get(
@@ -118,7 +127,7 @@ export const getFeaturesByServiceId = async (serviceId) => {
   }
 };
 
-// delete features by feautes id
+//3. delete features by feature id
 
 export const deleteFeature = async (id) => {
   try {
@@ -132,6 +141,7 @@ export const deleteFeature = async (id) => {
   }
 };
 
+//4. update feature data by feature id
 export const updateFeatureDataById = async (id, updateData) => {
   try {
     const feature = await axios.post(
@@ -186,11 +196,23 @@ export const paymentPostApi = async (paymentInfo)=>{
   }
 }
 
+// get all payment api
+export const getAllPaymentAPi = async (page,limit)=>{
+  try {
+    const paymentRes = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/all/payments?page=${page}&limit=${limit}`);
+    return paymentRes.data;
+  } catch (error) {
+    console.log(error);
+    return error;
+  }
+}
 
 // get all orders api 
 export const getAllOrdersApi = async () =>{
   try {
     const orders = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/all/orders`);
+    // console.log("order Api:",orders);
+    
     return orders.data;
   } catch (error) {
     console.log(error);
@@ -209,3 +231,65 @@ export const getSingleOrderByIdApi = async (id) =>{
     return error;
   }
 }
+
+
+// get single order by service id
+export const getSingleOrderByServiceId = async (serviceId) =>{
+  try{
+    const singleOrderByserviceId = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/order/by-service-id/${serviceId}`);
+    return singleOrderByserviceId.data;
+  }
+  catch(error){
+    console.log(error);
+    return error;
+  }
+}
+
+
+
+   /* user management section all api is here */
+
+  //  1.create user api
+
+  export const createUserApi = async (userData)=>{
+    try {
+      const user = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/user/create`,userData,{
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+      return user.data;
+    } catch (error) {
+      console.log(error);
+      return error;
+    }
+  }
+
+
+  // 2. get all users api
+
+  export const getAllUsersApi = async ()=>{
+    try {
+      const users = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/system/users`);
+      return users.data;
+    } catch (error) {
+      console.log(error);
+      return error;
+    }
+  }
+
+
+
+  /** ...................activity Logs api here start...............**** */
+
+  // 1.get all activity logs api with pagination and other functionality
+
+  export const getAllActivityLogsApi = async (page,limit)=>{
+    try {
+      const activityLogs = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/activity-logs/all?page=${page}&limit=${limit}`);
+      return activityLogs.data;
+    } catch (error) {
+      console.log(error);
+      return error;
+    }
+  }

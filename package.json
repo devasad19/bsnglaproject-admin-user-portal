@@ -9,12 +9,17 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@ckeditor/ckeditor5-build-classic": "^43.1.0",
+    "@ckeditor/ckeditor5-react": "^9.2.0",
     "@faker-js/faker": "^8.4.1",
     "@smastrom/react-rating": "^1.5.0",
     "axios": "^1.7.2",
     "chart.js": "^4.4.2",
     "cors": "^2.8.5",
     "framer-motion": "^11.3.24",
+    "html2canvas": "^1.4.1",
+    "js-cookie": "^3.0.5",
+    "jspdf": "^2.5.2",
     "next": "14.1.4",
     "react": "^18",
     "react-chartjs-2": "^5.2.0",
@@ -29,6 +34,7 @@
     "swiper": "^11.0.7"
   },
   "devDependencies": {
+    "@types/js-cookie": "^3.0.6",
     "@types/node": "^20.12.12",
     "@types/react": "^18.3.2",
     "autoprefixer": "^10.0.1",
