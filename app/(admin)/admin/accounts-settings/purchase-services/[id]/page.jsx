@@ -30,7 +30,7 @@ const Home = ({ params: { id } }) => {
                         <div className="flex items-center gap-4 pb-5">
                             <Link
                                 href={{
-                                    pathname: "/user/accounts-settings/purchase-services",
+                                    pathname: "/admin/accounts-settings/purchase-services",
                                 }}
                                 shallow
                             >
