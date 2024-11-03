@@ -40,16 +40,6 @@ const UpdateBanglaResource = ({ id }) => {
             api_docs
         } = data;
 
-        const dataFormat = {
-            service_id: id,
-            sub_title,
-            name,
-            description,
-            broad_description,
-            user_docs,
-            api_docs
-        };
-
         const form = new FormData();
         form.append('service_id', id);
         form.append("name", name);
@@ -60,16 +50,11 @@ const UpdateBanglaResource = ({ id }) => {
         form.append("api_docs", api_docs);
 
 
-        // console.log('data format: ',dataFormat);
-
-        // const res = await serviceBanglaResourceApi(dataFormat);
-
         const res = await updateServiceBanglaResource(form, id);
 
         if (res.status) {
             setIsLoading(false);
             toast.success(res.message);
-            reset();
         } else {
             setIsLoading(false);
             toast.error(res.message);

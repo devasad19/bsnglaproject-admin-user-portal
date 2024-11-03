@@ -179,7 +179,7 @@ const Home = () => {
                       </td>
                       <td className="text-center border-r border-gray-200">
                         {
-                          item?.completion_status == 1 ? (
+                          item?.completion_status == 3 ? (
                             <button
                               onClick={() => UpdateServicePublishStatus(item?.id, item?.status == 1 ? 0 : 1)}
                               className={`text-white px-4 py-2 rounded transition-all duration-300 w-[90%] ${item?.status == 1
@@ -201,7 +201,7 @@ const Home = () => {
                         <div className="w-full flex items-center justify-center gap-2">
                           <>
                             {
-                              item?.completion_status == 1 && (
+                              item?.completion_status == 3 && (
                                 <Link
                                   href={{
                                     pathname: `/admin/services/${item?.id}`,
@@ -221,11 +221,11 @@ const Home = () => {
                               }}
                               className="px-2 py-1  bg-blue-500 text-white active:scale-90 transition-all duration-400 rounded-md"
                             >
-                              { item?.completion_status == 1 ? "Edit" : "Update"}
+                              { item?.completion_status == 3 ? "Edit" : "Update"}
                             </Link>
 
                             {
-                              item?.completion_status == 1 && (
+                              item?.completion_status == 3 && (
                                 <button
                                   onClick={() => handleDelete(item?.id)}
                                   className="p-1  bg-red-500 text-white active:scale-90 transition-all duration-400 rounded-md"

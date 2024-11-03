@@ -113,6 +113,7 @@ export const updateServiceResource = async (payload, id) => {
 };
 
 export const updateSingleServiceResource = async (payload, id) => {
+  console.log('before hitting api: ',payload, id);
   try{
     const res = await axios
       .post(
