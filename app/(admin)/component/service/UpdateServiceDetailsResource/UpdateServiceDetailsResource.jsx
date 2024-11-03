@@ -276,14 +276,18 @@ const UpdateServiceDetailsResource = ({ id }) => {
         payload.append("service_id", id);
         payload.append("broad_description", formData.description);
 
-        if (formData.mediaImages) {
-            Array.from(formData.mediaImages).forEach((file) => {
 
+        formData?.mediaImages.forEach((item, index)=>{
+            payload.append(`media_images[${index}]`, item);
+        });
+
+        /* if (formData.mediaImages) {
+            Array.from(formData.mediaImages).forEach((file) => {
                 payload.append("media_images[]", file);
             });
         } else {
             payload.append("media_images[]", "");
-        }
+        } */
 
         payload.append("api_doc_label", formData.api_doc.label);
         payload.append("api_doc_icon", formData.api_doc.icon);
@@ -322,8 +326,75 @@ const UpdateServiceDetailsResource = ({ id }) => {
 
         if (res?.status == true) {
             toast.success(res.message);
-            setIsLoading(false);
-            window.location.reload();
+            getSingleServiceDetailsResource(id).then((response) => {
+                setServiceDetailsResource(response?.data);
+    
+                setFormData({
+                    ...formData,
+                    description: response?.data?.broad_description,
+                    mediaImages: JSON.parse(response?.data?.media_images) ?? [],
+                    distribution: JSON.parse(response?.data?.distribution_items) ?? [
+                        {
+                            label: "",
+                            icon: "",
+                        }
+                    ],
+                    user_characteristics: JSON.parse(response?.data?.user_characteristics) ?? [
+                        {
+                            label: "",
+                        }
+                    ],
+                    api_characteristics: JSON.parse(response?.data?.api_characteristics) ?? [
+                        {
+                            label: "",
+                        }
+                    ],
+                    api_doc: {
+                        label: response?.data?.api_doc_label ?? '',
+                        icon: response?.data?.api_doc_icon ?? '',
+                        short_description: response?.data?.api_desc ?? '',
+                        external_links: JSON.parse(response?.data?.api_external_links) ?? [
+                            {
+                                label: "",
+                                link: ""
+                            }
+                        ],
+                        video_link: response?.data?.api_youtube_link ?? '',
+                        module_file: JSON.parse(response?.data?.api_modules) ?? [
+                            {
+                                label: "",
+                                version: "",
+                                module: ""
+                            }
+                        ]
+                    },
+                    user_doc: {
+                        label: response?.data?.user_doc_label ?? '',
+                        icon: response?.data?.user_doc_icon ?? '',
+                        short_description: response?.data?.user_desc ?? '',
+                        external_links: JSON.parse(response?.data?.user_external_links) ?? [
+                            {
+                                label: "",
+                                link: ""
+                            }
+                        ],
+                        video_link: response?.data?.user_youtube_link ?? '',
+                        module_file: JSON.parse(response?.data?.user_modules) ?? [
+                            {
+                                label: "",
+                                version: "",
+                                module: ""
+                            }
+                        ]
+                    }
+                });
+
+                setIsLoading(false);
+
+            }).catch((error) => {
+                console.log(error);
+            });
+            
         } else {
             toast.error(res.message);
             setIsLoading(false);
@@ -339,35 +410,69 @@ const UpdateServiceDetailsResource = ({ id }) => {
             setFormData({
                 ...formData,
                 description: response?.data?.broad_description,
-                mediaImages: JSON.parse(response?.data?.media_images),
-                distribution: JSON.parse(response?.data?.distribution_items),
-                user_characteristics: JSON.parse(response?.data?.user_characteristics),
-                api_characteristics: JSON.parse(response?.data?.api_characteristics),
+                mediaImages: JSON.parse(response?.data?.media_images) ?? [],
+                distribution: JSON.parse(response?.data?.distribution_items) ?? [
+                    {
+                        label: "",
+                        icon: "",
+                    }
+                ],
+                user_characteristics: JSON.parse(response?.data?.user_characteristics) ?? [
+                    {
+                        label: "",
+                    }
+                ],
+                api_characteristics: JSON.parse(response?.data?.api_characteristics) ?? [
+                    {
+                        label: "",
+                    }
+                ],
                 api_doc: {
-                    label: response?.data?.api_doc_label,
-                    icon: response?.data?.api_doc_icon,
-                    short_description: response?.data?.api_desc,
-                    external_links: JSON.parse(response?.data?.api_external_links),
-                    video_link: response?.data?.api_youtube_link,
-                    module_file: JSON.parse(response?.data?.api_modules)
+                    label: response?.data?.api_doc_label ?? '',
+                    icon: response?.data?.api_doc_icon ?? '',
+                    short_description: response?.data?.api_desc ?? '',
+                    external_links: JSON.parse(response?.data?.api_external_links) ?? [
+                        {
+                            label: "",
+                            link: ""
+                        }
+                    ],
+                    video_link: response?.data?.api_youtube_link ?? '',
+                    module_file: JSON.parse(response?.data?.api_modules) ?? [
+                        {
+                            label: "",
+                            version: "",
+                            module: ""
+                        }
+                    ]
                 },
                 user_doc: {
-                    label: response?.data?.user_doc_label,
-                    icon: response?.data?.user_doc_icon,
-                    short_description: response?.data?.user_desc,
-                    external_links: JSON.parse(response?.data?.user_external_links),
-                    video_link: response?.data?.user_youtube_link,
-                    module_file: JSON.parse(response?.data?.user_modules)
+                    label: response?.data?.user_doc_label ?? '',
+                    icon: response?.data?.user_doc_icon ?? '',
+                    short_description: response?.data?.user_desc ?? '',
+                    external_links: JSON.parse(response?.data?.user_external_links) ?? [
+                        {
+                            label: "",
+                            link: ""
+                        }
+                    ],
+                    video_link: response?.data?.user_youtube_link ?? '',
+                    module_file: JSON.parse(response?.data?.user_modules) ?? [
+                        {
+                            label: "",
+                            version: "",
+                            module: ""
+                        }
+                    ]
                 }
             });
         }).catch((error) => {
             console.log(error);
-        })
+        });
     }, []);
 
 
-    // console.log('service details resource: ',serviceDetailsResource);
-    console.log('form data: ', formData);
+    // console.log('form data: ', formData);
 
 
     return (
