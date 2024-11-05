@@ -247,7 +247,6 @@ const ServiceResource = () => {
                 <option value="Application">Application</option>
                 <option value="Plugin">Plugin</option>
                 <option value="Mobile Apps">Mobile Apps</option>
-                <option value="Datasets">Data Sets</option>
                 <option value="Tools">Tools</option>
                 <option value="Papers">Papers</option>
                 <option value="Font">Font</option>
