@@ -12,7 +12,7 @@ const UpdateServiceResource = ({ id }) => {
     const router = useRouter();
     const [serviceResource, setServiceResource] = useState(null);
     const [paidStatus, setPaidStatus] = useState();
-    const [status, setStatus] = useState("");
+    // const [status, setStatus] = useState("");
     const [serviceImg, setServiceImg] = useState(null);
     const [resourceFileImg, setResourceFileImg] = useState(null);
     const [isLoading, setIsLoading] = useState(false);
@@ -24,7 +24,8 @@ const UpdateServiceResource = ({ id }) => {
         reset,
         formState: { errors },
         control,
-        setValue
+        setValue,
+        getValues
     } = useForm();
 
 
@@ -44,6 +45,7 @@ const UpdateServiceResource = ({ id }) => {
             visit_link,
             visit_type,
             resource_file,
+            status
         } = data;
 
         const formData = new FormData();
@@ -64,18 +66,19 @@ const UpdateServiceResource = ({ id }) => {
 
 
         const response = await updateServiceResource(formData, id).then((res) => {
-            setIsLoading(false);
-            console.log('api response: ', res);
+        
 
             if (res?.status == true) {
                 toast.success("Service Updated Successfully");
                 router.push("/admin/services");
-                reset();
-            }else{
+                // reset();
+            } else {
                 toast.error("Service Update Failed");
             }
         }).catch((err) => {
             console.log(err);
+            
+        }).finally(() => {
             setIsLoading(false);
         });
     };
@@ -83,6 +86,7 @@ const UpdateServiceResource = ({ id }) => {
 
     useEffect(() => {
         getSingleServiceResource(id).then((res) => {
+            console.log('service data: ',res?.data?.status)
             setServiceResource(res?.data);
             setValue("name", res?.data?.name);
             setValue("sub_title", res?.data?.sub_title);
@@ -106,6 +110,8 @@ const UpdateServiceResource = ({ id }) => {
             console.log(error);
         });
     }, []);
+
+    // console.log('service status: ',getValues('resource_file'));
 
     return (
         <>
@@ -571,11 +577,10 @@ const UpdateServiceResource = ({ id }) => {
 
                             <select
                                 {...register("status")}
-                                onChange={(e) => setStatus(e.target.value)}
                                 className="outline-none p-2 bg-white"
                             >
-                                <option selected={serviceResource?.status == "1"} value="1">Publish</option>
-                                <option selected={serviceResource?.status == "0"} value="0">UnPublish</option>
+                                <option selected={getValues("status") == "1"} value="1">Publish</option>
+                                <option selected={getValues("status") == "0"} value="0">UnPublish</option>
                             </select>
                         </fieldset>
                         {errors.status && (

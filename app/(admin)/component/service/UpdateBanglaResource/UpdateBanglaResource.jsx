@@ -55,6 +55,7 @@ const UpdateBanglaResource = ({ id }) => {
         if (res.status) {
             setIsLoading(false);
             toast.success(res.message);
+            router.push("/admin/services");
         } else {
             setIsLoading(false);
             toast.error(res.message);

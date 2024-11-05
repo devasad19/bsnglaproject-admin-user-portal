@@ -52,7 +52,7 @@ const Home = () => {
 
   const UpdateServicePublishStatus = async (id, status) => {
     const result = await fetch(
-      `http://dev-bangla-dashboard.mysoftheaven.com/api/service/publish-unpublish/${id}`,
+      `${process.env.NEXT_PUBLIC_API_URL}/service/publish-unpublish/${id}`,
       {
         method: "POST",
         headers: {
