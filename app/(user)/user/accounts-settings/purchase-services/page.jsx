@@ -17,6 +17,7 @@ const Home = () => {
       .catch((err) => console.log(err));
   }, []);
 
+ 
 
   return (
     <section>
@@ -53,7 +54,7 @@ const Home = () => {
                   <tr key={index}>
                     <td className="px-2">
                       <div className="flex items-center gap-2 text-14">
-                        <Image src={process.env.NEXT_PUBLIC_IMAGE_URL + (item?.service?.logo)} className="w-[5em] h-[5em]" width={1000} height={1000} alt="Bangla" />
+                        <Image src={process.env.NEXT_PUBLIC_IMAGE_URL + (item?.service?.logo ?? '')} className="w-[5em] h-[5em]" width={1000} height={1000} alt="Bangla" />
                         <span className="flex items-center gap-3">
                           {item?.service?.name ?? ''}
                         </span>
