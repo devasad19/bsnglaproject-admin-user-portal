@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useRef, useState, useEffect } from "react";
 import Image from "next/image";
 import { relative_image_path } from "@/helper";
 import { usePDF } from "react-to-pdf";
@@ -24,6 +24,28 @@ const Home = ({ params }) => {
   const [loading, setLoading] = useState(true);
 
 
+  const divRef = useRef();
+
+  const handleDownloadPDF = async () => {
+    const div = divRef.current;
+    if (!div) return;
+
+    // Capture the div as a canvas image
+    const canvas = await html2canvas(div);
+    const imgData = canvas.toDataURL('image/png');
+
+    // Generate PDF
+    const pdf = new jsPDF({
+      orientation: 'portrait',
+      unit: 'px',
+      format: [canvas.width, canvas.height],
+    });
+
+    pdf.addImage(imgData, 'PNG', 0, 0, canvas.width, canvas.height);
+    pdf.save('citizen-invoice.pdf');
+  };
+
+
   const PrintInvoice = () => {
     var printContents = document.getElementById("invoice").innerHTML;
     var originalContents = document.body.innerHTML;
@@ -42,51 +64,6 @@ const Home = ({ params }) => {
       setLoading(false);
     }).catch((err) => console.log(err));
   }, []);
-
-
-
-  const HandlePdfDownload = async (elementId) => {
-    const invoiceElement = document.getElementById(elementId);
-
-    if (!invoiceElement) {
-      console.error("Invoice element not found.");
-      return;
-    }
-
-    const doc = new jsPDF();
-
-    doc.html(invoiceElement, {
-      callback: (doc) => {
-        console.log(doc);
-        doc.save("invoice.pdf");
-      },
-    })
-    doc.save("a4.pdf");
-
-    // window.location.reload();
-
-    /* try {
-      
-  
-      
-      const canvas = await html2canvas(invoiceElement);
-      const imageData = canvas.toDataURL("image/png");
-  
-      const pdf = new jsPDF("p", "pt", "a4");
-      const pdfWidth = pdf.internal.pageSize.getWidth();
-      const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
-  
-      pdf.addImage(imageData, "PNG", 0, 0, pdfWidth, pdfHeight);
-      pdf.save("invoice.pdf");
-    } catch (error) {
-      console.error("Error generating PDF:", error);
-    } */
-  };
-
-
-
-
-
 
 
   return (
@@ -109,16 +86,16 @@ const Home = ({ params }) => {
                     Print
                   </button>
                   <button
-                    onClick={() => HandlePdfDownload("invoice")}
+                    // onClick={() => HandlePdfDownload("invoice")}
+                    onClick={handleDownloadPDF}
                     className="bg-blue-500 text-white text-14 lg:text-16 px-2 py-1 lg:px-4 lg:py-2 rounded active:scale-75 transition-all duration-300"
                   >
                     Download
                   </button>
                 </div>
               </div>
-              <div className="flex justify-center items-center text-14">
+              <div ref={divRef} className=" w-full flex-col justify-center items-center text-14">
                 <div
-                  // ref={targetRef}
                   id="invoice"
                   className="w-2/3 bg-white p-6 shadow-lg rounded-md"
                 >
