@@ -22,7 +22,7 @@ const Home = () => {
   const sliderAddForm = useRef(null); //add form ref
   const [slider, setSlider] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [fetchApi,setFetchAPi] = useState(false);
+  const [fetchApi, setFetchAPi] = useState(false);
 
   const {
     register,
@@ -42,25 +42,18 @@ const Home = () => {
     fetchSlider();
   }, [fetchApi]);
 
-  
-  const setBtnToggle = async(status,id)=>{
-    // console.log(status,id);
-    
-    const sliderRes = await sliderUpdateStatus(id,status);
-    // console.log(sliderRes);
-    if(sliderRes.status){
+
+  const setBtnToggle = async (status, id) => {
+    const sliderRes = await sliderUpdateStatus(id, status);
+    if (sliderRes.status) {
       setFetchAPi(!fetchApi);
       toast.success("Slider status updated successfully");
     }
-    
-    
+
+
   }
 
-  // console.log({ slider });
-
   const onSliderSubmit = async (data) => {
-    console.log(data);
-    // return;
     const { slider_image, caption_text, caption_text_link, caption_button, caption_button_link, slider_status } = data;
     let fromData = new FormData();
     fromData.append("img", slider_image[0]);
@@ -71,7 +64,7 @@ const Home = () => {
     fromData.append("status", slider_status);
 
     const sliderRe = await AddSLiderApi(fromData);
-    console.log(sliderRe);
+
     if (sliderRe.status) {
       setFetchAPi(!fetchApi);
       reset();
@@ -81,6 +74,9 @@ const Home = () => {
       toast.error("Something went wrong");
     }
   };
+
+
+  console.log('admin sliders: ', slider)
 
   return (
     <>
@@ -119,10 +115,11 @@ const Home = () => {
           <table className="w-full">
             <thead>
               <tr className="bg-primary text-white h-16 px-2">
-                <th className="px-2">Number</th>
+                <th className="px-2">Serial</th>
                 <th>Banner</th>
-                <th>Caption Text and Link</th>
-                <th>Button Text and Link</th>
+                <th>Url</th>
+                <th>Caption Text</th>
+                <th>Caption Button Text</th>
                 <th>Status</th>
                 <th>Action</th>
               </tr>
@@ -140,59 +137,33 @@ const Home = () => {
                   <tr key={index} className="h-16">
                     <td className="px-3">
                       <span className="border border-gray-300 px-2 py-1 rounded-md">
-                        {index+1}
+                        {index + 1}
                       </span>
                     </td>
                     <td className="px-3">
-                      <div className="flex items-center justify-center">
-                        <Image
-                          src={`${process.env.NEXT_PUBLIC_IMAGE_URL}${item?.img}`}
-                          className="w-[7.8125em] h-[3.57375em]"
-                          width={1000}
-                          height={1000}
-                          alt="Bangla"
-                        />
-                      </div>
+                      <Image
+                        src={`${process.env.NEXT_PUBLIC_IMAGE_URL}${item?.img}`}
+                        className="w-[7.8125em] h-[3.57375em]"
+                        width={1000}
+                        height={1000}
+                        alt="Bangla"
+                      />
+                    </td>
+                    <td>
+                      {
+                        item?.link
+                      }
                     </td>
                     <td className="px-3">
-                      <div className="flex items-center justify-center">
-                        <p className="text-14 font-bold">{item?.caption_text}</p>
-                        <a
-                          href={item?.caption_text_link}
-                          target="_blank"
-                          rel="noreferrer"
-                          className="text-14 font-bold text-blue-500"
-                        >
-                          {item?.caption_text_link}
-                        </a>
-                      </div>
+                      <p className="text-14 font-bold">{item?.caption_text?.slice(0, 20)}</p>
                     </td>
                     <td className="px-3">
-                      <button
-                        
-                        className="text-white"
-                      >
-                        <span
-                        onClick={() => setBtnToggle(1,item?.id)}
-                          className={`p-2 border border-gray-500 ${
-                            item?.status == 1 ? "bg-primary" : "bg-gray-500"
-                          }`}
-                        >
-                          on
-                        </span>
-                        <span
-                        onClick={() => setBtnToggle(0,item?.id)}
-                          className={`p-2 border border-gray-500 ${
-                            item?.status == 0 ? "bg-primary" : "bg-gray-500"
-                          }`}
-                        >
-                          off
-                        </span>
-                      </button>
+                      <p className="text-14 font-bold">{item?.caption_btn}</p>
                     </td>
+
                     <td className="px-4">{
                       slider?.status == 1 ? "Active" : "Inactive"
-                      }</td>
+                    }</td>
                     <td className="px-3">
                       <div className="space-x-3 flex">
                         <button
@@ -235,7 +206,83 @@ const Home = () => {
                                     className="p-2 w-full"
                                   />
                                 </fieldset>
-                                <fieldset className="border border-gray-300 flex flex-col px-2 rounded">
+
+                                <div>
+                                  <fieldset className="border border-gray-300 flex flex-col px-2 rounded">
+                                    <legend>
+                                      <label
+                                        htmlFor="link"
+                                        className="text-14 bg-white px-2"
+                                      >
+                                        Url:
+                                      </label>
+                                    </legend>
+                                    <input
+                                      {...register("link")}
+                                      id="link"
+                                      placeholder="Enter Slider url"
+                                      className="outline-none text-14 p-2 w-full"
+                                    ></input>
+                                  </fieldset>
+                                </div>
+                                <div>
+                                  <fieldset className="border border-gray-300 flex flex-col px-2 rounded">
+                                    <legend>
+                                      <label
+                                        htmlFor="slider_description"
+                                        className="text-14 bg-white px-2"
+                                      >
+                                        Caption Text:
+                                      </label>
+                                    </legend>
+                                    <input
+                                      {...register("caption_text")}
+                                      id="slider_description"
+                                      placeholder="Enter Slider Description"
+                                      className="outline-none text-14 p-2 w-full"
+                                    ></input>
+                                  </fieldset>
+                                </div>
+                                <div>
+                                  <fieldset className="border border-gray-300 flex flex-col px-2 rounded">
+                                    <legend>
+                                      <label
+                                        htmlFor="caption_button"
+                                        className="text-14 bg-white px-2"
+                                      >
+                                        Caption Button Text:
+                                      </label>
+                                    </legend>
+                                    <input
+                                      {...register("caption_button")}
+                                      id="caption_button"
+                                      placeholder="Enter caption button text"
+                                      className="outline-none text-14 p-2 w-full"
+                                    ></input>
+                                  </fieldset>
+                                </div>
+                                <div>
+                                  <fieldset className="border border-gray-300 flex flex-col px-2 rounded">
+                                    <legend>
+                                      <label
+                                        htmlFor="slider_status"
+                                        className="text-14 p-2 bg-white"
+                                      >
+                                        Select Slider Status:
+                                      </label>
+                                    </legend>
+                                    <select
+                                      {...register("slider_status", { required: true })}
+                                      id="slider_status"
+                                      className="text-14 p-2 bg-white"
+                                    >
+                                      <option value="1">Active</option>
+                                      <option value="2">Inactive</option>
+                                    </select>
+                                  </fieldset>
+                                </div>
+
+                                {/* <fieldset className="border border-gray-300 flex flex-col px-2 rounded">
                                   <legend>
                                     <label
                                       htmlFor="slider_description"
@@ -250,7 +297,9 @@ const Home = () => {
                                     placeholder="Enter Slider Description"
                                     className="outline-none text-14 p-2 w-full"
                                   ></textarea>
-                                </fieldset>
+                                </fieldset> */}
+
+
                                 <fieldset className="border border-gray-300 flex flex-col px-2 rounded">
                                   <legend>
                                     <label
@@ -343,6 +392,24 @@ const Home = () => {
               <fieldset className="border border-gray-300 flex flex-col px-2 rounded">
                 <legend>
                   <label
+                    htmlFor="link"
+                    className="text-14 bg-white px-2"
+                  >
+                    Url:
+                  </label>
+                </legend>
+                <input
+                  {...register("link")}
+                  id="link"
+                  placeholder="Enter Slider url"
+                  className="outline-none text-14 p-2 w-full"
+                ></input>
+              </fieldset>
+            </div>
+            <div>
+              <fieldset className="border border-gray-300 flex flex-col px-2 rounded">
+                <legend>
+                  <label
                     htmlFor="slider_description"
                     className="text-14 bg-white px-2"
                   >
@@ -361,24 +428,6 @@ const Home = () => {
               <fieldset className="border border-gray-300 flex flex-col px-2 rounded">
                 <legend>
                   <label
-                    htmlFor="caption_text_link"
-                    className="text-14 bg-white px-2"
-                  >
-                    Caption Text Link:
-                  </label>
-                </legend>
-                <input
-                  {...register("caption_text_link")}
-                  id="caption_text_link"
-                  placeholder="https://ocr.bangla.gov.bd/details"
-                  className="outline-none text-14 p-2 w-full"
-                ></input>
-              </fieldset>
-            </div>
-            <div>
-              <fieldset className="border border-gray-300 flex flex-col px-2 rounded">
-                <legend>
-                  <label
                     htmlFor="caption_button"
                     className="text-14 bg-white px-2"
                   >
@@ -389,24 +438,6 @@ const Home = () => {
                   {...register("caption_button")}
                   id="caption_button"
                   placeholder="Enter caption button text"
-                  className="outline-none text-14 p-2 w-full"
-                ></input>
-              </fieldset>
-            </div>
-            <div>
-              <fieldset className="border border-gray-300 flex flex-col px-2 rounded">
-                <legend>
-                  <label
-                    htmlFor="caption_button_link"
-                    className="text-14 bg-white px-2"
-                  >
-                    Caption Button Link:
-                  </label>
-                </legend>
-                <input
-                  {...register("caption_button_link")}
-                  id="caption_button_link"
-                  placeholder="https://ocr.bangla.gov.bd/service"
                   className="outline-none text-14 p-2 w-full"
                 ></input>
               </fieldset>
