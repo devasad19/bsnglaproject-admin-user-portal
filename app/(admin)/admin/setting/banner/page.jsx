@@ -54,7 +54,7 @@ const Home = () => {
   }
 
   const onSliderSubmit = async (data) => {
-    const { slider_image, caption_text, caption_text_link, caption_button, caption_button_link, slider_status } = data;
+    const { slider_image, caption_text, caption_text_link, caption_button, caption_button_link, slider_status, link } = data;
     let fromData = new FormData();
     fromData.append("img", slider_image[0]);
     fromData.append("caption_text", caption_text);
@@ -62,6 +62,7 @@ const Home = () => {
     fromData.append("caption_btn", caption_button);
     fromData.append("caption_btn_link", caption_button_link);
     fromData.append("status", slider_status);
+    fromData.append("link", link);
 
     const sliderRe = await AddSLiderApi(fromData);
 
@@ -73,6 +74,11 @@ const Home = () => {
     } else {
       toast.error("Something went wrong");
     }
+  };
+
+
+  const HandleDelete = (id) => {
+
   };
 
 
