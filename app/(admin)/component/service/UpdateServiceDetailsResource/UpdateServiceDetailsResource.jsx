@@ -328,7 +328,6 @@ const UpdateServiceDetailsResource = ({ id }) => {
             toast.success(res.message);
             getSingleServiceDetailsResource(id).then((response) => {
                 setServiceDetailsResource(response?.data);
-    
                 setFormData({
                     ...formData,
                     description: response?.data?.broad_description,
@@ -388,11 +387,11 @@ const UpdateServiceDetailsResource = ({ id }) => {
                         ]
                     }
                 });
-
-                setIsLoading(false);
-
             }).catch((error) => {
                 console.log(error);
+            }).finally(() => {
+                setIsLoading(false);
+                router.push("/admin/services");
             });
             
         } else {
