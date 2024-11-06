@@ -2,28 +2,43 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { getSingleSlider } from "@/app/(admin)/_api";
+import Image from "next/image";
+import { getSingleSlider, updateSlider } from "@/app/(admin)/_api";
+import { toast } from "react-toastify";
+import { useRouter } from "next/navigation";
 
 
 
 const Home = ({ params: { id } }) => {
+    const router = useRouter();
     const [data, setData] = useState();
     const [loading, setLoading] = useState(false);
-    const [formData, setFormData] = useState({
-        image: null,
-        url: "",
-        captionText: "",
-        buttonText: "",
-        status: "",
-    });
 
 
     useEffect(() => {
+        setLoading(true);
         getSingleSlider(id).then((res) => {
             setData(res.data);
         }).catch((err) => console.log(err)).finally(() => setLoading(false));
-    },[id]);
-    console.log('banner: ', data);
+    }, [id]);
+
+
+    const HandleUpdate = async () => {
+        setLoading(true);
+        const response = await updateSlider(data, id).then((res) => {
+            if (res.status) {
+                toast.success("Slider Updated Successfully");
+                router.push("/admin/setting/banner");
+            } else {
+                toast.error("Something went wrong");
+            }
+        }).catch((err) => {
+            console.log(err);
+        }).finally(() => {
+            setLoading(false);
+        });
+    }
+
     return (
         <section className="bg-white p-4 rounded min-h-screen">
             <div className=" w-full inline-flex flex-col lg:flex-row justify-between">
@@ -49,120 +64,158 @@ const Home = ({ params: { id } }) => {
                 </div>
             </div>
 
-            <div>
-                <form
-                    className="grid grid-cols-1 gap-2"
-                >
+            {
+                loading ? (
+                    <p>Loading...</p>
+                ) : (
                     <div>
-                        <fieldset className="border border-gray-300 flex flex-col px-2 rounded">
-                            <legend>
-                                <label
-                                    htmlFor="slider_image"
-                                    className="text-14  bg-white px-2"
-                                >
-                                    Change Slider Image:
-                                </label>
-                            </legend>
-                            <input
-                                type="file"
-                                id="slider_image"
-                                className="p-2 w-full"
-                            />
-                        </fieldset>
-                        {/* {errors.slider_image && (
-                            <span className="text-red-500 text-12 px-2 pt-1">
-                                This field is required
-                            </span>
-                        )} */}
-                    </div>
-                    <div>
-                        <fieldset className="border border-gray-300 flex flex-col px-2 rounded">
-                            <legend>
-                                <label
-                                    htmlFor="link"
-                                    className="text-14 bg-white px-2"
-                                >
-                                    Url:
-                                </label>
-                            </legend>
-                            <input
-                                id="link"
-                                placeholder="Enter Slider url"
-                                className="outline-none text-14 p-2 w-full"
-                            ></input>
-                        </fieldset>
-                    </div>
-                    <div>
-                        <fieldset className="border border-gray-300 flex flex-col px-2 rounded">
-                            <legend>
-                                <label
-                                    htmlFor="slider_description"
-                                    className="text-14 bg-white px-2"
-                                >
-                                    Caption Text:
-                                </label>
-                            </legend>
-                            <input
-                                id="slider_description"
-                                placeholder="Enter Slider Description"
-                                className="outline-none text-14 p-2 w-full"
-                            ></input>
-                        </fieldset>
-                    </div>
-                    <div>
-                        <fieldset className="border border-gray-300 flex flex-col px-2 rounded">
-                            <legend>
-                                <label
-                                    htmlFor="caption_button"
-                                    className="text-14 bg-white px-2"
-                                >
-                                    Caption Button Text:
-                                </label>
-                            </legend>
-                            <input
-                                id="caption_button"
-                                placeholder="Enter caption button text"
-                                className="outline-none text-14 p-2 w-full"
-                            ></input>
-                        </fieldset>
-                    </div>
-                    <div>
-                        <fieldset className="border border-gray-300 flex flex-col px-2 rounded">
-                            <legend>
-                                <label
-                                    htmlFor="slider_status"
-                                    className="text-14 p-2 bg-white"
-                                >
-                                    Select Slider Status:
-                                </label>
-                            </legend>
-                            <select
-                                id="slider_status"
-                                className="text-14 p-2 bg-white"
-                            >
-                                <option value="1">Active</option>
-                                <option value="2">Inactive</option>
-                            </select>
-                        </fieldset>
-                    </div>
-                    <div className="pt-6 flex justify-end">
-                        <div className="flex items-center gap-4">
-                            <Link href={{
-                                pathname: "/admin/setting/banner",
-                            }} shallow>
-                                Cancel
-                            </Link>
+                        <form
+                            onSubmit={(e) => {
+                                e.preventDefault();
+                                HandleUpdate();
+                            }}
+                            className="grid grid-cols-1 gap-2"
+                        >
+                            <div>
+                                <fieldset className="border border-gray-300 flex flex-col px-2 rounded">
+                                    <legend>
+                                        <label
+                                            htmlFor="slider_image"
+                                            className="text-14  bg-white px-2"
+                                        >
+                                            Change Slider Image:
+                                        </label>
+                                    </legend>
+                                    <input
+                                        onChange={(event) => setData({ ...data, img: event.target.files[0] })}
+                                        type="file"
+                                        id="slider_image"
+                                        className="p-2 w-full"
+                                    />
+                                </fieldset>
+                                {
+                                    typeof data?.img == 'string' && (
+                                        <Image
+                                            src={process.env.NEXT_PUBLIC_IMAGE_URL + data?.img}
+                                            className="w-[10em] h-[10em]"
+                                            alt="slider"
+                                            width={1000}
+                                            height={1000}
+                                        />
+                                    )
+                                }
 
-                            <button
-                                type="submit"
-                                className="bg-blue-500 text-white px-4 py-3 rounded-md"
-                            >
-                                Update
-                            </button>
-                        </div>
+
+                                {
+                                    typeof data?.img == 'object' && (
+                                        <Image
+                                            src={URL.createObjectURL(data?.img)}
+                                            className="w-[10em] h-[10em]"
+                                            alt="slider"
+                                            width={1000}
+                                            height={1000}
+                                        />
+                                    )
+                                }
+                            </div>
+                            <div>
+                                <fieldset className="border border-gray-300 flex flex-col px-2 rounded">
+                                    <legend>
+                                        <label
+                                            htmlFor="link"
+                                            className="text-14 bg-white px-2"
+                                        >
+                                            Url:
+                                        </label>
+                                    </legend>
+                                    <input
+                                        onChange={(event) => setData({ ...data, link: event.target.value })}
+                                        value={data?.link}
+                                        id="link"
+                                        placeholder="Enter Slider url"
+                                        className="outline-none text-14 p-2 w-full"
+                                    />
+                                </fieldset>
+                            </div>
+                            <div>
+                                <fieldset className="border border-gray-300 flex flex-col px-2 rounded">
+                                    <legend>
+                                        <label
+                                            htmlFor="slider_description"
+                                            className="text-14 bg-white px-2"
+                                        >
+                                            Caption Text:
+                                        </label>
+                                    </legend>
+                                    <input
+                                        onChange={(event) => setData({ ...data, caption_text: event.target.value })}
+                                        value={data?.caption_text}
+                                        id="slider_description"
+                                        placeholder="Enter Slider Description"
+                                        className="outline-none text-14 p-2 w-full"
+                                    />
+                                </fieldset>
+                            </div>
+                            <div>
+                                <fieldset className="border border-gray-300 flex flex-col px-2 rounded">
+                                    <legend>
+                                        <label
+                                            htmlFor="caption_button"
+                                            className="text-14 bg-white px-2"
+                                        >
+                                            Caption Button Text:
+                                        </label>
+                                    </legend>
+                                    <input
+                                        onChange={(event) => setData({ ...data, caption_btn: event.target.value })}
+                                        value={data?.caption_btn}
+                                        id="caption_button"
+                                        placeholder="Enter caption button text"
+                                        className="outline-none text-14 p-2 w-full"
+                                    ></input>
+                                </fieldset>
+                            </div>
+                            <div>
+                                <fieldset className="border border-gray-300 flex flex-col px-2 rounded">
+                                    <legend>
+                                        <label
+                                            htmlFor="slider_status"
+                                            className="text-14 p-2 bg-white"
+                                        >
+                                            Select Slider Status:
+                                        </label>
+                                    </legend>
+                                    <select
+                                        id="slider_status"
+                                        className="text-14 p-2 bg-white"
+                                    >
+                                        <option selected={data?.status === 1} value="1">Active</option>
+                                        <option selected={data?.status === 0} value="2">Inactive</option>
+                                    </select>
+                                </fieldset>
+                            </div>
+                            <div className="pt-6 flex justify-end">
+                                <div className="flex items-center gap-4">
+                                    <Link href={{
+                                        pathname: "/admin/setting/banner",
+                                    }} shallow className="bg-gray-500 text-white px-4 py-3 rounded-md">
+                                        Cancel
+                                    </Link>
+
+                                    <button
+                                        type="submit"
+                                        className="bg-blue-500 text-white px-4 py-3 rounded-md"
+                                    >
+                                        Update
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
                     </div>
-                </form>
-            </div>
+                )
+            }
+
+
 
 
         </section>
