@@ -4,6 +4,113 @@ import Cookies from "js-cookie";
 
 const token = Cookies.get("token");
 
+
+export const updateFooterRight = async (payload) => {
+  console.log("before hitting api: ", payload);
+  try {
+    const data = await axios
+      .post(`${process.env.NEXT_PUBLIC_API_URL}/store/footer/right-content`, payload)
+      .then((res) => {
+        return res?.data;
+      }).catch((err) => {
+        console.log(err);
+        return err;
+      });
+    return data;
+  } catch (error) {
+    console.log(error);
+    return error;
+  }
+};
+
+
+export const getFooterRightData = async () => {
+  try {
+    const data = await axios
+      .get(`${process.env.NEXT_PUBLIC_API_URL}/footer/single/right-content`)
+      .then((res) => {
+        return res?.data?.data;
+      }).catch((err) => {
+        console.log(err);
+      });
+    return data;
+  } catch (error) {
+    console.log(error);
+    return error;
+  }
+};
+
+
+
+export const updateFooterMiddle = async (id, payload) => {
+  try {
+    const data = await axios
+      .post(`${process.env.NEXT_PUBLIC_API_URL}/update/footer/middle-content`, payload)
+      .then((res) => {
+        return res?.data;
+      }).catch((err) => {
+        console.log(err);
+        return err;
+      });
+    return data;
+  } catch (error) {
+    console.log(error);
+    return error;
+  }
+};
+
+
+
+export const getFooterMiddleData = async () => {
+  try {
+    const data = await axios
+      .get(`${process.env.NEXT_PUBLIC_API_URL}/footer/middle-content`)
+      .then((res) => {
+        return res?.data?.data;
+      }).catch((err) => {
+        console.log(err);
+      });
+    return data;
+  } catch (error) {
+    console.log(error);
+    return error;
+  }
+};
+
+
+export const upDateFooterLeft = async (id, payload) => {
+  try {
+    const data = await axios
+      .post(`${process.env.NEXT_PUBLIC_API_URL}/footer/left/update/data`, payload)
+      .then((res) => {
+        return res?.data;
+      }).catch((err) => {
+        console.log(err);
+        return err;
+      });
+    return data;
+  } catch (error) {
+    console.log(error);
+    return error;
+  }
+};
+
+export const getFooterLeftData = async () => {
+  try {
+    const data = await axios
+      .get(`${process.env.NEXT_PUBLIC_API_URL}/footer/left-content`)
+      .then((res) => {
+        return res?.data?.data;
+      }).catch((err) => {
+        console.log(err);
+      });
+    return data;
+  } catch (error) {
+    console.log(error);
+    return error;
+  }
+};
+
 export const updateSlider = async (id, payload) => {
   console.log("before hitting api: ", payload, id);
   try {
