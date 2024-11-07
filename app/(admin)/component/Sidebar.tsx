@@ -257,7 +257,7 @@ const Sidebar = () => {
                       isOpen ? "block" : "hidden"
                     } ${pathname.includes("/admin/setting") && "text-white"}`}
                   >
-                    Frontend Settings
+                    Portal Settings
                   </span>
                 </div>
 
@@ -292,6 +292,19 @@ const Sidebar = () => {
                       }`}
                     >
                      General Settings
+                    </Link>
+                    <Link
+                      href={{
+                        pathname: "/admin/setting/sidebar-links",
+                      }}
+                      shallow
+                      className={`text-14 hover:bg-green-500 px-2 py-1 rounded hover:text-white ${
+                        pathname.includes("/admin/setting/sidebar-links")
+                          ? "bg-green-500 text-white font-semibold"
+                          : "text-black"
+                      }`}
+                    >
+                     Sidebar Links
                     </Link>
                     {/* <Link
                       href={{

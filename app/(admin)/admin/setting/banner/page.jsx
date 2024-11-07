@@ -1,9 +1,9 @@
 "use client";
 
-import { use, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { modelClose, modelOpen, relative_image_path } from "@/helper";
+import { modelClose, modelOpen } from "@/helper";
 import Modal from "@/app/_components/Modal/Modal";
 import { useForm } from "react-hook-form";
 import {
@@ -12,14 +12,13 @@ import {
   sliderUpdateStatus,
 } from "@/app/(portal)/_api/SliderApi/SliderApi";
 import { toast } from "react-toastify";
-import TableSkeleton from "@/app/_components/TableSkeleton/TableSkeleton";
-import { tr } from "@faker-js/faker";
 import Skeleton from "react-loading-skeleton";
+import { DeleteSlider } from "@/app/(admin)/_api";
 
 const Home = () => {
 
-  const sliderAddModal = useRef(null); //add modal ref
-  const sliderAddForm = useRef(null); //add form ref
+  const sliderAddModal = useRef(null);
+  const sliderAddForm = useRef(null);
   const [slider, setSlider] = useState([]);
   const [loading, setLoading] = useState(false);
   const [fetchApi, setFetchAPi] = useState(false);
@@ -49,8 +48,6 @@ const Home = () => {
       setFetchAPi(!fetchApi);
       toast.success("Slider status updated successfully");
     }
-
-
   }
 
   const onSliderSubmit = async (data) => {
@@ -78,7 +75,21 @@ const Home = () => {
 
 
   const HandleDelete = (id) => {
-
+    setLoading(true);
+    if (id) {
+      DeleteSlider(id).then((data) => {
+        if (data) {
+          setFetchAPi(!fetchApi);
+          toast.success("Slider Deleted Successfully");
+        } else {
+          toast.error("Something went wrong");
+        }
+      }).catch((err) => {
+        console.log(err);
+      }).finally(() => {
+        setLoading(false);
+      });
+    }
   };
 
 
@@ -133,7 +144,7 @@ const Home = () => {
             <tbody className="text-center">
               {loading && (
                 <tr>
-                  <td colSpan={6}>
+                  <td colSpan={7}>
                     <Skeleton width="100%" count={10} height={50} />
                   </td>
                 </tr>
@@ -171,8 +182,8 @@ const Home = () => {
                       slider?.status == 1 ? "Active" : "Inactive"
                     }</td>
                     <td className="px-3">
-                      <div className="space-x-3 flex">
-                        <button
+                      <div className="flex items-center gap-2">
+                        {/* <button
                           className="border border-gray-300 p-1 rounded-md"
                           onClick={() =>
                             document.getElementById("my_modal_2").showModal()
@@ -288,23 +299,6 @@ const Home = () => {
                                   </fieldset>
                                 </div>
 
-                                {/* <fieldset className="border border-gray-300 flex flex-col px-2 rounded">
-                                  <legend>
-                                    <label
-                                      htmlFor="slider_description"
-                                      className="text-14 bg-white px-2"
-                                    >
-                                      Add Slider Description:
-                                    </label>
-                                  </legend>
-                                  <textarea
-                                    name="slider_description"
-                                    id="slider_description"
-                                    placeholder="Enter Slider Description"
-                                    className="outline-none text-14 p-2 w-full"
-                                  ></textarea>
-                                </fieldset> */}
-
 
                                 <fieldset className="border border-gray-300 flex flex-col px-2 rounded">
                                   <legend>
@@ -337,8 +331,23 @@ const Home = () => {
                               </form>
                             </div>
                           </div>
-                        </dialog>
-                        <button className="border border-gray-300 p-1 rounded-md">
+                        </dialog> */}
+
+                        
+                        <Link href={{
+                          pathname: `/admin/setting/banner/edit/${item.id}`
+                        }} shallow>
+                          <svg
+                            className="w-6 h-6 fill-gray-500"
+                            xmlns="http://www.w3.org/2000/svg"
+                            viewBox="0 0 512 512"
+                          >
+                            <path d="M441 58.9L453.1 71c9.4 9.4 9.4 24.6 0 33.9L424 134.1 377.9 88 407 58.9c9.4-9.4 24.6-9.4 33.9 0zM209.8 256.2L344 121.9 390.1 168 255.8 302.2c-2.9 2.9-6.5 5-10.4 6.1l-58.5 16.7 16.7-58.5c1.1-3.9 3.2-7.5 6.1-10.4zM373.1 25L175.8 222.2c-8.7 8.7-15 19.4-18.3 31.1l-28.6 100c-2.4 8.4-.1 17.4 6.1 23.6s15.2 8.5 23.6 6.1l100-28.6c11.8-3.4 22.5-9.7 31.1-18.3L487 138.9c28.1-28.1 28.1-73.7 0-101.8L474.9 25C446.8-3.1 401.2-3.1 373.1 25zM88 64C39.4 64 0 103.4 0 152V424c0 48.6 39.4 88 88 88H360c48.6 0 88-39.4 88-88V312c0-13.3-10.7-24-24-24s-24 10.7-24 24V424c0 22.1-17.9 40-40 40H88c-22.1 0-40-17.9-40-40V152c0-22.1 17.9-40 40-40H200c13.3 0 24-10.7 24-24s-10.7-24-24-24H88z" />
+                          </svg>
+                        </Link>
+
+
+                        <button onClick={() => HandleDelete(item.id)} className=" p-1 rounded-md">
                           <svg
                             className="w-6 h-6 fill-gray-500"
                             xmlns="http://www.w3.org/2000/svg"

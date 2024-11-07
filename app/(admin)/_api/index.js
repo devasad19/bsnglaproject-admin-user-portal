@@ -4,6 +4,58 @@ import Cookies from "js-cookie";
 
 const token = Cookies.get("token");
 
+export const updateSlider = async (id, payload) => {
+  console.log("before hitting api: ", payload, id);
+  try {
+    const data = await axios
+      .post(`${process.env.NEXT_PUBLIC_API_URL}/update/slider/${id}`, payload)
+      .then((res) => {
+        return res?.data;
+      }).catch((err) => {
+        console.log(err);
+        return err;
+      });
+    return data;
+  } catch (error) {
+    console.log(error);
+    return error;
+  }
+};
+
+export const getSingleSlider = async (id) => {
+  try {
+    const data = await axios
+      .get(`${process.env.NEXT_PUBLIC_API_URL}/slider/${id}`)
+      .then((res) => {
+        return res?.data;
+      }).catch((err) => {
+        console.log(err);
+      });
+    return data;
+  } catch (error) {
+    console.log(error);
+    return error;
+  }
+};
+
+
+export const DeleteSlider = async (id) => {
+  try {
+    const data = await axios
+      .get(`${process.env.NEXT_PUBLIC_API_URL}/slider/delete/${id}`)
+      .then((res) => {
+        return res?.data;
+      }).catch((err) => {
+        console.log(err);
+        return err;
+      });
+    return data;
+  } catch (error) {
+    console.log(error);
+    return error;
+  }
+};
+
 
 export const getAdminPurchaseServiceDetails = async (id) => {
   try {
