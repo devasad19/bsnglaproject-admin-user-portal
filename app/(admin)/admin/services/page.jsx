@@ -106,6 +106,7 @@ const Home = () => {
           <table className="w-full">
             <thead className="border-b border-gray-200  bg-primary text-white  h-10 text-12 md:text-15">
               <tr>
+                <th className="text-center px-2">SL</th>
                 <th className="text-center px-2">Name</th>
                 <th className="text-center">Sub Title</th>
                 <th className="text-center">Type</th>
@@ -128,6 +129,11 @@ const Home = () => {
                   const paidStatus = JSON?.parse(item?.paid_status || "{}");
                   return (
                     <tr key={index}>
+                    <td className="px-3">
+                      <span className="border border-gray-300 px-2 py-1 rounded-md">
+                        {index + 1}
+                      </span>
+                    </td>
                       <td className="px-2 border-r border-gray-200">
                         <Link
                           href={{

@@ -39,6 +39,7 @@ const Home = () => {
             <table className="w-full">
               <thead className="border-b border-[#151D48] text-[#151D48] h-10 text-12 lg:text-16">
                 <tr>
+                  <th className="text-center">SL</th>
                   <th className="text-center">Name</th>
                   <th className="text-center">Description</th>
                   <th className="text-center">Status</th>
@@ -57,6 +58,11 @@ const Home = () => {
                 {services?.map((item, index) => {
                   return (
                     <tr key={index}>
+                    <td className="px-3">
+                      <span className="border border-gray-300 px-2 py-1 rounded-md">
+                        {index + 1}
+                      </span>
+                    </td>
                       <td className="px-2">
                         <div className="flex items-center gap-2 text-14">
                           <Image src={item?.logo.length > 0 ? (process.env.NEXT_PUBLIC_IMAGE_URL + item?.logo) : relative_image_path('dummy_image1.jpg')} className="w-[5em] h-[5em]" width={1000} height={1000} alt="Bangla" />
