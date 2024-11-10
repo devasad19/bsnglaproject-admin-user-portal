@@ -319,6 +319,19 @@ const Sidebar = () => {
                     >
                      Footer Content
                     </Link>
+                    <Link
+                      href={{
+                        pathname: "/admin/setting/hero-section",
+                      }}
+                      shallow
+                      className={`text-14 hover:bg-green-500 px-2 py-1 rounded hover:text-white ${
+                        pathname.includes("/admin/setting/hero-section")
+                          ? "bg-green-500 text-white font-semibold"
+                          : "text-black"
+                      }`}
+                    >
+                     Hero Section
+                    </Link>
                     {/* <Link
                       href={{
                         pathname: "/admin/setting/user-setting",

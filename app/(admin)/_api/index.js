@@ -5,8 +5,42 @@ import Cookies from "js-cookie";
 const token = Cookies.get("token");
 
 
+export const updateHeroRight = async (payload) => {
+  try {
+    const data = await axios
+      .post(`${process.env.NEXT_PUBLIC_API_URL}/store/slider-right-content/1`, payload)
+      .then((res) => {
+        return res?.data;
+      }).catch((err) => {
+        console.log(err);
+        return err;
+      });
+    return data;
+  } catch (error) {
+    console.log(error);
+    return error;
+  }
+};
+
+
+export const getHeroRightData = async () => {
+  try {
+    const data = await axios
+      .get(`${process.env.NEXT_PUBLIC_API_URL}/get/slider-right-content`)
+      .then((res) => {
+        return res?.data?.data;
+      }).catch((err) => {
+        console.log(err);
+      });
+    return data;
+  } catch (error) {
+    console.log(error);
+    return error;
+  }
+};
+
+
 export const updateFooterRight = async (payload) => {
-  console.log("before hitting api: ", payload);
   try {
     const data = await axios
       .post(`${process.env.NEXT_PUBLIC_API_URL}/store/footer/right-content`, payload)
