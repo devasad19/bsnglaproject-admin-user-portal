@@ -58,16 +58,22 @@ const Home = () => {
 
 
         getFooterMiddleData().then((response) => {
+            // console.log('inside 2nd api: ',response);
             setMiddleForm({
                 title: response?.title,
-                links: response?.links
+                links: response?.links ? JSON.parse(response?.links) : [
+                    {
+                        label: "",
+                        link: "",
+                    }
+                ]
             })
         }).catch((err) => console.log('2nd err: ', err));
 
 
 
         getFooterRightData().then((response) => {
-            console.log('inside api response: ', response);
+            console.log('3rd res: ',response)
             setRightForm({
                 title: response?.title,
                 address: response?.address,
@@ -78,7 +84,7 @@ const Home = () => {
                         label: "",
                     }
                 ],
-                social: response?.social ? JSON.parse(response?.social) : [
+                social: response?.social_icons ? JSON.parse(response?.social_icons) : [
                     {
                         icon: "",
                         link: "",
@@ -120,15 +126,22 @@ const Home = () => {
         const form = new FormData();
 
         form.append("title", middleForm.title);
-        form.append("links", JSON.stringify(middleForm.links));
+        middleForm.links.map((item, index) => {
+            form.append(`links[${index}][label]`, item.label);
+            form.append(`links[${index}][link]`, item.link);
+        })
         form.append("status", 1);
 
 
-        const response = await updateFooterMiddle(middleForm.id,form).catch((err) => {
+        const response = await updateFooterMiddle(middleForm.id, form).catch((err) => {
             console.log('2nd err: ', err)
         }).finally(() => setLoading(false));
 
-        console.log('response: ', response, form);
+        if (response.status === true) {
+            toast.success(response.message);
+        } else {
+            toast.error(response.message);
+        }
     };
 
     const HandleUpdate3 = async (e) => {
@@ -142,7 +155,7 @@ const Home = () => {
 
         rightForm.contacts.map((item, index) => {
             form.append(`contacts[${index}][icon]`, item.icon);
-            form.append(`contacts[${index}][label]`, item.contact);
+            form.append(`contacts[${index}][label]`, item.label);
         });
 
         rightForm.social.map((item, index) => {
@@ -159,12 +172,10 @@ const Home = () => {
         } else {
             toast.error(response.message);
         }
-
-        // console.log('response: ', response);
     }
 
 
-    console.log('leftForm: ', /* leftForm, */ middleForm/* , rightForm */);
+    // console.log('rightForm: ', rightForm);
 
 
 
@@ -246,7 +257,7 @@ const Home = () => {
                                         </div>
 
                                         {
-                                            middleForm.links.map((link, index) => (
+                                            middleForm?.links && middleForm?.links?.map((link, index) => (
                                                 <div key={index} className="w-full flex gap-2">
                                                     <div className="border border-gray-400 rounded p-2 space-y-3 w-full">
                                                         <div className="grid grid-cols-12">
@@ -285,7 +296,7 @@ const Home = () => {
                                             <legend>
                                                 <label htmlFor="title2" className="bg-white px-1 text-14 after:content-['_*'] after:text-red-500">Title</label>
                                             </legend>
-                                            <input onChange={(e) => setRightForm({ ...rightForm, title: e.target.value })} value={rightForm.title} type="text" id="title2" placeholder="Enter title" className="w-full outline-none text-14 py-1" required />
+                                            <input onChange={(e) => setRightForm({ ...rightForm, title: e.target.value })} value={rightForm.title} type="text" id="title2" placeholder="Enter title" className="w-full outline-none text-14 py-1"  />
                                         </fieldset>
 
 
@@ -294,7 +305,7 @@ const Home = () => {
                                                 <label htmlFor="address" className="bg-white px-1 text-14 after:content-['_*'] after:text-red-500">Address</label>
                                             </legend>
 
-                                            <textarea onChange={(e) => setRightForm({ ...rightForm, address: e.target.value })} value={rightForm.address} className="w-full outline-none text-14 py-1" name="address" id="address" placeholder="Enter address" required></textarea>
+                                            <textarea onChange={(e) => setRightForm({ ...rightForm, address: e.target.value })} value={rightForm.address} className="w-full outline-none text-14 py-1" name="address" id="address" placeholder="Enter address" ></textarea>
                                         </fieldset>
 
 
@@ -303,7 +314,20 @@ const Home = () => {
                                                 <label htmlFor="address_icon" className="bg-white px-1 text-14 after:content-['_*'] after:text-red-500">Address Icon</label>
                                             </legend>
 
-                                            <input onChange={(e) => setRightForm({ ...rightForm, addressIcon: e.target.files[0] })} type="file" name="address_icon" id=" address_icon" required />
+                                            <input onChange={(e) => setRightForm({ ...rightForm, addressIcon: e.target.files[0] })} type="file" name="address_icon" id=" address_icon" />
+
+
+                                            {
+                                                typeof rightForm?.addressIcon == 'string' && (
+                                                    <img src={process.env.NEXT_PUBLIC_IMAGE_URL + rightForm.addressIcon} className="w-32 h-32 object-cover" />
+                                                )
+                                            }
+
+                                            {
+                                                typeof rightForm?.addressIcon == 'object' && (
+                                                    <img src={URL.createObjectURL(rightForm.addressIcon)} className="w-32 h-32 object-cover" />
+                                                )
+                                            }
                                         </fieldset>
 
                                         <div className="bg-slate-100 rounded flex justify-between items-center p-2 mb-2">
@@ -317,13 +341,28 @@ const Home = () => {
                                             rightForm?.contacts.map((contact, index) => (
                                                 <div key={index} className="w-full flex gap-2">
                                                     <div className="grow border border-gray-400 rounded p-2 space-y-3">
-                                                        <div className="flex items-center gap-2">
-                                                            <p className="text-14 after:content-['_*'] after:text-red-500">Icon:</p>
-                                                            <input onChange={(e) => setRightForm({ ...rightForm, contacts: rightForm.contacts.map((contact, i) => i == index ? { ...contact, icon: e.target.files[0] } : contact) })} type="file" name="icon" id="icon" className="grow border border-gray-400 rounded outline-none p-1" required />
+                                                        <div className="">
+                                                            <div className="flex items-center gap-2 pb-2">
+                                                                <p className="text-14 after:content-['_*'] after:text-red-500">Icon:</p>
+                                                                <input onChange={(e) => setRightForm({ ...rightForm, contacts: rightForm.contacts.map((contact, i) => i == index ? { ...contact, icon: e.target.files[0] } : contact) })} type="file" name="icon" id="icon" className="grow border border-gray-400 rounded outline-none p-1"  />
+                                                            </div>
+
+                                                            {
+                                                                typeof contact.icon == 'string' && (
+                                                                    <img src={process.env.NEXT_PUBLIC_IMAGE_URL + contact.icon} className="w-32 h-32 object-cover" />
+                                                                )
+                                                            }
+
+                                                            {
+                                                                typeof contact.icon == 'object' && (
+                                                                    <img src={URL.createObjectURL(contact.icon)} className="w-32 h-32 object-cover" />
+                                                                )
+                                                            }
+
                                                         </div>
                                                         <div className="flex items-center gap-2">
                                                             <p className="text-14 after:content-['_*'] after:text-red-500">Contact:</p>
-                                                            <input onChange={(e) => setRightForm({ ...rightForm, contacts: rightForm.contacts.map((contact, i) => i == index ? { ...contact, contact: e.target.value } : contact) })} value={contact.label} type="text" placeholder="Enter link" className="grow border border-gray-400 rounded outline-none p-1" required />
+                                                            <input onChange={(e) => setRightForm({ ...rightForm, contacts: rightForm.contacts.map((contact, i) => i == index ? { ...contact, label: e.target.value } : contact) })} value={contact.label} type="text" placeholder="Enter link" className="grow border border-gray-400 rounded outline-none p-1"  />
                                                         </div>
                                                     </div>
                                                     <div>
@@ -349,13 +388,27 @@ const Home = () => {
                                             rightForm?.social.map((link, index) => (
                                                 <div key={index} className="w-full flex gap-2">
                                                     <div className="grow border border-gray-400 rounded p-2 space-y-3">
-                                                        <div className="w-full flex items-center gap-2">
-                                                            <p className="text-14 after:content-['_*'] after:text-red-500">Icon:</p>
-                                                            <input onChange={(e) => setRightForm({ ...rightForm, social: rightForm.social.map((link, i) => i == index ? { ...link, icon: e.target.files[0] } : link) })} type="file" name="icon" id="icon" className="grow border border-gray-400 rounded outline-none p-1" required />
+                                                        <div >
+                                                            <div className="w-full flex items-center gap-2">
+                                                                <p className="text-14 after:content-['_*'] after:text-red-500">Icon:</p>
+                                                                <input onChange={(e) => setRightForm({ ...rightForm, social: rightForm.social.map((link, i) => i == index ? { ...link, icon: e.target.files[0] } : link) })} type="file" name="icon" id="icon" className="grow border border-gray-400 rounded outline-none p-1"  />
+                                                            </div>
+
+                                                            {
+                                                                typeof link.icon == 'string' && (
+                                                                    <img src={process.env.NEXT_PUBLIC_IMAGE_URL + link.icon} className="w-32 h-32 object-cover" />
+                                                                )
+                                                            }
+
+                                                            {
+                                                                typeof link.icon == 'object' && (
+                                                                    <img src={URL.createObjectURL(link.icon)} className="w-32 h-32 object-cover" />
+                                                                )
+                                                            }
                                                         </div>
                                                         <div className="w-full flex items-center gap-2">
                                                             <p className="text-14 after:content-['_*'] after:text-red-500">Url:</p>
-                                                            <input onChange={(e) => setRightForm({ ...rightForm, social: rightForm.social.map((link, i) => i == index ? { ...link, link: e.target.value } : link) })} value={link.link} type="text" placeholder="Enter link" className="grow border border-gray-400 rounded outline-none p-1" required />
+                                                            <input onChange={(e) => setRightForm({ ...rightForm, social: rightForm.social.map((link, i) => i == index ? { ...link, link: e.target.value } : link) })} value={link.link} type="text" placeholder="Enter link" className="grow border border-gray-400 rounded outline-none p-1"  />
                                                         </div>
                                                     </div>
                                                     <div>
@@ -366,19 +419,6 @@ const Home = () => {
                                                 </div>
                                             ))
                                         }
-
-                                        {/* <div>
-                                    <div className="border border-gray-400 rounded p-2 space-y-3">
-                                        <div className="grid grid-cols-12">
-                                            <p className="text-14 after:content-['_*'] after:text-red-500">Icon:</p>
-                                            <input type="file" name="icon" id="icon" />
-                                        </div>
-                                        <div className="grid grid-cols-12">
-                                            <p className="text-14 after:content-['_*'] after:text-red-500">Url:</p>
-                                            <input type="text" placeholder="Enter link" className="col-span-11 border border-gray-400 rounded outline-none p-1" />
-                                        </div>
-                                    </div>
-                                </div> */}
 
 
                                         <div className="flex justify-end">
