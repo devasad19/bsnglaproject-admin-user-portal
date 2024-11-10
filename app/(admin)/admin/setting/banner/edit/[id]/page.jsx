@@ -25,7 +25,7 @@ const Home = ({ params: { id } }) => {
 
     const HandleUpdate = async () => {
         setLoading(true);
-        const response = await updateSlider(data, id).then((res) => {
+        const response = await updateSlider(id, data).then((res) => {
             if (res.status) {
                 toast.success("Slider Updated Successfully");
                 router.push("/admin/setting/banner");
