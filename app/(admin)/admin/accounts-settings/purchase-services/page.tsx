@@ -30,6 +30,7 @@ const PurchaaseServicePage = () => {
         <table className="w-full">
           <thead className="border-b border-[#151D48] text-[#151D48] h-10 text-12 lg:text-16">
             <tr>
+              <th className="text-center">SL</th>
               <th className="text-center">Name</th>
               <th className="text-center">Description</th>
               <th className="text-center">Link</th>
@@ -49,6 +50,11 @@ const PurchaaseServicePage = () => {
               ) : (
                 soldServices?.map((item: any, index: number) => (
                   <tr key={index}>
+                  <td className="px-3">
+                    <span className="border border-gray-300 px-2 py-1 rounded-md">
+                      {index + 1}
+                    </span>
+                  </td>
                     <td className="px-2">
                       <Link
                         href={{

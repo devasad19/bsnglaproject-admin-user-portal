@@ -33,6 +33,7 @@ const Home = () => {
             <table className="w-full text-left">
               <thead>
                 <tr>
+                  <th>SL</th>
                   <th>Invoice</th>
                   <th>Amount</th>
                   <th>Billing Date</th>
@@ -46,6 +47,11 @@ const Home = () => {
                   orders?.map((item, index) => {
                     return (
                       <tr key={index} className="h-16">
+                      <td className="px-3">
+                        <span className="border border-gray-300 px-2 py-1 rounded-md">
+                          {index + 1}
+                        </span>
+                      </td>
                         <td>
                           <Link
                             href={{

@@ -58,9 +58,10 @@ const Home = () => {
                         <table className="w-full">
                             <thead className="bg-primary text-white h-10">
                                 <tr>
-                                    <th>Serial</th>
+                                    <th>SL</th>
                                     <th>Title</th>
                                     <th>English Title</th>
+                                    <th>Sort Value</th>
                                     <th>Url</th>
                                     <th>Status</th>
                                     <th className="w-[20em]">Action</th>
@@ -71,9 +72,14 @@ const Home = () => {
                                 {
                                     data?.map((item, index) => (
                                         <tr key={index} className="h-16">
-                                            <td>{ item?.sort_id }</td>
+                                        <td className="px-3">
+                                          <span className="border border-gray-300 px-2 py-1 rounded-md">
+                                            {index + 1}
+                                          </span>
+                                        </td>
                                             <td>{ item?.title_bn }</td>
                                             <td>{ item?.title_eng }</td>
+                                            <td>{ item?.sort_id }</td>
                                             <td>{ item?.url }</td>
                                             <td>{ item?.status == 1 ? 'Active' : 'Inactive' }</td>
                                             <td className="space-x-5">

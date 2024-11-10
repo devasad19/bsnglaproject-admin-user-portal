@@ -31,7 +31,8 @@ const Home = (): JSX.Element => {
         <table className="w-full">
           <thead>
             <tr className="bg-[#E1F6F9] h-8">
-              <th>SI</th>
+              <th>SL</th>
+              <th>Image</th>
               <th>Name</th>
               <th>Phone</th>
               <th>Status</th>
@@ -43,8 +44,17 @@ const Home = (): JSX.Element => {
               citizen?.map((item: any, index: any) => {
                 return (
                   <tr key={index} className="h-16 border-b border-gray-300">
-                    <td className="">
-                      <span className="ml-2">{item?.id}</span>
+                  <td className="px-3">
+                    <span className="border border-gray-300 px-2 py-1 rounded-md">
+                      {index + 1}
+                    </span>
+                  </td>
+                    <td>
+                      <div className="flex items-center justify-center">
+                        <div className="flex flex-col text-left">
+                           <img src="{relative_image_path(item?.image_path)}" alt="" />
+                        </div>
+                      </div>
                     </td>
                     <td>
                       <div className="flex items-center justify-center">

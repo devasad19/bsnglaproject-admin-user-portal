@@ -112,7 +112,7 @@ const Home = () => {
             <table className="w-full">
               <thead>
                 <tr className="bg-[#E1F6F9] h-8">
-                  <th>SI</th>
+                  <th>SL</th>
                   <th>User Name</th>
                   <th>Phone</th>
                   <th>Status</th>
@@ -124,8 +124,11 @@ const Home = () => {
                   users?.map((item: any, index: any) => {
                     return (
                       <tr key={index} className="h-16 border-b border-gray-300">
-                        <td className="">
-                          <span className="ml-2">{ index+1 }</span>
+                        
+                        <td className="px-3">
+                          <span className="border border-gray-300 px-2 py-1 rounded-md">
+                            {index + 1}
+                          </span>
                         </td>
                         <td>
                           <div className="flex items-center justify-center">

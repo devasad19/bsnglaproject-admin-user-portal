@@ -256,7 +256,7 @@ const UpdateServiceResource = ({ id }) => {
                             >
                                 <option selected={serviceResource?.type == 'Application'} value="Application">Application</option>
                                 <option selected={serviceResource?.type == 'Plugin'} value="Plugin">Plugin</option>
-                                <option selected={serviceResource?.type == 'Mobile Apps'} value="Mobile Apps">Mobile Apps</option>
+                                <option selected={serviceResource?.type == 'Mobile_Apps'} value="Mobile Apps">Mobile Apps</option>
                                 <option selected={serviceResource?.type == 'Datasets'} value="Datasets">Data Sets</option>
                                 <option selected={serviceResource?.type == 'Tools'} value="Tools">Tools</option>
                                 <option selected={serviceResource?.type == 'Papers'} value="Papers">Papers</option>
