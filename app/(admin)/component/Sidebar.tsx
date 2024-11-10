@@ -279,7 +279,7 @@ const Sidebar = () => {
               </li>
               {isOpen && (
                 <NewAccordion isOpen={isToggleOpen.setting}>
-                  <div className="ms-3 flex flex-col">
+                  <div className="ms-3 flex flex-col gap-1">
                     <Link
                       href={{
                         pathname: "/admin/setting/frontend-setting",
@@ -305,6 +305,32 @@ const Sidebar = () => {
                       }`}
                     >
                      Sidebar Links
+                    </Link>
+                    <Link
+                      href={{
+                        pathname: "/admin/setting/footer-content",
+                      }}
+                      shallow
+                      className={`text-14 hover:bg-green-500 px-2 py-1 rounded hover:text-white ${
+                        pathname.includes("/admin/setting/footer-content")
+                          ? "bg-green-500 text-white font-semibold"
+                          : "text-black"
+                      }`}
+                    >
+                     Footer Content
+                    </Link>
+                    <Link
+                      href={{
+                        pathname: "/admin/setting/hero-section",
+                      }}
+                      shallow
+                      className={`text-14 hover:bg-green-500 px-2 py-1 rounded hover:text-white ${
+                        pathname.includes("/admin/setting/hero-section")
+                          ? "bg-green-500 text-white font-semibold"
+                          : "text-black"
+                      }`}
+                    >
+                     Hero Section
                     </Link>
                     {/* <Link
                       href={{

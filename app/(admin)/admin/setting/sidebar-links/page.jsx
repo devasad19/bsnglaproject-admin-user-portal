@@ -1,20 +1,40 @@
 'use client';
 
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
+import { getPortalMenu, deletePortalMenu } from "@/app/(admin)/_api";
 
 const Home = () => {
-const [loading, setLoading] = useState(false);
-const [data, setData] = useState([]);
+    const [loading, setLoading] = useState(false);
+    const [data, setData] = useState([]);
+
+
+
+    useEffect(() => {
+        setLoading(true);
+        getPortalMenu().then((res) => {
+            setData(res);
+        }).catch((err) => console.log(err)).finally(() => setLoading(false));
+    }, []);
 
 
 
 
-
-const HandleDelete = (id) => {
-
-};
+    const HandleDelete = (id) => {
+        setLoading(true);
+        if (id) {
+            deletePortalMenu(id).then(() => {
+                getPortalMenu().then((res) => {
+                    setData(res);
+                }).catch((err) => console.log(err));
+            }).catch((err) => {
+                console.log(err);
+            }).finally(() => {
+                setLoading(false);
+            });
+        }
+    };
 
 
 
@@ -29,36 +49,55 @@ const HandleDelete = (id) => {
                 </Link>
             </div>
 
-            <div>
-                <table className="w-full">
-                    <thead className="bg-primary text-white h-10">
-                        <tr>
-                            <th>SI</th>
-                            <th>Title</th>
-                            <th>Url</th>
-                            <th className="w-[20em]">Action</th>
-                        </tr>
-                    </thead>
-                    <tbody className="text-center">
-                        <tr className="h-16">
-                            <td>1</td>
-                            <td>Home</td>
-                            <td>home</td>
-                            <td className="space-x-5">
-                                <Link href={{
-                                    pathname: `/admin/setting/sidebar-links/edit`,
-                                }} shallow className="bg-green-500 text-white px-4 py-2 rounded">
-                                    Edit
-                                </Link>
 
-                                <button onClick={() => HandleDelete(1)} className="bg-red-500 text-white px-4 py-1.5 rounded">
-                                    Delete
-                                </button>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
+            {
+                loading ? (
+                    <p>Loading...</p>
+                ) : (
+                    <div>
+                        <table className="w-full">
+                            <thead className="bg-primary text-white h-10">
+                                <tr>
+                                    <th>Serial</th>
+                                    <th>Title</th>
+                                    <th>English Title</th>
+                                    <th>Url</th>
+                                    <th>Status</th>
+                                    <th className="w-[20em]">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody className="text-center">
+
+                                {
+                                    data?.map((item, index) => (
+                                        <tr key={index} className="h-16">
+                                            <td>{ item?.sort_id }</td>
+                                            <td>{ item?.title_bn }</td>
+                                            <td>{ item?.title_eng }</td>
+                                            <td>{ item?.url }</td>
+                                            <td>{ item?.status == 1 ? 'Active' : 'Inactive' }</td>
+                                            <td className="space-x-5">
+                                                <Link href={{
+                                                    pathname: `/admin/setting/sidebar-links/edit/${item?.id}`,
+                                                }} shallow className="bg-green-500 text-white px-4 py-2 rounded">
+                                                    Edit
+                                                </Link>
+
+                                                <button onClick={() => HandleDelete(item?.id)} className="bg-red-500 text-white px-4 py-1.5 rounded">
+                                                    Delete
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    ))
+                                }
+
+                            </tbody>
+                        </table>
+                    </div>
+                )
+            }
+
+
         </section>
     )
 };
