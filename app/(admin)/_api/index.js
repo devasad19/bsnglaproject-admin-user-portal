@@ -5,6 +5,92 @@ import Cookies from "js-cookie";
 const token = Cookies.get("token");
 
 
+export const updatePortalMenu = async (id, payload) => {
+  try {
+    const data = await axios
+      .post(`${process.env.NEXT_PUBLIC_API_URL}/update/menu-item`, payload)
+      .then((res) => {
+        return res?.data;
+      }).catch((err) => {
+        console.log(err);
+      });
+    return data;
+  } catch (error) {
+    console.log(error);
+    return error;
+  }
+};
+
+export const getSingleMenu = async (id) => {
+  try {
+    const data = await axios
+      .get(`${process.env.NEXT_PUBLIC_API_URL}/signle/portal/menu/${id}`)
+      .then((res) => {
+        return res?.data;
+      }).catch((err) => {
+        console.log(err);
+      });
+    return data;
+  } catch (error) {
+    console.log(error);
+    return error;
+  }
+};
+
+
+export const getPortalMenu = async () => {
+  try {
+    const data = await axios
+      .get(`${process.env.NEXT_PUBLIC_API_URL}/portal/menus`)
+      .then((res) => {
+        return res?.data?.data;
+      }).catch((err) => {
+        console.log(err);
+      });
+    return data;
+  } catch (error) {
+    console.log(error);
+    return error;
+  }
+};
+
+
+export const deletePortalMenu = async (id) => {
+  try {
+    const data = await axios
+      .delete(`${process.env.NEXT_PUBLIC_API_URL}/portal/menu/delete/${id}`)
+      .then((res) => {
+        return res?.data;
+      }).catch((err) => {
+        console.log(err);
+        return err;
+      });
+    return data;
+  } catch (error) {
+    console.log(error);
+    return error;
+  }
+};
+
+
+export const createPortalMenu = async (payload) => {
+  try {
+    const data = await axios
+      .post(`${process.env.NEXT_PUBLIC_API_URL}/store/portal/menu`, payload)
+      .then((res) => {
+        return res?.data;
+      }).catch((err) => {
+        console.log(err);
+        return err;
+      });
+    return data;
+  } catch (error) {
+    console.log(error);
+    return error;
+  }
+}
+
+
 export const updateHeroRight = async (payload) => {
   try {
     const data = await axios
