@@ -72,7 +72,7 @@ const Home = () => {
                                     data?.map((item, index) => (
                                         <tr key={index} className="h-16">
                                             <td>{ item?.sort_id }</td>
-                                            <td>{ item?.title }</td>
+                                            <td>{ item?.title_bn }</td>
                                             <td>{ item?.title_eng }</td>
                                             <td>{ item?.url }</td>
                                             <td>{ item?.status == 1 ? 'Active' : 'Inactive' }</td>
@@ -83,7 +83,7 @@ const Home = () => {
                                                     Edit
                                                 </Link>
 
-                                                <button onClick={() => HandleDelete(1)} className="bg-red-500 text-white px-4 py-1.5 rounded">
+                                                <button onClick={() => HandleDelete(item?.id)} className="bg-red-500 text-white px-4 py-1.5 rounded">
                                                     Delete
                                                 </button>
                                             </td>

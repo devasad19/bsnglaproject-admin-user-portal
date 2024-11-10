@@ -6,11 +6,13 @@ import Link from "next/link";
 import { IoMdArrowRoundBack } from "react-icons/io";
 import { createPortalMenu } from "@/app/(admin)/_api";
 import { toast } from "react-toastify";
+import { useRouter } from "next/navigation";
 
 
 
 
 const Home = () => {
+    const router = useRouter();
     const [laoding, setLoading] = useState(false);
     const [formData, setFormData] = useState({
         serial: 0,
@@ -33,8 +35,9 @@ const Home = () => {
         form.append("url", formData.url);
         form.append("status", formData.status);
 
-        createPortalMenu(formData).then((res) => {
+        createPortalMenu(form).then((res) => {
             toast.success(res?.message);
+            router.push("/admin/setting/sidebar-links");
         }).catch((err) => {
             console.log(err);
             toast.error(err?.message);

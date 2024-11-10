@@ -5,7 +5,8 @@ import Cookies from "js-cookie";
 const token = Cookies.get("token");
 
 
-export const updatePortalMenu = async (id, payload) => {
+export const updatePortalMenu = async (payload) => {
+  console.log('link payload: ',payload)
   try {
     const data = await axios
       .post(`${process.env.NEXT_PUBLIC_API_URL}/update/menu-item`, payload)
@@ -198,7 +199,7 @@ export const getFooterMiddleData = async () => {
 };
 
 
-export const upDateFooterLeft = async (id, payload) => {
+export const upDateFooterLeft = async (payload) => {
   try {
     const data = await axios
       .post(`${process.env.NEXT_PUBLIC_API_URL}/footer/left/update/data`, payload)

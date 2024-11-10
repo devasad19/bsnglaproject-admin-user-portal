@@ -57,12 +57,12 @@ const Home = () => {
         }).catch((err) => console.log('1st err: ', err));
 
 
-        /* getFooterMiddleData().then((response) => {
+        getFooterMiddleData().then((response) => {
             setMiddleForm({
                 title: response?.title,
                 links: response?.links
             })
-        }).catch((err) => console.log('2nd err: ', err)); */
+        }).catch((err) => console.log('2nd err: ', err));
 
 
 
@@ -98,8 +98,8 @@ const Home = () => {
 
         form.append("title", leftForm.title);
         form.append("description", leftForm.description);
-        form.append("copyText", leftForm.copyText);
-
+        form.append("copyright_text", leftForm.copyText);
+        form.append("status", 2);
 
         const response = await upDateFooterLeft(form, leftForm.id).catch((err) => {
             console.log('1st err: ', err)
@@ -121,10 +121,10 @@ const Home = () => {
 
         form.append("title", middleForm.title);
         form.append("links", JSON.stringify(middleForm.links));
-        form.append("status", middleForm.status);
+        form.append("status", 1);
 
 
-        const response = await updateFooterMiddle(form, middleForm.id).catch((err) => {
+        const response = await updateFooterMiddle(middleForm.id,form).catch((err) => {
             console.log('2nd err: ', err)
         }).finally(() => setLoading(false));
 
@@ -164,7 +164,7 @@ const Home = () => {
     }
 
 
-    console.log('leftForm: ', /* leftForm, middleForm, */ rightForm);
+    console.log('leftForm: ', /* leftForm, */ middleForm/* , rightForm */);
 
 
 
@@ -247,7 +247,7 @@ const Home = () => {
 
                                         {
                                             middleForm.links.map((link, index) => (
-                                                <div className="w-full flex gap-2">
+                                                <div key={index} className="w-full flex gap-2">
                                                     <div className="border border-gray-400 rounded p-2 space-y-3 w-full">
                                                         <div className="grid grid-cols-12">
                                                             <p className="text-14 after:content-['_*'] after:text-red-500">Label:</p>
