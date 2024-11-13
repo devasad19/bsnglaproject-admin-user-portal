@@ -19,6 +19,13 @@ const Sidebar = () => {
     }
   }, []);
 
+
+  const HandleLogout = () => {
+    document.cookie = "user=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+    document.cookie = "token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+    window.location.href="http://localhost:3000/signin";
+  }
+
   // console.log('user cookie: ',user);
   return (
     <>
@@ -201,8 +208,8 @@ const Sidebar = () => {
                     icon={
                       <svg
                         className={`w-5 h-5 fill-current ${pathname.includes("accounts-settings")
-                            ? "text-white"
-                            : "text-primary"
+                          ? "text-white"
+                          : "text-primary"
                           }`}
                         xmlns="http://www.w3.org/2000/svg"
                         viewBox="0 0 640 512"
@@ -217,7 +224,7 @@ const Sidebar = () => {
                           pathname: "/user/accounts-settings/purchase-services",
                         }}
                         shallow
-                        className={`text-14 hover:bg-green-500 hover:text-white p-2 rounded ${ pathname.includes("purchase-services")
+                        className={`text-14 hover:bg-green-500 hover:text-white p-2 rounded ${pathname.includes("purchase-services")
                           ? "bg-green-500 text-white"
                           : ""}`}
                       >
@@ -228,7 +235,7 @@ const Sidebar = () => {
                           pathname: "/user/accounts-settings/payment-history",
                         }}
                         shallow
-                        className={`text-14 hover:bg-green-500 hover:text-white p-2 rounded ${ pathname.includes("payment-history")
+                        className={`text-14 hover:bg-green-500 hover:text-white p-2 rounded ${pathname.includes("payment-history")
                           ? "bg-green-500 text-white"
                           : ""}`}
                       >
@@ -250,8 +257,8 @@ const Sidebar = () => {
                     icon={
                       <svg
                         className={`w-5 h-5 fill-current ${pathname.includes("profile-settings")
-                            ? "text-white"
-                            : "text-primary"
+                          ? "text-white"
+                          : "text-primary"
                           }`}
                         xmlns="http://www.w3.org/2000/svg"
                         viewBox="0 0 640 512"
@@ -266,7 +273,7 @@ const Sidebar = () => {
                           pathname: "/user/profile-settings/manage-profile",
                         }}
                         shallow
-                        className={`text-14 hover:bg-green-500 hover:text-white p-2 rounded ${ pathname.includes("manage-profile")
+                        className={`text-14 hover:bg-green-500 hover:text-white p-2 rounded ${pathname.includes("manage-profile")
                           ? "bg-green-500 text-white"
                           : ""}`}
                       >
@@ -277,7 +284,7 @@ const Sidebar = () => {
                           pathname: "/user/profile-settings/change-password",
                         }}
                         shallow
-                        className={`text-14 hover:bg-green-500 hover:text-white p-2 rounded ${ pathname.includes("change-password")
+                        className={`text-14 hover:bg-green-500 hover:text-white p-2 rounded ${pathname.includes("change-password")
                           ? "bg-green-500 text-white"
                           : ""}`}
                       >
@@ -347,7 +354,7 @@ const Sidebar = () => {
             <div className="flex items-center gap-2">
               <Image
                 className="w-10 h-10 rounded-md"
-                src={user?.avatar ? process.env.NEXT_PUBLIC_IMAGE_URL+user?.avatar :  relative_image_path('dummy_image1.jpg')}
+                src={user?.avatar ? process.env.NEXT_PUBLIC_IMAGE_URL + user?.avatar : relative_image_path('dummy_image1.jpg')}
                 width={1000}
                 height={1000}
                 alt="Bangla"
@@ -358,7 +365,7 @@ const Sidebar = () => {
               </div>
             </div>
           )}
-          <button title="Logout">
+          <button onClick={HandleLogout} title="Logout">
             <svg
               className="w-5 h-5 fill-white"
               xmlns="http://www.w3.org/2000/svg"
