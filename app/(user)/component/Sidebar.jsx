@@ -1,5 +1,5 @@
 "use client";
-import { useContext, useState } from "react";
+import { useContext, useState, useEffect } from "react";
 import Image from "next/image";
 import { relative_image_path } from "@/helper";
 import Link from "next/link";
@@ -7,9 +7,19 @@ import Accordion from "@/app/_components/Accordion/Accordion";
 import { usePathname } from "next/navigation";
 import { MyContext } from "@/ContextProvider/ContextProvider";
 const Sidebar = () => {
-  const { user } = useContext(MyContext);
   const pathname = usePathname();
+  const [user, setUser] = useState(null);
   const [isOpen, setIsOpen] = useState(true);
+
+
+  useEffect(() => {
+    const userCookie = document.cookie.split(';').find(c => c.trim().startsWith('user='));
+    if (userCookie != undefined) {
+      setUser(JSON.parse(decodeURIComponent(userCookie.split('=')[1])));
+    }
+  }, []);
+
+  // console.log('user cookie: ',user);
   return (
     <>
       <div className="min-h-screen flex flex-col justify-between">
@@ -337,7 +347,7 @@ const Sidebar = () => {
             <div className="flex items-center gap-2">
               <Image
                 className="w-10 h-10 rounded-md"
-                src={relative_image_path("dummy_image1.jpg")}
+                src={user?.avatar ? process.env.NEXT_PUBLIC_IMAGE_URL+user?.avatar :  relative_image_path('dummy_image1.jpg')}
                 width={1000}
                 height={1000}
                 alt="Bangla"

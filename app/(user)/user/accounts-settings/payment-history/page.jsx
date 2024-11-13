@@ -7,17 +7,26 @@ import { getUserOrders } from "@/app/(user)/_api";
 
 const Home = () => {
   const [orders, setOrders] = useState();
+  const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(false);
+
+
+  useEffect(() => {
+    const userCookie = document.cookie.split(';').find(c => c.trim().startsWith('user='));
+    if (userCookie != undefined) {
+      setUser(JSON.parse(decodeURIComponent(userCookie.split('=')[1])));
+    }
+  }, []);
 
   useEffect(() => {
     setLoading(true);
-    getUserOrders(12).then((response) => {
+    getUserOrders(user?.id).then((response) => {
       setOrders(response?.data);
       setLoading(false)
     }).catch((error) => {
       console.log(error)
     });
-  }, []);
+  }, [user]);
 
   return (
     <section>

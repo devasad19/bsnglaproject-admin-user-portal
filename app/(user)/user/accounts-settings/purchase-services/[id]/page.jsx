@@ -11,15 +11,15 @@ const Home = ({ params: { id } }) => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    getServicePurchaseHistory(12)
+    getServicePurchaseHistory(id)
       .then((response) => {
         setData(response?.data);
         setLoading(false);
       })
       .catch((error) => console.log(error));
-  }, []);
+  }, [id]);
 
-  // console.log('payment history response: ', data);
+  console.log('payment history response: ', data, id);
 
 
   return (

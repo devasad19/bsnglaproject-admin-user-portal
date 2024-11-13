@@ -9,18 +9,27 @@ import { relative_image_path } from "@/helper";
 
 const Home = () => {
   const [services, setServices] = useState([]);
+  const [user, setUser] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
+
+
+
+  useEffect(() => {
+    const userCookie = document.cookie.split(';').find(c => c.trim().startsWith('user='));
+    if (userCookie != undefined) {
+      setUser(JSON.parse(decodeURIComponent(userCookie.split('=')[1])));
+    }
+  }, []);
 
   useEffect(() => {
     setIsLoading(true);
-    getBoughtServices(12)
+    getBoughtServices(user?.id)
       .then((data) => {
         setServices(data?.data);
         setIsLoading(false);
       })
       .catch((err) => console.log(err));
-  }, []);
-
+  }, [user]);
 
 
   return (
@@ -58,11 +67,11 @@ const Home = () => {
                 {services?.map((item, index) => {
                   return (
                     <tr key={index}>
-                    <td className="px-3">
-                      <span className="border border-gray-300 px-2 py-1 rounded-md">
-                        {index + 1}
-                      </span>
-                    </td>
+                      <td className="px-3">
+                        <span className="border border-gray-300 px-2 py-1 rounded-md">
+                          {index + 1}
+                        </span>
+                      </td>
                       <td className="px-2">
                         <div className="flex items-center gap-2 text-14">
                           <Image src={item?.logo.length > 0 ? (process.env.NEXT_PUBLIC_IMAGE_URL + item?.logo) : relative_image_path('dummy_image1.jpg')} className="w-[5em] h-[5em]" width={1000} height={1000} alt="Bangla" />
@@ -97,13 +106,13 @@ const Home = () => {
                           <summary className="btn m-1 h-auto min-h-1 border-none bg-blue-500 px-4 py-2 rounded text-white hover:bg-blue-500 hover:text-white">Options</summary>
                           <ul className="menu dropdown-content bg-gray-100 rounded-box z-[1] w-40 p-1 shadow-md right-0">
                             <li>
-                              <Link target="_blank" href={process.env.NEXT_PUBLIC_LOCAL_PORTAL_URL + '/services/' + item?.service_id}>
+                              <Link target="_blank" href={process.env.NEXT_PUBLIC_LOCAL_PORTAL_URL + '/services/' + item?.id}>
                                 Service Details
                               </Link>
                             </li>
                             <li>
                               <Link href={{
-                                pathname: `/user/services/${item?.service_id}`
+                                pathname: `/user/services/${item?.id}`
                               }}
                                 shallow
                               >
@@ -112,7 +121,7 @@ const Home = () => {
                             </li>
                             <li>
                               <Link href={{
-                                pathname: `/user/accounts-settings/purchase-services/${item?.service_id}`
+                                pathname: `/user/accounts-settings/purchase-services/${item?.id}`
                               }}
                                 shallow
                               >
