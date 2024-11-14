@@ -7,74 +7,168 @@ const Home = async (): Promise<JSX.Element> => {
       <h3 className="text-32 font-mono font-bold text-[#151D48] pb-5">
         Dashboard
       </h3>
-      <div>
-        <div className="flex flex-col gap-4 lg:gap-0 lg:flex-row pb-5">
-          <div className="w-full lg:w-[60%]">
-            <p className="pb-1 text-18 font-bold">Stats</p>
-            <div className="flex flex-wrap gap-4">
-              <div className="bg-[#DCFCE7] p-4 w-full lg:w-[48%]">
-                <div className="flex justify-between">
-                  <svg
-                    className="fill-white bg-[#3CD856] w-8 h-8 p-1 rounded-full"
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 512 512"
-                  >
-                    <path d="M288 32c0-17.7-14.3-32-32-32s-32 14.3-32 32V274.7l-73.4-73.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l128 128c12.5 12.5 32.8 12.5 45.3 0l128-128c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L288 274.7V32zM64 352c-35.3 0-64 28.7-64 64v32c0 35.3 28.7 64 64 64H448c35.3 0 64-28.7 64-64V416c0-35.3-28.7-64-64-64H346.5l-45.3 45.3c-25 25-65.5 25-90.5 0L165.5 352H64zm368 56a24 24 0 1 1 0 48 24 24 0 1 1 0-48z" />
-                  </svg>
-                  <p className="text-[#151D48] text-16 font-medium">
-                    Total Download
-                  </p>
+      <div className="flex flex-wrap">
+        <div className="w-full md:w-1/2 xl:w-1/4 p-2">
+            <div className="bg-blue-500 text-white mb-4 rounded-lg shadow-lg">
+                <div className="p-4 text-left text-24 font-bold">343</div>
+                <div className="p-4 flex items-center justify-between bg-blue-600 rounded-b-lg">
+                    <a className="text-white text-sm font-medium underline" href="#">Total Services </a>
+                    <div className="text-white">
+                        <svg className="w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 256 512">
+                            <path d="M246.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L178.7 256 41.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/>
+                        </svg>
+                    </div>
                 </div>
-                <p className="text-center text-24 font-bold text-[#151D48]">
-                  100
-                </p>
-              </div>
-              <div className="bg-blue-100 p-4 w-full lg:w-[48%]">
-                <div className="flex justify-between">
-                  <svg
-                    className="fill-white bg-blue-400 w-8 h-8 p-1 rounded-full"
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 512 512"
-                  >
-                    <path d="M256 448c141.4 0 256-93.1 256-208S397.4 32 256 32S0 125.1 0 240c0 45.1 17.7 86.8 47.7 120.9c-1.9 24.5-11.4 46.3-21.4 62.9c-5.5 9.2-11.1 16.6-15.2 21.6c-2.1 2.5-3.7 4.4-4.9 5.7c-.6 .6-1 1.1-1.3 1.4l-.3 .3 0 0 0 0 0 0 0 0c-4.6 4.6-5.9 11.4-3.4 17.4c2.5 6 8.3 9.9 14.8 9.9c28.7 0 57.6-8.9 81.6-19.3c22.9-10 42.4-21.9 54.3-30.6c31.8 11.5 67 17.9 104.1 17.9zM128 208a32 32 0 1 1 0 64 32 32 0 1 1 0-64zm128 0a32 32 0 1 1 0 64 32 32 0 1 1 0-64zm96 32a32 32 0 1 1 64 0 32 32 0 1 1 -64 0z" />
-                  </svg>
-                  <p className="text-[#151D48] text-16 font-medium">
-                    Total Comment
-                  </p>
-                </div>
-                <p className="text-center text-24 font-bold text-[#151D48]">
-                  100
-                </p>
-              </div>
-              <div className="bg-fuchsia-100 p-4 w-full lg:w-[48%]">
-                <div className="flex justify-between">
-                  <svg
-                    className="fill-white bg-fuchsia-400 w-8 h-8 p-1 rounded-full"
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 576 512"
-                  >
-                    <path d="M7.8 207.7c-13.1-17.8-9.3-42.8 8.5-55.9L142.9 58.5C166.2 41.3 194.5 32 223.5 32H384 544c17.7 0 32 14.3 32 32v64c0 17.7-14.3 32-32 32H507.2l-44.9 36c-22.7 18.2-50.9 28-80 28H304 288 224c-17.7 0-32-14.3-32-32s14.3-32 32-32h64 16c8.8 0 16-7.2 16-16s-7.2-16-16-16H183.4L63.7 216.2c-17.8 13.1-42.8 9.3-55.9-8.5zM382.4 160l0 0 .9 0c-.3 0-.6 0-.9 0zM568.2 304.3c13.1 17.8 9.3 42.8-8.5 55.9L433.1 453.5c-23.4 17.2-51.6 26.5-80.7 26.5H192 32c-17.7 0-32-14.3-32-32V384c0-17.7 14.3-32 32-32H68.8l44.9-36c22.7-18.2 50.9-28 80-28H272h16 64c17.7 0 32 14.3 32 32s-14.3 32-32 32H288 272c-8.8 0-16 7.2-16 16s7.2 16 16 16H392.6l119.7-88.2c17.8-13.1 42.8-9.3 55.9 8.5zM193.6 352l0 0-.9 0c.3 0 .6 0 .9 0z" />
-                  </svg>
-                  <p className="text-[#151D48] text-16 font-medium">
-                    Total Service
-                  </p>
-                </div>
-                <p className="text-center text-24 font-bold text-[#151D48]">
-                  100
-                </p>
-              </div>
             </div>
-          </div>
-          <div className="w-full lg:w-[40%]">
-            <p className="pb-1 text-18 font-bold">Monthly Usage</p>
-            <BarChart />
-          </div>
         </div>
-        <div>
-          <p className="pb-1 text-18 font-bold">Monthly Usage</p>
-          <LineChart />
+
+        <div className="w-full md:w-1/2 xl:w-1/4 p-2">
+            <div className="bg-yellow-500 text-white mb-4 rounded-lg shadow-lg">
+                <div className="p-4 font-semibold">Warning Card</div>
+                <div className="p-4 flex items-center justify-between bg-yellow-600 rounded-b-lg">
+                    <a className="text-white text-sm font-medium underline" href="#">View Details</a>
+                    <div className="text-white">
+                        <svg className="w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 256 512">
+                            <path d="M246.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L178.7 256 41.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/>
+                        </svg>
+                    </div>
+                </div>
+            </div>
         </div>
-      </div>
+
+        <div className="w-full md:w-1/2 xl:w-1/4 p-2">
+            <div className="bg-green-500 text-white mb-4 rounded-lg shadow-lg">
+                <div className="p-4 font-semibold">Success Card</div>
+                <div className="p-4 flex items-center justify-between bg-green-600 rounded-b-lg">
+                    <a className="text-white text-sm font-medium underline" href="#">View Details</a>
+                    <div className="text-white">
+                        <svg className="w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 256 512">
+                            <path d="M246.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L178.7 256 41.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div className="w-full md:w-1/2 xl:w-1/4 p-2">
+            <div className="bg-red-500 text-white mb-4 rounded-lg shadow-lg">
+                <div className="p-4 font-semibold">Danger Card</div>
+                <div className="p-4 flex items-center justify-between bg-red-600 rounded-b-lg">
+                    <a className="text-white text-sm font-medium underline" href="#">View Details</a>
+                    <div className="text-white">
+                        <svg className="w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 256 512">
+                            <path d="M246.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L178.7 256 41.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div className="flex flex-wrap mt-3">
+    {/* <!-- Sessions by Channel Card --> */}
+    <div className="w-full xl:w-5/12 p-2">
+        <div className="bg-white rounded-lg shadow-md">
+            <div className="p-4">
+                <div className="flex justify-between mb-3">
+                    <h4 className="text-lg font-semibold">Service Visits</h4>
+                </div>
+                <div className="flex">
+                    <div className="w-1/2 p-3">
+                        <div id="circleProgress6" className="relative rounded-full bg-gray-100 p-4">
+                            {/* <!-- Placeholder for progress circle --> */}
+                            <svg viewBox="0 0 100 100" className="w-full">
+                                <path d="M 50,50 m 0,-45 a 45,45 0 1 1 0,90 a 45,45 0 1 1 0,-90" stroke="#eee" stroke-width="10" fill-opacity="0"></path>
+                                <path d="M 50,50 m 0,-45 a 45,45 0 1 1 0,90 a 45,45 0 1 1 0,-90" stroke="rgb(46,32,199)" stroke-width="10" fill-opacity="0"></path>
+                            </svg>
+                            <div className="absolute inset-0 flex flex-col items-center justify-center text-blue-900 font-bold text-2xl">
+                                <p className="mb-0 text-xl text-center">Total Visits</p>
+                                2345
+                            </div>
+                        </div>
+                    </div>
+                    <div className="w-1/2">
+                        <ul className="space-y-2">
+                            <li className="flex justify-between">
+                                <div>Firewalls (3)</div>
+                                <div>4 (100%)</div>
+                            </li>
+                            <li className="flex justify-between">
+                                <div>Ports (12)</div>
+                                <div>12 (100%)</div>
+                            </li>
+                            <li className="flex justify-between">
+                                <div>Servers (233)</div>
+                                <div>2 (100%)</div>
+                            </li>
+                            <li className="flex justify-between">
+                                <div>Firewalls (3)</div>
+                                <div>7 (100%)</div>
+                            </li>
+                            <li className="flex justify-between">
+                                <div>Firewalls (3)</div>
+                                <div>6 (70%)</div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {/* <!-- Events Card --> */}
+    <div className="w-full xl:w-1/4 p-2">
+        <div className="bg-white rounded-lg shadow-md">
+            <div className="p-4">
+                <div className="flex justify-between mb-3">
+                    <h4 className="text-lg font-semibold">Payments</h4>
+                </div>
+                <div className=" justify-between mb-5 mt-3 text-sm">
+                    <div className="my-3 text-gray-600">Total Payments<span className="text-gray-800 font-bold float-right">23456</span></div>
+                    <div className="my-3 text-red-500">Today Payments <span className="text-gray-800 font-bold float-right">23456</span></div>
+                    <div className="my-3 text-yellow-500">Last Month Payments <span className="text-gray-800 font-bold float-right">23456</span></div>
+                  
+                </div>
+                 
+            </div>
+        </div>
+    </div>
+
+    {/* <!-- Device Stats Card --> */}
+    <div className="w-full xl:w-1/3 p-2">
+        <div className="bg-white rounded-lg shadow-md">
+            <div className="p-4">
+                <div className="flex justify-between mb-3">
+                    <h4 className="text-lg font-semibold">Device stats</h4>
+                </div>
+                <div className="space-y-4">
+                    <div className="flex justify-between">
+                        <div>Uptime</div>
+                        <div className="text-gray-500">195 Days, 8 hours</div>
+                    </div>
+                    <div className="flex justify-between">
+                        <div>First Seen</div>
+                        <div className="text-gray-500">23 Sep 2019, 2.04PM</div>
+                    </div>
+                    <div className="flex justify-between">
+                        <div>Collected time</div>
+                        <div className="text-gray-500">23 Sep 2019, 2.04PM</div>
+                    </div>
+                    <div className="flex justify-between">
+                        <div>Memory space</div>
+                        <div className="text-gray-500">168.3GB</div>
+                    </div>
+                    <div className="relative w-full bg-gray-200 rounded h-2 mt-4">
+                        <div className="bg-green-500 h-full rounded w-1/2"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
     </section>
   );
 };

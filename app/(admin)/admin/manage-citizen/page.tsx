@@ -52,7 +52,7 @@ const Home = (): JSX.Element => {
                     <td>
                       <div className="flex items-center justify-center">
                         <div className="flex flex-col text-left">
-                           <img src="{relative_image_path(item?.image_path)}" alt="" />
+                           <img className="rounded-full" width="50" height="50" src={relative_image_path('demo_profile.png')} alt="" />
                         </div>
                       </div>
                     </td>
