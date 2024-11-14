@@ -5,6 +5,7 @@ import { FaPlus, FaMinus } from "react-icons/fa";
 import Image from "next/image";
 import { getHeroRightData, updateHeroRight } from "@/app/(admin)/_api";
 import { toast } from "react-toastify";
+ 
 
 
 const Home = () => {
@@ -15,6 +16,7 @@ const Home = () => {
         buttons: [
             {
                 label: "",
+                bg_color: "",
                 icon: "",
             }
         ]
@@ -32,6 +34,7 @@ const Home = () => {
                     buttons: res?.buttons ? JSON.parse(res?.buttons) : [
                         {
                             label: "",
+                            bg_color: "",
                             icon: "",
                         }
                     ]
@@ -57,8 +60,11 @@ const Home = () => {
 
         formData.buttons.map((item, index) => {
             form.append(`buttons[${index}][label]`, item.label);
+            form.append(`buttons[${index}][bg_color]`, item.bg_color);
             form.append(`buttons[${index}][icon]`, item.icon);
         })
+
+        log("form data", form);
         updateHeroRight(form).then((res) => {
             console.log(res);
             toast.success(res?.message);
@@ -101,7 +107,7 @@ const Home = () => {
 
                     <div className="flex items-center justify-between bg-gray-300 p-2 rounded">
                         <h3>Buttons</h3>
-                        <button onClick={() => setFormData({ ...formData, buttons: [...formData.buttons, { label: "", icon: "" }] })} className="bg-primary p-1 rounded">
+                        <button onClick={() => setFormData({ ...formData, buttons: [...formData.buttons, { label: "", bg_color: "", icon: "" }] })} className="bg-primary p-1 rounded">
                             <FaPlus size={20} className="text-white" />
                         </button>
                     </div>
@@ -121,6 +127,19 @@ const Home = () => {
                                                 })}
                                                 type="text"
                                                 placeholder="Enter Label"
+                                                className="col-span-10 border border-gray-400 focus:outline-none p-1 rounded"
+                                            />
+                                        </div>
+                                        <div className="grid grid-cols-12">
+                                            <p className="text-14 after:content-['_*'] after:text-red-500">Background Color:</p>
+                                            <input
+                                                value={item.bg_color}
+                                                onChange={(e) => setFormData({
+                                                    ...formData,
+                                                    buttons: formData.buttons.map((btn, i) => i === index ? { ...btn, bg_color: e.target.value } : btn)
+                                                })}
+                                                type="text"
+                                                placeholder="Enter Color Code. Ex: #000000"
                                                 className="col-span-10 border border-gray-400 focus:outline-none p-1 rounded"
                                             />
                                         </div>
