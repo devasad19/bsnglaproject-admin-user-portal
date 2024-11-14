@@ -4,6 +4,25 @@ import Cookies from "js-cookie";
 
 const token = Cookies.get("token");
 
+
+export const changePassword = async (payload) => {
+    try {
+        const data = await axios
+            .post(`${process.env.NEXT_PUBLIC_API_URL}/citizen/password-update`, payload)
+            .then((res) => {
+                return res?.data;
+            })
+            .catch((err) => {
+                console.log(err);
+                return err;
+            });
+        return data;
+    } catch (error) {
+        console.log(error);
+        return error;
+    }
+};
+
 export const updateCitizenData = async (payload) => {
     try {
         const data = await axios

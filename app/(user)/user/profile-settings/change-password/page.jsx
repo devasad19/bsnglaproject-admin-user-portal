@@ -3,23 +3,60 @@
 import { useState, useEffect } from "react";
 import Image from "next/image";
 import { relative_image_path } from "@/helper";
+import { changePassword } from "../../../_api";
+import { toast } from "react-toastify";
 
 const Home = () => {
   const [showPass, setShowPass] = useState(false);
   const [formInputs, setFormInputs] = useState({
-    username: "",
-    phone: "",
-    email: "",
+    oldPassword: "",
     password: "",
     confirmPassword: "",
   });
+  const [user, setUser] = useState(null);
+
+  useEffect(() => {
+    const userCookie = document.cookie.split(';').find(c => c.trim().startsWith('user='));
+    if (userCookie != undefined) {
+      setUser(JSON.parse(decodeURIComponent(userCookie.split('=')[1])));
+    }
+  }, []);
+
+
+  const HandleSubmit = async (e) => {
+    e.preventDefault();
+
+    const form = new FormData();
+    form.append("old_password", formInputs?.oldPassword);
+    form.append("password", formInputs?.password);
+    form.append("confirmed_password", formInputs?.confirmPassword);
+    form.append("id", user?.id);
+
+
+    // console.log(form);
+
+
+    const response = await changePassword(form).then((res) => res).catch((err) => console.log(err));
+
+    if(response?.status == true) {
+      toast.success(response?.message);
+    }else {
+      toast.error(response?.message);
+    }
+
+    console.log(response);
+    // console.log(response);
+  };
+
+
+
   return (
     <section>
       <h3 className="text-20 font-mono font-bold text-[#151D48] pb-10">
         Change Password
       </h3>
       <div className="w-full flex justify-center items-center">
-        <div className="bg-white w-10/12 max-w-[40rem] min-h-[25rem] rounded-md flex flex-col items-center justify-center shadow-lg">
+        <form onSubmit={HandleSubmit} className="bg-white w-10/12 max-w-[40rem] min-h-[25rem] rounded-md flex flex-col items-center justify-center shadow-lg">
           <div className="flex flex-col items-center gap-3 pb-6 w-[70%]">
             <Image
               src={relative_image_path("user_password_change.jpg")}
@@ -31,9 +68,9 @@ const Home = () => {
             <div>
               <fieldset className="border border-[#979C9E] rounded-md flex items-center py-1 px-2 w-full">
                 <input
-                  value={formInputs.password}
+                  value={formInputs?.oldPassword}
                   onChange={(e) =>
-                    setFormInputs({ ...formInputs, password: e.target.value })
+                    setFormInputs({ ...formInputs, oldPassword: e.target.value })
                   }
                   type={showPass ? "text" : "password"}
                   name="password"
@@ -168,7 +205,7 @@ const Home = () => {
           >
             সংশোধন পাসওয়ার্ড
           </button>
-        </div>
+        </form>
       </div>
     </section>
   );
