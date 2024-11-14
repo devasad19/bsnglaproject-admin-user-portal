@@ -5,6 +5,7 @@ import { cookies } from "next/headers";
 const BarChart = dynamic(() => import("@/app/_components/Chart/BarChart/BarChart"));
 const LineChart = dynamic(() => import("@/app/_components/Chart/LineChart/LineChart"));
 import { getDashboardStats } from "../_api";
+import Link from "next/link";
 
 
 const Home = async () => {
@@ -27,7 +28,9 @@ const Home = async () => {
           <div className="w-full lg:w-[60%]">
             <p className="pb-1 text-18 font-bold">Stats</p>
             <div className="flex flex-wrap gap-4">
-              <div className="bg-[#DCFCE7] p-4 w-full lg:w-[48%]">
+              <Link href={{
+                pathname: "/user/accounts-settings/purchase-services"
+              }} shallow className="bg-[#DCFCE7] p-4 w-full lg:w-[48%]">
                 <div className="flex justify-between">
                   <svg
                     className="fill-white bg-[#3CD856] w-8 h-8 p-1 rounded-full"
@@ -43,8 +46,10 @@ const Home = async () => {
                 <p className="text-center text-24 font-bold text-[#151D48]">
                   {stats?.activeServices}
                 </p>
-              </div>
-              <div className="bg-blue-100 p-4 w-full lg:w-[48%]">
+              </Link>
+              <Link href={{
+                pathname: "/user/accounts-settings/payment-history"
+              }} shallow className="bg-blue-100 p-4 w-full lg:w-[48%]">
                 <div className="flex justify-between">
                   <svg
                     className="fill-white bg-blue-400 w-8 h-8 p-1 rounded-full"
@@ -60,8 +65,10 @@ const Home = async () => {
                 <p className="text-center text-24 font-bold text-[#151D48]">
                   {stats?.totalPayments}
                 </p>
-              </div>
-              <div className="bg-fuchsia-100 p-4 w-full lg:w-[48%]">
+              </Link>
+              <Link href={{
+                pathname: "/user/comment"
+              }} shallow className="bg-fuchsia-100 p-4 w-full lg:w-[48%]">
                 <div className="flex justify-between">
                   <svg
                     className="fill-white bg-fuchsia-400 w-8 h-8 p-1 rounded-full"
@@ -77,7 +84,7 @@ const Home = async () => {
                 <p className="text-center text-24 font-bold text-[#151D48]">
                   {stats?.feedbacks}
                 </p>
-              </div>
+              </Link>
             </div>
           </div>
           <div className="w-full lg:w-[40%]">
