@@ -1,11 +1,14 @@
 "use client";
+import dynamic from "next/dynamic";
 import { uploadServiceData } from "@/app/(portal)/_api";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 import { useForm, Controller } from "react-hook-form";
 import { toast } from "react-toastify";
-import CustomEditor from "@/app/_components/CustomEditor/CustomEditor";
+const CustomEditor = dynamic(() => import("@/app/_components/CustomEditor/CustomEditor"), {
+  ssr: false,
+});
 
 const ServiceResource = () => {
   const router = useRouter();
@@ -43,6 +46,7 @@ const ServiceResource = () => {
       resource_file,
       completion_status,
       status,
+      description_title
     } = data;
 
     let paid_status = {
@@ -66,6 +70,7 @@ const ServiceResource = () => {
     formData.append("completion_status", '1');
     formData.append("status", status);
     formData.append("resource_file", resource_file[0] || "");
+    formData.append("description_title", description_title);
 
     const uploadRes = await uploadServiceData(formData);
 
@@ -91,7 +96,7 @@ const ServiceResource = () => {
                   htmlFor="ServiceName"
                   className="after:content-['_*'] after:text-red-500"
                 >
-                  Resoource Name
+                  Resource Name
                 </label>
               </legend>
               <input
@@ -120,6 +125,8 @@ const ServiceResource = () => {
               </p>
             )}
           </div>
+
+
           <div>
             <fieldset className="flex flex-col border rounded-md px-2">
               <legend>
@@ -127,7 +134,7 @@ const ServiceResource = () => {
                   htmlFor="ServiceName"
                   className="after:content-['_*'] after:text-red-500"
                 >
-                  Resoource Sub Title
+                  Resource Sub Title
                 </label>
               </legend>
               <input
@@ -151,6 +158,41 @@ const ServiceResource = () => {
             {errors.sub_title && (
               <p className="text-red-500 text-12 px-2 pt-1">
                 {errors.sub_title.message as string}
+              </p>
+            )}
+          </div>
+
+          <div>
+            <fieldset className="flex flex-col border rounded-md px-2">
+              <legend>
+                <label
+                  htmlFor="ServiceName"
+                  className="after:content-['_*'] after:text-red-500"
+                >
+                  Description Title
+                </label>
+              </legend>
+              <input
+                {...register("description_title", {
+                  required: "Description Title is required",
+                  validate: {
+                    maxWords: (value) => {
+                      const wordCount = value.trim().split(/\s+/).length;
+                      return (
+                        wordCount <= 10 || "Description cannot exceed 10 words"
+                      );
+                    },
+                  },
+                })}
+                id="description_title"
+                type="text"
+                placeholder="Description Title"
+                className="outline-none p-2"
+              />
+            </fieldset>
+            {errors.description_title && (
+              <p className="text-red-500 text-12 px-2 pt-1">
+                {errors.description_title.message as string}
               </p>
             )}
           </div>

@@ -655,11 +655,11 @@ const UpdateServiceDetailsResource = ({ id }) => {
 
                                             <div className="flex flex-col gap-2">
                                                 <div className="grid grid-cols-4">
-                                                    <p>Label:</p>
+                                                    <p>Link:</p>
                                                     <div className="col-span-3">
                                                         <input
                                                             type="text"
-                                                            placeholder="Enter Label"
+                                                            placeholder="Enter Link"
                                                             className="border border-black w-full px-2 outline-none"
                                                             value={item?.label}
                                                             onChange={(e) => {
@@ -956,6 +956,225 @@ const UpdateServiceDetailsResource = ({ id }) => {
                             </div>
                         </div>
                     ))}
+
+
+                    {
+                        error?.apiCharacter?.status && (
+                            <p className="text-red-500 text-12 px-2 pt-1">
+                                {error?.apiCharacter?.message}
+                            </p>
+                        )
+                    }
+                </div>
+
+
+                <div className="border border-gray-300 rounded">
+                    <div className="bg-gray-300 flex items-center justify-between p-2">
+                        <h3 className="text-primary font-semibold">Paid Package Infos</h3>
+                        <button
+                            type="button"
+                            onClick={() => setFormData({ ...formData, api_characteristics: [...formData.api_characteristics, { label: "" }] })}
+                            className="bg-primary text-white px-4 py-2 rounded"
+                        >
+                            <svg
+                                className="w-4 h-4 fill-current"
+                                xmlns="http://www.w3.org/2000/svg"
+                                viewBox="0 0 448 512"
+                            >
+                                <path d="M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32V224H48c-17.7 0-32 14.3-32 32s14.3 32 32 32H192V432c0 17.7 14.3 32 32 32s32-14.3 32-32V288H400c17.7 0 32-14.3 32-32s-14.3-32-32-32H256V80z" />
+                            </svg>
+                        </button>
+                    </div>
+                    {formData?.api_characteristics?.map((item, index) => (
+                        <div key={index} className="p-2 ">
+                            <div>
+                                <div className="flex gap-2">
+                                    <div className="flex w-full  items-center justify-between">
+                                        <fieldset className="w-full flex flex-col border rounded-md px-2">
+                                            <legend>
+                                                <label
+                                                    htmlFor="key"
+                                                    className="after:content-['_*'] after:text-red-500"
+                                                >
+                                                    Characteristics - {index + 1}
+                                                </label>
+                                            </legend>
+
+                                            <div className="flex flex-col gap-2">
+                                                <div className="grid grid-cols-4">
+                                                    <p>Label:</p>
+                                                    <div className="col-span-3">
+                                                        <input
+                                                            type="text"
+                                                            placeholder="Enter Label"
+                                                            className="border border-black w-full px-2 mb-2 outline-none"
+                                                            value={item?.label}
+                                                            onChange={(e) => {
+                                                                setFormData({
+                                                                    ...formData,
+                                                                    api_characteristics: formData.api_characteristics.map(
+                                                                        (dist, i) =>
+                                                                            i === index ? { ...dist, label: e.target.value } : dist
+                                                                    ),
+                                                                });
+                                                            }}
+
+
+                                                        />
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </fieldset>
+                                    </div>
+                                    <div className="mt-3">
+                                        <button
+                                            type="button"
+                                            onClick={() => {
+                                                if (formData.api_characteristics.length != 1) {
+                                                    setFormData({
+                                                        ...formData,
+                                                        api_characteristics: formData.api_characteristics.filter(
+                                                            (dist, i) => i !== index
+                                                        ),
+                                                    });
+                                                }
+
+                                            }}
+                                            className="border border-primary bg-primary text-white mt-2 px-2 py-1 rounded"
+                                        >
+                                            <svg
+                                                className="w-6 h-6 fill-current"
+                                                xmlns="http://www.w3.org/2000/svg"
+                                                viewBox="0 0 448 512"
+                                            >
+                                                <path d="M432 256c0 17.7-14.3 32-32 32L48 288c-17.7 0-32-14.3-32-32s14.3-32 32-32l352 0c17.7 0 32 14.3 32 32z" />
+                                            </svg>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    ))}
+
+
+                    {
+                        error?.apiCharacter?.status && (
+                            <p className="text-red-500 text-12 px-2 pt-1">
+                                {error?.apiCharacter?.message}
+                            </p>
+                        )
+                    }
+                </div>
+
+
+
+                <div className="border border-gray-300 rounded">
+                    <div className="bg-gray-300 flex items-center justify-between p-2">
+                        <h3 className="text-primary font-semibold">Visit Link</h3>
+                        {/* <button
+                            type="button"
+                            onClick={() => setFormData({ ...formData, api_characteristics: [...formData.api_characteristics, { label: "" }] })}
+                            className="bg-primary text-white px-4 py-2 rounded"
+                        >
+                            <svg
+                                className="w-4 h-4 fill-current"
+                                xmlns="http://www.w3.org/2000/svg"
+                                viewBox="0 0 448 512"
+                            >
+                                <path d="M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32V224H48c-17.7 0-32 14.3-32 32s14.3 32 32 32H192V432c0 17.7 14.3 32 32 32s32-14.3 32-32V288H400c17.7 0 32-14.3 32-32s-14.3-32-32-32H256V80z" />
+                            </svg>
+                        </button> */}
+                    </div>
+                    <div className="p-2 ">
+                            <div>
+                                <div className="flex gap-2">
+                                    <div className="flex w-full  items-center justify-between">
+                                        <fieldset className="w-full flex flex-col border rounded-md px-2">
+                                            {/* <legend>
+                                                <label
+                                                    htmlFor="key"
+                                                    className="after:content-['_*'] after:text-red-500"
+                                                >
+                                                    Characteristics
+                                                </label>
+                                            </legend> */}
+
+                                            <div className="flex flex-col gap-2">
+                                                <div className="grid grid-cols-4">
+                                                    <p>Domain Name:</p>
+                                                    <div className="col-span-3">
+                                                        <input
+                                                            type="text"
+                                                            placeholder="Enter domain"
+                                                            className="border border-black w-full px-2 mb-2 outline-none"
+                                                            // value={item?.label}
+                                                            // onChange={(e) => {
+                                                            //     setFormData({
+                                                            //         ...formData,
+                                                            //         api_characteristics: formData.api_characteristics.map(
+                                                            //             (dist, i) =>
+                                                            //                 i === index ? { ...dist, label: e.target.value } : dist
+                                                            //         ),
+                                                            //     });
+                                                            // }}
+
+
+                                                        />
+                                                    </div>
+                                                </div>
+                                                <div className="grid grid-cols-4">
+                                                    <p>Domain Link:</p>
+                                                    <div className="col-span-3">
+                                                        <input
+                                                            type="text"
+                                                            placeholder="Enter url"
+                                                            className="border border-black w-full px-2 mb-2 outline-none"
+                                                            // value={item?.label}
+                                                            /* onChange={(e) => {
+                                                                setFormData({
+                                                                    ...formData,
+                                                                    api_characteristics: formData.api_characteristics.map(
+                                                                        (dist, i) =>
+                                                                            i === index ? { ...dist, label: e.target.value } : dist
+                                                                    ),
+                                                                });
+                                                            }} */
+
+
+                                                        />
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </fieldset>
+                                    </div>
+                                    {/* <div className="mt-3">
+                                        <button
+                                            type="button"
+                                            onClick={() => {
+                                                if (formData.api_characteristics.length != 1) {
+                                                    setFormData({
+                                                        ...formData,
+                                                        api_characteristics: formData.api_characteristics.filter(
+                                                            (dist, i) => i !== index
+                                                        ),
+                                                    });
+                                                }
+
+                                            }}
+                                            className="border border-primary bg-primary text-white mt-2 px-2 py-1 rounded"
+                                        >
+                                            <svg
+                                                className="w-6 h-6 fill-current"
+                                                xmlns="http://www.w3.org/2000/svg"
+                                                viewBox="0 0 448 512"
+                                            >
+                                                <path d="M432 256c0 17.7-14.3 32-32 32L48 288c-17.7 0-32-14.3-32-32s14.3-32 32-32l352 0c17.7 0 32 14.3 32 32z" />
+                                            </svg>
+                                        </button>
+                                    </div> */}
+                                </div>
+                            </div>
+                        </div>
 
 
                     {
