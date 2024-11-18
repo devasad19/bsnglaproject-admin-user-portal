@@ -262,11 +262,11 @@ const Home = () => {
                                                     <div className="border border-gray-400 rounded p-2 space-y-3 w-full">
                                                         <div className="grid grid-cols-12">
                                                             <p className="text-14 after:content-['_*'] after:text-red-500">Label:</p>
-                                                            <input onChange={(e) => setMiddleForm({ ...middleForm, links: middleForm.links.map((link, i) => i == index ? { ...link, label: e.target.value } : link) })} value={link.label} type="text" placeholder="Enter label" className="col-span-11 border border-gray-400 rounded outline-none p-1" />
+                                                            <input onChange={(e) => setMiddleForm({ ...middleForm, links: middleForm.links.map((link, i) => i == index ? { ...link, label: e.target.value } : link) })} value={link.label} type="text" placeholder="Enter label" className="col-span-11 border border-gray-400 rounded outline-none p-1" required/>
                                                         </div>
                                                         <div className="grid grid-cols-12">
                                                             <p className="text-14 after:content-['_*'] after:text-red-500">Link:</p>
-                                                            <input onChange={(e) => setMiddleForm({ ...middleForm, links: middleForm.links.map((link, i) => i == index ? { ...link, link: e.target.value } : link) })} value={link.link} type="text" placeholder="Enter link" className="col-span-11 border border-gray-400 rounded outline-none p-1" />
+                                                            <input onChange={(e) => setMiddleForm({ ...middleForm, links: middleForm.links.map((link, i) => i == index ? { ...link, link: e.target.value } : link) })} value={link.link} type="text" placeholder="Enter link" className="col-span-11 border border-gray-400 rounded outline-none p-1" required/>
                                                         </div>
                                                     </div>
                                                     <div>
@@ -296,7 +296,7 @@ const Home = () => {
                                             <legend>
                                                 <label htmlFor="title2" className="bg-white px-1 text-14 after:content-['_*'] after:text-red-500">Title</label>
                                             </legend>
-                                            <input onChange={(e) => setRightForm({ ...rightForm, title: e.target.value })} value={rightForm.title} type="text" id="title2" placeholder="Enter title" className="w-full outline-none text-14 py-1"  />
+                                            <input onChange={(e) => setRightForm({ ...rightForm, title: e.target.value })} value={rightForm.title} type="text" id="title2" placeholder="Enter title" className="w-full outline-none text-14 py-1"  required/>
                                         </fieldset>
 
 
@@ -305,7 +305,7 @@ const Home = () => {
                                                 <label htmlFor="address" className="bg-white px-1 text-14 after:content-['_*'] after:text-red-500">Address</label>
                                             </legend>
 
-                                            <textarea onChange={(e) => setRightForm({ ...rightForm, address: e.target.value })} value={rightForm.address} className="w-full outline-none text-14 py-1" name="address" id="address" placeholder="Enter address" ></textarea>
+                                            <textarea onChange={(e) => setRightForm({ ...rightForm, address: e.target.value })} value={rightForm.address} className="w-full outline-none text-14 py-1" name="address" id="address" placeholder="Enter address" required></textarea>
                                         </fieldset>
 
 
@@ -314,7 +314,7 @@ const Home = () => {
                                                 <label htmlFor="address_icon" className="bg-white px-1 text-14 after:content-['_*'] after:text-red-500">Address Icon</label>
                                             </legend>
 
-                                            <input onChange={(e) => setRightForm({ ...rightForm, addressIcon: e.target.files[0] })} type="file" name="address_icon" id=" address_icon" />
+                                            <input onChange={(e) => setRightForm({ ...rightForm, addressIcon: e.target.files[0] })} type="file" name="address_icon" id="address_icon" />
 
 
                                             {
@@ -362,7 +362,7 @@ const Home = () => {
                                                         </div>
                                                         <div className="flex items-center gap-2">
                                                             <p className="text-14 after:content-['_*'] after:text-red-500">Contact:</p>
-                                                            <input onChange={(e) => setRightForm({ ...rightForm, contacts: rightForm.contacts.map((contact, i) => i == index ? { ...contact, label: e.target.value } : contact) })} value={contact.label} type="text" placeholder="Enter link" className="grow border border-gray-400 rounded outline-none p-1"  />
+                                                            <input onChange={(e) => setRightForm({ ...rightForm, contacts: rightForm.contacts.map((contact, i) => i == index ? { ...contact, label: e.target.value } : contact) })} value={contact.label} type="text" placeholder="Enter link" className="grow border border-gray-400 rounded outline-none p-1"  required/>
                                                         </div>
                                                     </div>
                                                     <div>
