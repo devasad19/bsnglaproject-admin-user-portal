@@ -30,7 +30,7 @@
     ".next/types/**/*.ts",
     "**/*.ts",
     "**/*.tsx"
-, "helper/index.js", "app/(portal)/component/Forgotpass/Forgotpass.jsx", "app/(portal)/component/Signup/Signup.jsx", "withRoleBaseAuth/WithReleBaseAuth.jsx", "app/(admin)/admin/invoice/[id]/page.jsx", "app/_components/Pagination/Pagination.jsx"  ],
+, "helper/index.js", "app/(portal)/component/Forgotpass/Forgotpass.jsx", "app/(portal)/component/Signup/Signup.jsx", "withRoleBaseAuth/WithReleBaseAuth.jsx", "app/(admin)/admin/invoice/[id]/page.jsx", "app/_components/Pagination/Pagination.jsx", "app/(admin)/admin/services/_components/ServiceResource.jsx"  ],
   "exclude": [
     "node_modules"
   ],

@@ -9,16 +9,17 @@ import { toast } from "react-toastify";
 const CustomEditor = dynamic(() => import("@/app/_components/CustomEditor/CustomEditor"), {
   ssr: false,
 });
+import { FaCheckCircle } from "react-icons/fa";
 
 const ServiceResource = () => {
   const router = useRouter();
-  const [status, setStatus] = useState("");
-  const [serviceImg, setServiceImg] = useState<File | null>(null);
-  const [resourceFileImg, setResourceFileImg] = useState<File | null>(null);
-  const [tutorialVideo, setTutorialVideo] = useState(null);
-  const [links, setLinks] = useState([]);
+  const [serviceImg, setServiceImg] = useState(null);
+  const [resourceFileImg, setResourceFileImg] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [showItem, setShowItem] = useState("");
+  const [type, setType] = useState([]);
+
+  const allTypes = ['Application', 'Plugin', 'Mobile Apps', 'Tools', 'Papers', 'Font'];
 
   const {
     register,
@@ -28,7 +29,7 @@ const ServiceResource = () => {
     control,
   } = useForm();
 
-  const onSubmitServiceResource = async (data: any) => {
+  const onSubmitServiceResource = async (data) => {
     setIsLoading(true);
 
     const {
@@ -40,12 +41,10 @@ const ServiceResource = () => {
       production_status,
       release_date,
       sub_title,
-      type,
       visit_link,
       visit_type,
       resource_file,
-      completion_status,
-      status,
+      // status,
       description_title
     } = data;
 
@@ -63,14 +62,15 @@ const ServiceResource = () => {
     formData.append("paid_status", JSON.stringify(paid_status));
     formData.append("production_status", production_status);
     formData.append("release_date", release_date);
-    formData.append("type", type);
+    // formData.append("type", type);
     formData.append("sub_title", sub_title);
     formData.append("visit_link", visit_link || "");
     formData.append("visit_type", visit_type);
     formData.append("completion_status", '1');
-    formData.append("status", status);
+    // formData.append("status", status);
     formData.append("resource_file", resource_file[0] || "");
     formData.append("description_title", description_title);
+    formData.append("type", JSON.stringify(type));
 
     const uploadRes = await uploadServiceData(formData);
 
@@ -85,10 +85,20 @@ const ServiceResource = () => {
     }
 
   };
+
+
+  const handleToggleType = (value) => {
+    if (type.includes(value)) {
+      setType((prev) => prev.filter((item) => item !== value));
+    } else {
+      setType((prev) => [...prev, value]);
+    }
+  };
+
   return (
     <>
       <div className="relative">
-        <form onSubmit={handleSubmit(onSubmitServiceResource)}>
+        <form onSubmit={handleSubmit(onSubmitServiceResource)} className="flex flex-col gap-3">
           <div>
             <fieldset className="flex flex-col border rounded-md px-2">
               <legend>
@@ -121,7 +131,7 @@ const ServiceResource = () => {
             </fieldset>
             {errors.name && (
               <p className="text-red-500 text-12 px-2 pt-1">
-                {errors.name.message as string}
+                {errors.name.message}
               </p>
             )}
           </div>
@@ -157,7 +167,7 @@ const ServiceResource = () => {
             </fieldset>
             {errors.sub_title && (
               <p className="text-red-500 text-12 px-2 pt-1">
-                {errors.sub_title.message as string}
+                {errors.sub_title.message}
               </p>
             )}
           </div>
@@ -192,7 +202,7 @@ const ServiceResource = () => {
             </fieldset>
             {errors.description_title && (
               <p className="text-red-500 text-12 px-2 pt-1">
-                {errors.description_title.message as string}
+                {errors.description_title.message}
               </p>
             )}
           </div>
@@ -210,7 +220,7 @@ const ServiceResource = () => {
 
               <Controller
                 name="description"
-                
+
                 control={control}
                 defaultValue=""
                 rules={{
@@ -230,7 +240,7 @@ const ServiceResource = () => {
                 }) => (
                   <>
                     <CustomEditor
-                      onChange={(event: any, editor: any) => {
+                      onChange={(event, editor) => {
                         const data = editor.getData();
                         onChange(data);
                       }}
@@ -238,67 +248,44 @@ const ServiceResource = () => {
                     />
                     {errors.description && (
                       <p className="text-red-500 text-12 px-2 pt-1">
-                        {errors.description.message as string}
+                        {errors.description.message}
                       </p>
                     )}
                   </>
                 )}
               />
-
-              {/* <textarea
-                {...register("description", {
-                  required: "description is required",
-                  validate: {
-                    maxWords: (value) => {
-                      const wordCount = value.trim().split(/\s+/).length;
-                      return (
-                        wordCount <= 80 || "Description cannot exceed 80 words"
-                      );
-                    },
-                  },
-                })}
-                id=""
-                className="outline-none p-2"
-                placeholder="Description"
-              ></textarea> */}
             </fieldset>
-            {/* {errors.description && (
-              <p className="text-red-500 text-12 px-2 pt-1">
-                {errors.description.message as string}
-              </p>
-            )} */}
           </div>
 
           <div>
-            <fieldset className="flex flex-col border rounded-md px-2">
-              <legend>
-                <label
-                  htmlFor="ServiceName"
-                  className="after:content-['_*'] after:text-red-500"
-                >
-                  Type
-                </label>
-              </legend>
+            <fieldset className="flex flex-col border rounded-md p-2">
+                <legend>
+                  <label className="after:content-['_*'] after:text-red-500">Type</label>
+                </legend>
 
-              <select
-                {...register("type", {
-                  required: "Type is required",
-                })}
-                className="outline-none p-2 bg-white"
-              >
-                <option value="Application">Application</option>
-                <option value="Plugin">Plugin</option>
-                <option value="Mobile Apps">Mobile Apps</option>
-                <option value="Tools">Tools</option>
-                <option value="Papers">Papers</option>
-                <option value="Font">Font</option>
-              </select>
+              <div className="flex flex-wrap gap-2">
+                {allTypes.map((item, index) => (
+                  <button
+                    key={index}
+                    className={`px-4 py-1 rounded cursor-pointer ${type.includes(item)
+                        ? "bg-green-600 text-white hover:bg-green-700 flex items-center gap-2"
+                        : "bg-blue-600 text-white hover:bg-blue-700"
+                      }`}
+                    onClick={(e) => {
+                      e.preventDefault();
+                      handleToggleType(item);
+                    }}
+                  >
+                    {item}
+                    {
+                      type.includes(item) && (
+                        <FaCheckCircle />
+                      )
+                    }
+                  </button>
+                ))}
+              </div>
             </fieldset>
-            {errors.type && (
-              <p className="text-red-500 text-12 px-2 pt-1">
-                {errors.type.message as string}
-              </p>
-            )}
           </div>
 
           <div>
@@ -325,7 +312,7 @@ const ServiceResource = () => {
             </fieldset>
             {errors.production_status && (
               <p className="text-red-500 text-12 px-2 pt-1">
-                {errors.production_status.message as string}
+                {errors.production_status.message}
               </p>
             )}
           </div>
@@ -356,7 +343,7 @@ const ServiceResource = () => {
             </fieldset>
             {errors.distribution && (
               <p className="text-red-500 text-12 px-2 pt-1">
-                {errors.distribution.message as string}
+                {errors.distribution.message}
               </p>
             )}
           </div>
@@ -381,7 +368,7 @@ const ServiceResource = () => {
             </fieldset>
             {errors.release_date && (
               <p className="text-red-500 text-12 px-2 pt-1">
-                {errors.release_date.message as string}
+                {errors.release_date.message}
               </p>
             )}
           </div>
@@ -423,7 +410,7 @@ const ServiceResource = () => {
             </fieldset>
             {errors.logo && (
               <p className="text-red-500 text-12 px-2 pt-1">
-                {errors.logo.message as string}
+                {errors.logo.message}
               </p>
             )}
           </div>
@@ -459,18 +446,10 @@ const ServiceResource = () => {
                   <label htmlFor="pro">Pro</label>
                 </div>
               </div>
-
-              {/* <select
-                    {...register('paid_status', { required: "Paid Status is required" })}
-                    className="outline-none p-2 bg-white"
-                  >
-                    <option value="Free">Free</option>
-                    <option value="Pro">Pro</option>
-                  </select> */}
             </fieldset>
             {errors.paid_status && (
               <p className="text-red-500 text-12 px-2 pt-1">
-                {errors.paid_status.message as string}
+                {errors.paid_status.message}
               </p>
             )}
           </div>
@@ -497,7 +476,7 @@ const ServiceResource = () => {
             </fieldset>
             {errors.component && (
               <p className="text-red-500 text-12 px-2 pt-1">
-                {errors.component.message as string}
+                {errors.component.message}
               </p>
             )}
           </div>
@@ -528,7 +507,7 @@ const ServiceResource = () => {
             </fieldset>
             {errors.visit_type && (
               <p className="text-red-500 text-12 px-2 pt-1">
-                {errors.visit_type.message as string}
+                {errors.visit_type.message}
               </p>
             )}
           </div>
@@ -555,7 +534,7 @@ const ServiceResource = () => {
               </fieldset>
               {errors.visit_link && (
                 <p className="text-red-500 text-12 px-2 pt-1">
-                  {errors.visit_link.message as string}
+                  {errors.visit_link.message}
                 </p>
               )}
             </div>
@@ -598,13 +577,13 @@ const ServiceResource = () => {
                 </fieldset>
                 {errors.resource_file && (
                   <p className="text-red-500 text-12 px-2 pt-1">
-                    {errors.resource_file.message as string}
+                    {errors.resource_file.message}
                   </p>
                 )}
               </div>
             </>
           )}
-          <div>
+          {/* <div>
             <fieldset className="flex flex-col border rounded-md px-2">
               <legend>
                 <label
@@ -627,10 +606,10 @@ const ServiceResource = () => {
             </fieldset>
             {errors.type && (
               <p className="text-red-500 text-12 px-2 pt-1">
-                {errors.type.message as string}
+                {errors.type.message}
               </p>
             )}
-          </div>
+          </div> */}
           <div className="flex justify-between pt-5">
             <p className="text-14">
               <span className="text-red-500">*</span> Required

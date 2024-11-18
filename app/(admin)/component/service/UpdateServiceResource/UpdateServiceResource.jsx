@@ -45,7 +45,8 @@ const UpdateServiceResource = ({ id }) => {
             visit_link,
             visit_type,
             resource_file,
-            status
+            status,
+            description_title
         } = data;
 
         const formData = new FormData();
@@ -63,10 +64,11 @@ const UpdateServiceResource = ({ id }) => {
         formData.append("visit_link", visit_link || "");
         formData.append("visit_type", visit_type);
         formData.append("resource_file", typeof resource_file == "string" ? '' : resource_file[0]);
+        formData.append("description_title", description_title);
 
 
         const response = await updateServiceResource(formData, id).then((res) => {
-        
+
 
             if (res?.status == true) {
                 toast.success("Service Updated Successfully");
@@ -77,7 +79,7 @@ const UpdateServiceResource = ({ id }) => {
             }
         }).catch((err) => {
             console.log(err);
-            
+
         }).finally(() => {
             setIsLoading(false);
         });
@@ -86,7 +88,7 @@ const UpdateServiceResource = ({ id }) => {
 
     useEffect(() => {
         getSingleServiceResource(id).then((res) => {
-            console.log('service data: ',res?.data?.status)
+            console.log('service data: ',res?.data);
             setServiceResource(res?.data);
             setValue("name", res?.data?.name);
             setValue("sub_title", res?.data?.sub_title);
@@ -104,6 +106,7 @@ const UpdateServiceResource = ({ id }) => {
             setValue("free", JSON.parse(res?.data?.paid_status)?.free);
             setValue("pro", JSON.parse(res?.data?.paid_status)?.pro);
             setValue("status", res?.data?.status);
+            setValue("description_title", res?.data?.description_title);
 
             setPaidStatus(JSON.parse(res?.data?.paid_status));
         }).catch((error) => {
@@ -124,7 +127,7 @@ const UpdateServiceResource = ({ id }) => {
                                     htmlFor="ServiceName"
                                     className="after:content-['_*'] after:text-red-500"
                                 >
-                                    Resoource Name
+                                    Resource Name
                                 </label>
                             </legend>
                             <input
@@ -160,7 +163,7 @@ const UpdateServiceResource = ({ id }) => {
                                     htmlFor="ServiceName"
                                     className="after:content-['_*'] after:text-red-500"
                                 >
-                                    Resoource Sub Title
+                                    Resource Sub Title
                                 </label>
                             </legend>
                             <input
@@ -187,6 +190,46 @@ const UpdateServiceResource = ({ id }) => {
                             </p>
                         )}
                     </div>
+
+
+
+                    <div>
+                        <fieldset className="flex flex-col border rounded-md px-2">
+                            <legend>
+                                <label
+                                    htmlFor="ServiceName"
+                                    className="after:content-['_*'] after:text-red-500"
+                                >
+                                    Description Title
+                                </label>
+                            </legend>
+                            <input
+                                {...register("description_title", {
+                                    required: "Description Title is required",
+                                    validate: {
+                                        maxWords: (value) => {
+                                            const wordCount = value.trim().split(/\s+/).length;
+                                            return (
+                                                wordCount <= 10 || "Description cannot exceed 10 words"
+                                            );
+                                        },
+                                    },
+                                })}
+                                id="description_title"
+                                type="text"
+                                placeholder="Description Title"
+                                className="outline-none p-2"
+                            />
+                        </fieldset>
+                        {errors.description_title && (
+                            <p className="text-red-500 text-12 px-2 pt-1">
+                                {errors.description_title.message}
+                            </p>
+                        )}
+                    </div>
+
+
+
 
                     <div>
                         <fieldset className="flex flex-col border rounded-md px-2">

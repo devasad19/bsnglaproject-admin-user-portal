@@ -79,8 +79,8 @@ const Home = async (): Promise<JSX.Element> => {
                         <div id="circleProgress6" className="relative rounded-full bg-gray-100 p-4">
                             {/* <!-- Placeholder for progress circle --> */}
                             <svg viewBox="0 0 100 100" className="w-full">
-                                <path d="M 50,50 m 0,-45 a 45,45 0 1 1 0,90 a 45,45 0 1 1 0,-90" stroke="#eee" stroke-width="10" fill-opacity="0"></path>
-                                <path d="M 50,50 m 0,-45 a 45,45 0 1 1 0,90 a 45,45 0 1 1 0,-90" stroke="rgb(46,32,199)" stroke-width="10" fill-opacity="0"></path>
+                                <path d="M 50,50 m 0,-45 a 45,45 0 1 1 0,90 a 45,45 0 1 1 0,-90" stroke="#eee" strokeWidth="10" fillOpacity="0"></path>
+                                <path d="M 50,50 m 0,-45 a 45,45 0 1 1 0,90 a 45,45 0 1 1 0,-90" stroke="rgb(46,32,199)" strokeWidth="10" fillOpacity="0"></path>
                             </svg>
                             <div className="absolute inset-0 flex flex-col items-center justify-center text-blue-900 font-bold text-2xl">
                                 <p className="mb-0 text-xl text-center">Total Visits</p>
