@@ -6,6 +6,7 @@ import { useForm, Controller, } from "react-hook-form";
 import { toast } from "react-toastify";
 import CustomEditor from "@/app/_components/CustomEditor/CustomEditor";
 import { getSingleServiceResource, updateServiceResource } from "@/app/(admin)/_api";
+import { FaCheckCircle } from "react-icons/fa";
 
 
 const UpdateServiceResource = ({ id }) => {
@@ -17,6 +18,8 @@ const UpdateServiceResource = ({ id }) => {
     const [resourceFileImg, setResourceFileImg] = useState(null);
     const [isLoading, setIsLoading] = useState(false);
     const [showItem, setShowItem] = useState("");
+    const [type, setType] = useState([]);
+    const allTypes = ['Application', 'Plugin', 'Mobile Apps', 'Tools', 'Papers', 'Font'];
 
     const {
         register,
@@ -41,7 +44,7 @@ const UpdateServiceResource = ({ id }) => {
             production_status,
             release_date,
             sub_title,
-            type,
+            // type,
             visit_link,
             visit_type,
             resource_file,
@@ -52,14 +55,14 @@ const UpdateServiceResource = ({ id }) => {
         const formData = new FormData();
         formData.append("name", name);
         formData.append("description", description);
-        formData.append("status", status);
+        // formData.append("status", status);
         formData.append("component", component);
         formData.append("distribution", distribution);
         formData.append("logo", typeof logo[0] == "string" ? '' : logo[0]);
         formData.append("paid_status", JSON.stringify(paidStatus));
         formData.append("production_status", production_status);
         formData.append("release_date", release_date);
-        formData.append("type", type);
+        formData.append("type", JSON.stringify(type));
         formData.append("sub_title", sub_title);
         formData.append("visit_link", visit_link || "");
         formData.append("visit_type", visit_type);
@@ -88,12 +91,12 @@ const UpdateServiceResource = ({ id }) => {
 
     useEffect(() => {
         getSingleServiceResource(id).then((res) => {
-            console.log('service data: ',res?.data);
+
             setServiceResource(res?.data);
             setValue("name", res?.data?.name);
             setValue("sub_title", res?.data?.sub_title);
             setValue("description", res?.data?.description);
-            setValue("type", res?.data?.type);
+            // setValue("type", JSON.parse(res?.data?.type));
             setValue("production_status", res?.data?.production_status);
             setValue("component", res?.data?.component);
             // setValue("distribution", res?.data?.distribution);
@@ -108,13 +111,24 @@ const UpdateServiceResource = ({ id }) => {
             setValue("status", res?.data?.status);
             setValue("description_title", res?.data?.description_title);
 
+            setType(JSON.parse(res?.data?.type));
+
             setPaidStatus(JSON.parse(res?.data?.paid_status));
         }).catch((error) => {
             console.log(error);
         });
     }, []);
 
-    // console.log('service status: ',getValues('resource_file'));
+
+    const handleToggleType = (value) => {
+        if (type.includes(value)) {
+          setType((prev) => prev.filter((item) => item !== value));
+        } else {
+          setType((prev) => [...prev, value]);
+        }
+      };
+
+    // console.log('service status: ',type);
 
     return (
         <>
@@ -191,8 +205,6 @@ const UpdateServiceResource = ({ id }) => {
                         )}
                     </div>
 
-
-
                     <div>
                         <fieldset className="flex flex-col border rounded-md px-2">
                             <legend>
@@ -227,9 +239,6 @@ const UpdateServiceResource = ({ id }) => {
                             </p>
                         )}
                     </div>
-
-
-
 
                     <div>
                         <fieldset className="flex flex-col border rounded-md px-2">
@@ -281,6 +290,37 @@ const UpdateServiceResource = ({ id }) => {
                     </div>
 
                     <div>
+                        <fieldset className="flex flex-col border rounded-md p-2">
+                            <legend>
+                                <label className="after:content-['_*'] after:text-red-500">Type</label>
+                            </legend>
+
+                            <div className="flex flex-wrap gap-2">
+                                {allTypes.map((item, index) => (
+                                    <button
+                                        key={index}
+                                        className={`px-4 py-1 rounded cursor-pointer ${type.includes(item)
+                                            ? "bg-green-600 text-white hover:bg-green-700 flex items-center gap-2"
+                                            : "bg-blue-600 text-white hover:bg-blue-700"
+                                            }`}
+                                        onClick={(e) => {
+                                            e.preventDefault();
+                                            handleToggleType(item);
+                                        }}
+                                    >
+                                        {item}
+                                        {
+                                            type.includes(item) && (
+                                                <FaCheckCircle />
+                                            )
+                                        }
+                                    </button>
+                                ))}
+                            </div>
+                        </fieldset>
+                    </div>
+
+                    {/* <div>
                         <fieldset className="flex flex-col border rounded-md px-2">
                             <legend>
                                 <label
@@ -306,12 +346,7 @@ const UpdateServiceResource = ({ id }) => {
                                 <option selected={serviceResource?.type == 'Font'} value="Font">Font</option>
                             </select>
                         </fieldset>
-                        {errors.type && (
-                            <p className="text-red-500 text-12 px-2 pt-1">
-                                {errors.type.message}
-                            </p>
-                        )}
-                    </div>
+                    </div> */}
 
                     <div>
                         <fieldset className="flex flex-col border rounded-md px-2">
@@ -416,6 +451,7 @@ const UpdateServiceResource = ({ id }) => {
                             </p>
                         )}
                     </div>
+
                     <div>
                         <fieldset className="flex flex-col border rounded-md px-2">
                             <legend>
@@ -607,7 +643,7 @@ const UpdateServiceResource = ({ id }) => {
                             </div>
                         </>
                     )}
-                    <div>
+                    {/* <div>
                         <fieldset className="flex flex-col border rounded-md px-2">
                             <legend>
                                 <label
@@ -631,7 +667,7 @@ const UpdateServiceResource = ({ id }) => {
                                 {errors.status.message}
                             </p>
                         )}
-                    </div>
+                    </div> */}
                     <div className="flex justify-between pt-5">
                         <p className="text-14">
                             <span className="text-red-500">*</span> Required

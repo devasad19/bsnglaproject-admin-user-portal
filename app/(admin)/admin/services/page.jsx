@@ -12,6 +12,7 @@ const Home = () => {
   const [services, setServices] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [refetch, setRefetch] = useState(false);
+  const [type, settype] = useState([]);
 
   useEffect(() => {
     setIsLoading(true);
@@ -72,6 +73,8 @@ const Home = () => {
       console.error("Update failed:", result?.message);
     }
   }
+
+  console.log('services: ',services);
 
   return (
     <>
@@ -159,7 +162,7 @@ const Home = () => {
                           : item?.sub_title}
                       </td>
                       <td className="text-center border-r border-gray-200">
-                        {item?.type || ""}
+                        { type.toString() }
                       </td>
 
                       <td className="text-center border-r border-gray-200">

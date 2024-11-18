@@ -33,6 +33,13 @@ const UpdateServiceDetailsResource = ({ id }) => {
                 label: "",
             }
         ],
+        paid_package_infos: [
+            {
+                label: "",
+            }
+        ],
+        domain_name: '',
+        domain_link: '',
         user_doc: {
             label: "",
             icon: "",
@@ -161,114 +168,6 @@ const UpdateServiceDetailsResource = ({ id }) => {
     const HandleFormSubmit = async (e) => {
         e.preventDefault();
 
-
-        /* console.log( 'unsanitized youtube: ',formData?.user_doc?.video_link);
-        console.log( 'sanitized youtube: ',sanitizeYoutubeUrl(formData?.user_doc?.video_link)); */
-
-
-        /* if (CountWords(formData?.description) < 10 || CountWords(formData?.description) > 100) {
-            setError({ ...error, description: { status: true, message: "Description has to be 10 to 100 words." } });
-        } */
-
-
-
-        /* const mediaFiles = [...formData?.mediaImages];
-
-        if (mediaFiles?.length > 0) {
-            mediaFiles?.map((item) => {
-                if (GetFileSize(item) > 500000) {
-                    setError({ ...error, mediaImages: { status: true, message: "Image size should be less than 500kb." } });
-                }
-            })
-        }
-
-        if (formData?.distribution?.length < 1 || formData?.distribution?.length > 10) {
-            setError({ ...error, distribution: { status: true, message: "Distribution has to be 1 to 10." } });
-        } else {
-            formData?.distribution?.map((item) => {
-                if (CountWords(item?.label) < 1 || CountWords(item?.label) > 3) {
-                    setError({ ...error, distribution: { status: true, message: "Distribution label has to be 1 to 3 words." } });
-                } else if (GetFileSize(item?.icon) > 80000) {
-                    setError({ ...error, distribution: { status: true, message: "Distribution icon size should be less than 80kb." } });
-                }
-            });
-        }
-
-        if (formData?.user_characteristics?.length < 1 || formData?.user_characteristics?.length > 5) {
-            setError({ ...error, userCharacter: { status: true, message: "User Characteristics has to be 1 to 5." } });
-        } else {
-            formData?.user_characteristics?.map((item) => {
-                if (CountWords(item?.label) < 3 || CountWords(item?.label) > 5) {
-                    setError({ ...error, userCharacter: { status: true, message: "User Characteristic label has to be 3 to 5 words." } });
-                }
-            });
-        }
-
-
-        if (formData?.api_characteristics?.length < 1 || formData?.api_characteristics?.length > 5) {
-            setError({ ...error, apiCharacter: { status: true, message: "API Characteristics has to be 1 to 5." } });
-        } else {
-            formData?.api_characteristics?.map((item) => {
-                if (CountWords(item?.label) < 3 || CountWords(item?.label) > 5) {
-                    setError({ ...error, apiCharacter: { status: true, message: "API Characteristic label has to be 3 to 5 words." } });
-                }
-            });
-        } */
-
-        /* user doc validation start */
-
-        /* if (CountWords(formData?.user_doc?.label) < 2 || CountWords(formData?.user_doc?.label) > 4) {
-            setError({ ...error, userDoc: { label: { status: true, message: "User Documentation label has to be 2 to 4 words." } } });
-        }
-
-        if (GetFileSize(formData?.user_doc?.icon) > 100000) {
-            setError({ ...error, userDoc: { icon: { status: true, message: "User Documentation icon size should be less than 100kb." } } });
-        }
-
-
-        if (CountWords(formData?.user_doc?.short_description) < 10 || CountWords(formData?.user_doc?.short_description) > 25) {
-            setError({ ...error, userDoc: { shortDes: { status: true, message: "User Documentation short description has to be 10 to 100 words." } } });
-        }
-
-
-        if (formData?.user_doc?.module_file?.length > 0) {
-            formData?.user_doc?.module_file?.map((item) => {
-                if (CountWords(item?.label) < 3 || CountWords(item?.label) > 5) {
-                    setError({ ...error, userDoc: { module: { status: true, message: "User Documentation module file label has to be 3 to 5 words." } } });
-                } else if (typeof item?.version != "number") {
-                    setError({ ...error, userDoc: { module: { status: true, message: "User Documentation module file version should be a number." } } });
-                } else if (GetFileSize(item?.module) > 500000) {
-                    setError({ ...error, userDoc: { module: { status: true, message: "User Documentation module file size should be less than 500kb." } } });
-                }
-            })
-        } */
-
-        /* api doc validation start */
-        /* if (CountWords(formData?.api_doc?.label) < 2 || CountWords(formData?.api_doc?.label) > 4) {
-            setError({ ...error, apiDoc: { label: { status: true, message: "User Documentation label has to be 2 to 4 words." } } });
-        }
-
-        if (CountWords(formData?.api_doc?.short_description) < 10) {
-            setError({ ...error, apiDoc: { shortDes: { status: true, message: "User Documentation short description has to be 10 to 100 words." } } });
-        }
-
-
-        if (formData?.api_doc?.module_file?.length > 0) {
-            formData?.api_doc?.module_file?.map((item) => {
-                if (CountWords(item?.label) < 3 || CountWords(item?.label) > 5) {
-                    setError({ ...error, apiDoc: { module: { status: true, message: "User Documentation module file label has to be 3 to 5 words." } } });
-                } else if (typeof item?.version != "number") {
-                    setError({ ...error, apiDoc: { module: { status: true, message: "User Documentation module file version should be a number." } } });
-                } else if (GetFileSize(item?.module) > 500000) {
-                    setError({ ...error, apiDoc: { module: { status: true, message: "User Documentation module file size should be less than 500kb." } } });
-                }
-            })
-        }
-
-        if (GetFileSize(formData?.api_doc?.icon) > 100000) {
-            setError({ ...error, apiDoc: { icon: { status: true, message: "User Documentation icon size should be less than 100kb." } } });
-        } */
-
         setIsLoading(true);
 
         const payload = new FormData();
@@ -277,17 +176,21 @@ const UpdateServiceDetailsResource = ({ id }) => {
         payload.append("broad_description", formData.description);
 
 
+
+        /* formData?.paid_package_infos.forEach((item, index)=>{
+            payload.append(`paid_package_infos[${index}][label]`, item.label);
+        }); */
+
+        payload.append('paid_package_infos', JSON.stringify(formData.paid_package_infos));
+
+
         formData?.mediaImages.forEach((item, index)=>{
             payload.append(`media_images[${index}]`, item);
         });
+        
 
-        /* if (formData.mediaImages) {
-            Array.from(formData.mediaImages).forEach((file) => {
-                payload.append("media_images[]", file);
-            });
-        } else {
-            payload.append("media_images[]", "");
-        } */
+        payload.append("domain_name", formData.domain_name);
+        payload.append("domain_link", formData.domain_link);
 
         payload.append("api_doc_label", formData.api_doc.label);
         payload.append("api_doc_icon", formData.api_doc.icon);
@@ -426,6 +329,14 @@ const UpdateServiceDetailsResource = ({ id }) => {
                         label: "",
                     }
                 ],
+                paid_package_infos: JSON.parse(response?.data?.paid_package_infos) ?? [
+                    {
+                        label: "",
+                        price: "",
+                    }
+                ],
+                domain_name: response?.data?.domain_name ?? '',
+                domain_link: response?.data?.domain_link ?? '',
                 api_doc: {
                     label: response?.data?.api_doc_label ?? '',
                     icon: response?.data?.api_doc_icon ?? '',
@@ -493,42 +404,6 @@ const UpdateServiceDetailsResource = ({ id }) => {
                         </legend>
 
                         <textarea value={formData?.description} onChange={(e) => setFormData({ ...formData, description: e.target.value })} name="description" placeholder="Enter Description" className="w-full outline-none text-14 py-1" rows={4} ></textarea>
-
-                        {/* <Controller
-              name="description"
-              control={control}
-              defaultValue=""
-              rules={{
-                : "Description is ",
-                validate: {
-                  maxWords: (value) => {
-                    const wordCount = value.trim().split(/\s+/).length;
-                    return (
-                      wordCount <= 80 || "Description cannot exceed 80 words"
-                    );
-                  },
-                },
-              }}
-              render={({
-                field: { onChange, value },
-                fieldState: { error },
-              }) => (
-                <>
-                  <CustomEditor
-                    onChange={(event: any, editor: any) => {
-                      const data = editor.getData();
-                      onChange(data);
-                    }}
-                    data={value}
-                  />
-                  {errors.description && (
-                    <p className="text-red-500 text-12 px-2 pt-1">
-                      {errors.description.message as string}
-                    </p>
-                  )}
-                </>
-              )}
-            /> */}
                     </fieldset>
 
                     {
@@ -973,7 +848,7 @@ const UpdateServiceDetailsResource = ({ id }) => {
                         <h3 className="text-primary font-semibold">Paid Package Infos</h3>
                         <button
                             type="button"
-                            onClick={() => setFormData({ ...formData, api_characteristics: [...formData.api_characteristics, { label: "" }] })}
+                            onClick={() => setFormData({ ...formData, paid_package_infos: [...formData.paid_package_infos, { label: "" }] })}
                             className="bg-primary text-white px-4 py-2 rounded"
                         >
                             <svg
@@ -985,7 +860,7 @@ const UpdateServiceDetailsResource = ({ id }) => {
                             </svg>
                         </button>
                     </div>
-                    {formData?.api_characteristics?.map((item, index) => (
+                    {formData?.paid_package_infos?.map((item, index) => (
                         <div key={index} className="p-2 ">
                             <div>
                                 <div className="flex gap-2">
@@ -1012,7 +887,7 @@ const UpdateServiceDetailsResource = ({ id }) => {
                                                             onChange={(e) => {
                                                                 setFormData({
                                                                     ...formData,
-                                                                    api_characteristics: formData.api_characteristics.map(
+                                                                    paid_package_infos: formData.paid_package_infos.map(
                                                                         (dist, i) =>
                                                                             i === index ? { ...dist, label: e.target.value } : dist
                                                                     ),
@@ -1030,10 +905,10 @@ const UpdateServiceDetailsResource = ({ id }) => {
                                         <button
                                             type="button"
                                             onClick={() => {
-                                                if (formData.api_characteristics.length != 1) {
+                                                if (formData.paid_package_infos.length != 1) {
                                                     setFormData({
                                                         ...formData,
-                                                        api_characteristics: formData.api_characteristics.filter(
+                                                        paid_package_infos: formData.paid_package_infos.filter(
                                                             (dist, i) => i !== index
                                                         ),
                                                     });
@@ -1071,33 +946,12 @@ const UpdateServiceDetailsResource = ({ id }) => {
                 <div className="border border-gray-300 rounded">
                     <div className="bg-gray-300 flex items-center justify-between p-2">
                         <h3 className="text-primary font-semibold">Visit Link</h3>
-                        {/* <button
-                            type="button"
-                            onClick={() => setFormData({ ...formData, api_characteristics: [...formData.api_characteristics, { label: "" }] })}
-                            className="bg-primary text-white px-4 py-2 rounded"
-                        >
-                            <svg
-                                className="w-4 h-4 fill-current"
-                                xmlns="http://www.w3.org/2000/svg"
-                                viewBox="0 0 448 512"
-                            >
-                                <path d="M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32V224H48c-17.7 0-32 14.3-32 32s14.3 32 32 32H192V432c0 17.7 14.3 32 32 32s32-14.3 32-32V288H400c17.7 0 32-14.3 32-32s-14.3-32-32-32H256V80z" />
-                            </svg>
-                        </button> */}
                     </div>
                     <div className="p-2 ">
                             <div>
                                 <div className="flex gap-2">
                                     <div className="flex w-full  items-center justify-between">
                                         <fieldset className="w-full flex flex-col border rounded-md px-2">
-                                            {/* <legend>
-                                                <label
-                                                    htmlFor="key"
-                                                    className="after:content-['_*'] after:text-red-500"
-                                                >
-                                                    Characteristics
-                                                </label>
-                                            </legend> */}
 
                                             <div className="flex flex-col gap-2">
                                                 <div className="grid grid-cols-4">
@@ -1107,16 +961,13 @@ const UpdateServiceDetailsResource = ({ id }) => {
                                                             type="text"
                                                             placeholder="Enter domain"
                                                             className="border border-black w-full px-2 mb-2 outline-none"
-                                                            // value={item?.label}
-                                                            // onChange={(e) => {
-                                                            //     setFormData({
-                                                            //         ...formData,
-                                                            //         api_characteristics: formData.api_characteristics.map(
-                                                            //             (dist, i) =>
-                                                            //                 i === index ? { ...dist, label: e.target.value } : dist
-                                                            //         ),
-                                                            //     });
-                                                            // }}
+                                                            value={formData?.domain_name}
+                                                            onChange={(e) => {
+                                                                setFormData({
+                                                                    ...formData,
+                                                                    domain_name: e.target.value,
+                                                                });
+                                                            }}
 
 
                                                         />
@@ -1129,17 +980,13 @@ const UpdateServiceDetailsResource = ({ id }) => {
                                                             type="text"
                                                             placeholder="Enter url"
                                                             className="border border-black w-full px-2 mb-2 outline-none"
-                                                            // value={item?.label}
-                                                            /* onChange={(e) => {
+                                                            value={formData?.domain_link}
+                                                            onChange={(e) => {
                                                                 setFormData({
                                                                     ...formData,
-                                                                    api_characteristics: formData.api_characteristics.map(
-                                                                        (dist, i) =>
-                                                                            i === index ? { ...dist, label: e.target.value } : dist
-                                                                    ),
+                                                                    domain_link: e.target.value,
                                                                 });
-                                                            }} */
-
+                                                            }}
 
                                                         />
                                                     </div>
@@ -1147,31 +994,6 @@ const UpdateServiceDetailsResource = ({ id }) => {
                                             </div>
                                         </fieldset>
                                     </div>
-                                    {/* <div className="mt-3">
-                                        <button
-                                            type="button"
-                                            onClick={() => {
-                                                if (formData.api_characteristics.length != 1) {
-                                                    setFormData({
-                                                        ...formData,
-                                                        api_characteristics: formData.api_characteristics.filter(
-                                                            (dist, i) => i !== index
-                                                        ),
-                                                    });
-                                                }
-
-                                            }}
-                                            className="border border-primary bg-primary text-white mt-2 px-2 py-1 rounded"
-                                        >
-                                            <svg
-                                                className="w-6 h-6 fill-current"
-                                                xmlns="http://www.w3.org/2000/svg"
-                                                viewBox="0 0 448 512"
-                                            >
-                                                <path d="M432 256c0 17.7-14.3 32-32 32L48 288c-17.7 0-32-14.3-32-32s14.3-32 32-32l352 0c17.7 0 32 14.3 32 32z" />
-                                            </svg>
-                                        </button>
-                                    </div> */}
                                 </div>
                             </div>
                         </div>
