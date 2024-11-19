@@ -291,7 +291,7 @@ const Sidebar = () => {
                           : "text-black"
                       }`}
                     >
-                     General Settings
+                     General Portal Settings
                     </Link>
                     <Link
                       href={{
@@ -304,7 +304,7 @@ const Sidebar = () => {
                           : "text-black"
                       }`}
                     >
-                     Sidebar Links
+                     Hamburger Menu
                     </Link>
                     <Link
                       href={{
@@ -317,7 +317,7 @@ const Sidebar = () => {
                           : "text-black"
                       }`}
                     >
-                     Footer Content
+                     Manage Footer Content
                     </Link>
                     <Link
                       href={{
@@ -330,7 +330,7 @@ const Sidebar = () => {
                           : "text-black"
                       }`}
                     >
-                     Hero Section
+                     Banner Right Section
                     </Link>
                     {/* <Link
                       href={{

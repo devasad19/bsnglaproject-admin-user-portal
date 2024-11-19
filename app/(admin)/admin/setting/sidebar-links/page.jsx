@@ -41,7 +41,7 @@ const Home = () => {
     return (
         <section className="bg-white p-4 min-h-screen rounded">
             <div className="flex justify-between items-center pb-5">
-                <h3 className="text-32 font-mono font-bold text-[#151D48]">Sidebar Links</h3>
+                <h3 className="text-32 font-mono font-bold text-[#151D48]">Hamburger Menu List</h3>
                 <Link href={{
                     pathname: "/admin/setting/sidebar-links/create",
                 }} shallow className="bg-blue-500 text-white px-4 py-2 rounded">

@@ -63,8 +63,7 @@ const Home = () => {
             form.append(`buttons[${index}][bg_color]`, item.bg_color);
             form.append(`buttons[${index}][icon]`, item.icon);
         })
-
-        log("form data", form);
+ 
         updateHeroRight(form).then((res) => {
             console.log(res);
             toast.success(res?.message);
@@ -127,7 +126,7 @@ const Home = () => {
                                                 })}
                                                 type="text"
                                                 placeholder="Enter Label"
-                                                className="col-span-10 border border-gray-400 focus:outline-none p-1 rounded"
+                                                className="col-span-10 border border-gray-400 focus:outline-none p-1 rounded" required
                                             />
                                         </div>
                                         <div className="grid grid-cols-12">
@@ -140,7 +139,7 @@ const Home = () => {
                                                 })}
                                                 type="text"
                                                 placeholder="Enter Color Code. Ex: #000000"
-                                                className="col-span-10 border border-gray-400 focus:outline-none p-1 rounded"
+                                                className="col-span-10 border border-gray-400 focus:outline-none p-1 rounded" required
                                             />
                                         </div>
                                         <div className="grid grid-cols-12">
@@ -151,7 +150,7 @@ const Home = () => {
                                                     buttons: formData.buttons.map((btn, i) => i === index ? { ...btn, icon: e.target.files[0] } : btn)
                                                 })}
                                                 type="file"
-                                                className="col-span-10 border border-gray-400 focus:outline-none p-1 rounded"
+                                                className="col-span-10 border border-gray-400 focus:outline-none p-1 rounded" 
                                             />
                                         </div>
 
