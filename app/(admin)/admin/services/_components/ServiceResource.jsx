@@ -35,7 +35,7 @@ const ServiceResource = () => {
     const {
       component,
       description,
-      distribution,
+      // distribution,
       logo,
       name,
       production_status,
@@ -57,7 +57,7 @@ const ServiceResource = () => {
     formData.append("name", name);
     formData.append("description", description);
     formData.append("component", component);
-    formData.append("distribution", distribution);
+    // formData.append("distribution", distribution);
     formData.append("logo", logo[0]);
     formData.append("paid_status", JSON.stringify(paid_status));
     formData.append("production_status", production_status);
@@ -316,7 +316,7 @@ const ServiceResource = () => {
               </p>
             )}
           </div>
-          <div>
+          {/* <div>
             <fieldset className="flex flex-col border rounded-md px-2">
               <legend>
                 <label
@@ -346,7 +346,7 @@ const ServiceResource = () => {
                 {errors.distribution.message}
               </p>
             )}
-          </div>
+          </div> */}
           <div>
             <fieldset className="flex flex-col border rounded-md px-2">
               <legend>
