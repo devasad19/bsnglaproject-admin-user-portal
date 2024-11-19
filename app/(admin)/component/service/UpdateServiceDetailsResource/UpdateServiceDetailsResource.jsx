@@ -176,11 +176,6 @@ const UpdateServiceDetailsResource = ({ id }) => {
         payload.append("broad_description", formData.description);
 
 
-
-        /* formData?.paid_package_infos.forEach((item, index)=>{
-            payload.append(`paid_package_infos[${index}][label]`, item.label);
-        }); */
-
         payload.append('paid_package_infos', JSON.stringify(formData.paid_package_infos));
 
 
@@ -307,48 +302,50 @@ const UpdateServiceDetailsResource = ({ id }) => {
 
     useEffect(() => {
         getSingleServiceDetailsResource(id).then((response) => {
-            setServiceDetailsResource(response?.data);
+            setServiceDetailsResource(response?.data?.details);
+
+            console.log('user character: ',response?.data?.details);
 
             setFormData({
                 ...formData,
-                description: response?.data?.broad_description,
-                mediaImages: JSON.parse(response?.data?.media_images) ?? [],
-                distribution: JSON.parse(response?.data?.distribution_items) ?? [
+                description: response?.data?.details?.broad_description,
+                mediaImages: JSON.parse(response?.data?.details?.media_images) ?? [],
+                distribution: JSON.parse(response?.data?.details?.distribution_items) ?? [
                     {
                         label: "",
                         icon: "",
                     }
                 ],
-                user_characteristics: JSON.parse(response?.data?.user_characteristics) ?? [
+                user_characteristics: JSON.parse(response?.data?.details?.user_characteristics) ?? [
                     {
                         label: "",
                     }
                 ],
-                api_characteristics: JSON.parse(response?.data?.api_characteristics) ?? [
+                api_characteristics: JSON.parse(response?.data?.details?.api_characteristics) ?? [
                     {
                         label: "",
                     }
                 ],
-                paid_package_infos: JSON.parse(response?.data?.paid_package_infos) ?? [
+                paid_package_infos: JSON.parse(response?.data?.details?.paid_package_infos) ?? [
                     {
                         label: "",
                         price: "",
                     }
                 ],
-                domain_name: response?.data?.domain_name ?? '',
-                domain_link: response?.data?.domain_link ?? '',
+                domain_name: response?.data?.details?.domain_name ?? '',
+                domain_link: response?.data?.details?.domain_link ?? '',
                 api_doc: {
-                    label: response?.data?.api_doc_label ?? '',
-                    icon: response?.data?.api_doc_icon ?? '',
-                    short_description: response?.data?.api_desc ?? '',
-                    external_links: JSON.parse(response?.data?.api_external_links) ?? [
+                    label: response?.data?.details?.api_doc_label ?? '',
+                    icon: response?.data?.details?.api_doc_icon ?? '',
+                    short_description: response?.data?.details?.api_desc ?? '',
+                    external_links: JSON.parse(response?.data?.details?.api_external_links) ?? [
                         {
                             label: "",
                             link: ""
                         }
                     ],
-                    video_link: response?.data?.api_youtube_link ?? '',
-                    module_file: JSON.parse(response?.data?.api_modules) ?? [
+                    video_link: response?.data?.details?.api_youtube_link ?? '',
+                    module_file: JSON.parse(response?.data?.details?.api_modules) ?? [
                         {
                             label: "",
                             version: "",
@@ -357,17 +354,17 @@ const UpdateServiceDetailsResource = ({ id }) => {
                     ]
                 },
                 user_doc: {
-                    label: response?.data?.user_doc_label ?? '',
-                    icon: response?.data?.user_doc_icon ?? '',
-                    short_description: response?.data?.user_desc ?? '',
-                    external_links: JSON.parse(response?.data?.user_external_links) ?? [
+                    label: response?.data?.details?.user_doc_label ?? '',
+                    icon: response?.data?.details?.user_doc_icon ?? '',
+                    short_description: response?.data?.details?.user_desc ?? '',
+                    external_links: JSON.parse(response?.data?.details?.user_external_links) ?? [
                         {
                             label: "",
                             link: ""
                         }
                     ],
-                    video_link: response?.data?.user_youtube_link ?? '',
-                    module_file: JSON.parse(response?.data?.user_modules) ?? [
+                    video_link: response?.data?.details?.user_youtube_link ?? '',
+                    module_file: JSON.parse(response?.data?.details?.user_modules) ?? [
                         {
                             label: "",
                             version: "",
