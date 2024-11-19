@@ -74,7 +74,7 @@ const Home = ({params: {id}}) => {
                 }} shallow>
                     <IoMdArrowRoundBack size={30} />
                 </Link>
-                <h3 className="text-32 font-mono font-bold text-[#151D48]">Edit Sidebar Links</h3>
+                <h3 className="text-32 font-mono font-bold text-[#151D48]">Edit Hamburger Menu</h3>
             </div>
 
             {
