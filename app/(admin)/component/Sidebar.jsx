@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Image from "next/image";
 import { relative_image_path } from "@/helper";
 import Link from "next/link";
@@ -8,16 +8,19 @@ import Accordion from "@/app/_components/Accordion/Accordion";
 import { usePathname } from "next/navigation";
 import { NewAccordion } from "@/app/_components/NewAccordion/NewAccordion";
 
+
 const Sidebar = () => {
-  const [isOpen, setIsOpen] = useState(true);
   const pathname = usePathname();
+  const [user, setUser] = useState(null);
+  const [isOpen, setIsOpen] = useState(true);
+
   const [isToggleOpen, setIsToggleOpen] = useState({
     setting: false,
     alc: false,
     accountsSettings: false,
   });
 
-  const toggleAccordionSub = (valueName1: string) => {
+  const toggleAccordionSub = (valueName1) => {
     setIsToggleOpen((prevIsToggleOpen) => {
       if (valueName1 === "setting") {
         return {
@@ -45,24 +48,36 @@ const Sidebar = () => {
     });
   };
 
+
+  useEffect(() => {
+    const userCookie = document.cookie.split(';').find(c => c.trim().startsWith('user='));
+    if (userCookie != undefined) {
+      setUser(JSON.parse(decodeURIComponent(userCookie.split('=')[1])));
+    }
+  }, []);
+
+
+  const HandleLogout = () => {
+    document.cookie = "user=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+    document.cookie = "token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+    window.location.href=process.env.NEXT_PUBLIC_PORTAL_URL+'/signin';
+  }
+
   return (
     <>
       <div className="min-h-screen flex flex-col justify-between">
         <div
-          className={`p-4 bg-white transition-all duration-500  ${
-            isOpen ? "w-60" : "w-12"
-          }`}
+          className={`p-4 bg-white transition-all duration-500  ${isOpen ? "w-60" : "w-12"
+            }`}
         >
           <div className="flex flex-col items-center">
             <div
-              className={`w-full flex items-center pb-5 ${
-                isOpen ? "justify-between" : "justify-end"
-              }`}
+              className={`w-full flex items-center pb-5 ${isOpen ? "justify-between" : "justify-end"
+                }`}
             >
               <Image
-                className={`w-24 transition-all duration-500 ${
-                  isOpen ? "opacity-100 block" : "opacity-0 hidden"
-                }`}
+                className={`w-24 transition-all duration-500 ${isOpen ? "opacity-100 block" : "opacity-0 hidden"
+                  }`}
                 src={relative_image_path("logo.png")}
                 width={1000}
                 height={1000}
@@ -92,14 +107,12 @@ const Sidebar = () => {
               </button>
             </div>
             <ul
-              className={`[&>li]:text-slate-900  [&>li]:py-2 w-11/12 [&>li]:rounded-md [&>li]:transition-all [&>li]:duration-500 [&>li]:text-14 [&>li>a]:text-14 flex flex-col gap-2 ${
-                isOpen ? "[&>li]:px-3" : ""
-              }`}
+              className={`[&>li]:text-slate-900  [&>li]:py-2 w-11/12 [&>li]:rounded-md [&>li]:transition-all [&>li]:duration-500 [&>li]:text-14 [&>li>a]:text-14 flex flex-col gap-2 ${isOpen ? "[&>li]:px-3" : ""
+                }`}
             >
               <li
-                className={`hover:bg-primary group ${
-                  pathname == "/admin" ? "bg-primary" : ""
-                }`}
+                className={`hover:bg-primary group ${pathname == "/admin" ? "bg-primary" : ""
+                  }`}
               >
                 <Link
                   href={{
@@ -107,10 +120,9 @@ const Sidebar = () => {
                   }}
                   shallow
                   title="Dashboard"
-                  className={`flex items-center gap-2 group-hover:text-white ${
-                    pathname == "/admin" ? "text-white" : "text-primary"
-                  }`}
-                  // className="flex items-center gap-2"
+                  className={`flex items-center gap-2 group-hover:text-white ${pathname == "/admin" ? "text-white" : "text-primary"
+                    }`}
+                // className="flex items-center gap-2"
                 >
                   <span>
                     <svg
@@ -127,13 +139,12 @@ const Sidebar = () => {
                 </Link>
               </li>
               <li
-                className={`hover:bg-primary group ${
-                  pathname === "/admin/services" ||
-                  pathname === "/admin/services/create" ||
-                  /^\/admin\/services\/\d+$/.test(pathname)
+                className={`hover:bg-primary group ${pathname === "/admin/services" ||
+                    pathname === "/admin/services/create" ||
+                    /^\/admin\/services\/\d+$/.test(pathname)
                     ? "bg-primary"
                     : ""
-                }`}
+                  }`}
               >
                 <Link
                   href={{
@@ -142,13 +153,12 @@ const Sidebar = () => {
                   shallow
                   title="Show All Services"
                   // className="flex items-center gap-2"
-                  className={`flex items-center gap-2 group-hover:text-white ${
-                    pathname == "/admin/services" ||
-                    pathname == "/admin/services/create" ||
-                    /^\/admin\/services\/\d+$/.test(pathname)
+                  className={`flex items-center gap-2 group-hover:text-white ${pathname == "/admin/services" ||
+                      pathname == "/admin/services/create" ||
+                      /^\/admin\/services\/\d+$/.test(pathname)
                       ? "text-white"
                       : "text-primary"
-                  }`}
+                    }`}
                 >
                   <span>
                     <svg
@@ -164,11 +174,10 @@ const Sidebar = () => {
                   </span>
                 </Link>
               </li>
-              
+
               <li
-                className={`hover:bg-primary group ${
-                  pathname == "/admin/user" ? "bg-primary" : ""
-                }`}
+                className={`hover:bg-primary group ${pathname == "/admin/user" ? "bg-primary" : ""
+                  }`}
               >
                 <Link
                   href={{
@@ -176,9 +185,8 @@ const Sidebar = () => {
                   }}
                   shallow
                   title="User"
-                  className={`flex items-center gap-2 group-hover:text-white ${
-                    pathname == "/admin/user" ? "text-white" : "text-primary"
-                  }`}
+                  className={`flex items-center gap-2 group-hover:text-white ${pathname == "/admin/user" ? "text-white" : "text-primary"
+                    }`}
                 >
                   <span>
                     <svg
@@ -198,9 +206,8 @@ const Sidebar = () => {
                 </Link>
               </li>
               <li
-                className={`hover:bg-primary group ${
-                  pathname == "/admin/manage-citizen" ? "bg-primary" : ""
-                }`}
+                className={`hover:bg-primary group ${pathname == "/admin/manage-citizen" ? "bg-primary" : ""
+                  }`}
               >
                 <Link
                   href={{
@@ -208,11 +215,10 @@ const Sidebar = () => {
                   }}
                   shallow
                   title="Manage Citizen"
-                  className={`flex items-center gap-2 group-hover:text-white ${
-                    pathname == "/admin/manage-citizen"
+                  className={`flex items-center gap-2 group-hover:text-white ${pathname == "/admin/manage-citizen"
                       ? "text-white"
                       : "text-primary"
-                  }`}
+                    }`}
                 >
                   <span>
                     <svg
@@ -233,11 +239,9 @@ const Sidebar = () => {
               </li>
               <li
                 onClick={() => toggleAccordionSub("setting")}
-                className={`hover:bg-primary  group flex items-center justify-between   ${
-                  pathname.includes("/admin/setting") && "bg-primary"
-                } cursor-pointer ${
-                  isToggleOpen.setting ? "border-b-2 border-primary" : ""
-                }`}
+                className={`hover:bg-primary  group flex items-center justify-between   ${pathname.includes("/admin/setting") && "bg-primary"
+                  } cursor-pointer ${isToggleOpen.setting ? "border-b-2 border-primary" : ""
+                  }`}
               >
                 <div className="flex items-center gap-2">
                   <span className="">
@@ -253,23 +257,20 @@ const Sidebar = () => {
                   </span>
 
                   <span
-                    className={`text-15 text-primary group-hover:text-white  ${
-                      isOpen ? "block" : "hidden"
-                    } ${pathname.includes("/admin/setting") && "text-white"}`}
+                    className={`text-15 text-primary group-hover:text-white  ${isOpen ? "block" : "hidden"
+                      } ${pathname.includes("/admin/setting") && "text-white"}`}
                   >
                     Portal Settings
                   </span>
                 </div>
 
                 <span
-                  className={`transition-transform duration-300 ${
-                    isOpen ? "block" : "hidden"
-                  } ${isToggleOpen.setting ? "rotate-180" : ""}`}
+                  className={`transition-transform duration-300 ${isOpen ? "block" : "hidden"
+                    } ${isToggleOpen.setting ? "rotate-180" : ""}`}
                 >
                   <svg
-                    className={`w-3 h-3 fill-current text-primary group-hover:text-white transition-colors duration-300 ${
-                      pathname.includes("/admin/setting") && "text-white"
-                    }`}
+                    className={`w-3 h-3 fill-current text-primary group-hover:text-white transition-colors duration-300 ${pathname.includes("/admin/setting") && "text-white"
+                      }`}
                     xmlns="http://www.w3.org/2000/svg"
                     viewBox="0 0 448 512"
                   >
@@ -285,52 +286,48 @@ const Sidebar = () => {
                         pathname: "/admin/setting/frontend-setting",
                       }}
                       shallow
-                      className={`text-14 hover:bg-green-500 px-2 py-1 rounded hover:text-white ${
-                        pathname.includes("/admin/setting/frontend-setting")
+                      className={`text-14 hover:bg-green-500 px-2 py-1 rounded hover:text-white ${pathname.includes("/admin/setting/frontend-setting")
                           ? "bg-green-500 text-white font-semibold"
                           : "text-black"
-                      }`}
+                        }`}
                     >
-                     General Portal Settings
+                      General Portal Settings
                     </Link>
                     <Link
                       href={{
                         pathname: "/admin/setting/sidebar-links",
                       }}
                       shallow
-                      className={`text-14 hover:bg-green-500 px-2 py-1 rounded hover:text-white ${
-                        pathname.includes("/admin/setting/sidebar-links")
+                      className={`text-14 hover:bg-green-500 px-2 py-1 rounded hover:text-white ${pathname.includes("/admin/setting/sidebar-links")
                           ? "bg-green-500 text-white font-semibold"
                           : "text-black"
-                      }`}
+                        }`}
                     >
-                     Hamburger Menu
+                      Hamburger Menu
                     </Link>
                     <Link
                       href={{
                         pathname: "/admin/setting/footer-content",
                       }}
                       shallow
-                      className={`text-14 hover:bg-green-500 px-2 py-1 rounded hover:text-white ${
-                        pathname.includes("/admin/setting/footer-content")
+                      className={`text-14 hover:bg-green-500 px-2 py-1 rounded hover:text-white ${pathname.includes("/admin/setting/footer-content")
                           ? "bg-green-500 text-white font-semibold"
                           : "text-black"
-                      }`}
+                        }`}
                     >
-                     Manage Footer Content
+                      Manage Footer Content
                     </Link>
                     <Link
                       href={{
                         pathname: "/admin/setting/hero-section",
                       }}
                       shallow
-                      className={`text-14 hover:bg-green-500 px-2 py-1 rounded hover:text-white ${
-                        pathname.includes("/admin/setting/hero-section")
+                      className={`text-14 hover:bg-green-500 px-2 py-1 rounded hover:text-white ${pathname.includes("/admin/setting/hero-section")
                           ? "bg-green-500 text-white font-semibold"
                           : "text-black"
-                      }`}
+                        }`}
                     >
-                     Banner Right Section
+                      Banner Right Section
                     </Link>
                     {/* <Link
                       href={{
@@ -459,22 +456,19 @@ const Sidebar = () => {
               )} */}
               <li
                 onClick={() => toggleAccordionSub("accounts-settings")}
-                className={`hover:bg-primary  group flex items-center  justify-between ${
-                  pathname.includes("/admin/accounts-settings") && "bg-primary"
-                } cursor-pointer ${
-                  isToggleOpen.accountsSettings
+                className={`hover:bg-primary  group flex items-center  justify-between ${pathname.includes("/admin/accounts-settings") && "bg-primary"
+                  } cursor-pointer ${isToggleOpen.accountsSettings
                     ? "border-b-2 border-primary"
                     : ""
-                }`}
+                  }`}
               >
                 <div className="flex items-center gap-2">
                   <span className="">
                     <svg
                       className={`w-5 h-5 fill-current text-primary group-hover:text-white transition-colors duration-300
-                      ${
-                        pathname.includes("/admin/accounts-settings") &&
+                      ${pathname.includes("/admin/accounts-settings") &&
                         "text-white"
-                      }`}
+                        }`}
                       // fill="#348739"
                       xmlns="http://www.w3.org/2000/svg"
                       viewBox="0 0 640 512"
@@ -484,27 +478,23 @@ const Sidebar = () => {
                   </span>
 
                   <span
-                    className={`text-15 text-primary group-hover:text-white  ${
-                      isOpen ? "block" : "hidden"
-                    } ${
-                      pathname.includes("/admin/accounts-settings") &&
+                    className={`text-15 text-primary group-hover:text-white  ${isOpen ? "block" : "hidden"
+                      } ${pathname.includes("/admin/accounts-settings") &&
                       "text-white"
-                    }`}
+                      }`}
                   >
                     Manage Sale
                   </span>
                 </div>
 
                 <span
-                  className={`transition-transform duration-300 ${
-                    isOpen ? "block" : "hidden"
-                  } ${isToggleOpen.accountsSettings ? "rotate-180" : ""}`}
+                  className={`transition-transform duration-300 ${isOpen ? "block" : "hidden"
+                    } ${isToggleOpen.accountsSettings ? "rotate-180" : ""}`}
                 >
                   <svg
-                    className={`w-3 h-3 fill-current text-primary group-hover:text-white transition-colors duration-300 ${
-                      pathname.includes("/admin/accounts-settings") &&
+                    className={`w-3 h-3 fill-current text-primary group-hover:text-white transition-colors duration-300 ${pathname.includes("/admin/accounts-settings") &&
                       "text-white"
-                    }`}
+                      }`}
                     xmlns="http://www.w3.org/2000/svg"
                     viewBox="0 0 448 512"
                   >
@@ -516,45 +506,43 @@ const Sidebar = () => {
 
 
 
-<NewAccordion isOpen={isToggleOpen.accountsSettings}>
+                <NewAccordion isOpen={isToggleOpen.accountsSettings}>
 
-             
-<div className="ms-3 flex flex-col gap-2 p-1">
-   
-  <Link
-    href={{
-      pathname: "/admin/accounts-settings/purchase-services",
-    }}
-    shallow
-    className={`text-14 hover:bg-green-500 px-2 py-1 rounded hover:text-white ${
-      pathname.includes("/admin/accounts-settings/purchase-services")
-        ? "bg-green-500 text-white font-semibold"
-        : "text-black"
-    }`}
-  >
-    Sold Services
-  </Link>
-  <Link
-    href={{
-      pathname: "/admin/bill",
-    }}
-    shallow
-    className={`text-14 hover:bg-green-500 px-2 py-1 rounded hover:text-white ${
-      pathname.includes("/admin/bill")
-        ? "bg-green-500 text-white font-semibold"
-        : "text-black"
-    }`}
-  >
-    Citizen Payments List
-  </Link>
- 
-</div>
-</NewAccordion>
+
+                  <div className="ms-3 flex flex-col gap-2 p-1">
+
+                    <Link
+                      href={{
+                        pathname: "/admin/accounts-settings/purchase-services",
+                      }}
+                      shallow
+                      className={`text-14 hover:bg-green-500 px-2 py-1 rounded hover:text-white ${pathname.includes("/admin/accounts-settings/purchase-services")
+                          ? "bg-green-500 text-white font-semibold"
+                          : "text-black"
+                        }`}
+                    >
+                      Sold Services
+                    </Link>
+                    <Link
+                      href={{
+                        pathname: "/admin/bill",
+                      }}
+                      shallow
+                      className={`text-14 hover:bg-green-500 px-2 py-1 rounded hover:text-white ${pathname.includes("/admin/bill")
+                          ? "bg-green-500 text-white font-semibold"
+                          : "text-black"
+                        }`}
+                    >
+                      Citizen Payments List
+                    </Link>
+
+                  </div>
+                </NewAccordion>
 
 
               )}
-               
-              
+
+
               {/* <li
                 className={`hover:bg-primary group ${
                   pathname == "/admin/documentation" ? "bg-primary" : ""
@@ -629,9 +617,8 @@ const Sidebar = () => {
                 </Link>
               </li> */}
               <li
-                className={`hover:bg-primary group ${
-                  pathname == "/admin/user-feedbacks" ? "bg-primary" : ""
-                }`}
+                className={`hover:bg-primary group ${pathname == "/admin/user-feedbacks" ? "bg-primary" : ""
+                  }`}
               >
                 <Link
                   href={{
@@ -639,11 +626,10 @@ const Sidebar = () => {
                   }}
                   shallow
                   title="User Feedbacks"
-                  className={`flex items-center gap-2 group-hover:text-white ${
-                    pathname == "/admin/user-feedbacks"
+                  className={`flex items-center gap-2 group-hover:text-white ${pathname == "/admin/user-feedbacks"
                       ? "text-white"
                       : "text-primary"
-                  }`}
+                    }`}
                 >
                   <span>
                     <svg
@@ -710,12 +696,12 @@ const Sidebar = () => {
                 alt="Bangla"
               />
               <div>
-                <h3>Admin</h3>
-                <p className="text-12">user</p>
+                <h3>{user ? user?.name : ""}</h3>
+                <p className="text-12">{user ? user?.type : ""}</p>
               </div>
             </div>
           )}
-          <button title="Logout">
+          <button onClick={HandleLogout} title="Logout">
             <svg
               className="w-5 h-5 fill-white"
               xmlns="http://www.w3.org/2000/svg"

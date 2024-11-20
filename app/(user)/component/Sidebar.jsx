@@ -361,7 +361,7 @@ const Sidebar = () => {
               />
               <div>
                 <h3> {user ? user?.name : ""} </h3>
-                <p className="text-12">{user ? user?.role : ""}</p>
+                <p className="text-12">{user ? user?.type : ""}</p>
               </div>
             </div>
           )}
