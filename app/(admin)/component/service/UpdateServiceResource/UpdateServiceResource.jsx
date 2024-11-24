@@ -170,6 +170,7 @@ const UpdateServiceResource = ({ id }) => {
                             </p>
                         )}
                     </div>
+                    
                     <div>
                         <fieldset className="flex flex-col border rounded-md px-2">
                             <legend>

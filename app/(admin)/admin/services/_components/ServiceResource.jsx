@@ -40,7 +40,7 @@ const ServiceResource = () => {
       name,
       production_status,
       release_date,
-      sub_title,
+      // sub_title,
       visit_link,
       visit_type,
       resource_file,
@@ -63,7 +63,7 @@ const ServiceResource = () => {
     formData.append("production_status", production_status);
     formData.append("release_date", release_date);
     // formData.append("type", type);
-    formData.append("sub_title", sub_title);
+    // formData.append("sub_title", sub_title);
     formData.append("visit_link", visit_link || "");
     formData.append("visit_type", visit_type);
     formData.append("completion_status", '1');
@@ -137,7 +137,7 @@ const ServiceResource = () => {
           </div>
 
 
-          <div>
+          {/* <div>
             <fieldset className="flex flex-col border rounded-md px-2">
               <legend>
                 <label
@@ -170,7 +170,7 @@ const ServiceResource = () => {
                 {errors.sub_title.message}
               </p>
             )}
-          </div>
+          </div> */}
 
           <div>
             <fieldset className="flex flex-col border rounded-md px-2">
