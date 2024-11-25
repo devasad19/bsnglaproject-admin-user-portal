@@ -41,6 +41,18 @@ const UpdateServiceDetailsResource = ({ id }) => {
                 right_image: '',
             }
         ],
+        fourCol: [
+            {
+                bg: '',
+                icon: '',
+                title: '',
+                version: '',
+                release_date: '',
+                button_label: '',
+                button_bg: '',
+                button_link: '',
+            }
+        ],
         distribution: [
             {
                 label: "",
@@ -52,6 +64,11 @@ const UpdateServiceDetailsResource = ({ id }) => {
         user_doc: {
             label: "",
             icon: "",
+            video: {
+                title: "",
+                link: "",
+                thumbnail: "",
+            },
             video_link: "",
             short_description: "",
             module_file: [
@@ -158,9 +175,9 @@ const UpdateServiceDetailsResource = ({ id }) => {
         e.preventDefault();
 
 
-        console.log('form data: ', formData);
+        // console.log('form data: ', formData);
 
-        /* setIsLoading(true);
+        setIsLoading(true);
 
         const payload = new FormData();
 
@@ -168,7 +185,7 @@ const UpdateServiceDetailsResource = ({ id }) => {
         payload.append("broad_description", formData.description);
 
 
-        payload.append('paid_package_infos', JSON.stringify(formData.paid_package_infos));
+        // payload.append('paid_package_infos', JSON.stringify(formData.paid_package_infos));
 
 
         formData?.mediaImages.forEach((item, index) => {
@@ -176,16 +193,23 @@ const UpdateServiceDetailsResource = ({ id }) => {
         });
 
 
+        payload.append("promotion_title", formData?.promotion?.title);
+        payload.append("prom_title_bg", formData?.promotion?.title_bg);
+        payload.append("prom_area_bg", formData?.promotion?.area_bg);
+        payload.append("prom_left_label", formData?.promotion?.left_side?.label);
+        payload.append("prom_left_icon", formData?.promotion?.left_side?.image);
+        payload.append("prom_right_label", formData?.promotion?.right_side?.label);
+        payload.append("prom_right_icon", formData?.promotion?.right_side?.image);
+
+
         payload.append("domain_name", formData.domain_name);
         payload.append("domain_link", formData.domain_link);
 
-        payload.append("api_doc_label", formData.api_doc.label);
+        /* payload.append("api_doc_label", formData.api_doc.label);
         payload.append("api_doc_icon", formData.api_doc.icon);
         payload.append("api_desc", formData.api_doc.short_description);
-        payload.append("user_characteristics", JSON.stringify(formData.user_characteristics));
-        payload.append("api_characteristics", JSON.stringify(formData.api_characteristics));
         payload.append("api_external_links", JSON.stringify(formData.api_doc.external_links));
-        payload.append("api_youtube_link", formData.api_doc.video_link);
+        payload.append("api_youtube_link", formData.api_doc.video_link); */
         payload.append("user_doc_label", formData.user_doc.label);
         payload.append("user_doc_icon", formData.user_doc.icon);
         payload.append("user_desc", formData.user_doc.short_description);
@@ -202,21 +226,21 @@ const UpdateServiceDetailsResource = ({ id }) => {
             payload.append(`user_modules[${index}][version]`, item.version);
             payload.append(`user_modules[${index}][module]`, item.module);
         });
-        formData.api_doc.module_file.forEach((item, index) => {
+        /* formData.api_doc.module_file.forEach((item, index) => {
             payload.append(`api_modules[${index}][label]`, item.label);
             payload.append(`api_modules[${index}][version]`, item.version);
             payload.append(`api_modules[${index}][module]`, item.module);
-        });
+        }); */
 
 
         const res = await updateSingleServiceResource(payload, id).catch((err) => {
             console.log(err);
-        }); */
+        });
 
 
-        /* if (res?.status == true) {
+        if (res?.status == true) {
             toast.success(res.message);
-            getSingleServiceDetailsResource(id).then((response) => {
+            /* getSingleServiceDetailsResource(id).then((response) => {
                 setServiceDetailsResource(response?.data);
                 setFormData({
                     ...formData,
@@ -282,12 +306,12 @@ const UpdateServiceDetailsResource = ({ id }) => {
             }).finally(() => {
                 setIsLoading(false);
                 router.push("/admin/services");
-            });
+            }); */
 
         } else {
             toast.error(res.message);
             setIsLoading(false);
-        } */
+        }
 
 
     };
@@ -295,8 +319,6 @@ const UpdateServiceDetailsResource = ({ id }) => {
     useEffect(() => {
         getSingleServiceDetailsResource(id).then((response) => {
             setServiceDetailsResource(response?.data?.details);
-
-            console.log('user character: ', response?.data?.details);
 
             setFormData({
                 ...formData,
@@ -602,9 +624,91 @@ const UpdateServiceDetailsResource = ({ id }) => {
                                     </fieldset>
 
                                     <div>
+                                        <button onClick={() => setFormData({ ...formData, infoSection: formData?.infoSection?.filter((item, i) => i !== index) })} className="border border-primary bg-primary text-white mt-2 px-2 py-1 rounded">
+                                            <FaMinus />
+                                        </button>
+                                    </div>
+                                </div>
+                            )
+                        })
+                    }
+
+
+                </div>
+
+                <div className="border border-gray-300 rounded">
+                    <div className="bg-gray-300 flex items-center justify-between p-2">
+                        <h3 className="text-primary font-semibold">Four Column section</h3>
+                        <button
+                            onClick={() => setFormData({
+                                ...formData, fourCol: [...formData?.fourCol, {
+                                    bg: '',
+                                    icon: '',
+                                    title: '',
+                                    version: '',
+                                    release_date: '',
+                                    button_label: '',
+                                    button_bg: '',
+                                    button_link: '',
+                                }]
+                            })}
+                            type="button"
+                            title="Add Section"
+                            className="bg-primary text-white px-4 py-2 rounded"
+                        >
+                            <FaPlus />
+                        </button>
+                    </div>
+
+                    {
+                        formData?.fourCol?.map((item, index) => {
+                            return (
+                                <div key={index} className="w-full flex gap-2">
+                                    <fieldset className="flex flex-col border rounded-md px-2 w-full">
+
+                                        <div>
+                                            <p>Background Color:</p>
+                                            <input value={item?.bg} onChange={(e) => setFormData({ ...formData, fourCol: formData?.fourCol?.map((item, i) => i === index ? { ...item, bg: e.target.value } : item) })} type="color" className="w-full" />
+                                        </div>
+
+                                        <div>
+                                            <p>Icon:</p>
+                                            <input type="file" onChange={(e) => setFormData({ ...formData, fourCol: formData?.fourCol?.map((item, i) => i === index ? { ...item, icon: e.target.files[0] } : item) })} />
+                                        </div>
+
+                                        <div>
+                                            <p>Title:</p>
+                                            <input value={item?.title} onChange={(e) => setFormData({ ...formData, fourCol: formData?.fourCol?.map((item, i) => i === index ? { ...item, title: e.target.value } : item) })} type="text" className="w-full outline-none border border-gray-500 px-2 rounded" />
+                                        </div>
+
+                                        <div>
+                                            <p>Version:</p>
+                                            <input value={item?.version} onChange={(e) => setFormData({ ...formData, fourCol: formData?.fourCol?.map((item, i) => i === index ? { ...item, version: e.target.value } : item) })} type="text" className="w-full outline-none border border-gray-500 px-2 rounded" />
+                                        </div>
+
+                                        <div>
+                                            <p>Release Date:</p>
+                                            <input value={item?.release_date} onChange={(e) => setFormData({ ...formData, fourCol: formData?.fourCol?.map((item, i) => i === index ? { ...item, release_date: e.target.value } : item) })} type="text" className="w-full outline-none border border-gray-500 px-2 rounded" />
+                                        </div>
+
+                                        <div>
+                                            <p>Button Label:</p>
+                                            <input value={item?.button_label} onChange={(e) => setFormData({ ...formData, fourCol: formData?.fourCol?.map((item, i) => i === index ? { ...item, button_label: e.target.value } : item) })} type="text" className="w-full outline-none border border-gray-500 px-2 rounded" />
+                                        </div>
+
+                                        <div>
+                                            <p>Background Color:</p>
+                                            <input value={item?.button_bg} onChange={(e) => setFormData({ ...formData, fourCol: formData?.fourCol?.map((item, i) => i === index ? { ...item, button_bg: e.target.value } : item) })} type="color" className="w-full" />
+                                        </div>
+
+
+
+                                    </fieldset>
+
+                                    <div>
                                         <button onClick={() => {
-                                            if (formData?.infoSection?.length > 1) {
-                                                setFormData({ ...formData, infoSection: formData?.infoSection?.filter((_, i) => i !== index) })
+                                            if (formData?.fourCol?.length > 1) {
+                                                setFormData({ ...formData, fourCol: formData?.fourCol?.filter((item, i) => i !== index) })
                                             }
                                         }} className="border border-primary bg-primary text-white mt-2 px-2 py-1 rounded">
                                             <FaMinus />
@@ -771,300 +875,6 @@ const UpdateServiceDetailsResource = ({ id }) => {
                     }
                 </div>
 
-                {/* <div className="border border-gray-300 rounded">
-                    <div className="bg-gray-300 flex items-center justify-between p-2">
-                        <h3 className="text-primary font-semibold">Service User Characteristics</h3>
-                        <button
-                            type="button"
-                            onClick={() => setFormData({ ...formData, user_characteristics: [...formData.user_characteristics, { label: "" }] })}
-                            className="bg-primary text-white px-4 py-2 rounded"
-                        >
-                            <svg
-                                className="w-4 h-4 fill-current"
-                                xmlns="http://www.w3.org/2000/svg"
-                                viewBox="0 0 448 512"
-                            >
-                                <path d="M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32V224H48c-17.7 0-32 14.3-32 32s14.3 32 32 32H192V432c0 17.7 14.3 32 32 32s32-14.3 32-32V288H400c17.7 0 32-14.3 32-32s-14.3-32-32-32H256V80z" />
-                            </svg>
-                        </button>
-                    </div>
-                    {formData?.user_characteristics?.map((item, index) => (
-                        <div key={index} className="p-2 ">
-                            <div>
-                                <div className="flex gap-2">
-                                    <div className="flex w-full  items-center justify-between">
-                                        <fieldset className="w-full flex flex-col border rounded-md px-2">
-                                            <legend>
-                                                <label
-                                                    htmlFor="key"
-                                                    className="after:content-['_*'] after:text-red-500"
-                                                >
-                                                    Characteristics - {index + 1}
-                                                </label>
-                                            </legend>
-
-                                            <div className="flex flex-col gap-2">
-                                                <div className="grid grid-cols-4">
-                                                    <p>Label:</p>
-                                                    <div className="col-span-3">
-                                                        <input
-                                                            type="text"
-                                                            placeholder="Enter Label"
-                                                            className="border border-black w-full px-2 mb-2 outline-none"
-                                                            value={item?.label}
-                                                            onChange={(e) => {
-                                                                setFormData({
-                                                                    ...formData,
-                                                                    user_characteristics: formData.user_characteristics.map(
-                                                                        (dist, i) =>
-                                                                            i === index ? { ...dist, label: e.target.value } : dist
-                                                                    ),
-                                                                });
-                                                            }}
-
-
-                                                        />
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </fieldset>
-                                    </div>
-                                    <div className="mt-3">
-                                        <button
-                                            type="button"
-                                            onClick={() => {
-                                                if (formData.user_characteristics.length != 1) {
-                                                    setFormData({
-                                                        ...formData,
-                                                        user_characteristics: formData.user_characteristics.filter(
-                                                            (dist, i) => i !== index
-                                                        ),
-                                                    });
-                                                }
-
-                                            }}
-                                            className="border border-primary bg-primary text-white mt-2 px-2 py-1 rounded"
-                                        >
-                                            <svg
-                                                className="w-6 h-6 fill-current"
-                                                xmlns="http://www.w3.org/2000/svg"
-                                                viewBox="0 0 448 512"
-                                            >
-                                                <path d="M432 256c0 17.7-14.3 32-32 32L48 288c-17.7 0-32-14.3-32-32s14.3-32 32-32l352 0c17.7 0 32 14.3 32 32z" />
-                                            </svg>
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    ))}
-
-                    {
-                        error?.userCharacter?.status && (
-                            <p className="text-red-500 text-12 px-2 pt-1">
-                                {error?.userCharacter?.message}
-                            </p>
-                        )
-                    }
-                </div> */}
-
-                {/* <div className="border border-gray-300 rounded">
-                    <div className="bg-gray-300 flex items-center justify-between p-2">
-                        <h3 className="text-primary font-semibold">Service API Characteristics</h3>
-                        <button
-                            type="button"
-                            onClick={() => setFormData({ ...formData, api_characteristics: [...formData.api_characteristics, { label: "" }] })}
-                            className="bg-primary text-white px-4 py-2 rounded"
-                        >
-                            <svg
-                                className="w-4 h-4 fill-current"
-                                xmlns="http://www.w3.org/2000/svg"
-                                viewBox="0 0 448 512"
-                            >
-                                <path d="M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32V224H48c-17.7 0-32 14.3-32 32s14.3 32 32 32H192V432c0 17.7 14.3 32 32 32s32-14.3 32-32V288H400c17.7 0 32-14.3 32-32s-14.3-32-32-32H256V80z" />
-                            </svg>
-                        </button>
-                    </div>
-                    {formData?.api_characteristics?.map((item, index) => (
-                        <div key={index} className="p-2 ">
-                            <div>
-                                <div className="flex gap-2">
-                                    <div className="flex w-full  items-center justify-between">
-                                        <fieldset className="w-full flex flex-col border rounded-md px-2">
-                                            <legend>
-                                                <label
-                                                    htmlFor="key"
-                                                    className="after:content-['_*'] after:text-red-500"
-                                                >
-                                                    Characteristics - {index + 1}
-                                                </label>
-                                            </legend>
-
-                                            <div className="flex flex-col gap-2">
-                                                <div className="grid grid-cols-4">
-                                                    <p>Label:</p>
-                                                    <div className="col-span-3">
-                                                        <input
-                                                            type="text"
-                                                            placeholder="Enter Label"
-                                                            className="border border-black w-full px-2 mb-2 outline-none"
-                                                            value={item?.label}
-                                                            onChange={(e) => {
-                                                                setFormData({
-                                                                    ...formData,
-                                                                    api_characteristics: formData.api_characteristics.map(
-                                                                        (dist, i) =>
-                                                                            i === index ? { ...dist, label: e.target.value } : dist
-                                                                    ),
-                                                                });
-                                                            }}
-
-
-                                                        />
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </fieldset>
-                                    </div>
-                                    <div className="mt-3">
-                                        <button
-                                            type="button"
-                                            onClick={() => {
-                                                if (formData.api_characteristics.length != 1) {
-                                                    setFormData({
-                                                        ...formData,
-                                                        api_characteristics: formData.api_characteristics.filter(
-                                                            (dist, i) => i !== index
-                                                        ),
-                                                    });
-                                                }
-
-                                            }}
-                                            className="border border-primary bg-primary text-white mt-2 px-2 py-1 rounded"
-                                        >
-                                            <svg
-                                                className="w-6 h-6 fill-current"
-                                                xmlns="http://www.w3.org/2000/svg"
-                                                viewBox="0 0 448 512"
-                                            >
-                                                <path d="M432 256c0 17.7-14.3 32-32 32L48 288c-17.7 0-32-14.3-32-32s14.3-32 32-32l352 0c17.7 0 32 14.3 32 32z" />
-                                            </svg>
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    ))}
-
-
-                    {
-                        error?.apiCharacter?.status && (
-                            <p className="text-red-500 text-12 px-2 pt-1">
-                                {error?.apiCharacter?.message}
-                            </p>
-                        )
-                    }
-                </div> */}
-
-
-                {/* <div className="border border-gray-300 rounded">
-                    <div className="bg-gray-300 flex items-center justify-between p-2">
-                        <h3 className="text-primary font-semibold">Paid Package Infos</h3>
-                        <button
-                            type="button"
-                            onClick={() => setFormData({ ...formData, paid_package_infos: [...formData.paid_package_infos, { label: "" }] })}
-                            className="bg-primary text-white px-4 py-2 rounded"
-                        >
-                            <svg
-                                className="w-4 h-4 fill-current"
-                                xmlns="http://www.w3.org/2000/svg"
-                                viewBox="0 0 448 512"
-                            >
-                                <path d="M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32V224H48c-17.7 0-32 14.3-32 32s14.3 32 32 32H192V432c0 17.7 14.3 32 32 32s32-14.3 32-32V288H400c17.7 0 32-14.3 32-32s-14.3-32-32-32H256V80z" />
-                            </svg>
-                        </button>
-                    </div>
-                    {formData?.paid_package_infos?.map((item, index) => (
-                        <div key={index} className="p-2 ">
-                            <div>
-                                <div className="flex gap-2">
-                                    <div className="flex w-full  items-center justify-between">
-                                        <fieldset className="w-full flex flex-col border rounded-md px-2">
-                                            <legend>
-                                                <label
-                                                    htmlFor="key"
-                                                    className="after:content-['_*'] after:text-red-500"
-                                                >
-                                                    Characteristics - {index + 1}
-                                                </label>
-                                            </legend>
-
-                                            <div className="flex flex-col gap-2">
-                                                <div className="grid grid-cols-4">
-                                                    <p>Label:</p>
-                                                    <div className="col-span-3">
-                                                        <input
-                                                            type="text"
-                                                            placeholder="Enter Label"
-                                                            className="border border-black w-full px-2 mb-2 outline-none"
-                                                            value={item?.label}
-                                                            onChange={(e) => {
-                                                                setFormData({
-                                                                    ...formData,
-                                                                    paid_package_infos: formData.paid_package_infos.map(
-                                                                        (dist, i) =>
-                                                                            i === index ? { ...dist, label: e.target.value } : dist
-                                                                    ),
-                                                                });
-                                                            }}
-
-
-                                                        />
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </fieldset>
-                                    </div>
-                                    <div className="mt-3">
-                                        <button
-                                            type="button"
-                                            onClick={() => {
-                                                if (formData.paid_package_infos.length != 1) {
-                                                    setFormData({
-                                                        ...formData,
-                                                        paid_package_infos: formData.paid_package_infos.filter(
-                                                            (dist, i) => i !== index
-                                                        ),
-                                                    });
-                                                }
-
-                                            }}
-                                            className="border border-primary bg-primary text-white mt-2 px-2 py-1 rounded"
-                                        >
-                                            <svg
-                                                className="w-6 h-6 fill-current"
-                                                xmlns="http://www.w3.org/2000/svg"
-                                                viewBox="0 0 448 512"
-                                            >
-                                                <path d="M432 256c0 17.7-14.3 32-32 32L48 288c-17.7 0-32-14.3-32-32s14.3-32 32-32l352 0c17.7 0 32 14.3 32 32z" />
-                                            </svg>
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    ))}
-
-
-                    {
-                        error?.apiCharacter?.status && (
-                            <p className="text-red-500 text-12 px-2 pt-1">
-                                {error?.apiCharacter?.message}
-                            </p>
-                        )
-                    }
-                </div> */}
-
 
 
                 <div className="border border-gray-300 rounded">
@@ -1210,6 +1020,17 @@ const UpdateServiceDetailsResource = ({ id }) => {
                                 }
                             </div>
 
+
+                            <div>
+                                <fieldset className="flex flex-col border rounded-md px-2">
+                                    <legend>
+                                        <label className="after:content-['_*'] after:text-red-500">Video Title</label>
+                                    </legend>
+                                    <input value={formData?.user_doc?.video?.title}
+                                    onChange={(e) => setFormData({ ...formData, user_doc: { ...formData.user_doc, video: { ...formData.user_doc.video, title: e.target.value } } })} type="text" className="outline-none p-2" placeholder="Enter video title" />
+                                </fieldset>
+                            </div>
+
                             <div>
                                 <fieldset className="flex flex-col border rounded-md px-2">
                                     <legend>
@@ -1217,27 +1038,33 @@ const UpdateServiceDetailsResource = ({ id }) => {
                                             htmlFor="video_link"
                                             className="after:content-['_*'] after:text-red-500"
                                         >
-                                            Video Link (Youtube)
+                                            Video Link
                                         </label>
                                     </legend>
                                     <input
-                                        onChange={(e) => setFormData({ ...formData, user_doc: { ...formData.user_doc, video_link: e.target.value } })}
+                                        value={formData?.user_doc?.video?.link}
+                                        onChange={(e) => setFormData({ ...formData, user_doc: { ...formData.user_doc, video: { ...formData.user_doc.video, link: e.target.value } } })}
                                         id="video_link"
                                         type="text"
-                                        placeholder="Video Link (Youtube)"
+                                        placeholder="Video Link"
                                         className="outline-none p-2"
-                                        value={formData?.user_doc?.video_link}
 
                                     />
                                 </fieldset>
+                            </div>
 
-                                {
-                                    error?.userDoc?.video?.status && (
-                                        <p className="text-red-500 text-12 px-2 pt-1">
-                                            {error?.userDoc?.video?.message}
-                                        </p>
-                                    )
-                                }
+                            <div>
+                                <fieldset className="flex flex-col border rounded-md px-2">
+                                    <legend>
+                                        <label
+                                            htmlFor="video_link"
+                                            className="after:content-['_*'] after:text-red-500"
+                                        >
+                                            Video Thumbnail
+                                        </label>
+                                    </legend>
+                                    <input onChange={(e) => setFormData({ ...formData, user_doc: { ...formData.user_doc, video: { ...formData.user_doc.video, thumbnail: e.target.files?.[0] } } })} type="file" name="video_thumbnail" />
+                                </fieldset>
                             </div>
 
                             <div>
@@ -1657,525 +1484,11 @@ const UpdateServiceDetailsResource = ({ id }) => {
                     </div>
                 </div>
 
-                {/* <div>
-                    <div className="border border-black">
-                        <h3 className="border-b border-black py-3 pl-3 bg-gray-300 text-primary font-bold">
-                            API Documentation
-                        </h3>
-                        <div className="p-3 space-y-4">
-
-                            <div>
-                                <fieldset className="flex flex-col border rounded-md px-2">
-                                    <legend>
-                                        <label htmlFor="user_doc_title" className="after:content-['_*'] after:text-red-500">
-                                            Label
-                                        </label>
-                                    </legend>
-                                    <input value={formData?.api_doc?.label} onChange={(e) => setFormData({ ...formData, api_doc: { ...formData.api_doc, label: e.target.value } })} type="text" placeholder="Enter api doc label" className="w-full outline-none p-2" />
-
-                                </fieldset>
-
-                                {
-                                    error?.apiDoc?.label?.status && (
-                                        <p className="text-red-500 text-12 px-2 pt-1">
-                                            {error?.apiDoc?.label?.message}
-                                        </p>
-                                    )
-                                }
-                            </div>
-
-                            <div>
-                                <fieldset className="flex flex-col border rounded-md px-2 pb-2">
-                                    <legend>
-                                        <label htmlFor="user_doc_icon" className="after:content-['_*'] after:text-red-500">
-                                            Icon
-                                        </label>
-                                    </legend>
-                                    <input onChange={(e) => setFormData({ ...formData, api_doc: { ...formData.api_doc, icon: e.target.files?.[0] } })} type="file" name="user_doc_icon" />
-
-                                    {
-                                        formData?.api_doc?.icon?.length > 0 && (
-                                            <div className="mt-5 relative w-[5em] h-[5em]">
-                                                <Image
-                                                    src={process.env.NEXT_PUBLIC_IMAGE_URL + formData?.api_doc?.icon}
-                                                    alt='Bangla'
-                                                    width={100}
-                                                    height={100}
-                                                    className="w-[5em] h-[5em]"
-                                                />
-                                                <button className="absolute top-0 right-0 bg-red-500 p-0.5 rounded-full" onClick={(e) => setFormData({ ...formData, api_doc: { ...formData.api_doc, icon: null } })} type="button">
-                                                    <FaRegTimesCircle className="w-4 h-4 text-white" />
-                                                </button>
-                                            </div>
-                                        )
-                                    }
-
-                                    {
-                                        formData?.api_doc?.icon && typeof formData?.api_doc?.icon == 'object' && (
-                                            <div className="mt-5 relative w-[5em] h-[5em]">
-                                                <Image
-                                                    src={URL.createObjectURL(formData?.api_doc?.icon)}
-                                                    alt='Bangla'
-                                                    width={100}
-                                                    height={100}
-                                                    className="w-[5em] h-[5em]"
-                                                />
-                                                <button className="absolute top-0 right-0 bg-red-500 p-0.5 rounded-full" onClick={(e) => setFormData({ ...formData, api_doc: { ...formData.api_doc, icon: null } })} type="button">
-                                                    <FaRegTimesCircle className="w-4 h-4 text-white" />
-                                                </button>
-                                            </div>
-                                        )
-                                    }
-                                </fieldset>
-
-                                {
-                                    error?.apiDoc?.icon?.status && (
-                                        <p className="text-red-500 text-12 px-2 pt-1">
-                                            {error?.apiDoc?.icon?.message}
-                                        </p>
-                                    )
-                                }
-                            </div>
-
-                            <div>
-                                <fieldset className="flex flex-col border rounded-md px-2">
-                                    <legend>
-                                        <label
-                                            htmlFor="videolink"
-                                            className="after:content-['_*'] after:text-red-500"
-                                        >
-                                            Video Link (Youtube)
-                                        </label>
-                                    </legend>
-                                    <input
-                                        onChange={(e) => setFormData({ ...formData, api_doc: { ...formData.api_doc, video_link: e.target.value } })}
-                                        type="text"
-                                        placeholder="Video Link (Youtube)"
-                                        className="outline-none p-2"
-                                        value={formData?.api_doc?.video_link}
-                                    />
-                                </fieldset>
-
-                                {
-                                    error?.apiDoc?.video?.status && (
-                                        <p className="text-red-500 text-12 px-2 pt-1">
-                                            {error?.apiDoc?.video?.message}
-                                        </p>
-                                    )
-                                }
-                            </div>
-
-                            <div>
-                                <fieldset className="flex flex-col border rounded-md px-2">
-                                    <legend>
-                                        <label
-                                            htmlFor="ServiceName"
-                                            className="after:content-['_*'] after:text-red-500"
-                                        >
-                                            Short Description
-                                        </label>
-                                    </legend>
-
-                                    <textarea value={formData?.api_doc?.short_description} name="api_doc_short_desc" onChange={(e) => setFormData({ ...formData, api_doc: { ...formData.api_doc, short_description: e.target.value } })} className="w-full outline-none p-2" placeholder="Enter api doc short description" ></textarea>
-                                </fieldset>
-
-                                {
-                                    error?.apiDoc?.shortDes?.status && (
-                                        <p className="text-red-500 text-12 px-2 pt-1">
-                                            {error?.apiDoc?.shortDes?.message}
-                                        </p>
-                                    )
-                                }
-                            </div>
-
-                            <div className="grid grid-cols-1 lg:grid-cols-2 gap-2">
-                                <div className="border border-gray-300 rounded">
-                                    <div className="bg-gray-300 flex items-center justify-between p-2">
-                                        <h3 className="text-primary font-semibold">Modules File</h3>
-                                        <button
-                                            type="button"
-                                            onClick={() => {
-                                                setFormData({
-                                                    ...formData,
-                                                    api_doc: {
-                                                        ...formData.api_doc,
-                                                        module_file: [...formData.api_doc.module_file, {
-                                                            label: "",
-                                                            version: "",
-                                                            module: ""
-                                                        }],
-                                                    },
-                                                });
-                                            }}
-                                            className="bg-primary text-white px-4 py-2 rounded"
-                                        >
-                                            <svg
-                                                className="w-4 h-4 fill-current"
-                                                xmlns="http://www.w3.org/2000/svg"
-                                                viewBox="0 0 448 512"
-                                            >
-                                                <path d="M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32V224H48c-17.7 0-32 14.3-32 32s14.3 32 32 32H192V432c0 17.7 14.3 32 32 32s32-14.3 32-32V288H400c17.7 0 32-14.3 32-32s-14.3-32-32-32H256V80z" />
-                                            </svg>
-                                        </button>
-                                    </div>
-                                    {formData?.api_doc?.module_file?.map((item, index) => {
-                                        return (
-                                            <div key={index} className="p-2 ">
-                                                <div>
-                                                    <div className="flex gap-2">
-                                                        <div className="flex w-full  items-center justify-between">
-                                                            <fieldset className="w-full flex flex-col border rounded-md px-2">
-                                                                <legend>
-                                                                    <label
-                                                                        htmlFor="key"
-                                                                        className="after:content-['_*'] after:text-red-500"
-                                                                    >
-                                                                        Module - {index + 1}
-                                                                    </label>
-                                                                </legend>
-
-                                                                <div className="flex flex-col gap-2">
-                                                                    <div className="grid grid-cols-4">
-                                                                        <p>Label:</p>
-                                                                        <div className="col-span-3">
-                                                                            <input
-                                                                                onChange={(e) => {
-                                                                                    const newModuleFile = [...formData.api_doc.module_file];
-                                                                                    newModuleFile[index] = {
-                                                                                        ...newModuleFile[index],
-                                                                                        label: e.target.value
-                                                                                    };
-                                                                                    setFormData({
-                                                                                        ...formData,
-                                                                                        api_doc: {
-                                                                                            ...formData.api_doc,
-                                                                                            module_file: newModuleFile
-                                                                                        }
-                                                                                    });
-                                                                                }}
-                                                                                value={item.label}
-                                                                                type="text"
-                                                                                placeholder="Enter Label"
-                                                                                className=" border border-black w-full px-2"
-
-
-                                                                            />
-                                                                        </div>
-                                                                    </div>
-                                                                    <div className="grid grid-cols-4">
-                                                                        <p>Version:</p>
-                                                                        <div className="col-span-3">
-                                                                            <input
-                                                                                value={item.version}
-                                                                                onChange={(e) => {
-                                                                                    const newModuleFile = [...formData.api_doc.module_file];
-                                                                                    newModuleFile[index] = {
-                                                                                        ...newModuleFile[index],
-                                                                                        version: e.target.value
-                                                                                    };
-                                                                                    setFormData({
-                                                                                        ...formData,
-                                                                                        api_doc: {
-                                                                                            ...formData.api_doc,
-                                                                                            module_file: newModuleFile
-                                                                                        }
-                                                                                    });
-                                                                                }}
-                                                                                type="text"
-                                                                                placeholder="Enter Version"
-                                                                                className=" border border-black w-full px-2"
-
-
-                                                                            />
-                                                                        </div>
-                                                                    </div>
-                                                                    <div className="grid grid-cols-4">
-                                                                        <p>Module:</p>
-                                                                        <div className="col-span-3">
-                                                                            <input
-                                                                                onChange={(e) => {
-                                                                                    const newModuleFile = [...formData.api_doc.module_file];
-                                                                                    newModuleFile[index] = {
-                                                                                        ...newModuleFile[index],
-                                                                                        module: e.target.files?.[0]
-                                                                                    };
-                                                                                    setFormData({
-                                                                                        ...formData,
-                                                                                        api_doc: {
-                                                                                            ...formData.api_doc,
-                                                                                            module_file: newModuleFile
-                                                                                        }
-                                                                                    });
-                                                                                }}
-                                                                                type="file"
-                                                                                className="w-full "
-
-
-                                                                            />
-                                                                        </div>
-                                                                    </div>
-
-                                                                    {
-                                                                        item?.module?.length > 0 && (
-                                                                            item?.module?.includes('pdf') || item?.module?.includes('exe') ? (
-                                                                                item?.module?.includes('pdf') ? (
-                                                                                    <div className="mt-5 relative w-[5em] h-[5em]">
-                                                                                        <Image
-                                                                                            src={relative_image_path('pdf_file.png')}
-                                                                                            alt='Bangla'
-                                                                                            width={100}
-                                                                                            height={100}
-                                                                                            className="w-[5em] h-[5em]"
-                                                                                        />
-                                                                                        <button className="absolute top-0 right-0 bg-red-500 p-0.5 rounded-full" onClick={() => setFormData({ ...formData, distribution: formData.distribution.map((dist, i) => i === index ? { ...dist, module: "" } : dist) })} type="button">
-                                                                                            <FaRegTimesCircle className="w-4 h-4 text-white" />
-                                                                                        </button>
-                                                                                    </div>
-                                                                                ) : (
-                                                                                    <div className="mt-5 relative w-[5em] h-[5em]">
-                                                                                        <Image
-                                                                                            src={relative_image_path('exe_file.png')}
-                                                                                            alt='Bangla'
-                                                                                            width={100}
-                                                                                            height={100}
-                                                                                            className="w-[5em] h-[5em]"
-                                                                                        />
-                                                                                        <button className="absolute top-0 right-0 bg-red-500 p-0.5 rounded-full" onClick={() => setFormData({ ...formData, distribution: formData.distribution.map((dist, i) => i === index ? { ...dist, module: "" } : dist) })} type="button">
-                                                                                            <FaRegTimesCircle className="w-4 h-4 text-white" />
-                                                                                        </button>
-                                                                                    </div>
-                                                                                )
-
-                                                                            ) : (
-                                                                                <div className="mt-5 relative w-[5em] h-[5em]">
-                                                                                    <Image
-                                                                                        src={process.env.NEXT_PUBLIC_IMAGE_URL + item?.module}
-                                                                                        alt='Bangla'
-                                                                                        width={100}
-                                                                                        height={100}
-                                                                                        className="w-[5em] h-[5em]"
-                                                                                    />
-                                                                                    <button className="absolute top-0 right-0 bg-red-500 p-0.5 rounded-full" onClick={() => setFormData({ ...formData, distribution: formData.distribution.map((dist, i) => i === index ? { ...dist, module: "" } : dist) })} type="button">
-                                                                                        <FaRegTimesCircle className="w-4 h-4 text-white" />
-                                                                                    </button>
-                                                                                </div>
-                                                                            )
-
-                                                                        )
-                                                                    }
-
-                                                                    {
-                                                                        typeof item?.module == 'object' && (
-                                                                            <div className="mt-5 relative w-[5em] h-[5em]">
-                                                                                <Image
-                                                                                    src={URL.createObjectURL(item?.module)}
-                                                                                    alt='Bangla'
-                                                                                    width={100}
-                                                                                    height={100}
-                                                                                    className="w-[5em] h-[5em]"
-                                                                                />
-                                                                                <button className="absolute top-0 right-0 bg-red-500 p-0.5 rounded-full" onClick={() => setFormData({ ...formData, distribution: formData.distribution.map((dist, i) => i === index ? { ...dist, module: "" } : dist) })} type="button">
-                                                                                    <FaRegTimesCircle className="w-4 h-4 text-white" />
-                                                                                </button>
-                                                                            </div>
-                                                                        )
-                                                                    }
-                                                                </div>
-                                                            </fieldset>
-                                                        </div>
-                                                        <div className="mt-3">
-                                                            <button
-                                                                type="button"
-                                                                onClick={() => {
-                                                                    if (formData?.api_doc?.module_file.length != 1) {
-                                                                        setFormData({
-                                                                            ...formData,
-                                                                            api_doc: {
-                                                                                ...formData.api_doc,
-                                                                                module_file: formData.api_doc.module_file.filter((_, i) => i !== index),
-                                                                            },
-                                                                        })
-                                                                    }
-
-                                                                }}
-                                                                className="border border-primary bg-primary text-white mt-2 px-2 py-1 rounded"
-                                                            >
-                                                                <svg
-                                                                    className="w-6 h-6 fill-current"
-                                                                    xmlns="http://www.w3.org/2000/svg"
-                                                                    viewBox="0 0 448 512"
-                                                                >
-                                                                    <path d="M432 256c0 17.7-14.3 32-32 32L48 288c-17.7 0-32-14.3-32-32s14.3-32 32-32l352 0c17.7 0 32 14.3 32 32z" />
-                                                                </svg>
-                                                            </button>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        )
-                                    })}
-
-                                    {
-                                        error?.apiDoc?.module?.status && (
-                                            <p className="text-red-500 text-12 px-2 pt-1">
-                                                {error?.apiDoc?.module?.message}
-                                            </p>
-                                        )
-                                    }
-                                </div>
-                                <div className="border border-gray-300 rounded">
-                                    <div className="bg-gray-300 flex items-center justify-between p-2">
-                                        <h3 className="text-primary font-semibold">
-                                            External Links
-                                        </h3>
-                                        <button
-                                            type="button"
-                                            onClick={() => {
-                                                setFormData({
-                                                    ...formData,
-                                                    api_doc: {
-                                                        ...formData.api_doc,
-                                                        external_links: [
-                                                            ...formData.api_doc.external_links,
-                                                            {
-                                                                label: "",
-                                                                link: ""
-                                                            },
-                                                        ],
-                                                    },
-                                                });
-                                            }}
-                                            className="bg-primary text-white px-4 py-2 rounded"
-                                        >
-                                            <svg
-                                                className="w-4 h-4 fill-current"
-                                                xmlns="http://www.w3.org/2000/svg"
-                                                viewBox="0 0 448 512"
-                                            >
-                                                <path d="M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32V224H48c-17.7 0-32 14.3-32 32s14.3 32 32 32H192V432c0 17.7 14.3 32 32 32s32-14.3 32-32V288H400c17.7 0 32-14.3 32-32s-14.3-32-32-32H256V80z" />
-                                            </svg>
-                                        </button>
-                                    </div>
-                                    {formData?.api_doc?.external_links?.map((item, index) => (
-                                        <div key={index} className="p-2 ">
-                                            <div>
-                                                <div className="flex gap-2">
-                                                    <div className="flex w-full  items-center justify-between">
-                                                        <fieldset className="w-full flex flex-col border rounded-md px-2">
-                                                            <legend>
-                                                                <label
-                                                                    htmlFor="key"
-                                                                // className="after:content-['_*'] after:text-red-500"
-                                                                >
-                                                                    Link - {index + 1}
-                                                                </label>
-                                                            </legend>
-
-                                                            <div className="flex flex-col gap-2">
-                                                                <div className="grid grid-cols-4">
-                                                                    <p>Label:</p>
-                                                                    <div className="col-span-3">
-                                                                        <input
-                                                                            onChange={(e) => {
-                                                                                const newExternalLinks = [...formData.api_doc.external_links];
-                                                                                newExternalLinks[index] = {
-                                                                                    ...newExternalLinks[index],
-                                                                                    label: e.target.value
-                                                                                };
-                                                                                setFormData({
-                                                                                    ...formData,
-                                                                                    api_doc: {
-                                                                                        ...formData.api_doc,
-                                                                                        external_links: newExternalLinks
-                                                                                    }
-                                                                                });
-                                                                            }}
-                                                                            type="text"
-                                                                            placeholder="Enter Label"
-                                                                            className=" border border-black w-full px-2"
-                                                                            value={item.label}
-                                                                        />
-                                                                    </div>
-                                                                </div>
-
-                                                                <div className="grid grid-cols-4">
-                                                                    <p>Link:</p>
-                                                                    <div className="col-span-3">
-                                                                        <input
-                                                                            onChange={(e) => {
-                                                                                const newExternalLinks = [...formData.api_doc.external_links];
-                                                                                newExternalLinks[index] = {
-                                                                                    ...newExternalLinks[index],
-                                                                                    link: e.target.value
-                                                                                };
-                                                                                setFormData({
-                                                                                    ...formData,
-                                                                                    api_doc: {
-                                                                                        ...formData.api_doc,
-                                                                                        external_links: newExternalLinks
-                                                                                    }
-                                                                                });
-                                                                            }}
-                                                                            type="text"
-                                                                            placeholder="Enter Link"
-                                                                            className=" border border-black w-full px-2"
-                                                                            value={item.link}
-                                                                        />
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </fieldset>
-                                                    </div>
-                                                    <div className="mt-3">
-                                                        <button
-                                                            type="button"
-                                                            onClick={() => {
-                                                                if (formData?.api_doc?.external_links?.length != 1) {
-                                                                    setFormData({
-                                                                        ...formData,
-                                                                        api_doc: {
-                                                                            ...formData.api_doc,
-                                                                            external_links: formData.api_doc.external_links.filter((_, i) => i !== index),
-                                                                        },
-                                                                    })
-                                                                }
-
-                                                            }}
-                                                            className="border border-primary bg-primary text-white mt-2 px-2 py-1 rounded"
-                                                        >
-                                                            <svg
-                                                                className="w-6 h-6 fill-current"
-                                                                xmlns="http://www.w3.org/2000/svg"
-                                                                viewBox="0 0 448 512"
-                                                            >
-                                                                <path d="M432 256c0 17.7-14.3 32-32 32L48 288c-17.7 0-32-14.3-32-32s14.3-32 32-32l352 0c17.7 0 32 14.3 32 32z" />
-                                                            </svg>
-                                                        </button>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    ))}
-
-                                    {
-                                        error?.userDoc?.extraLink?.status && (
-                                            <p className="text-red-500 text-12 px-2 pt-1">
-                                                {error?.userDoc?.extraLink?.message}
-                                            </p>
-                                        )
-                                    }
-                                </div>
-                            </div>
-
-
-                        </div>
-                    </div>
-                </div> */}
-
 
                 <div className="flex justify-between pt-5">
                     <p className="text-14">
-                        <span className="text-red-500">*</span>
+                        <span className="text-red-500">* </span>
+                        Required
                     </p>
                     <button
                         type="submit"
