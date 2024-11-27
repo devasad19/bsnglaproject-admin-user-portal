@@ -13,79 +13,10 @@ import CustomEditor from "@/app/_components/CustomEditor/CustomEditor";
 import { FaMinus } from "react-icons/fa";
 import { FaPlus } from "react-icons/fa";
 
-const UpdateServiceDetailsResource = ({ id }) => {
+const UpdateServiceDetailsResource = ({ id, secondTab }) => {
     const router = useRouter();
-    const [serviceDetailsResource, setServiceDetailsResource] = useState();
     const [isLoading, setIsLoading] = useState(false);
-    const [formData, setFormData] = useState({
-        description: "",
-        mediaImages: [],
-        promotion: {
-            title: '',
-            title_bg: '',
-            left_side: {
-                label: '',
-                image: '',
-            },
-            right_side: {
-                label: '',
-                image: '',
-            },
-            area_bg: ''
-        },
-        infoSection: [
-            {
-                bg_color: '',
-                left_desc: '',
-                right_desc: '',
-                right_image: '',
-            }
-        ],
-        fourCol: [
-            {
-                bg: '',
-                icon: '',
-                title: '',
-                version: '',
-                release_date: '',
-                button_label: '',
-                button_bg: '',
-                button_link: '',
-            }
-        ],
-        distribution: [
-            {
-                label: "",
-                icon: "",
-            }
-        ],
-        domain_name: '',
-        domain_link: '',
-        user_doc: {
-            label: "",
-            icon: "",
-            video: {
-                title: "",
-                link: "",
-                thumbnail: "",
-            },
-            video_link: "",
-            short_description: "",
-            module_file: [
-                {
-                    label: "",
-                    version: "",
-                    module: ""
-                }
-            ],
-            external_links: [
-                {
-                    label: "",
-                    link: ""
-                }
-            ]
-        },
-    });
+    const [formData, setFormData] = useState(secondTab);
 
     const [error, setError] = useState({
         description: {
@@ -175,8 +106,6 @@ const UpdateServiceDetailsResource = ({ id }) => {
         e.preventDefault();
 
 
-        // console.log('form data: ', formData);
-
         setIsLoading(true);
 
         const payload = new FormData();
@@ -185,11 +114,31 @@ const UpdateServiceDetailsResource = ({ id }) => {
         payload.append("broad_description", formData.description);
 
 
-        // payload.append('paid_package_infos', JSON.stringify(formData.paid_package_infos));
-
-
         formData?.mediaImages.forEach((item, index) => {
             payload.append(`media_images[${index}]`, item);
+        });
+
+
+        formData?.infoSection.forEach((item, index) => {
+            payload.append(`featurs_and_usages[${index}][bg_color]`, item.bg_color);
+            payload.append(`featurs_and_usages[${index}][left_description]`, item.left_description);
+            payload.append(`featurs_and_usages[${index}][right_description]`, item.right_description);
+            payload.append(`featurs_and_usages[${index}][right_img]`, item.right_img);
+        });
+
+
+
+        formData?.fourCol?.forEach((item, index) => {
+            payload.append(`distribution_card_items[${index}][item_bg]`, item.item_bg);
+            payload.append(`distribution_card_items[${index}][icon]`, item.icon);
+            payload.append(`distribution_card_items[${index}][title]`, item.title);
+            payload.append(`distribution_card_items[${index}][version]`, item.version);
+            payload.append(`distribution_card_items[${index}][release_date]`, item.release_date);
+            payload.append(`distribution_card_items[${index}][btn_label]`, item.btn_label);
+            payload.append(`distribution_card_items[${index}][btn_bg]`, item.btn_bg);
+            payload.append(`distribution_card_items[${index}][brows_type]`, item.brows_type);
+            payload.append(`distribution_card_items[${index}][brows_file]`, item.brows_file);
+            payload.append(`distribution_card_items[${index}][brows_link]`, item.brows_link);
         });
 
 
@@ -205,16 +154,13 @@ const UpdateServiceDetailsResource = ({ id }) => {
         payload.append("domain_name", formData.domain_name);
         payload.append("domain_link", formData.domain_link);
 
-        /* payload.append("api_doc_label", formData.api_doc.label);
-        payload.append("api_doc_icon", formData.api_doc.icon);
-        payload.append("api_desc", formData.api_doc.short_description);
-        payload.append("api_external_links", JSON.stringify(formData.api_doc.external_links));
-        payload.append("api_youtube_link", formData.api_doc.video_link); */
         payload.append("user_doc_label", formData.user_doc.label);
         payload.append("user_doc_icon", formData.user_doc.icon);
         payload.append("user_desc", formData.user_doc.short_description);
         payload.append("user_external_links", JSON.stringify(formData.user_doc.external_links));
-        payload.append("user_youtube_link", formData.user_doc.video_link);
+        payload.append("user_youtube_link", formData.user_doc?.video?.link);
+        payload.append("user_youtube_thumbnail", formData.user_doc?.video?.thumbnail);
+        payload.append("youtube_video_title", formData.user_doc?.video?.title);
 
         formData.distribution.forEach((item, index) => {
             payload.append(`distribution_items[${index}][label]`, item.label);
@@ -226,11 +172,7 @@ const UpdateServiceDetailsResource = ({ id }) => {
             payload.append(`user_modules[${index}][version]`, item.version);
             payload.append(`user_modules[${index}][module]`, item.module);
         });
-        /* formData.api_doc.module_file.forEach((item, index) => {
-            payload.append(`api_modules[${index}][label]`, item.label);
-            payload.append(`api_modules[${index}][version]`, item.version);
-            payload.append(`api_modules[${index}][module]`, item.module);
-        }); */
+
 
 
         const res = await updateSingleServiceResource(payload, id).catch((err) => {
@@ -240,73 +182,7 @@ const UpdateServiceDetailsResource = ({ id }) => {
 
         if (res?.status == true) {
             toast.success(res.message);
-            /* getSingleServiceDetailsResource(id).then((response) => {
-                setServiceDetailsResource(response?.data);
-                setFormData({
-                    ...formData,
-                    description: response?.data?.broad_description,
-                    mediaImages: JSON.parse(response?.data?.media_images) ?? [],
-                    distribution: JSON.parse(response?.data?.distribution_items) ?? [
-                        {
-                            label: "",
-                            icon: "",
-                        }
-                    ],
-                    user_characteristics: JSON.parse(response?.data?.user_characteristics) ?? [
-                        {
-                            label: "",
-                        }
-                    ],
-                    api_characteristics: JSON.parse(response?.data?.api_characteristics) ?? [
-                        {
-                            label: "",
-                        }
-                    ],
-                    api_doc: {
-                        label: response?.data?.api_doc_label ?? '',
-                        icon: response?.data?.api_doc_icon ?? '',
-                        short_description: response?.data?.api_desc ?? '',
-                        external_links: JSON.parse(response?.data?.api_external_links) ?? [
-                            {
-                                label: "",
-                                link: ""
-                            }
-                        ],
-                        video_link: response?.data?.api_youtube_link ?? '',
-                        module_file: JSON.parse(response?.data?.api_modules) ?? [
-                            {
-                                label: "",
-                                version: "",
-                                module: ""
-                            }
-                        ]
-                    },
-                    user_doc: {
-                        label: response?.data?.user_doc_label ?? '',
-                        icon: response?.data?.user_doc_icon ?? '',
-                        short_description: response?.data?.user_desc ?? '',
-                        external_links: JSON.parse(response?.data?.user_external_links) ?? [
-                            {
-                                label: "",
-                                link: ""
-                            }
-                        ],
-                        video_link: response?.data?.user_youtube_link ?? '',
-                        module_file: JSON.parse(response?.data?.user_modules) ?? [
-                            {
-                                label: "",
-                                version: "",
-                                module: ""
-                            }
-                        ]
-                    }
-                });
-            }).catch((error) => {
-                console.log(error);
-            }).finally(() => {
-                setIsLoading(false);
-                router.push("/admin/services");
-            }); */
+            router.push("/admin/services");
 
         } else {
             toast.error(res.message);
@@ -316,84 +192,8 @@ const UpdateServiceDetailsResource = ({ id }) => {
 
     };
 
-    useEffect(() => {
-        getSingleServiceDetailsResource(id).then((response) => {
-            setServiceDetailsResource(response?.data?.details);
 
-            setFormData({
-                ...formData,
-                description: response?.data?.details?.broad_description,
-                mediaImages: JSON.parse(response?.data?.details?.media_images) ?? [],
-                distribution: JSON.parse(response?.data?.details?.distribution_items) ?? [
-                    {
-                        label: "",
-                        icon: "",
-                    }
-                ],
-                user_characteristics: JSON.parse(response?.data?.details?.user_characteristics) ?? [
-                    {
-                        label: "",
-                    }
-                ],
-                api_characteristics: JSON.parse(response?.data?.details?.api_characteristics) ?? [
-                    {
-                        label: "",
-                    }
-                ],
-                paid_package_infos: JSON.parse(response?.data?.details?.paid_package_infos) ?? [
-                    {
-                        label: "",
-                        price: "",
-                    }
-                ],
-                domain_name: response?.data?.details?.domain_name ?? '',
-                domain_link: response?.data?.details?.domain_link ?? '',
-                api_doc: {
-                    label: response?.data?.details?.api_doc_label ?? '',
-                    icon: response?.data?.details?.api_doc_icon ?? '',
-                    short_description: response?.data?.details?.api_desc ?? '',
-                    external_links: JSON.parse(response?.data?.details?.api_external_links) ?? [
-                        {
-                            label: "",
-                            link: ""
-                        }
-                    ],
-                    video_link: response?.data?.details?.api_youtube_link ?? '',
-                    module_file: JSON.parse(response?.data?.details?.api_modules) ?? [
-                        {
-                            label: "",
-                            version: "",
-                            module: ""
-                        }
-                    ]
-                },
-                user_doc: {
-                    label: response?.data?.details?.user_doc_label ?? '',
-                    icon: response?.data?.details?.user_doc_icon ?? '',
-                    short_description: response?.data?.details?.user_desc ?? '',
-                    external_links: JSON.parse(response?.data?.details?.user_external_links) ?? [
-                        {
-                            label: "",
-                            link: ""
-                        }
-                    ],
-                    video_link: response?.data?.details?.user_youtube_link ?? '',
-                    module_file: JSON.parse(response?.data?.details?.user_modules) ?? [
-                        {
-                            label: "",
-                            version: "",
-                            module: ""
-                        }
-                    ]
-                }
-            });
-        }).catch((error) => {
-            console.log(error);
-        });
-    }, []);
-
-
-    // console.log('form data: ', formData);
+    // console.log('form data: ', formData?.fourCol);
 
 
     return (
@@ -527,7 +327,7 @@ const UpdateServiceDetailsResource = ({ id }) => {
                             <legend>
                                 <label htmlFor="title_bg" className="after:content-['_*'] after:text-red-500">Title Background Color</label>
                             </legend>
-                            <input onChange={(e) => setFormData({ ...formData, promotion: { ...formData?.promotion, title_bg: e.target.value } })} type="color" name="title_bg" id="title_bg" className="w-full" />
+                            <input value={formData?.promotion?.title_bg} onChange={(e) => setFormData({ ...formData, promotion: { ...formData?.promotion, title_bg: e.target.value } })} type="color" name="title_bg" id="title_bg" className="w-full" />
                         </fieldset>
                     </div>
 
@@ -547,6 +347,22 @@ const UpdateServiceDetailsResource = ({ id }) => {
                                     <p>Image</p>
                                     <input type="file" accept="image/*" onChange={(e) => setFormData({ ...formData, promotion: { ...formData?.promotion, left_side: { ...formData?.promotion?.left_side, image: e.target.files[0] } } })} />
                                 </div>
+
+                                {
+                                    typeof formData?.promotion?.left_side?.image == 'string' && (
+                                        <div>
+                                            <img src={process.env.NEXT_PUBLIC_IMAGE_URL + formData?.promotion?.left_side?.image} height={100} width={100} alt="Bangla" />
+                                        </div>
+                                    )
+                                }
+
+                                {
+                                    typeof formData?.promotion?.left_side?.image == 'object' && (
+                                        <div>
+                                            <img src={URL.createObjectURL(formData?.promotion?.left_side?.image)} height={100} width={100} alt="Bangla" />
+                                        </div>
+                                    )
+                                }
                             </div>
                         </fieldset>
                     </div>
@@ -567,6 +383,22 @@ const UpdateServiceDetailsResource = ({ id }) => {
                                     <p>Image</p>
                                     <input type="file" accept="image/*" onChange={(e) => setFormData({ ...formData, promotion: { ...formData?.promotion, right_side: { ...formData?.promotion?.right_side, image: e.target.files[0] } } })} />
                                 </div>
+
+                                {
+                                    typeof formData?.promotion?.right_side?.image == 'string' && (
+                                        <div>
+                                            <img src={process.env.NEXT_PUBLIC_IMAGE_URL + formData?.promotion?.right_side?.image} height={100} width={100} alt="Bangla" />
+                                        </div>
+                                    )
+                                }
+
+                                {
+                                    typeof formData?.promotion?.right_side?.image == 'object' && (
+                                        <div>
+                                            <img src={URL.createObjectURL(formData?.promotion?.right_side?.image)} height={100} width={100} alt="Bangla" />
+                                        </div>
+                                    )
+                                }
                             </div>
                         </fieldset>
                     </div>
@@ -585,7 +417,14 @@ const UpdateServiceDetailsResource = ({ id }) => {
                     <div className="bg-gray-300 flex items-center justify-between p-2">
                         <h3 className="text-primary font-semibold">Features and Usage section</h3>
                         <button
-                            onClick={() => setFormData({ ...formData, infoSection: [...formData?.infoSection, { title: '', description: '' }] })}
+                            onClick={() => setFormData({
+                                ...formData, infoSection: [...formData?.infoSection, {
+                                    bg_color: '',
+                                    left_description: '',
+                                    right_description: '',
+                                    right_img: '',
+                                }]
+                            })}
                             type="button"
                             title="Add Section"
                             className="bg-primary text-white px-4 py-2 rounded"
@@ -610,17 +449,33 @@ const UpdateServiceDetailsResource = ({ id }) => {
 
                                         <div>
                                             <p>Left Side Description:</p>
-                                            <CustomEditor onChange={(e, editor) => setFormData({ ...formData, infoSection: formData?.infoSection?.map((item, i) => i === index ? { ...item, right_desc: editor.getData() } : item) })} data={item?.right_desc} />
+                                            <CustomEditor onChange={(e, editor) => setFormData({ ...formData, infoSection: formData?.infoSection?.map((item, i) => i === index ? { ...item, right_description: editor.getData() } : item) })} data={item?.right_description} />
                                         </div>
                                         <div>
                                             <p>Right Side Description:</p>
-                                            <CustomEditor onChange={(e, editor) => setFormData({ ...formData, infoSection: formData?.infoSection?.map((item, i) => i === index ? { ...item, left_desc: editor.getData() } : item) })} data={item?.left_desc} />
+                                            <CustomEditor onChange={(e, editor) => setFormData({ ...formData, infoSection: formData?.infoSection?.map((item, i) => i === index ? { ...item, left_description: editor.getData() } : item) })} data={item?.left_description} />
                                         </div>
 
                                         <div>
                                             <p>Right Side Image:</p>
-                                            <input type="file" onChange={(e) => setFormData({ ...formData, infoSection: formData?.infoSection?.map((item, i) => i === index ? { ...item, right_image: e.target.files[0] } : item) })} />
+                                            <input type="file" onChange={(e) => setFormData({ ...formData, infoSection: formData?.infoSection?.map((item, i) => i === index ? { ...item, right_img: e.target.files[0] } : item) })} />
                                         </div>
+
+                                        {
+                                            typeof item?.right_img == 'string' && (
+                                                <div>
+                                                    <img src={process.env.NEXT_PUBLIC_IMAGE_URL + item?.right_img} height={100} width={100} alt="Bangla" />
+                                                </div>
+                                            )
+                                        }
+
+                                        {
+                                            typeof item?.right_img == 'object' && (
+                                                <div>
+                                                    <img src={URL.createObjectURL(item?.right_img)} height={100} width={100} alt="Bangla" />
+                                                </div>
+                                            )
+                                        }
                                     </fieldset>
 
                                     <div>
@@ -642,14 +497,16 @@ const UpdateServiceDetailsResource = ({ id }) => {
                         <button
                             onClick={() => setFormData({
                                 ...formData, fourCol: [...formData?.fourCol, {
-                                    bg: '',
+                                    item_bg: '',
                                     icon: '',
                                     title: '',
                                     version: '',
                                     release_date: '',
-                                    button_label: '',
-                                    button_bg: '',
-                                    button_link: '',
+                                    btn_label: '',
+                                    btn_bg: '',
+                                    brows_type: '',
+                                    brows_file: '',
+                                    brows_link: '',
                                 }]
                             })}
                             type="button"
@@ -668,13 +525,29 @@ const UpdateServiceDetailsResource = ({ id }) => {
 
                                         <div>
                                             <p>Background Color:</p>
-                                            <input value={item?.bg} onChange={(e) => setFormData({ ...formData, fourCol: formData?.fourCol?.map((item, i) => i === index ? { ...item, bg: e.target.value } : item) })} type="color" className="w-full" />
+                                            <input value={item?.item_bg} onChange={(e) => setFormData({ ...formData, fourCol: formData?.fourCol?.map((item, i) => i === index ? { ...item, item_bg: e.target.value } : item) })} type="color" className="w-full" />
                                         </div>
 
                                         <div>
                                             <p>Icon:</p>
                                             <input type="file" onChange={(e) => setFormData({ ...formData, fourCol: formData?.fourCol?.map((item, i) => i === index ? { ...item, icon: e.target.files[0] } : item) })} />
                                         </div>
+
+                                        {
+                                            typeof item?.icon == 'string' && (
+                                                <div>
+                                                    <img src={process.env.NEXT_PUBLIC_IMAGE_URL + item?.icon} height={100} width={100} alt="Bangla" />
+                                                </div>
+                                            )
+                                        }
+
+                                        {
+                                            typeof item?.icon == 'object' && (
+                                                <div>
+                                                    <img src={URL.createObjectURL(item?.icon)} height={100} width={100} alt="Bangla" />
+                                                </div>
+                                            )
+                                        }
 
                                         <div>
                                             <p>Title:</p>
@@ -693,12 +566,59 @@ const UpdateServiceDetailsResource = ({ id }) => {
 
                                         <div>
                                             <p>Button Label:</p>
-                                            <input value={item?.button_label} onChange={(e) => setFormData({ ...formData, fourCol: formData?.fourCol?.map((item, i) => i === index ? { ...item, button_label: e.target.value } : item) })} type="text" className="w-full outline-none border border-gray-500 px-2 rounded" />
+                                            <input value={item?.btn_label} onChange={(e) => setFormData({ ...formData, fourCol: formData?.fourCol?.map((item, i) => i === index ? { ...item, btn_label: e.target.value } : item) })} type="text" className="w-full outline-none border border-gray-500 px-2 rounded" />
                                         </div>
 
                                         <div>
-                                            <p>Background Color:</p>
-                                            <input value={item?.button_bg} onChange={(e) => setFormData({ ...formData, fourCol: formData?.fourCol?.map((item, i) => i === index ? { ...item, button_bg: e.target.value } : item) })} type="color" className="w-full" />
+                                            <p>Visit Type:</p>
+                                            <select onChange={(e) => setFormData({ ...formData, fourCol: formData?.fourCol?.map((item, i) => i === index ? { ...item, brows_type: e.target.value } : item) })} className="w-full outline-none border border-gray-500 p-2 rounded">
+                                                <option value="#">
+                                                    ---Select--
+                                                </option>
+                                                <option selected={item?.brows_type == "download"} value="download">Download</option>
+                                                <option selected={item?.brows_type == "browse"} value="browse">Browse</option>
+                                            </select>
+                                        </div>
+
+                                        {
+                                            item?.brows_type == "download" && (
+                                                <>
+                                                    <div>
+                                                        <p>File:</p>
+                                                        <input type="file" onChange={(e) => setFormData({ ...formData, fourCol: formData?.fourCol?.map((item, i) => i === index ? { ...item, brows_file: e.target.files[0] } : item) })} />
+                                                    </div>
+
+                                                    {
+                                                        typeof item?.brows_file == 'string' && (
+                                                            <div>
+                                                                <img src={process.env.NEXT_PUBLIC_IMAGE_URL + item?.brows_file} height={100} width={100} alt="Bangla" />
+                                                            </div>
+                                                        )
+                                                    }
+
+                                                    {
+                                                        typeof item?.brows_file == 'object' && (
+                                                            <div>
+                                                                <img src={URL.createObjectURL(item?.brows_file)} height={100} width={100} alt="Bangla" />
+                                                            </div>
+                                                        )
+                                                    }
+                                                </>
+                                            )
+                                        }
+
+                                        {
+                                            item?.brows_type == "browse" && (
+                                                <div>
+                                                    <p>Link:</p>
+                                                    <input value={item?.brows_link} type="text" onChange={(e) => setFormData({ ...formData, fourCol: formData?.fourCol?.map((item, i) => i === index ? { ...item, brows_link: e.target.value } : item) })} className="w-full outline-none border border-gray-500 px-2 rounded" />
+                                                </div>
+                                            )
+                                        }
+
+                                        <div>
+                                            <p>Button Background Color:</p>
+                                            <input value={item?.btn_bg} onChange={(e) => setFormData({ ...formData, fourCol: formData?.fourCol?.map((item, i) => i === index ? { ...item, btn_bg: e.target.value } : item) })} type="color" className="w-full" />
                                         </div>
 
 
@@ -1027,7 +947,7 @@ const UpdateServiceDetailsResource = ({ id }) => {
                                         <label className="after:content-['_*'] after:text-red-500">Video Title</label>
                                     </legend>
                                     <input value={formData?.user_doc?.video?.title}
-                                    onChange={(e) => setFormData({ ...formData, user_doc: { ...formData.user_doc, video: { ...formData.user_doc.video, title: e.target.value } } })} type="text" className="outline-none p-2" placeholder="Enter video title" />
+                                        onChange={(e) => setFormData({ ...formData, user_doc: { ...formData.user_doc, video: { ...formData.user_doc.video, title: e.target.value } } })} type="text" className="outline-none p-2" placeholder="Enter video title" />
                                 </fieldset>
                             </div>
 
@@ -1065,6 +985,23 @@ const UpdateServiceDetailsResource = ({ id }) => {
                                     </legend>
                                     <input onChange={(e) => setFormData({ ...formData, user_doc: { ...formData.user_doc, video: { ...formData.user_doc.video, thumbnail: e.target.files?.[0] } } })} type="file" name="video_thumbnail" />
                                 </fieldset>
+
+
+                                {
+                                    typeof formData?.user_doc?.video?.thumbnail == 'string' && (
+                                        <div>
+                                            <img src={process.env.NEXT_PUBLIC_IMAGE_URL + formData?.user_doc?.video?.thumbnail} height={100} width={100} alt="Bangla" />
+                                        </div>
+                                    )
+                                }
+
+                                {
+                                    typeof formData?.user_doc?.video?.thumbnail == 'object' && (
+                                        <div>
+                                            <img src={URL.createObjectURL(formData?.user_doc?.video?.thumbnail)} height={100} width={100} alt="Bangla" />
+                                        </div>
+                                    )
+                                }
                             </div>
 
                             <div>
