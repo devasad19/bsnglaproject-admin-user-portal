@@ -1,4 +1,4 @@
-export const revalidate = 3600;
+export const revalidate = 60;
 
 
 import ServiceEditContainer from '../../../../component/ServiceEditContainer/ServiceEditContainer';

@@ -588,7 +588,7 @@ const UpdateServiceDetailsResource = ({ id, secondTab }) => {
                                                         <input type="file" onChange={(e) => setFormData({ ...formData, fourCol: formData?.fourCol?.map((item, i) => i === index ? { ...item, brows_file: e.target.files[0] } : item) })} />
                                                     </div>
 
-                                                    {
+                                                    {/* {
                                                         typeof item?.brows_file == 'string' && (
                                                             <div>
                                                                 <img src={process.env.NEXT_PUBLIC_IMAGE_URL + item?.brows_file} height={100} width={100} alt="Bangla" />
@@ -602,7 +602,7 @@ const UpdateServiceDetailsResource = ({ id, secondTab }) => {
                                                                 <img src={URL.createObjectURL(item?.brows_file)} height={100} width={100} alt="Bangla" />
                                                             </div>
                                                         )
-                                                    }
+                                                    } */}
                                                 </>
                                             )
                                         }
