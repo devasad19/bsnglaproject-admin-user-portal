@@ -62,7 +62,7 @@ const UpdateServiceResource = ({ id }) => {
         formData.append("paid_status", JSON.stringify(paidStatus));
         formData.append("production_status", production_status);
         formData.append("release_date", release_date);
-        formData.append("type", JSON.stringify(type));
+        formData.append("type", type);
         formData.append("sub_title", sub_title);
         formData.append("visit_link", visit_link || "");
         formData.append("visit_type", visit_type);
