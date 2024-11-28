@@ -36,8 +36,8 @@ const Home = async ({ params: { id } }) => {
       module_file: JSON.parse(response2?.data?.details?.user_modules) ?? [
         {
           label: "",
-          version: "",
-          module: ""
+          module: "",
+          download: 0
         }
       ]
     },

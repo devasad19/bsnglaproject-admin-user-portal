@@ -168,8 +168,10 @@ const UpdateServiceDetailsResource = ({ id, secondTab }) => {
         });
 
         formData.user_doc.module_file.forEach((item, index) => {
+            payload.append(`user_modules[${index}][id]`, index+1);
             payload.append(`user_modules[${index}][label]`, item.label);
-            payload.append(`user_modules[${index}][version]`, item.version);
+            payload.append(`user_modules[${index}][download]`, item.download);
+            // payload.append(`user_modules[${index}][version]`, item.version);
             payload.append(`user_modules[${index}][module]`, item.module);
         });
 
@@ -1040,7 +1042,6 @@ const UpdateServiceDetailsResource = ({ id, secondTab }) => {
                                                             ...formData.user_doc,
                                                             module_file: [...formData.user_doc.module_file, {
                                                                 label: "",
-                                                                version: "",
                                                                 module: ""
                                                             }],
                                                         },
@@ -1101,7 +1102,7 @@ const UpdateServiceDetailsResource = ({ id, secondTab }) => {
                                                                             />
                                                                         </div>
                                                                     </div>
-                                                                    <div className="grid grid-cols-4">
+                                                                    {/* <div className="grid grid-cols-4">
                                                                         <p>Version:</p>
                                                                         <div className="col-span-3">
                                                                             <input
@@ -1127,7 +1128,7 @@ const UpdateServiceDetailsResource = ({ id, secondTab }) => {
 
                                                                             />
                                                                         </div>
-                                                                    </div>
+                                                                    </div> */}
                                                                     <div className="grid grid-cols-4">
                                                                         <p>Module:</p>
                                                                         <div className="col-span-3">
