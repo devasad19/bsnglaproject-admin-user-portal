@@ -160,7 +160,7 @@ const UpdateServiceResource = ({ id }) => {
                                     },
                                 })}
                                 type="text"
-                                placeholder="Resoource Name"
+                                placeholder="Resource Name"
                                 className="outline-none p-2"
                             />
                         </fieldset>
@@ -195,7 +195,7 @@ const UpdateServiceResource = ({ id }) => {
                                 })}
                                 id="sub_tile"
                                 type="text"
-                                placeholder="Resoource Sub Title"
+                                placeholder="Resource Sub Title"
                                 className="outline-none p-2"
                             />
                         </fieldset>

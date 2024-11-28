@@ -233,7 +233,7 @@ const Sidebar = () => {
                     </svg>
                   </span>
                   <span className={isOpen ? "block" : "hidden"}>
-                    Manage Citizen
+                    Manage Citizens
                   </span>
                 </Link>
               </li>
@@ -483,7 +483,7 @@ const Sidebar = () => {
                       "text-white"
                       }`}
                   >
-                    Manage Sale
+                    Manage Sales
                   </span>
                 </div>
 
