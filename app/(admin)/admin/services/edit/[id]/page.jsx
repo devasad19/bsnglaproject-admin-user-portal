@@ -7,10 +7,12 @@ const Home = async ({ params: { id } }) => {
 
   const response2 = await getSingleServiceDetailsResource(id).catch((err) => console.log(err));
 
+  // console.log('service response: ',response2);
+
   const secondTab = {
     description: response2?.data?.details?.broad_description,
-    mediaImages: JSON.parse(response2?.data?.details?.media_images) ?? [],
-    distribution: JSON.parse(response2?.data?.details?.distribution_items) ?? [
+    mediaImages: response2?.data?.details?.media_images ? JSON.parse(response2?.data?.details?.media_images) : [],
+    distribution: response2?.data?.details?.distribution_items ? JSON.parse(response2?.data?.details?.distribution_items) : [
       {
         label: "",
         icon: "",
@@ -22,7 +24,7 @@ const Home = async ({ params: { id } }) => {
       label: response2?.data?.details?.user_doc_label ?? '',
       icon: response2?.data?.details?.user_doc_icon ?? '',
       short_description: response2?.data?.details?.user_desc ?? '',
-      external_links: JSON.parse(response2?.data?.details?.user_external_links) ?? [
+      external_links: response2?.data?.details?.user_external_links ? JSON.parse(response2?.data?.details?.user_external_links) : [
         {
           label: "",
           link: ""
@@ -33,7 +35,7 @@ const Home = async ({ params: { id } }) => {
         thumbnail: response2?.data?.details?.user_youtube_thumbnail ?? '',
         title: response2?.data?.details?.youtube_video_title ?? ''
       },
-      module_file: JSON.parse(response2?.data?.details?.user_modules) ?? [
+      module_file: response2?.data?.details?.user_modules ? JSON.parse(response2?.data?.details?.user_modules) : [
         {
           label: "",
           module: "",
@@ -62,7 +64,7 @@ const Home = async ({ params: { id } }) => {
         right_img: '',
       }
     ],
-    fourCol: JSON.parse(response2?.data?.details?.distribution_card_items) ?? [
+    fourCol: response2?.data?.details?.distribution_card_items ? JSON.parse(response2?.data?.details?.distribution_card_items) : [
       {
         item_bg: '',
         icon: '',

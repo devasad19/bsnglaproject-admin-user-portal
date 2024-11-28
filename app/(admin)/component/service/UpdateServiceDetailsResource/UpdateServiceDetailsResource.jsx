@@ -253,6 +253,7 @@ const UpdateServiceDetailsResource = ({ id, secondTab }) => {
                             type="file"
                             accept="image/*"
                             multiple
+                            required
 
                         />
 
@@ -320,7 +321,7 @@ const UpdateServiceDetailsResource = ({ id, secondTab }) => {
                             <legend>
                                 <label htmlFor="promotion_title" className="after:content-['_*'] after:text-red-500">Title</label>
                             </legend>
-                            <input type="text" id="promotion_title" value={formData?.promotion?.title} onChange={(e) => setFormData({ ...formData, promotion: { ...formData?.promotion, title: e.target.value } })} className="outline-none w-full" placeholder="Enter Title" />
+                            <input type="text" id="promotion_title" value={formData?.promotion?.title} onChange={(e) => setFormData({ ...formData, promotion: { ...formData?.promotion, title: e.target.value } })} className="outline-none w-full" placeholder="Enter Title" required />
                         </fieldset>
                     </div>
 
@@ -329,7 +330,7 @@ const UpdateServiceDetailsResource = ({ id, secondTab }) => {
                             <legend>
                                 <label htmlFor="title_bg" className="after:content-['_*'] after:text-red-500">Title Background Color</label>
                             </legend>
-                            <input value={formData?.promotion?.title_bg} onChange={(e) => setFormData({ ...formData, promotion: { ...formData?.promotion, title_bg: e.target.value } })} type="color" name="title_bg" id="title_bg" className="w-full" />
+                            <input value={formData?.promotion?.title_bg} onChange={(e) => setFormData({ ...formData, promotion: { ...formData?.promotion, title_bg: e.target.value } })} type="color" name="title_bg" id="title_bg" className="w-full" required />
                         </fieldset>
                     </div>
 
@@ -343,11 +344,11 @@ const UpdateServiceDetailsResource = ({ id, secondTab }) => {
                             <div className="p-2">
                                 <div className="flex gap-2">
                                     <p>Label:</p>
-                                    <input type="text" className="outline-none border border-gray-500 rounded w-full" placeholder="Enter Label" value={formData?.promotion?.left_side?.label} onChange={(e) => setFormData({ ...formData, promotion: { ...formData?.promotion, left_side: { ...formData?.promotion?.left_side, label: e.target.value } } })} />
+                                    <input type="text" className="outline-none border border-gray-500 rounded w-full" placeholder="Enter Label" value={formData?.promotion?.left_side?.label} onChange={(e) => setFormData({ ...formData, promotion: { ...formData?.promotion, left_side: { ...formData?.promotion?.left_side, label: e.target.value } } })} required />
                                 </div>
                                 <div>
                                     <p>Image</p>
-                                    <input type="file" accept="image/*" onChange={(e) => setFormData({ ...formData, promotion: { ...formData?.promotion, left_side: { ...formData?.promotion?.left_side, image: e.target.files[0] } } })} />
+                                    <input type="file" accept="image/*" onChange={(e) => setFormData({ ...formData, promotion: { ...formData?.promotion, left_side: { ...formData?.promotion?.left_side, image: e.target.files[0] } } })} required />
                                 </div>
 
                                 {
@@ -379,11 +380,11 @@ const UpdateServiceDetailsResource = ({ id, secondTab }) => {
                             <div className="p-2">
                                 <div className="flex gap-2">
                                     <p>Label:</p>
-                                    <input type="text" className="outline-none border border-gray-500 rounded w-full" placeholder="Enter Label" value={formData?.promotion?.right_side?.label} onChange={(e) => setFormData({ ...formData, promotion: { ...formData?.promotion, right_side: { ...formData?.promotion?.right_side, label: e.target.value } } })} />
+                                    <input type="text" className="outline-none border border-gray-500 rounded w-full" placeholder="Enter Label" value={formData?.promotion?.right_side?.label} onChange={(e) => setFormData({ ...formData, promotion: { ...formData?.promotion, right_side: { ...formData?.promotion?.right_side, label: e.target.value } } })} required />
                                 </div>
                                 <div>
                                     <p>Image</p>
-                                    <input type="file" accept="image/*" onChange={(e) => setFormData({ ...formData, promotion: { ...formData?.promotion, right_side: { ...formData?.promotion?.right_side, image: e.target.files[0] } } })} />
+                                    <input type="file" accept="image/*" onChange={(e) => setFormData({ ...formData, promotion: { ...formData?.promotion, right_side: { ...formData?.promotion?.right_side, image: e.target.files[0] } } })} required />
                                 </div>
 
                                 {
@@ -410,7 +411,7 @@ const UpdateServiceDetailsResource = ({ id, secondTab }) => {
                             <legend>
                                 <label htmlFor="area_background" className="after:content-['_*'] after:text-red-500">Area Background Color</label>
                             </legend>
-                            <input value={formData?.promotion?.area_bg} onChange={(e) => setFormData({ ...formData, promotion: { ...formData?.promotion, area_bg: e.target.value } })} type="color" name="area_background" id="area_background" className="w-full" />
+                            <input value={formData?.promotion?.area_bg} onChange={(e) => setFormData({ ...formData, promotion: { ...formData?.promotion, area_bg: e.target.value } })} type="color" name="area_background" id="area_background" className="w-full" required />
                         </fieldset>
                     </div>
                 </div>
@@ -446,7 +447,7 @@ const UpdateServiceDetailsResource = ({ id, secondTab }) => {
 
                                         <div>
                                             <p>Background Color:</p>
-                                            <input value={item?.bg_color} onChange={(e) => setFormData({ ...formData, infoSection: formData?.infoSection?.map((item, i) => i === index ? { ...item, bg_color: e.target.value } : item) })} type="color" className="w-full" />
+                                            <input value={item?.bg_color} onChange={(e) => setFormData({ ...formData, infoSection: formData?.infoSection?.map((item, i) => i === index ? { ...item, bg_color: e.target.value } : item) })} type="color" className="w-full" required />
                                         </div>
 
                                         <div>
@@ -460,7 +461,7 @@ const UpdateServiceDetailsResource = ({ id, secondTab }) => {
 
                                         <div>
                                             <p>Right Side Image:</p>
-                                            <input type="file" onChange={(e) => setFormData({ ...formData, infoSection: formData?.infoSection?.map((item, i) => i === index ? { ...item, right_img: e.target.files[0] } : item) })} />
+                                            <input type="file" onChange={(e) => setFormData({ ...formData, infoSection: formData?.infoSection?.map((item, i) => i === index ? { ...item, right_img: e.target.files[0] } : item) })} required />
                                         </div>
 
                                         {
@@ -527,12 +528,12 @@ const UpdateServiceDetailsResource = ({ id, secondTab }) => {
 
                                         <div>
                                             <p>Background Color:</p>
-                                            <input value={item?.item_bg} onChange={(e) => setFormData({ ...formData, fourCol: formData?.fourCol?.map((item, i) => i === index ? { ...item, item_bg: e.target.value } : item) })} type="color" className="w-full" />
+                                            <input value={item?.item_bg} onChange={(e) => setFormData({ ...formData, fourCol: formData?.fourCol?.map((item, i) => i === index ? { ...item, item_bg: e.target.value } : item) })} type="color" className="w-full" required />
                                         </div>
 
                                         <div>
                                             <p>Icon:</p>
-                                            <input type="file" onChange={(e) => setFormData({ ...formData, fourCol: formData?.fourCol?.map((item, i) => i === index ? { ...item, icon: e.target.files[0] } : item) })} />
+                                            <input type="file" onChange={(e) => setFormData({ ...formData, fourCol: formData?.fourCol?.map((item, i) => i === index ? { ...item, icon: e.target.files[0] } : item) })} required />
                                         </div>
 
                                         {
@@ -553,27 +554,27 @@ const UpdateServiceDetailsResource = ({ id, secondTab }) => {
 
                                         <div>
                                             <p>Title:</p>
-                                            <input value={item?.title} onChange={(e) => setFormData({ ...formData, fourCol: formData?.fourCol?.map((item, i) => i === index ? { ...item, title: e.target.value } : item) })} type="text" className="w-full outline-none border border-gray-500 px-2 rounded" />
+                                            <input value={item?.title} onChange={(e) => setFormData({ ...formData, fourCol: formData?.fourCol?.map((item, i) => i === index ? { ...item, title: e.target.value } : item) })} type="text" className="w-full outline-none border border-gray-500 px-2 rounded" required />
                                         </div>
 
                                         <div>
                                             <p>Version:</p>
-                                            <input value={item?.version} onChange={(e) => setFormData({ ...formData, fourCol: formData?.fourCol?.map((item, i) => i === index ? { ...item, version: e.target.value } : item) })} type="text" className="w-full outline-none border border-gray-500 px-2 rounded" />
+                                            <input value={item?.version} onChange={(e) => setFormData({ ...formData, fourCol: formData?.fourCol?.map((item, i) => i === index ? { ...item, version: e.target.value } : item) })} type="text" className="w-full outline-none border border-gray-500 px-2 rounded" required />
                                         </div>
 
                                         <div>
                                             <p>Release Date:</p>
-                                            <input value={item?.release_date} onChange={(e) => setFormData({ ...formData, fourCol: formData?.fourCol?.map((item, i) => i === index ? { ...item, release_date: e.target.value } : item) })} type="text" className="w-full outline-none border border-gray-500 px-2 rounded" />
+                                            <input value={item?.release_date} onChange={(e) => setFormData({ ...formData, fourCol: formData?.fourCol?.map((item, i) => i === index ? { ...item, release_date: e.target.value } : item) })} type="text" className="w-full outline-none border border-gray-500 px-2 rounded" required />
                                         </div>
 
                                         <div>
                                             <p>Button Label:</p>
-                                            <input value={item?.btn_label} onChange={(e) => setFormData({ ...formData, fourCol: formData?.fourCol?.map((item, i) => i === index ? { ...item, btn_label: e.target.value } : item) })} type="text" className="w-full outline-none border border-gray-500 px-2 rounded" />
+                                            <input value={item?.btn_label} onChange={(e) => setFormData({ ...formData, fourCol: formData?.fourCol?.map((item, i) => i === index ? { ...item, btn_label: e.target.value } : item) })} type="text" className="w-full outline-none border border-gray-500 px-2 rounded" required />
                                         </div>
 
                                         <div>
                                             <p>Visit Type:</p>
-                                            <select onChange={(e) => setFormData({ ...formData, fourCol: formData?.fourCol?.map((item, i) => i === index ? { ...item, brows_type: e.target.value } : item) })} className="w-full outline-none border border-gray-500 p-2 rounded">
+                                            <select onChange={(e) => setFormData({ ...formData, fourCol: formData?.fourCol?.map((item, i) => i === index ? { ...item, brows_type: e.target.value } : item) })} className="w-full outline-none border border-gray-500 p-2 rounded" required>
                                                 <option value="#">
                                                     ---Select--
                                                 </option>
@@ -613,14 +614,14 @@ const UpdateServiceDetailsResource = ({ id, secondTab }) => {
                                             item?.brows_type == "browse" && (
                                                 <div>
                                                     <p>Link:</p>
-                                                    <input value={item?.brows_link} type="text" onChange={(e) => setFormData({ ...formData, fourCol: formData?.fourCol?.map((item, i) => i === index ? { ...item, brows_link: e.target.value } : item) })} className="w-full outline-none border border-gray-500 px-2 rounded" />
+                                                    <input value={item?.brows_link} type="text" onChange={(e) => setFormData({ ...formData, fourCol: formData?.fourCol?.map((item, i) => i === index ? { ...item, brows_link: e.target.value } : item) })} className="w-full outline-none border border-gray-500 px-2 rounded" required />
                                                 </div>
                                             )
                                         }
 
                                         <div>
                                             <p>Button Background Color:</p>
-                                            <input value={item?.btn_bg} onChange={(e) => setFormData({ ...formData, fourCol: formData?.fourCol?.map((item, i) => i === index ? { ...item, btn_bg: e.target.value } : item) })} type="color" className="w-full" />
+                                            <input value={item?.btn_bg} onChange={(e) => setFormData({ ...formData, fourCol: formData?.fourCol?.map((item, i) => i === index ? { ...item, btn_bg: e.target.value } : item) })} type="color" className="w-full" required />
                                         </div>
 
 
@@ -696,6 +697,7 @@ const UpdateServiceDetailsResource = ({ id, secondTab }) => {
                                                                     ),
                                                                 });
                                                             }}
+                                                            required
 
 
                                                         />
@@ -716,6 +718,7 @@ const UpdateServiceDetailsResource = ({ id, secondTab }) => {
                                                                     ),
                                                                 });
                                                             }}
+                                                            required
 
 
                                                         />
@@ -824,6 +827,7 @@ const UpdateServiceDetailsResource = ({ id, secondTab }) => {
                                                                 domain_name: e.target.value,
                                                             });
                                                         }}
+                                                        required
 
 
                                                     />
@@ -843,6 +847,7 @@ const UpdateServiceDetailsResource = ({ id, secondTab }) => {
                                                                 domain_link: e.target.value,
                                                             });
                                                         }}
+                                                        required
 
                                                     />
                                                 </div>
@@ -878,7 +883,7 @@ const UpdateServiceDetailsResource = ({ id, secondTab }) => {
                                             Label
                                         </label>
                                     </legend>
-                                    <input value={formData?.user_doc?.label} onChange={(e) => setFormData({ ...formData, user_doc: { ...formData.user_doc, label: e.target.value } })} id="user_doc_label" type="text" placeholder="Enter user doc label" className="w-full outline-none p-2" />
+                                    <input value={formData?.user_doc?.label} onChange={(e) => setFormData({ ...formData, user_doc: { ...formData.user_doc, label: e.target.value } })} id="user_doc_label" type="text" placeholder="Enter user doc label" className="w-full outline-none p-2" required />
                                 </fieldset>
 
                                 {
@@ -897,7 +902,7 @@ const UpdateServiceDetailsResource = ({ id, secondTab }) => {
                                             Icon
                                         </label>
                                     </legend>
-                                    <input onChange={(e) => setFormData({ ...formData, user_doc: { ...formData.user_doc, icon: e.target.files?.[0] } })} type="file" name="user_doc_icon" />
+                                    <input onChange={(e) => setFormData({ ...formData, user_doc: { ...formData.user_doc, icon: e.target.files?.[0] } })} type="file" name="user_doc_icon" required />
 
                                     {
                                         formData?.user_doc?.icon?.length > 0 && (
@@ -949,7 +954,7 @@ const UpdateServiceDetailsResource = ({ id, secondTab }) => {
                                         <label className="after:content-['_*'] after:text-red-500">Video Title</label>
                                     </legend>
                                     <input value={formData?.user_doc?.video?.title}
-                                        onChange={(e) => setFormData({ ...formData, user_doc: { ...formData.user_doc, video: { ...formData.user_doc.video, title: e.target.value } } })} type="text" className="outline-none p-2" placeholder="Enter video title" />
+                                        onChange={(e) => setFormData({ ...formData, user_doc: { ...formData.user_doc, video: { ...formData.user_doc.video, title: e.target.value } } })} type="text" className="outline-none p-2" placeholder="Enter video title" required />
                                 </fieldset>
                             </div>
 
@@ -970,6 +975,7 @@ const UpdateServiceDetailsResource = ({ id, secondTab }) => {
                                         type="text"
                                         placeholder="Video Link"
                                         className="outline-none p-2"
+                                        required
 
                                     />
                                 </fieldset>
@@ -985,7 +991,7 @@ const UpdateServiceDetailsResource = ({ id, secondTab }) => {
                                             Video Thumbnail
                                         </label>
                                     </legend>
-                                    <input onChange={(e) => setFormData({ ...formData, user_doc: { ...formData.user_doc, video: { ...formData.user_doc.video, thumbnail: e.target.files?.[0] } } })} type="file" name="video_thumbnail" />
+                                    <input onChange={(e) => setFormData({ ...formData, user_doc: { ...formData.user_doc, video: { ...formData.user_doc.video, thumbnail: e.target.files?.[0] } } })} type="file" name="video_thumbnail" required />
                                 </fieldset>
 
 
@@ -1017,7 +1023,7 @@ const UpdateServiceDetailsResource = ({ id, secondTab }) => {
                                         </label>
                                     </legend>
 
-                                    <textarea value={formData?.user_doc?.short_description} onChange={(e) => setFormData({ ...formData, user_doc: { ...formData.user_doc, short_description: e.target.value } })} name="user_doc_description" className="w-full outline-none p-2" placeholder="Enter user doc short description" ></textarea>
+                                    <textarea value={formData?.user_doc?.short_description} onChange={(e) => setFormData({ ...formData, user_doc: { ...formData.user_doc, short_description: e.target.value } })} name="user_doc_description" className="w-full outline-none p-2" placeholder="Enter user doc short description" required ></textarea>
                                 </fieldset>
 
                                 {
@@ -1097,38 +1103,12 @@ const UpdateServiceDetailsResource = ({ id, secondTab }) => {
                                                                                 type="text"
                                                                                 placeholder="Enter Label"
                                                                                 className=" border border-black w-full px-2"
+                                                                                required
 
 
                                                                             />
                                                                         </div>
                                                                     </div>
-                                                                    {/* <div className="grid grid-cols-4">
-                                                                        <p>Version:</p>
-                                                                        <div className="col-span-3">
-                                                                            <input
-                                                                                value={item.version}
-                                                                                onChange={(e) => {
-                                                                                    const newModuleFile = [...formData.user_doc.module_file];
-                                                                                    newModuleFile[index] = {
-                                                                                        ...newModuleFile[index],
-                                                                                        version: e.target.value
-                                                                                    };
-                                                                                    setFormData({
-                                                                                        ...formData,
-                                                                                        user_doc: {
-                                                                                            ...formData.user_doc,
-                                                                                            module_file: newModuleFile
-                                                                                        }
-                                                                                    });
-                                                                                }}
-                                                                                type="text"
-                                                                                placeholder="Enter Version"
-                                                                                className=" border border-black w-full px-2"
-
-
-                                                                            />
-                                                                        </div>
-                                                                    </div> */}
                                                                     <div className="grid grid-cols-4">
                                                                         <p>Module:</p>
                                                                         <div className="col-span-3">
@@ -1152,6 +1132,7 @@ const UpdateServiceDetailsResource = ({ id, secondTab }) => {
                                                                                 }}
                                                                                 type="file"
                                                                                 className="w-full "
+                                                                                required
                                                                             />
                                                                         </div>
                                                                     </div>
@@ -1343,6 +1324,7 @@ const UpdateServiceDetailsResource = ({ id, secondTab }) => {
                                                                                 placeholder="Enter Label"
                                                                                 className=" border border-black w-full px-2"
                                                                                 value={item.label}
+                                                                                required
 
                                                                             />
                                                                         </div>
@@ -1370,6 +1352,7 @@ const UpdateServiceDetailsResource = ({ id, secondTab }) => {
                                                                                 placeholder="Enter Link"
                                                                                 className=" border border-black w-full px-2"
                                                                                 value={item.link}
+                                                                                required
 
                                                                             />
                                                                         </div>
