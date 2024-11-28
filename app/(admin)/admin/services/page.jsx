@@ -108,14 +108,14 @@ const Home = () => {
           <table className="w-full">
             <thead className="border-b border-gray-200  bg-primary text-white  h-10 text-12 md:text-15">
               <tr>
-                <th className="text-center px-2">SL</th>
-                <th className="text-center px-2">Name</th>
-                <th className="text-center">Sub Title</th>
-                <th className="text-center">Type</th>
-                <th className="text-center">Production Status</th>
-                <th className="text-center">Paid Status</th>
-                <th className="text-center">Publish/Unpublish</th>
-                <th className="text-center">Action</th>
+                <th className="text-sm text-center px-2">SL</th>
+                <th className="text-sm text-center px-2">Name</th>
+                <th className="text-sm text-center">Sub Title</th>
+                <th className="text-sm text-center">Type</th>
+                <th className="text-sm text-center">Production Status</th>
+                <th className="text-sm text-center">Paid Status</th>
+                <th className="text-sm text-center">Publish/Unpublish</th>
+                <th className="text-sm text-center">Action</th>
               </tr>
             </thead>
             <tbody className="[&>tr]:border-b [&>tr]:border-gray-200 [&>tr]:text-left [&>tr]:h-16 text-12 lg:text-16 ">
@@ -171,7 +171,7 @@ const Home = () => {
                       <td className="text-center border-r border-gray-200">
                         <div className="flex items-center gap-2">
                           {paidStatus?.free == 1 ? (
-                            <button className="bg-[#2F93DF] px-1 py-1 lg:px-3 lg:py-2 text-white  rounded ">
+                            <button className="bg-[#2F93DF] px-1 py-1 lg:px-2 lg:py-1 text-sm text-white  rounded ">
                               Free
                             </button>
                           ) : (
@@ -179,7 +179,7 @@ const Home = () => {
                           )}
 
                           {paidStatus?.pro == 1 && (
-                            <button className="bg-[#1AB17A] px-1 py-1 lg:px-3 lg:py-2 text-white  rounded ">
+                            <button className="bg-[#1AB17A] px-1 py-1 lg:px-2 lg:py-1 text-sm text-white  rounded ">
                               Pro
                             </button>
                           )}
@@ -190,7 +190,7 @@ const Home = () => {
                           item?.completion_status == 3 ? (
                             <button
                               onClick={() => UpdateServicePublishStatus(item?.id, item?.status == 1 ? 0 : 1)}
-                              className={`text-white px-4 py-2 rounded transition-all duration-300 w-[90%] ${item?.status == 1
+                              className={`text-white px-2 py-1 rounded transition-all duration-300 w-[60%] ${item?.status == 1
                                 ? "bg-green-700"
                                 : "bg-yellow-500"
                                 }`}
@@ -198,7 +198,7 @@ const Home = () => {
                               {item?.status == 1 ? "Publish" : "UnPublish"}
                             </button>
                           ) : (
-                            <button className="bg-white border border-red-500 text-red-500 px-4 py-2 w-[90%] rounded">
+                            <button className="bg-white border border-red-500 text-red-500 text-sm px-2 py-1 w-[70%] rounded">
                               Incomplete
                             </button>
                           )
