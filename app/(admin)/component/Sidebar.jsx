@@ -66,8 +66,9 @@ const Sidebar = () => {
 
 
   const HandleLogout = () => {
-    document.cookie = "user=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
-    document.cookie = "token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+    document.cookie = "token=; path=/; domain=localhost; expires=Thu, 01 Jan 1970 00:00:00 UTC;";
+    document.cookie = "user=; path=/; domain=localhost; expires=Thu, 01 Jan 1970 00:00:00 UTC;";
+    // window.location.href='http://localhost:3000/signin';
     window.location.href=process.env.NEXT_PUBLIC_PORTAL_URL+'/signin';
   }
 
@@ -147,10 +148,10 @@ const Sidebar = () => {
               </li>
               <li
                 className={`hover:bg-primary group ${pathname === "/admin/services" ||
-                    pathname === "/admin/services/create" ||
-                    /^\/admin\/services\/\d+$/.test(pathname)
-                    ? "bg-primary"
-                    : ""
+                  pathname === "/admin/services/create" ||
+                  /^\/admin\/services\/\d+$/.test(pathname)
+                  ? "bg-primary"
+                  : ""
                   }`}
               >
                 <Link
@@ -161,10 +162,10 @@ const Sidebar = () => {
                   title="Show All Services"
                   // className="flex items-center gap-2"
                   className={`flex items-center gap-2 group-hover:text-white ${pathname == "/admin/services" ||
-                      pathname == "/admin/services/create" ||
-                      /^\/admin\/services\/\d+$/.test(pathname)
-                      ? "text-white"
-                      : "text-primary"
+                    pathname == "/admin/services/create" ||
+                    /^\/admin\/services\/\d+$/.test(pathname)
+                    ? "text-white"
+                    : "text-primary"
                     }`}
                 >
                   <span>
@@ -212,8 +213,8 @@ const Sidebar = () => {
                   shallow
                   title="Manage Citizen"
                   className={`flex items-center gap-2 group-hover:text-white ${pathname == "/admin/manage-citizen"
-                      ? "text-white"
-                      : "text-primary"
+                    ? "text-white"
+                    : "text-primary"
                     }`}
                 >
                   <FaUsersCog size={20} className="fill-current" />
@@ -271,8 +272,8 @@ const Sidebar = () => {
                       }}
                       shallow
                       className={`text-14 hover:bg-green-500 px-2 py-1 rounded hover:text-white ${pathname.includes("/admin/setting/frontend-setting")
-                          ? "bg-green-500 text-white font-semibold"
-                          : "text-black"
+                        ? "bg-green-500 text-white font-semibold"
+                        : "text-black"
                         }`}
                     >
                       General Portal Settings
@@ -283,8 +284,8 @@ const Sidebar = () => {
                       }}
                       shallow
                       className={`text-14 hover:bg-green-500 px-2 py-1 rounded hover:text-white ${pathname.includes("/admin/setting/sidebar-links")
-                          ? "bg-green-500 text-white font-semibold"
-                          : "text-black"
+                        ? "bg-green-500 text-white font-semibold"
+                        : "text-black"
                         }`}
                     >
                       Hamburger Menu
@@ -295,8 +296,8 @@ const Sidebar = () => {
                       }}
                       shallow
                       className={`text-14 hover:bg-green-500 px-2 py-1 rounded hover:text-white ${pathname.includes("/admin/setting/footer-content")
-                          ? "bg-green-500 text-white font-semibold"
-                          : "text-black"
+                        ? "bg-green-500 text-white font-semibold"
+                        : "text-black"
                         }`}
                     >
                       Manage Footer Content
@@ -307,8 +308,8 @@ const Sidebar = () => {
                       }}
                       shallow
                       className={`text-14 hover:bg-green-500 px-2 py-1 rounded hover:text-white ${pathname.includes("/admin/setting/hero-section")
-                          ? "bg-green-500 text-white font-semibold"
-                          : "text-black"
+                        ? "bg-green-500 text-white font-semibold"
+                        : "text-black"
                         }`}
                     >
                       Banner Right Section
@@ -367,8 +368,8 @@ const Sidebar = () => {
                       }}
                       shallow
                       className={`text-14 hover:bg-green-500 px-2 py-1 rounded hover:text-white ${pathname.includes("/admin/accounts-settings/purchase-services")
-                          ? "bg-green-500 text-white font-semibold"
-                          : "text-black"
+                        ? "bg-green-500 text-white font-semibold"
+                        : "text-black"
                         }`}
                     >
                       Sold Services
@@ -379,8 +380,8 @@ const Sidebar = () => {
                       }}
                       shallow
                       className={`text-14 hover:bg-green-500 px-2 py-1 rounded hover:text-white ${pathname.includes("/admin/bill")
-                          ? "bg-green-500 text-white font-semibold"
-                          : "text-black"
+                        ? "bg-green-500 text-white font-semibold"
+                        : "text-black"
                         }`}
                     >
                       Citizen Payments List
@@ -403,8 +404,8 @@ const Sidebar = () => {
                   shallow
                   title="User Feedbacks"
                   className={`flex items-center gap-2 group-hover:text-white ${pathname == "/admin/user-feedbacks"
-                      ? "text-white"
-                      : "text-primary"
+                    ? "text-white"
+                    : "text-primary"
                     }`}
                 >
                   <VscFeedback size={20} className="fill-current" />
