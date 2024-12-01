@@ -25,26 +25,24 @@ const ServiceResource = () => {
     register,
     handleSubmit,
     reset,
+    setError,
     formState: { errors },
     control,
   } = useForm();
 
   const onSubmitServiceResource = async (data) => {
-    setIsLoading(true);
+    // setIsLoading(true);
 
     const {
       component,
       description,
-      // distribution,
       logo,
       name,
       production_status,
       release_date,
-      // sub_title,
       visit_link,
       visit_type,
       resource_file,
-      // status,
       description_title
     } = data;
 
@@ -53,47 +51,122 @@ const ServiceResource = () => {
       pro: data.pro ? 1 : 0,
     };
 
-    const formData = new FormData();
-    formData.append("name", name);
-    formData.append("description", description);
-    formData.append("component", component);
-    // formData.append("distribution", distribution);
-    formData.append("logo", logo[0]);
-    formData.append("paid_status", JSON.stringify(paid_status));
-    formData.append("production_status", production_status);
-    formData.append("release_date", release_date);
-    // formData.append("type", type);
-    // formData.append("sub_title", sub_title);
-    formData.append("visit_link", visit_link || "");
-    formData.append("visit_type", visit_type);
-    formData.append("completion_status", '1');
-    // formData.append("status", status);
-    formData.append("resource_file", resource_file[0] || "");
-    formData.append("description_title", description_title);
-    formData.append("type", JSON.stringify(type));
+    console.log('resource file img:', resourceFileImg.size);
 
-    const uploadRes = await uploadServiceData(formData);
-
-    if (uploadRes.status === true) {
+    if (name.length < 3) {
       setIsLoading(false);
-      toast.success("Service Created Successfully");
-      router.push("/admin/services");
-      reset();
+      setError("name", { type: "manual", message: "Service name must be at least 3 characters long" });
+      return;
+    } else if (description.length < 3) {
+      setIsLoading(false);
+      setError("description", { type: "manual", message: "Service description must be at least 3 characters long" });
+      return;
+    } else if (type.length < 1) {
+      setIsLoading(false);
+      setError("type", { type: "manual", message: "Please select at least one type" });
+      return;
+    } else if (production_status.length < 1) {
+      setIsLoading(false);
+      setError("production_status", { type: "manual", message: "Please select production status" });
+      return;
+    } else if (release_date.length < 1) {
+      setIsLoading(false);
+      setError("release_date", { type: "manual", message: "Please select release date" });
+      return;
+    } else if (logo.length < 1) {
+      setIsLoading(false);
+      setError("logo", { type: "manual", message: "Please upload a logo" });
+      return;
+    } else if (logo[0].size > 500000) { // 1MB
+      setIsLoading(false);
+      setError("logo", { type: "manual", message: "Logo size must be less than 500kb" });
+      return;
+    } else if (paid_status.free === 0 && paid_status.pro === 0) {
+      setIsLoading(false);
+      setError("paid_status", { type: "manual", message: "Please select at least one paid status" });
+      return;
+    } else if (component.length < 1) {
+      setIsLoading(false);
+      setError("component", { type: "manual", message: "Please select component" });
+      return;
+    } else if (visit_type.length < 1) {
+      setIsLoading(false);
+      setError("visit_type", { type: "manual", message: "Please select visit type" });
+      return;
+    } else if (visit_type == 'download' && resource_file.length < 1) {
+      setIsLoading(false);
+      setError("resource_file", { type: "manual", message: "Please upload a resource file" });
+      return;
+    } else if (visit_type == 'download' && resourceFileImg.size > 500000) {
+      setIsLoading(false);
+      setError("resource_file", { type: "manual", message: "Resource file size must be less than 500kb" });
+      return;
+    } else if (visit_type == 'link' && visit_link.length < 1) {
+      setIsLoading(false);
+      setError("visit_link", { type: "manual", message: "Please enter visit link" });
+      return;
+    } else if (visit_type == 'Subscribe' && visit_link.length < 1) {
+      setIsLoading(false);
+      setError("visit_link", { type: "manual", message: "Please enter visit link" });
+      return;
     } else {
-      setIsLoading(false);
-      toast.error("Service Creation Failed");
+
+
+      const formData = new FormData();
+      formData.append("name", name);
+      formData.append("description", description);
+      formData.append("component", component);
+      formData.append("logo", logo[0]);
+      formData.append("paid_status", JSON.stringify(paid_status));
+      formData.append("production_status", production_status);
+      formData.append("release_date", release_date);
+      formData.append("visit_link", visit_link || "");
+      formData.append("visit_type", visit_type);
+      formData.append("completion_status", '1');
+      formData.append("resource_file", resource_file[0] || "");
+      formData.append("description_title", description_title);
+      formData.append("type", JSON.stringify(type));
+
+
+
+
+
+      const uploadRes = await uploadServiceData(formData);
+
+      if (uploadRes.status === true) {
+        setIsLoading(false);
+        toast.success("Service Created Successfully");
+        router.push("/admin/services");
+        reset();
+      } else {
+        setIsLoading(false);
+        toast.error("Service Creation Failed");
+      }
     }
+
+
 
   };
 
 
   const handleToggleType = (value) => {
+
     if (type.includes(value)) {
       setType((prev) => prev.filter((item) => item !== value));
+
     } else {
-      setType((prev) => [...prev, value]);
+      if (type.length < 3) {
+        setType((prev) => [...prev, value]);
+      } else {
+        toast.warning("You can select only 3 types");
+      }
+
     }
+
   };
+
+
+
 
   return (
     <>
@@ -106,7 +179,7 @@ const ServiceResource = () => {
                   htmlFor="ServiceName"
                   className="after:content-['_*'] after:text-red-500"
                 >
-                  Resource Name
+                  Service Name
                 </label>
               </legend>
               <input
@@ -115,18 +188,19 @@ const ServiceResource = () => {
                   validate: {
                     wordCount: (value) => {
                       const wordCount = value.trim().split(/\s+/).length;
-                      if (wordCount < 3) {
-                        return "Description must have at least 3 words";
-                      } else if (wordCount > 8) {
-                        return "Description cannot exceed 8 words";
+                      if (wordCount < 1) {
+                        return "Description must have at least 1 words";
+                      } else if (wordCount > 3) {
+                        return "Description cannot exceed 3 words";
                       }
                       return true;
                     },
                   },
                 })}
                 type="text"
-                placeholder="Resource Name"
+                placeholder="Service Name"
                 className="outline-none p-2"
+                required
               />
             </fieldset>
             {errors.name && (
@@ -135,42 +209,6 @@ const ServiceResource = () => {
               </p>
             )}
           </div>
-
-
-          {/* <div>
-            <fieldset className="flex flex-col border rounded-md px-2">
-              <legend>
-                <label
-                  htmlFor="ServiceName"
-                  className="after:content-['_*'] after:text-red-500"
-                >
-                  Resource Sub Title
-                </label>
-              </legend>
-              <input
-                {...register("sub_title", {
-                  required: "Sub Title is required",
-                  validate: {
-                    maxWords: (value) => {
-                      const wordCount = value.trim().split(/\s+/).length;
-                      return (
-                        wordCount <= 10 || "Description cannot exceed 10 words"
-                      );
-                    },
-                  },
-                })}
-                id="sub_tile"
-                type="text"
-                placeholder="Resource Sub Title"
-                className="outline-none p-2"
-              />
-            </fieldset>
-            {errors.sub_title && (
-              <p className="text-red-500 text-12 px-2 pt-1">
-                {errors.sub_title.message}
-              </p>
-            )}
-          </div> */}
 
           <div>
             <fieldset className="flex flex-col border rounded-md px-2">
@@ -189,7 +227,7 @@ const ServiceResource = () => {
                     maxWords: (value) => {
                       const wordCount = value.trim().split(/\s+/).length;
                       return (
-                        wordCount <= 10 || "Description cannot exceed 10 words"
+                        wordCount <= 1 || "Description cannot exceed 1 words"
                       );
                     },
                   },
@@ -198,6 +236,7 @@ const ServiceResource = () => {
                 type="text"
                 placeholder="Description Title"
                 className="outline-none p-2"
+                required
               />
             </fieldset>
             {errors.description_title && (
@@ -229,7 +268,7 @@ const ServiceResource = () => {
                     maxWords: (value) => {
                       const wordCount = value.trim().split(/\s+/).length;
                       return (
-                        wordCount <= 80 || "Description cannot exceed 80 words"
+                        wordCount <= 15 || "Description cannot exceed 80 words"
                       );
                     },
                   },
@@ -259,17 +298,17 @@ const ServiceResource = () => {
 
           <div>
             <fieldset className="flex flex-col border rounded-md p-2">
-                <legend>
-                  <label className="after:content-['_*'] after:text-red-500">Type</label>
-                </legend>
+              <legend>
+                <label className="after:content-['_*'] after:text-red-500">Type</label>
+              </legend>
 
               <div className="flex flex-wrap gap-2">
                 {allTypes.map((item, index) => (
                   <button
                     key={index}
                     className={`px-4 py-1 rounded cursor-pointer ${type.includes(item)
-                        ? "bg-green-600 text-white hover:bg-green-700 flex items-center gap-2"
-                        : "bg-blue-600 text-white hover:bg-blue-700"
+                      ? "bg-green-600 text-white hover:bg-green-700 flex items-center gap-2"
+                      : "bg-blue-600 text-white hover:bg-blue-700"
                       }`}
                     onClick={(e) => {
                       e.preventDefault();
@@ -316,37 +355,8 @@ const ServiceResource = () => {
               </p>
             )}
           </div>
-          {/* <div>
-            <fieldset className="flex flex-col border rounded-md px-2">
-              <legend>
-                <label
-                  htmlFor="ServiceName"
-                  className="after:content-['_*'] after:text-red-500"
-                >
-                  Distribution
-                </label>
-              </legend>
 
-              <select
-                {...register("distribution", {
-                  required: "Distribution is required",
-                })}
-                className="outline-none p-2 bg-white"
-              >
-                <option value="web">Web</option>
-                <option value="windows">Windows</option>
-                <option value="linux">Linux</option>
-                <option value="mac">Mac</option>
-                <option value="ios">IOS</option>
-                <option value="android">Android</option>
-              </select>
-            </fieldset>
-            {errors.distribution && (
-              <p className="text-red-500 text-12 px-2 pt-1">
-                {errors.distribution.message}
-              </p>
-            )}
-          </div> */}
+
           <div>
             <fieldset className="flex flex-col border rounded-md px-2">
               <legend>
@@ -382,6 +392,8 @@ const ServiceResource = () => {
               alt="Preview"
             />
           )}
+
+
           <div>
             <fieldset className="flex flex-col border rounded-md px-2">
               <legend>
@@ -414,6 +426,8 @@ const ServiceResource = () => {
               </p>
             )}
           </div>
+
+
           <div>
             <fieldset className="flex flex-col border rounded-md px-2">
               <legend>
@@ -488,7 +502,7 @@ const ServiceResource = () => {
                   htmlFor="ServiceName"
                   className="after:content-['_*'] after:text-red-500"
                 >
-                  user access
+                  User Access
                 </label>
               </legend>
 
@@ -511,6 +525,8 @@ const ServiceResource = () => {
               </p>
             )}
           </div>
+
+
           {showItem == "Visit" || showItem == "Subscribe" ? (
             <div>
               <fieldset className="flex flex-col border rounded-md px-2">
@@ -562,7 +578,7 @@ const ServiceResource = () => {
 
                   <input
                     {...register("resource_file", {
-                      required: "resource_file is required",
+                      required: "Resource File is required",
                     })}
                     id="file"
                     type="file"
@@ -573,6 +589,7 @@ const ServiceResource = () => {
                     }}
                     // accept="video/mp4, video/ogg, video/avi"
                     accept="image/*"
+                    size={500000}
                   />
                 </fieldset>
                 {errors.resource_file && (
@@ -583,33 +600,9 @@ const ServiceResource = () => {
               </div>
             </>
           )}
-          {/* <div>
-            <fieldset className="flex flex-col border rounded-md px-2">
-              <legend>
-                <label
-                  htmlFor="ServiceName"
-                  className="after:content-['_*'] after:text-red-500"
-                >
-                  Status
-                </label>
-              </legend>
 
-              <select
-                {...register("status", {
-                  required: "Type is required",
-                })}
-                className="outline-none p-2 bg-white"
-              >
-                <option value="1">Publish</option>
-                <option value="0">Unpublish</option>
-              </select>
-            </fieldset>
-            {errors.type && (
-              <p className="text-red-500 text-12 px-2 pt-1">
-                {errors.type.message}
-              </p>
-            )}
-          </div> */}
+
+
           <div className="flex justify-between pt-5">
             <p className="text-14">
               <span className="text-red-500">*</span> Required
@@ -632,10 +625,11 @@ const ServiceResource = () => {
             )}
           </div>
         </form>
+
+
         {isLoading && (
           <div className="absolute inset-0 bg-white bg-opacity-75 flex items-center justify-center z-10">
             <div className="flex flex-col items-center space-y-4">
-              {/* Loading Spinner */}
               <svg
                 className="animate-spin h-12 w-12 text-blue-600"
                 xmlns="http://www.w3.org/2000/svg"
@@ -656,11 +650,11 @@ const ServiceResource = () => {
                   d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
                 ></path>
               </svg>
-              {/* Loading Text */}
               <p className="text-gray-700 font-medium">Loading...</p>
             </div>
           </div>
         )}
+
       </div>
     </>
   );

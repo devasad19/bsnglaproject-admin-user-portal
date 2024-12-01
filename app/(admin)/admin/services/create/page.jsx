@@ -10,9 +10,6 @@ const Home = () => {
         <div className="flex justify-center w-full">
           <div className="bg-white p-4 w-full lg:w-[80%] overflow-hidden">
             <div className="flex flex-col gap-3">
-              <h1 className="text-20 font-mono font-bold text-[#151D48]">
-                Service Details
-              </h1>
 
               <div>
                 <div className="flex flex-col gap-4">
