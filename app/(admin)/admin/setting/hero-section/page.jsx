@@ -18,6 +18,7 @@ const Home = () => {
                 label: "",
                 bg_color: "",
                 icon: "",
+                file: "",
             }
         ]
     });
@@ -36,6 +37,7 @@ const Home = () => {
                             label: "",
                             bg_color: "",
                             icon: "",
+                            file: "",
                         }
                     ]
                 }
@@ -62,6 +64,7 @@ const Home = () => {
             form.append(`buttons[${index}][label]`, item.label);
             form.append(`buttons[${index}][bg_color]`, item.bg_color);
             form.append(`buttons[${index}][icon]`, item.icon);
+            form.append(`buttons[${index}][file]`, item.file);
         })
  
         updateHeroRight(form).then((res) => {
@@ -71,6 +74,8 @@ const Home = () => {
             console.log(err);
             toast.error(err?.message);
         }).finally(() => setLoading(false));
+
+        
     };
 
 
@@ -117,7 +122,7 @@ const Home = () => {
                                 <div key={index} className="flex gap-2">
                                     <fieldset className="border border-gray-400 rounded-md p-2 flex flex-col gap-2 w-full">
                                         <div className="grid grid-cols-12">
-                                            <p className="text-14 after:content-['_*'] after:text-red-500">Label:</p>
+                                            <p className="text-14 after:content-['_*'] after:text-red-500 col-span-2">Label:</p>
                                             <input
                                                 value={item.label}
                                                 onChange={(e) => setFormData({
@@ -130,20 +135,63 @@ const Home = () => {
                                             />
                                         </div>
                                         <div className="grid grid-cols-12">
-                                            <p className="text-14 after:content-['_*'] after:text-red-500">Background Color:</p>
+                                            <p className="text-14 after:content-['_*'] after:text-red-500 col-span-2">Background Color:</p>
                                             <input
                                                 value={item.bg_color}
                                                 onChange={(e) => setFormData({
                                                     ...formData,
                                                     buttons: formData.buttons.map((btn, i) => i === index ? { ...btn, bg_color: e.target.value } : btn)
                                                 })}
-                                                type="text"
-                                                placeholder="Enter Color Code. Ex: #000000"
-                                                className="col-span-10 border border-gray-400 focus:outline-none p-1 rounded" required
+                                                type="color"
+                                                className="w-full rounded col-span-10" required
                                             />
                                         </div>
+
+
                                         <div className="grid grid-cols-12">
-                                            <p className="text-14 after:content-['_*'] after:text-red-500">Icon:</p>
+                                            <p className="text-14 after:content-['_*'] after:text-red-500 col-span-2">File:</p>
+                                            <input
+                                                onChange={(e) => setFormData({
+                                                    ...formData,
+                                                    buttons: formData.buttons.map((btn, i) => i === index ? { ...btn, file: e.target.files[0] } : btn)
+                                                })}
+                                                type="file"
+                                                className="col-span-10 border border-gray-400 focus:outline-none p-1 rounded" 
+                                            />
+                                        </div>
+
+                                        {
+                                            typeof item.file === "object" && (
+                                                <div>
+                                                    <Image
+                                                        src={URL.createObjectURL(item.file)}
+                                                        width={320}
+                                                        height={192}
+                                                        className="w-[10em] h-[10em] rounded-md mt-3"
+                                                        alt="Preview"
+                                                    />
+                                                </div>
+                                            )
+                                        }
+
+
+                                        {
+                                            (typeof item.file == "string" && item.file.length > 0) && (
+                                                <div>
+                                                    <Image
+                                                        src={process.env.NEXT_PUBLIC_IMAGE_URL + item.file}
+                                                        width={320}
+                                                        height={192}
+                                                        className="w-[10em] h-[10em] rounded-md mt-3"
+                                                        alt="Preview"
+                                                    />
+                                                </div>
+                                            )
+                                        }
+
+                                        
+                                        <div className="grid grid-cols-12">
+                                            <p className="text-14 after:content-['_*'] after:text-red-500 col-span-2">Icon:</p>
                                             <input
                                                 onChange={(e) => setFormData({
                                                     ...formData,
