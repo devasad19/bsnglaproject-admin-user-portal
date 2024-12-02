@@ -1,17 +1,17 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { toast } from "react-toastify";
 import { CountWords, GetFileSize, sanitizeYoutubeUrl } from "@/helper";
-import { serviceDetailsResourceApi } from "@/app/(portal)/_api/ServiceApi/ServiceApi";
-import { getSingleServiceDetailsResource, updateSingleServiceResource } from "@/app/(admin)/_api";
+import { updateSingleServiceResource } from "@/app/(admin)/_api";
 import Image from "next/image";
 import { FaRegTimesCircle } from "react-icons/fa";
 import { relative_image_path } from "@/helper";
 import CustomEditor from "@/app/_components/CustomEditor/CustomEditor";
 import { FaMinus } from "react-icons/fa";
 import { FaPlus } from "react-icons/fa";
+import Validation from "./Validation";
 
 const UpdateServiceDetailsResource = ({ id, secondTab }) => {
     const router = useRouter();
@@ -29,17 +29,50 @@ const UpdateServiceDetailsResource = ({ id, secondTab }) => {
             message: ""
         },
 
+        infoSection: {
+            status: false,
+            message: "",
+        },
+
+        promotion: {
+            title: {
+                status: false,
+                message: ""
+            },
+            title_bg: {
+                status: false,
+                message: ""
+            },
+            area_bg: {
+                status: false,
+                message: ""
+            },
+            left_side: {
+                status: false,
+                message: ""
+            },
+            right_side: {
+                status: false,
+                message: ""
+            }
+        },
+
+        fourCol: {
+            status: false,
+            message: "",
+        },
+
+        domain_name: {
+            status: false,
+            message: "",
+        },
+
+        domain_link: {
+            status: false,
+            message: "",
+        },
+
         distribution: {
-            status: false,
-            message: "",
-        },
-
-        userCharacter: {
-            status: false,
-            message: "",
-        },
-
-        apiCharacter: {
             status: false,
             message: "",
         },
@@ -71,131 +104,106 @@ const UpdateServiceDetailsResource = ({ id, secondTab }) => {
             }
         },
 
-
-        apiDoc: {
-            label: {
-                status: false,
-                message: ""
-            },
-            icon: {
-                status: false,
-                message: ""
-            },
-            video: {
-                status: false,
-                message: ""
-            },
-            shortDes: {
-                status: false,
-                message: ""
-            },
-            module: {
-                status: false,
-                message: ""
-            },
-            extraLink: {
-                status: false,
-                message: ""
-            }
-        },
-
     });
 
 
     const HandleFormSubmit = async (e) => {
         e.preventDefault();
-
-
         setIsLoading(true);
 
-        const payload = new FormData();
-
-        payload.append("service_id", id);
-        payload.append("broad_description", formData.description);
+        const res = await Validation(formData, setError);
 
 
-        formData?.mediaImages.forEach((item, index) => {
-            payload.append(`media_images[${index}]`, item);
-        });
+        if (!res) {
+            const payload = new FormData();
+
+            payload.append("service_id", id);
+            payload.append("broad_description", formData.description);
 
 
-        formData?.infoSection.forEach((item, index) => {
-            payload.append(`featurs_and_usages[${index}][bg_color]`, item.bg_color);
-            payload.append(`featurs_and_usages[${index}][left_description]`, item.left_description);
-            payload.append(`featurs_and_usages[${index}][right_description]`, item.right_description);
-            payload.append(`featurs_and_usages[${index}][right_img]`, item.right_img);
-        });
+            formData?.mediaImages.forEach((item, index) => {
+                payload.append(`media_images[${index}]`, item);
+            });
 
 
-
-        formData?.fourCol?.forEach((item, index) => {
-            payload.append(`distribution_card_items[${index}][item_bg]`, item.item_bg);
-            payload.append(`distribution_card_items[${index}][icon]`, item.icon);
-            payload.append(`distribution_card_items[${index}][title]`, item.title);
-            payload.append(`distribution_card_items[${index}][version]`, item.version);
-            payload.append(`distribution_card_items[${index}][release_date]`, item.release_date);
-            payload.append(`distribution_card_items[${index}][btn_label]`, item.btn_label);
-            payload.append(`distribution_card_items[${index}][btn_bg]`, item.btn_bg);
-            payload.append(`distribution_card_items[${index}][brows_type]`, item.brows_type);
-            payload.append(`distribution_card_items[${index}][brows_file]`, item.brows_file);
-            payload.append(`distribution_card_items[${index}][brows_link]`, item.brows_link);
-        });
-
-
-        payload.append("promotion_title", formData?.promotion?.title);
-        payload.append("prom_title_bg", formData?.promotion?.title_bg);
-        payload.append("prom_area_bg", formData?.promotion?.area_bg);
-        payload.append("prom_left_label", formData?.promotion?.left_side?.label);
-        payload.append("prom_left_icon", formData?.promotion?.left_side?.image);
-        payload.append("prom_right_label", formData?.promotion?.right_side?.label);
-        payload.append("prom_right_icon", formData?.promotion?.right_side?.image);
-
-
-        payload.append("domain_name", formData.domain_name);
-        payload.append("domain_link", formData.domain_link);
-
-        payload.append("user_doc_label", formData.user_doc.label);
-        payload.append("user_doc_icon", formData.user_doc.icon);
-        payload.append("user_desc", formData.user_doc.short_description);
-        payload.append("user_external_links", JSON.stringify(formData.user_doc.external_links));
-        payload.append("user_youtube_link", formData.user_doc?.video?.link);
-        payload.append("user_youtube_thumbnail", formData.user_doc?.video?.thumbnail);
-        payload.append("youtube_video_title", formData.user_doc?.video?.title);
-
-        formData.distribution.forEach((item, index) => {
-            payload.append(`distribution_items[${index}][label]`, item.label);
-            payload.append(`distribution_items[${index}][icon]`, item.icon);
-        });
-
-        formData.user_doc.module_file.forEach((item, index) => {
-            payload.append(`user_modules[${index}][id]`, index+1);
-            payload.append(`user_modules[${index}][label]`, item.label);
-            payload.append(`user_modules[${index}][download]`, item.download);
-            // payload.append(`user_modules[${index}][version]`, item.version);
-            payload.append(`user_modules[${index}][module]`, item.module);
-        });
+            formData?.infoSection.forEach((item, index) => {
+                payload.append(`featurs_and_usages[${index}][bg_color]`, item.bg_color);
+                payload.append(`featurs_and_usages[${index}][left_description]`, item.left_description);
+                payload.append(`featurs_and_usages[${index}][right_description]`, item.right_description);
+                payload.append(`featurs_and_usages[${index}][right_img]`, item.right_img);
+            });
 
 
 
-        const res = await updateSingleServiceResource(payload, id).catch((err) => {
-            console.log(err);
-        });
+            formData?.fourCol?.forEach((item, index) => {
+                payload.append(`distribution_card_items[${index}][item_bg]`, item.item_bg);
+                payload.append(`distribution_card_items[${index}][icon]`, item.icon);
+                payload.append(`distribution_card_items[${index}][title]`, item.title);
+                payload.append(`distribution_card_items[${index}][version]`, item.version);
+                payload.append(`distribution_card_items[${index}][release_date]`, item.release_date);
+                payload.append(`distribution_card_items[${index}][btn_label]`, item.btn_label);
+                payload.append(`distribution_card_items[${index}][btn_bg]`, item.btn_bg);
+                payload.append(`distribution_card_items[${index}][brows_type]`, item.brows_type);
+                payload.append(`distribution_card_items[${index}][brows_file]`, item.brows_file);
+                payload.append(`distribution_card_items[${index}][brows_link]`, item.brows_link);
+            });
 
 
-        if (res?.status == true) {
-            toast.success(res.message);
-            router.push("/admin/services");
+            payload.append("promotion_title", formData?.promotion?.title);
+            payload.append("prom_title_bg", formData?.promotion?.title_bg);
+            payload.append("prom_area_bg", formData?.promotion?.area_bg);
+            payload.append("prom_left_label", formData?.promotion?.left_side?.label);
+            payload.append("prom_left_icon", formData?.promotion?.left_side?.image);
+            payload.append("prom_right_label", formData?.promotion?.right_side?.label);
+            payload.append("prom_right_icon", formData?.promotion?.right_side?.image);
 
-        } else {
-            toast.error(res.message);
+
+            payload.append("domain_name", formData.domain_name);
+            payload.append("domain_link", formData.domain_link);
+
+            payload.append("user_doc_label", formData.user_doc.label);
+            payload.append("user_doc_icon", formData.user_doc.icon);
+            payload.append("user_desc", formData.user_doc.short_description);
+            payload.append("user_external_links", JSON.stringify(formData.user_doc.external_links));
+            payload.append("user_youtube_link", formData.user_doc?.video?.link);
+            payload.append("user_youtube_thumbnail", formData.user_doc?.video?.thumbnail);
+            payload.append("youtube_video_title", formData.user_doc?.video?.title);
+
+            formData.distribution.forEach((item, index) => {
+                payload.append(`distribution_items[${index}][label]`, item.label);
+                payload.append(`distribution_items[${index}][icon]`, item.icon);
+            });
+
+            formData.user_doc.module_file.forEach((item, index) => {
+                payload.append(`user_modules[${index}][id]`, index + 1);
+                payload.append(`user_modules[${index}][label]`, item.label);
+                payload.append(`user_modules[${index}][download]`, item.download);
+                payload.append(`user_modules[${index}][module]`, item.module);
+            });
+
+
+
+            const res = await updateSingleServiceResource(payload, id).catch((err) => {
+                console.log(err);
+            });
+
+
+            if (res?.status == true) {
+                toast.success(res.message);
+                router.push("/admin/services");
+
+            } else {
+                toast.error(res.message);
+                setIsLoading(false);
+            }
+        }else {
             setIsLoading(false);
+            toast.warn('Validation Error.');
         }
-
 
     };
 
 
-    // console.log('form data: ', formData?.fourCol);
 
 
     return (
@@ -253,7 +261,7 @@ const UpdateServiceDetailsResource = ({ id, secondTab }) => {
                             type="file"
                             accept="image/*"
                             multiple
-                            required
+
 
                         />
 
@@ -321,8 +329,16 @@ const UpdateServiceDetailsResource = ({ id, secondTab }) => {
                             <legend>
                                 <label htmlFor="promotion_title" className="after:content-['_*'] after:text-red-500">Title</label>
                             </legend>
-                            <input type="text" id="promotion_title" value={formData?.promotion?.title} onChange={(e) => setFormData({ ...formData, promotion: { ...formData?.promotion, title: e.target.value } })} className="outline-none w-full" placeholder="Enter Title" required />
+                            <input type="text" id="promotion_title" value={formData?.promotion?.title} onChange={(e) => setFormData({ ...formData, promotion: { ...formData?.promotion, title: e.target.value } })} className="outline-none w-full" placeholder="Enter Title" />
                         </fieldset>
+
+                        {
+                            error?.promotion?.title?.status && (
+                                <p className="text-red-500 text-12 px-2 pt-1">
+                                    {error?.promotion?.title?.message}
+                                </p>
+                            )
+                        }
                     </div>
 
                     <div>
@@ -330,8 +346,16 @@ const UpdateServiceDetailsResource = ({ id, secondTab }) => {
                             <legend>
                                 <label htmlFor="title_bg" className="after:content-['_*'] after:text-red-500">Title Background Color</label>
                             </legend>
-                            <input value={formData?.promotion?.title_bg} onChange={(e) => setFormData({ ...formData, promotion: { ...formData?.promotion, title_bg: e.target.value } })} type="color" name="title_bg" id="title_bg" className="w-full" required />
+                            <input value={formData?.promotion?.title_bg} onChange={(e) => setFormData({ ...formData, promotion: { ...formData?.promotion, title_bg: e.target.value } })} type="color" name="title_bg" id="title_bg" className="w-full" />
                         </fieldset>
+
+                        {
+                            error?.promotion?.title_bg?.status && (
+                                <p className="text-red-500 text-12 px-2 pt-1">
+                                    {error?.promotion?.title_bg?.message}
+                                </p>
+                            )
+                        }
                     </div>
 
 
@@ -344,11 +368,11 @@ const UpdateServiceDetailsResource = ({ id, secondTab }) => {
                             <div className="p-2">
                                 <div className="flex gap-2">
                                     <p>Label:</p>
-                                    <input type="text" className="outline-none border border-gray-500 rounded w-full" placeholder="Enter Label" value={formData?.promotion?.left_side?.label} onChange={(e) => setFormData({ ...formData, promotion: { ...formData?.promotion, left_side: { ...formData?.promotion?.left_side, label: e.target.value } } })} required />
+                                    <input type="text" className="outline-none border border-gray-500 rounded w-full" placeholder="Enter Label" value={formData?.promotion?.left_side?.label} onChange={(e) => setFormData({ ...formData, promotion: { ...formData?.promotion, left_side: { ...formData?.promotion?.left_side, label: e.target.value } } })} />
                                 </div>
                                 <div>
                                     <p>Image</p>
-                                    <input type="file" accept="image/*" onChange={(e) => setFormData({ ...formData, promotion: { ...formData?.promotion, left_side: { ...formData?.promotion?.left_side, image: e.target.files[0] } } })} required />
+                                    <input type="file" accept="image/*" onChange={(e) => setFormData({ ...formData, promotion: { ...formData?.promotion, left_side: { ...formData?.promotion?.left_side, image: e.target.files[0] } } })} />
                                 </div>
 
                                 {
@@ -368,6 +392,14 @@ const UpdateServiceDetailsResource = ({ id, secondTab }) => {
                                 }
                             </div>
                         </fieldset>
+
+                        {
+                            error?.promotion?.left_side?.status && (
+                                <p className="text-red-500 text-12 px-2 pt-1">
+                                    {error?.promotion?.left_side?.message}
+                                </p>
+                            )
+                        }
                     </div>
 
 
@@ -380,11 +412,11 @@ const UpdateServiceDetailsResource = ({ id, secondTab }) => {
                             <div className="p-2">
                                 <div className="flex gap-2">
                                     <p>Label:</p>
-                                    <input type="text" className="outline-none border border-gray-500 rounded w-full" placeholder="Enter Label" value={formData?.promotion?.right_side?.label} onChange={(e) => setFormData({ ...formData, promotion: { ...formData?.promotion, right_side: { ...formData?.promotion?.right_side, label: e.target.value } } })} required />
+                                    <input type="text" className="outline-none border border-gray-500 rounded w-full" placeholder="Enter Label" value={formData?.promotion?.right_side?.label} onChange={(e) => setFormData({ ...formData, promotion: { ...formData?.promotion, right_side: { ...formData?.promotion?.right_side, label: e.target.value } } })} />
                                 </div>
                                 <div>
                                     <p>Image</p>
-                                    <input type="file" accept="image/*" onChange={(e) => setFormData({ ...formData, promotion: { ...formData?.promotion, right_side: { ...formData?.promotion?.right_side, image: e.target.files[0] } } })} required />
+                                    <input type="file" accept="image/*" onChange={(e) => setFormData({ ...formData, promotion: { ...formData?.promotion, right_side: { ...formData?.promotion?.right_side, image: e.target.files[0] } } })} />
                                 </div>
 
                                 {
@@ -404,6 +436,14 @@ const UpdateServiceDetailsResource = ({ id, secondTab }) => {
                                 }
                             </div>
                         </fieldset>
+
+                        {
+                            error?.promotion?.right_side?.status && (
+                                <p className="text-red-500 text-12 px-2 pt-1">
+                                    {error?.promotion?.right_side?.message}
+                                </p>
+                            )
+                        }
                     </div>
 
                     <div>
@@ -411,8 +451,16 @@ const UpdateServiceDetailsResource = ({ id, secondTab }) => {
                             <legend>
                                 <label htmlFor="area_background" className="after:content-['_*'] after:text-red-500">Area Background Color</label>
                             </legend>
-                            <input value={formData?.promotion?.area_bg} onChange={(e) => setFormData({ ...formData, promotion: { ...formData?.promotion, area_bg: e.target.value } })} type="color" name="area_background" id="area_background" className="w-full" required />
+                            <input value={formData?.promotion?.area_bg} onChange={(e) => setFormData({ ...formData, promotion: { ...formData?.promotion, area_bg: e.target.value } })} type="color" name="area_background" id="area_background" className="w-full" />
                         </fieldset>
+
+                        {
+                            error?.promotion?.area_bg?.status && (
+                                <p className="text-red-500 text-12 px-2 pt-1">
+                                    {error?.promotion?.area_bg?.message}
+                                </p>
+                            )
+                        }
                     </div>
                 </div>
 
@@ -447,21 +495,53 @@ const UpdateServiceDetailsResource = ({ id, secondTab }) => {
 
                                         <div>
                                             <p>Background Color:</p>
-                                            <input value={item?.bg_color} onChange={(e) => setFormData({ ...formData, infoSection: formData?.infoSection?.map((item, i) => i === index ? { ...item, bg_color: e.target.value } : item) })} type="color" className="w-full" required />
+                                            <input value={item?.bg_color} onChange={(e) => setFormData({ ...formData, infoSection: formData?.infoSection?.map((item, i) => i === index ? { ...item, bg_color: e.target.value } : item) })} type="color" className="w-full" />
+
+                                            {
+                                                error?.infoSection?.bg_color?.status && (
+                                                    <p className="text-red-500 text-12 px-2 pt-1">
+                                                        {error?.infoSection?.bg_color?.message}
+                                                    </p>
+                                                )
+                                            }
                                         </div>
 
                                         <div>
                                             <p>Left Side Description:</p>
                                             <CustomEditor onChange={(e, editor) => setFormData({ ...formData, infoSection: formData?.infoSection?.map((item, i) => i === index ? { ...item, right_description: editor.getData() } : item) })} data={item?.right_description} />
+
+                                            {
+                                                error?.infoSection?.left_description?.status && (
+                                                    <p className="text-red-500 text-12 px-2 pt-1">
+                                                        {error?.infoSection?.left_description?.message}
+                                                    </p>
+                                                )
+                                            }
                                         </div>
                                         <div>
                                             <p>Right Side Description:</p>
                                             <CustomEditor onChange={(e, editor) => setFormData({ ...formData, infoSection: formData?.infoSection?.map((item, i) => i === index ? { ...item, left_description: editor.getData() } : item) })} data={item?.left_description} />
+
+                                            {
+                                                error?.infoSection?.right_description?.status && (
+                                                    <p className="text-red-500 text-12 px-2 pt-1">
+                                                        {error?.infoSection?.right_description?.message}
+                                                    </p>
+                                                )
+                                            }
                                         </div>
 
                                         <div>
                                             <p>Right Side Image:</p>
-                                            <input type="file" onChange={(e) => setFormData({ ...formData, infoSection: formData?.infoSection?.map((item, i) => i === index ? { ...item, right_img: e.target.files[0] } : item) })} required />
+                                            <input type="file" onChange={(e) => setFormData({ ...formData, infoSection: formData?.infoSection?.map((item, i) => i === index ? { ...item, right_img: e.target.files[0] } : item) })} />
+
+                                            {
+                                                error?.infoSection?.right_img?.status && (
+                                                    <p className="text-red-500 text-12 px-2 pt-1">
+                                                        {error?.infoSection?.right_img?.message}
+                                                    </p>
+                                                )
+                                            }
                                         </div>
 
                                         {
@@ -528,12 +608,12 @@ const UpdateServiceDetailsResource = ({ id, secondTab }) => {
 
                                         <div>
                                             <p>Background Color:</p>
-                                            <input value={item?.item_bg} onChange={(e) => setFormData({ ...formData, fourCol: formData?.fourCol?.map((item, i) => i === index ? { ...item, item_bg: e.target.value } : item) })} type="color" className="w-full" required />
+                                            <input value={item?.item_bg} onChange={(e) => setFormData({ ...formData, fourCol: formData?.fourCol?.map((item, i) => i === index ? { ...item, item_bg: e.target.value } : item) })} type="color" className="w-full" />
                                         </div>
 
                                         <div>
                                             <p>Icon:</p>
-                                            <input type="file" onChange={(e) => setFormData({ ...formData, fourCol: formData?.fourCol?.map((item, i) => i === index ? { ...item, icon: e.target.files[0] } : item) })} required />
+                                            <input type="file" onChange={(e) => setFormData({ ...formData, fourCol: formData?.fourCol?.map((item, i) => i === index ? { ...item, icon: e.target.files[0] } : item) })} />
                                         </div>
 
                                         {
@@ -554,27 +634,27 @@ const UpdateServiceDetailsResource = ({ id, secondTab }) => {
 
                                         <div>
                                             <p>Title:</p>
-                                            <input value={item?.title} onChange={(e) => setFormData({ ...formData, fourCol: formData?.fourCol?.map((item, i) => i === index ? { ...item, title: e.target.value } : item) })} type="text" className="w-full outline-none border border-gray-500 px-2 rounded" required />
+                                            <input value={item?.title} onChange={(e) => setFormData({ ...formData, fourCol: formData?.fourCol?.map((item, i) => i === index ? { ...item, title: e.target.value } : item) })} type="text" className="w-full outline-none border border-gray-500 px-2 rounded" />
                                         </div>
 
                                         <div>
                                             <p>Version:</p>
-                                            <input value={item?.version} onChange={(e) => setFormData({ ...formData, fourCol: formData?.fourCol?.map((item, i) => i === index ? { ...item, version: e.target.value } : item) })} type="text" className="w-full outline-none border border-gray-500 px-2 rounded" required />
+                                            <input value={item?.version} onChange={(e) => setFormData({ ...formData, fourCol: formData?.fourCol?.map((item, i) => i === index ? { ...item, version: e.target.value } : item) })} type="text" className="w-full outline-none border border-gray-500 px-2 rounded" />
                                         </div>
 
                                         <div>
                                             <p>Release Date:</p>
-                                            <input value={item?.release_date} onChange={(e) => setFormData({ ...formData, fourCol: formData?.fourCol?.map((item, i) => i === index ? { ...item, release_date: e.target.value } : item) })} type="text" className="w-full outline-none border border-gray-500 px-2 rounded" required />
+                                            <input value={item?.release_date} onChange={(e) => setFormData({ ...formData, fourCol: formData?.fourCol?.map((item, i) => i === index ? { ...item, release_date: e.target.value } : item) })} type="text" className="w-full outline-none border border-gray-500 px-2 rounded" />
                                         </div>
 
                                         <div>
                                             <p>Button Label:</p>
-                                            <input value={item?.btn_label} onChange={(e) => setFormData({ ...formData, fourCol: formData?.fourCol?.map((item, i) => i === index ? { ...item, btn_label: e.target.value } : item) })} type="text" className="w-full outline-none border border-gray-500 px-2 rounded" required />
+                                            <input value={item?.btn_label} onChange={(e) => setFormData({ ...formData, fourCol: formData?.fourCol?.map((item, i) => i === index ? { ...item, btn_label: e.target.value } : item) })} type="text" className="w-full outline-none border border-gray-500 px-2 rounded" />
                                         </div>
 
                                         <div>
                                             <p>Visit Type:</p>
-                                            <select onChange={(e) => setFormData({ ...formData, fourCol: formData?.fourCol?.map((item, i) => i === index ? { ...item, brows_type: e.target.value } : item) })} className="w-full outline-none border border-gray-500 p-2 rounded" required>
+                                            <select onChange={(e) => setFormData({ ...formData, fourCol: formData?.fourCol?.map((item, i) => i === index ? { ...item, brows_type: e.target.value } : item) })} className="w-full outline-none border border-gray-500 p-2 rounded" >
                                                 <option value="#">
                                                     ---Select--
                                                 </option>
@@ -614,14 +694,14 @@ const UpdateServiceDetailsResource = ({ id, secondTab }) => {
                                             item?.brows_type == "browse" && (
                                                 <div>
                                                     <p>Link:</p>
-                                                    <input value={item?.brows_link} type="text" onChange={(e) => setFormData({ ...formData, fourCol: formData?.fourCol?.map((item, i) => i === index ? { ...item, brows_link: e.target.value } : item) })} className="w-full outline-none border border-gray-500 px-2 rounded" required />
+                                                    <input value={item?.brows_link} type="text" onChange={(e) => setFormData({ ...formData, fourCol: formData?.fourCol?.map((item, i) => i === index ? { ...item, brows_link: e.target.value } : item) })} className="w-full outline-none border border-gray-500 px-2 rounded" />
                                                 </div>
                                             )
                                         }
 
                                         <div>
                                             <p>Button Background Color:</p>
-                                            <input value={item?.btn_bg} onChange={(e) => setFormData({ ...formData, fourCol: formData?.fourCol?.map((item, i) => i === index ? { ...item, btn_bg: e.target.value } : item) })} type="color" className="w-full" required />
+                                            <input value={item?.btn_bg} onChange={(e) => setFormData({ ...formData, fourCol: formData?.fourCol?.map((item, i) => i === index ? { ...item, btn_bg: e.target.value } : item) })} type="color" className="w-full" />
                                         </div>
 
 
@@ -640,6 +720,12 @@ const UpdateServiceDetailsResource = ({ id, secondTab }) => {
                                 </div>
                             )
                         })
+                    }
+
+                    {
+                        error?.fourCol?.status && (
+                            <p className="text-red-500">{error?.fourCol?.message}</p>
+                        )
                     }
 
 
@@ -697,7 +783,7 @@ const UpdateServiceDetailsResource = ({ id, secondTab }) => {
                                                                     ),
                                                                 });
                                                             }}
-                                                            required
+
 
 
                                                         />
@@ -718,7 +804,7 @@ const UpdateServiceDetailsResource = ({ id, secondTab }) => {
                                                                     ),
                                                                 });
                                                             }}
-                                                            required
+
 
 
                                                         />
@@ -827,10 +913,18 @@ const UpdateServiceDetailsResource = ({ id, secondTab }) => {
                                                                 domain_name: e.target.value,
                                                             });
                                                         }}
-                                                        required
+
 
 
                                                     />
+
+                                                    {
+                                                        error?.domain_name?.status && (
+                                                            <p className="text-red-500 text-12 px-2 pt-1">
+                                                                {error?.domain_name?.message}
+                                                            </p>
+                                                        )
+                                                    }
                                                 </div>
                                             </div>
                                             <div className="grid grid-cols-4">
@@ -847,9 +941,17 @@ const UpdateServiceDetailsResource = ({ id, secondTab }) => {
                                                                 domain_link: e.target.value,
                                                             });
                                                         }}
-                                                        required
+
 
                                                     />
+
+                                                    {
+                                                        error?.domain_link?.status && (
+                                                            <p className="text-red-500 text-12 px-2 pt-1">
+                                                                {error?.domain_link?.message}
+                                                            </p>
+                                                        )
+                                                    }
                                                 </div>
                                             </div>
                                         </div>
@@ -859,14 +961,6 @@ const UpdateServiceDetailsResource = ({ id, secondTab }) => {
                         </div>
                     </div>
 
-
-                    {
-                        error?.apiCharacter?.status && (
-                            <p className="text-red-500 text-12 px-2 pt-1">
-                                {error?.apiCharacter?.message}
-                            </p>
-                        )
-                    }
                 </div>
 
                 <div>
@@ -883,7 +977,7 @@ const UpdateServiceDetailsResource = ({ id, secondTab }) => {
                                             Label
                                         </label>
                                     </legend>
-                                    <input value={formData?.user_doc?.label} onChange={(e) => setFormData({ ...formData, user_doc: { ...formData.user_doc, label: e.target.value } })} id="user_doc_label" type="text" placeholder="Enter user doc label" className="w-full outline-none p-2" required />
+                                    <input value={formData?.user_doc?.label} onChange={(e) => setFormData({ ...formData, user_doc: { ...formData.user_doc, label: e.target.value } })} id="user_doc_label" type="text" placeholder="Enter user doc label" className="w-full outline-none p-2" />
                                 </fieldset>
 
                                 {
@@ -902,7 +996,7 @@ const UpdateServiceDetailsResource = ({ id, secondTab }) => {
                                             Icon
                                         </label>
                                     </legend>
-                                    <input onChange={(e) => setFormData({ ...formData, user_doc: { ...formData.user_doc, icon: e.target.files?.[0] } })} type="file" name="user_doc_icon" required />
+                                    <input onChange={(e) => setFormData({ ...formData, user_doc: { ...formData.user_doc, icon: e.target.files?.[0] } })} type="file" name="user_doc_icon" />
 
                                     {
                                         formData?.user_doc?.icon?.length > 0 && (
@@ -954,8 +1048,16 @@ const UpdateServiceDetailsResource = ({ id, secondTab }) => {
                                         <label className="after:content-['_*'] after:text-red-500">Video Title</label>
                                     </legend>
                                     <input value={formData?.user_doc?.video?.title}
-                                        onChange={(e) => setFormData({ ...formData, user_doc: { ...formData.user_doc, video: { ...formData.user_doc.video, title: e.target.value } } })} type="text" className="outline-none p-2" placeholder="Enter video title" required />
+                                        onChange={(e) => setFormData({ ...formData, user_doc: { ...formData.user_doc, video: { ...formData.user_doc.video, title: e.target.value } } })} type="text" className="outline-none p-2" placeholder="Enter video title" />
                                 </fieldset>
+
+                                {
+                                    error?.userDoc?.video?.title?.status && (
+                                        <p className="text-red-500 text-12 px-2 pt-1">
+                                            {error?.userDoc?.video?.title?.message}
+                                        </p>
+                                    )
+                                }
                             </div>
 
                             <div>
@@ -975,10 +1077,18 @@ const UpdateServiceDetailsResource = ({ id, secondTab }) => {
                                         type="text"
                                         placeholder="Video Link"
                                         className="outline-none p-2"
-                                        required
+
 
                                     />
                                 </fieldset>
+
+                                {
+                                    error?.userDoc?.video?.link?.status && (
+                                        <p className="text-red-500 text-12 px-2 pt-1">
+                                            {error?.userDoc?.video?.link?.message}
+                                        </p>
+                                    )
+                                }
                             </div>
 
                             <div>
@@ -991,7 +1101,7 @@ const UpdateServiceDetailsResource = ({ id, secondTab }) => {
                                             Video Thumbnail
                                         </label>
                                     </legend>
-                                    <input onChange={(e) => setFormData({ ...formData, user_doc: { ...formData.user_doc, video: { ...formData.user_doc.video, thumbnail: e.target.files?.[0] } } })} type="file" name="video_thumbnail" required />
+                                    <input onChange={(e) => setFormData({ ...formData, user_doc: { ...formData.user_doc, video: { ...formData.user_doc.video, thumbnail: e.target.files?.[0] } } })} type="file" name="video_thumbnail" />
                                 </fieldset>
 
 
@@ -1010,6 +1120,14 @@ const UpdateServiceDetailsResource = ({ id, secondTab }) => {
                                         </div>
                                     )
                                 }
+
+                                {
+                                    error?.userDoc?.video?.thumbnail?.status && (
+                                        <p className="text-red-500 text-12 px-2 pt-1">
+                                            {error?.userDoc?.video?.thumbnail?.message}
+                                        </p>
+                                    )
+                                }
                             </div>
 
                             <div>
@@ -1023,7 +1141,7 @@ const UpdateServiceDetailsResource = ({ id, secondTab }) => {
                                         </label>
                                     </legend>
 
-                                    <textarea value={formData?.user_doc?.short_description} onChange={(e) => setFormData({ ...formData, user_doc: { ...formData.user_doc, short_description: e.target.value } })} name="user_doc_description" className="w-full outline-none p-2" placeholder="Enter user doc short description" required ></textarea>
+                                    <textarea value={formData?.user_doc?.short_description} onChange={(e) => setFormData({ ...formData, user_doc: { ...formData.user_doc, short_description: e.target.value } })} name="user_doc_description" className="w-full outline-none p-2" placeholder="Enter user doc short description"  ></textarea>
                                 </fieldset>
 
                                 {
@@ -1103,7 +1221,7 @@ const UpdateServiceDetailsResource = ({ id, secondTab }) => {
                                                                                 type="text"
                                                                                 placeholder="Enter Label"
                                                                                 className=" border border-black w-full px-2"
-                                                                                required
+
 
 
                                                                             />
@@ -1132,7 +1250,7 @@ const UpdateServiceDetailsResource = ({ id, secondTab }) => {
                                                                                 }}
                                                                                 type="file"
                                                                                 className="w-full "
-                                                                                required
+
                                                                             />
                                                                         </div>
                                                                     </div>
@@ -1324,7 +1442,7 @@ const UpdateServiceDetailsResource = ({ id, secondTab }) => {
                                                                                 placeholder="Enter Label"
                                                                                 className=" border border-black w-full px-2"
                                                                                 value={item.label}
-                                                                                required
+
 
                                                                             />
                                                                         </div>
@@ -1352,7 +1470,7 @@ const UpdateServiceDetailsResource = ({ id, secondTab }) => {
                                                                                 placeholder="Enter Link"
                                                                                 className=" border border-black w-full px-2"
                                                                                 value={item.link}
-                                                                                required
+
 
                                                                             />
                                                                         </div>
@@ -1409,7 +1527,7 @@ const UpdateServiceDetailsResource = ({ id, secondTab }) => {
                 <div className="flex justify-between pt-5">
                     <p className="text-14">
                         <span className="text-red-500">* </span>
-                        Required
+
                     </p>
                     <button
                         type="submit"
