@@ -5,8 +5,24 @@ import Cookies from "js-cookie";
 const token = Cookies.get("token");
 
 
+export const getDashboardStats = async () => {
+  try {
+    const data = await axios
+      .get(`${process.env.NEXT_PUBLIC_API_URL}/admin/dashboard/feature-count`)
+      .then((res) => {
+        return res?.data?.data;
+      }).catch((err) => {
+        console.log(err);
+      });
+    return data;
+  } catch (error) {
+    console.log(error);
+    return error;
+  }
+};
+
+
 export const updatePortalMenu = async (payload) => {
-  console.log('link payload: ',payload)
   try {
     const data = await axios
       .post(`${process.env.NEXT_PUBLIC_API_URL}/update/menu-item`, payload)
