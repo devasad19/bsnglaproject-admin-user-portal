@@ -7,6 +7,7 @@ import { toast } from "react-toastify";
 import CustomEditor from "@/app/_components/CustomEditor/CustomEditor";
 import { getSingleServiceResource, updateServiceResource } from "@/app/(admin)/_api";
 import { FaCheckCircle } from "react-icons/fa";
+import { CountWords } from "@/helper";
 
 
 const UpdateServiceResource = ({ id }) => {
@@ -28,7 +29,8 @@ const UpdateServiceResource = ({ id }) => {
         formState: { errors },
         control,
         setValue,
-        getValues
+        getValues,
+        setError
     } = useForm();
 
 
@@ -52,6 +54,77 @@ const UpdateServiceResource = ({ id }) => {
             description_title
         } = data;
 
+        // console.log('description count: ',errors);
+
+
+        /* if(CountWords(description) > 30) {
+            setIsLoading(false);
+            setError("description", { type: "manual", message: "Description cannot exceed 30 words" });
+            return;
+        }
+
+        if(CountWords(name) > 3) {
+            setIsLoading(false);
+            setError("name", { type: "manual", message: "Name cannot exceed 3 words" });
+            return;
+        }
+
+
+        if(CountWords(description_title) > 10){
+            setIsLoading(false);
+            setError("description_title", { type: "manual", message: "Description title cannot exceed 10 words" });
+            return;
+        }
+
+
+        if(type.length > 3){
+            setIsLoading(false);
+            setError("type", { type: "manual", message: "You can select only 3 types" });
+            return;
+        }
+
+        if(production_status.length < 1){
+            setIsLoading(false);
+            setError("production_status", { type: "manual", message: "Production status is required" });
+            return;
+        }
+
+        if(release_date.length < 1){
+            setIsLoading(false);
+            setError("release_date", { type: "manual", message: "Release date is required" });
+            return;
+        }
+
+        if(logo.length < 1 && !logo[0]){
+            setIsLoading(false);
+            setError("logo", { type: "manual", message: "Logo is required" });
+            return;
+        }
+
+        if(paidStatus?.free == 0 && paidStatus?.pro == 0){
+            setIsLoading(false);
+            setError("paid_status", { type: "manual", message: "Paid status is required" });
+            return;
+        }
+
+        if(component.length < 1){
+            setIsLoading(false);
+            setError("component", { type: "manual", message: "Component is required" });
+            return;
+        }
+
+        if(visit_type.length < 1){
+            setIsLoading(false);
+            setError("visit_type", { type: "manual", message: "Visit type is required" });
+            return;
+        }
+
+        if(visit_type == 'download' && resource_file.length < 1){
+            setIsLoading(false);
+            setError("resource_file", { type: "manual", message: "Resource file is required" });
+            return;
+        } */
+
         const formData = new FormData();
         formData.append("name", name);
         formData.append("description", description);
@@ -70,13 +143,15 @@ const UpdateServiceResource = ({ id }) => {
         formData.append("description_title", description_title);
 
 
+        console.log('form data: ',formData);
+
+
         const response = await updateServiceResource(formData, id).then((res) => {
 
 
             if (res?.status == true) {
                 toast.success("Service Updated Successfully");
                 router.push("/admin/services");
-                // reset();
             } else {
                 toast.error("Service Update Failed");
             }
@@ -141,7 +216,7 @@ const UpdateServiceResource = ({ id }) => {
                                     htmlFor="ServiceName"
                                     className="after:content-['_*'] after:text-red-500"
                                 >
-                                    Resource Name
+                                    Service Name
                                 </label>
                             </legend>
                             <input
@@ -160,7 +235,7 @@ const UpdateServiceResource = ({ id }) => {
                                     },
                                 })}
                                 type="text"
-                                placeholder="Resource Name"
+                                placeholder="Service Name"
                                 className="outline-none p-2"
                             />
                         </fieldset>
@@ -321,33 +396,6 @@ const UpdateServiceResource = ({ id }) => {
                         </fieldset>
                     </div>
 
-                    {/* <div>
-                        <fieldset className="flex flex-col border rounded-md px-2">
-                            <legend>
-                                <label
-                                    htmlFor="ServiceName"
-                                    className="after:content-['_*'] after:text-red-500"
-                                >
-                                    Type
-                                </label>
-                            </legend>
-
-                            <select
-                                {...register("type", {
-                                    required: "Type is required",
-                                })}
-                                className="outline-none p-2 bg-white"
-                            >
-                                <option selected={serviceResource?.type == 'Application'} value="Application">Application</option>
-                                <option selected={serviceResource?.type == 'Plugin'} value="Plugin">Plugin</option>
-                                <option selected={serviceResource?.type == 'Mobile_Apps'} value="Mobile Apps">Mobile Apps</option>
-                                <option selected={serviceResource?.type == 'Datasets'} value="Datasets">Data Sets</option>
-                                <option selected={serviceResource?.type == 'Tools'} value="Tools">Tools</option>
-                                <option selected={serviceResource?.type == 'Papers'} value="Papers">Papers</option>
-                                <option selected={serviceResource?.type == 'Font'} value="Font">Font</option>
-                            </select>
-                        </fieldset>
-                    </div> */}
 
                     <div>
                         <fieldset className="flex flex-col border rounded-md px-2">

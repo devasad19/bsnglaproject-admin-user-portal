@@ -163,15 +163,15 @@ const ServiceListContainer = ({ services }) => {
                                                 item?.completion_status == 3 ? (
                                                     <button
                                                         onClick={() => UpdateServicePublishStatus(item?.id, item?.status == 1 ? 0 : 1)}
-                                                        className={`text-white px-2 py-1 rounded transition-all duration-300 lg:w-[60%] ${item?.status == 1
+                                                        className={`text-white w-[6em] py-1 rounded transition-all duration-300 ${item?.status == 1
                                                             ? "bg-green-700"
                                                             : "bg-yellow-500"
                                                             }`}
                                                     >
-                                                        {item?.status == 1 ? "Publish" : "UnPublish"}
+                                                        {item?.status == 1 ? "Publish" : "Unpublish"}
                                                     </button>
                                                 ) : (
-                                                    <button className="bg-white border border-red-500 text-red-500 text-center text-sm py-1 lg:w-[70%] rounded">
+                                                    <button className="bg-white border border-red-500 text-red-500 text-center text-sm w-[6em] py-1 rounded">
                                                         Incomplete
                                                     </button>
                                                 )

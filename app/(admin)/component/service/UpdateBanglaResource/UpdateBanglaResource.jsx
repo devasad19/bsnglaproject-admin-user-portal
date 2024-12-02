@@ -99,7 +99,7 @@ const UpdateBanglaResource = ({ id }) => {
                             <input
                                 {...register("name", {
                                     required: "Name is required",
-                                    /* validate: {
+                                    validate: {
                                         wordCount: (value) => {
                                             const wordCount = value.trim().split(/\s+/).length;
                                             if (wordCount < 3) {
@@ -109,7 +109,7 @@ const UpdateBanglaResource = ({ id }) => {
                                             }
                                             return true;
                                         },
-                                    }, */
+                                    },
                                 })}
                                 type="text"
                                 placeholder="Resource Name"
@@ -122,6 +122,8 @@ const UpdateBanglaResource = ({ id }) => {
                             </p>
                         )}
                     </div>
+
+
                     <div>
                         <fieldset className="flex flex-col border rounded-md px-2">
                             <legend>
@@ -135,7 +137,7 @@ const UpdateBanglaResource = ({ id }) => {
                             <input
                                 {...register("sub_title", {
                                     required: "Sub Title is required",
-                                    /* validate: {
+                                    validate: {
                                         maxWords: (value) => {
                                             const wordCount = value.trim().split(/\s+/).length;
                                             return (
@@ -143,7 +145,7 @@ const UpdateBanglaResource = ({ id }) => {
                                                 "Resource sub title cannot exceed 10 words"
                                             );
                                         },
-                                    }, */
+                                    },
                                 })}
                                 id="sub_tile"
                                 type="text"
@@ -174,14 +176,14 @@ const UpdateBanglaResource = ({ id }) => {
                                 defaultValue=""
                                 rules={{
                                     required: "Description is required",
-                                    /* validate: {
+                                    validate: {
                                         maxWords: (value) => {
                                             const wordCount = value.trim().split(/\s+/).length;
                                             return (
                                                 wordCount <= 80 || "Description cannot exceed 80 words"
                                             );
                                         },
-                                    }, */
+                                    },
                                 }}
                                 render={({
                                     field: { onChange, value },
@@ -195,12 +197,14 @@ const UpdateBanglaResource = ({ id }) => {
                                             }}
                                             data={value}
                                         />
-                                        {error && <p>{error.message}</p>}
+                                        {error && <p className="text-red-500 text-12 px-2 pt-1">{error.message}</p>}
                                     </>
                                 )}
                             />
                         </fieldset>
                     </div>
+
+
                     <div>
                         <fieldset className="flex flex-col border rounded-md px-2">
                             <legend>
@@ -217,15 +221,15 @@ const UpdateBanglaResource = ({ id }) => {
                                 control={control}
                                 defaultValue=""
                                 rules={{
-                                    required: "Broad_description is required",
-                                    /* validate: {
+                                    required: "Broad description is required",
+                                    validate: {
                                         maxWords: (value) => {
                                             const wordCount = value.trim().split(/\s+/).length;
                                             return (
                                                 wordCount <= 80 || "Description cannot exceed 80 words"
                                             );
                                         },
-                                    }, */
+                                    },
                                 }}
                                 render={({
                                     field: { onChange, value },
@@ -239,7 +243,7 @@ const UpdateBanglaResource = ({ id }) => {
                                             }}
                                             data={value}
                                         />
-                                        {error && <p>{error.message}</p>}
+                                        {error && <p className="text-red-500 text-12 px-2 pt-1">{error.message}</p>}
                                     </>
                                 )}
                             />
