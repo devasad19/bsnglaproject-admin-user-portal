@@ -99,13 +99,13 @@ const Home = ({ params: { id } }) => {
     setTotalPrice(initialTotalPrice || 0);
   }, [features]);
 
-  console.log({ features });
+  console.log('service: ', service );
 
   return (
     <section>
       <div className="flex flex-col lg:flex-row gap-2 bg-white p-4 rounded mb-5">
         <Image
-          src={`${process.env.NEXT_PUBLIC_IMAGE_URL}${service?.img || ""}`}
+          src={`${process.env.NEXT_PUBLIC_IMAGE_URL}${service?.logo || ""}`}
           className="w-16 h-16 lg:h-[5em] lg:w-[5em] pb-2"
           width={1000}
           height={1000}
@@ -113,7 +113,7 @@ const Home = ({ params: { id } }) => {
         />
         <div>
           <h3 className="text-20 font-medium"> {service?.name || ""}</h3>
-          <p>{service?.des || ""}</p>
+          <p>{service?.description || ""}</p>
         </div>
       </div>
       <div className="max-[768px]:w-[165vw] lg:w-auto flex justify-center items-center overflow-x-auto">

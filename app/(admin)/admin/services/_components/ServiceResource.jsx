@@ -1,46 +1,49 @@
 "use client";
+import dynamic from "next/dynamic";
 import { uploadServiceData } from "@/app/(portal)/_api";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 import { useForm, Controller } from "react-hook-form";
 import { toast } from "react-toastify";
-import CustomEditor from "@/app/_components/CustomEditor/CustomEditor";
+const CustomEditor = dynamic(() => import("@/app/_components/CustomEditor/CustomEditor"), {
+  ssr: false,
+});
+import { FaCheckCircle } from "react-icons/fa";
 
 const ServiceResource = () => {
   const router = useRouter();
-  const [status, setStatus] = useState("");
-  const [serviceImg, setServiceImg] = useState<File | null>(null);
-  const [resourceFileImg, setResourceFileImg] = useState<File | null>(null);
-  const [tutorialVideo, setTutorialVideo] = useState(null);
-  const [links, setLinks] = useState([]);
+  const [serviceImg, setServiceImg] = useState(null);
+  const [resourceFileImg, setResourceFileImg] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [showItem, setShowItem] = useState("");
+  const [type, setType] = useState([]);
+
+  const allTypes = ['Application', 'Plugin', 'Mobile Apps', 'Tools', 'Papers', 'Font'];
 
   const {
     register,
     handleSubmit,
     reset,
+    setError,
     formState: { errors },
     control,
   } = useForm();
 
-  const onSubmitServiceResource = async (data: any) => {
-    setIsLoading(true);
+  const onSubmitServiceResource = async (data) => {
+    // setIsLoading(true);
 
     const {
       component,
       description,
-      distribution,
       logo,
       name,
       production_status,
       release_date,
-      sub_title,
-      type,
       visit_link,
       visit_type,
       resource_file,
+      description_title
     } = data;
 
     let paid_status = {
@@ -48,39 +51,127 @@ const ServiceResource = () => {
       pro: data.pro ? 1 : 0,
     };
 
-    const formData = new FormData();
-    formData.append("name", name);
-    formData.append("description", description);
-    formData.append("component", component);
-    formData.append("distribution", distribution);
-    formData.append("logo", logo[0]);
-    formData.append("paid_status", JSON.stringify(paid_status));
-    formData.append("production_status", production_status);
-    formData.append("release_date", release_date);
-    formData.append("type", type);
-    formData.append("sub_title", sub_title);
-    formData.append("visit_link", visit_link || "");
-    formData.append("visit_type", visit_type);
-    formData.append("resource_file", resource_file[0] || "");
+    console.log('resource file img:', resourceFileImg.size);
 
-    const uploadRes = await uploadServiceData(formData);
-
-    if (uploadRes.status === true) {
+    if (name.length < 3) {
       setIsLoading(false);
-      toast.success("Service Created Successfully");
-      router.push("/admin/services");
-      reset();
+      setError("name", { type: "manual", message: "Service name must be at least 3 characters long" });
+      return;
+    } else if (description.length < 3) {
+      setIsLoading(false);
+      setError("description", { type: "manual", message: "Service description must be at least 3 characters long" });
+      return;
+    } else if (type.length < 1) {
+      setIsLoading(false);
+      setError("type", { type: "manual", message: "Please select at least one type" });
+      return;
+    } else if (production_status.length < 1) {
+      setIsLoading(false);
+      setError("production_status", { type: "manual", message: "Please select production status" });
+      return;
+    } else if (release_date.length < 1) {
+      setIsLoading(false);
+      setError("release_date", { type: "manual", message: "Please select release date" });
+      return;
+    } else if (logo.length < 1) {
+      setIsLoading(false);
+      setError("logo", { type: "manual", message: "Please upload a logo" });
+      return;
+    } else if (logo[0].size > 500000) { // 1MB
+      setIsLoading(false);
+      setError("logo", { type: "manual", message: "Logo size must be less than 500kb" });
+      return;
+    } else if (paid_status.free === 0 && paid_status.pro === 0) {
+      setIsLoading(false);
+      setError("paid_status", { type: "manual", message: "Please select at least one paid status" });
+      return;
+    } else if (component.length < 1) {
+      setIsLoading(false);
+      setError("component", { type: "manual", message: "Please select component" });
+      return;
+    } else if (visit_type.length < 1) {
+      setIsLoading(false);
+      setError("visit_type", { type: "manual", message: "Please select visit type" });
+      return;
+    } else if (visit_type == 'download' && resource_file.length < 1) {
+      setIsLoading(false);
+      setError("resource_file", { type: "manual", message: "Please upload a resource file" });
+      return;
+    } else if (visit_type == 'download' && resourceFileImg.size > 500000) {
+      setIsLoading(false);
+      setError("resource_file", { type: "manual", message: "Resource file size must be less than 500kb" });
+      return;
+    } else if (visit_type == 'link' && visit_link.length < 1) {
+      setIsLoading(false);
+      setError("visit_link", { type: "manual", message: "Please enter visit link" });
+      return;
+    } else if (visit_type == 'Subscribe' && visit_link.length < 1) {
+      setIsLoading(false);
+      setError("visit_link", { type: "manual", message: "Please enter visit link" });
+      return;
     } else {
-      setIsLoading(false);
-      toast.error("Service Creation Failed");
+
+
+      const formData = new FormData();
+      formData.append("name", name);
+      formData.append("description", description);
+      formData.append("component", component);
+      formData.append("logo", logo[0]);
+      formData.append("paid_status", JSON.stringify(paid_status));
+      formData.append("production_status", production_status);
+      formData.append("release_date", release_date);
+      formData.append("visit_link", visit_link || "");
+      formData.append("visit_type", visit_type);
+      formData.append("completion_status", '1');
+      formData.append("resource_file", resource_file[0] || "");
+      formData.append("description_title", description_title);
+      formData.append("type", JSON.stringify(type));
+
+
+
+
+
+      const uploadRes = await uploadServiceData(formData);
+
+      if (uploadRes.status === true) {
+        setIsLoading(false);
+        toast.success("Service Created Successfully");
+        router.push("/admin/services");
+        reset();
+      } else {
+        setIsLoading(false);
+        toast.error("Service Creation Failed");
+      }
     }
 
-    // console.log('formdata: ',formData);
+
+
   };
+
+
+  const handleToggleType = (value) => {
+
+    if (type.includes(value)) {
+      setType((prev) => prev.filter((item) => item !== value));
+
+    } else {
+      if (type.length < 3) {
+        setType((prev) => [...prev, value]);
+      } else {
+        toast.warning("You can select only 3 types");
+      }
+
+    }
+
+  };
+
+
+
+
   return (
     <>
       <div className="relative">
-        <form onSubmit={handleSubmit(onSubmitServiceResource)}>
+        <form onSubmit={handleSubmit(onSubmitServiceResource)} className="flex flex-col gap-3">
           <div>
             <fieldset className="flex flex-col border rounded-md px-2">
               <legend>
@@ -88,7 +179,7 @@ const ServiceResource = () => {
                   htmlFor="ServiceName"
                   className="after:content-['_*'] after:text-red-500"
                 >
-                  Resoource Name
+                  Service Name
                 </label>
               </legend>
               <input
@@ -97,26 +188,28 @@ const ServiceResource = () => {
                   validate: {
                     wordCount: (value) => {
                       const wordCount = value.trim().split(/\s+/).length;
-                      if (wordCount < 3) {
-                        return "Description must have at least 3 words";
-                      } else if (wordCount > 8) {
-                        return "Description cannot exceed 8 words";
+                      if (wordCount < 1) {
+                        return "Description must have at least 1 words";
+                      } else if (wordCount > 3) {
+                        return "Description cannot exceed 3 words";
                       }
                       return true;
                     },
                   },
                 })}
                 type="text"
-                placeholder="Resoource Name"
+                placeholder="Service Name"
                 className="outline-none p-2"
+                required
               />
             </fieldset>
             {errors.name && (
               <p className="text-red-500 text-12 px-2 pt-1">
-                {errors.name.message as string}
+                {errors.name.message}
               </p>
             )}
           </div>
+
           <div>
             <fieldset className="flex flex-col border rounded-md px-2">
               <legend>
@@ -124,30 +217,31 @@ const ServiceResource = () => {
                   htmlFor="ServiceName"
                   className="after:content-['_*'] after:text-red-500"
                 >
-                  Resoource Sub Title
+                  Description Title
                 </label>
               </legend>
               <input
-                {...register("sub_title", {
-                  required: "Sub Title is required",
+                {...register("description_title", {
+                  required: "Description Title is required",
                   validate: {
                     maxWords: (value) => {
                       const wordCount = value.trim().split(/\s+/).length;
                       return (
-                        wordCount <= 10 || "Description cannot exceed 10 words"
+                        wordCount <= 1 || "Description cannot exceed 1 words"
                       );
                     },
                   },
                 })}
-                id="sub_tile"
+                id="description_title"
                 type="text"
-                placeholder="Resoource Sub Title"
+                placeholder="Description Title"
                 className="outline-none p-2"
+                required
               />
             </fieldset>
-            {errors.sub_title && (
+            {errors.description_title && (
               <p className="text-red-500 text-12 px-2 pt-1">
-                {errors.sub_title.message as string}
+                {errors.description_title.message}
               </p>
             )}
           </div>
@@ -165,7 +259,7 @@ const ServiceResource = () => {
 
               <Controller
                 name="description"
-                
+
                 control={control}
                 defaultValue=""
                 rules={{
@@ -174,7 +268,7 @@ const ServiceResource = () => {
                     maxWords: (value) => {
                       const wordCount = value.trim().split(/\s+/).length;
                       return (
-                        wordCount <= 80 || "Description cannot exceed 80 words"
+                        wordCount <= 15 || "Description cannot exceed 80 words"
                       );
                     },
                   },
@@ -185,7 +279,7 @@ const ServiceResource = () => {
                 }) => (
                   <>
                     <CustomEditor
-                      onChange={(event: any, editor: any) => {
+                      onChange={(event, editor) => {
                         const data = editor.getData();
                         onChange(data);
                       }}
@@ -193,68 +287,44 @@ const ServiceResource = () => {
                     />
                     {errors.description && (
                       <p className="text-red-500 text-12 px-2 pt-1">
-                        {errors.description.message as string}
+                        {errors.description.message}
                       </p>
                     )}
                   </>
                 )}
               />
-
-              {/* <textarea
-                {...register("description", {
-                  required: "description is required",
-                  validate: {
-                    maxWords: (value) => {
-                      const wordCount = value.trim().split(/\s+/).length;
-                      return (
-                        wordCount <= 80 || "Description cannot exceed 80 words"
-                      );
-                    },
-                  },
-                })}
-                id=""
-                className="outline-none p-2"
-                placeholder="Description"
-              ></textarea> */}
             </fieldset>
-            {/* {errors.description && (
-              <p className="text-red-500 text-12 px-2 pt-1">
-                {errors.description.message as string}
-              </p>
-            )} */}
           </div>
 
           <div>
-            <fieldset className="flex flex-col border rounded-md px-2">
+            <fieldset className="flex flex-col border rounded-md p-2">
               <legend>
-                <label
-                  htmlFor="ServiceName"
-                  className="after:content-['_*'] after:text-red-500"
-                >
-                  Type
-                </label>
+                <label className="after:content-['_*'] after:text-red-500">Type</label>
               </legend>
 
-              <select
-                {...register("type", {
-                  required: "Type is required",
-                })}
-                className="outline-none p-2 bg-white"
-              >
-                <option value="Application">Application</option>
-                <option value="Plugin">Plugin</option>
-                <option value="Mobile Apps">Mobile Apps</option>
-                <option value="Datasets">Data Sets</option>
-                <option value="Tools">Tools</option>
-                <option value="Papers">Papers</option>
-                <option value="Font">Font</option>
-              </select>
+              <div className="flex flex-wrap gap-2">
+                {allTypes.map((item, index) => (
+                  <button
+                    key={index}
+                    className={`px-4 py-1 rounded cursor-pointer ${type.includes(item)
+                      ? "bg-green-600 text-white hover:bg-green-700 flex items-center gap-2"
+                      : "bg-blue-600 text-white hover:bg-blue-700"
+                      }`}
+                    onClick={(e) => {
+                      e.preventDefault();
+                      handleToggleType(item);
+                    }}
+                  >
+                    {item}
+                    {
+                      type.includes(item) && (
+                        <FaCheckCircle />
+                      )
+                    }
+                  </button>
+                ))}
+              </div>
             </fieldset>
-            {errors.type && (
-              <p className="text-red-500 text-12 px-2 pt-1">
-                {errors.type.message as string}
-              </p>
-            )}
           </div>
 
           <div>
@@ -281,41 +351,12 @@ const ServiceResource = () => {
             </fieldset>
             {errors.production_status && (
               <p className="text-red-500 text-12 px-2 pt-1">
-                {errors.production_status.message as string}
+                {errors.production_status.message}
               </p>
             )}
           </div>
-          <div>
-            <fieldset className="flex flex-col border rounded-md px-2">
-              <legend>
-                <label
-                  htmlFor="ServiceName"
-                  className="after:content-['_*'] after:text-red-500"
-                >
-                  Distribution
-                </label>
-              </legend>
 
-              <select
-                {...register("distribution", {
-                  required: "Distribution is required",
-                })}
-                className="outline-none p-2 bg-white"
-              >
-                <option value="web">Web</option>
-                <option value="windows">Windows</option>
-                <option value="linux">Linux</option>
-                <option value="mac">Mac</option>
-                <option value="ios">IOS</option>
-                <option value="android">Android</option>
-              </select>
-            </fieldset>
-            {errors.distribution && (
-              <p className="text-red-500 text-12 px-2 pt-1">
-                {errors.distribution.message as string}
-              </p>
-            )}
-          </div>
+
           <div>
             <fieldset className="flex flex-col border rounded-md px-2">
               <legend>
@@ -337,7 +378,7 @@ const ServiceResource = () => {
             </fieldset>
             {errors.release_date && (
               <p className="text-red-500 text-12 px-2 pt-1">
-                {errors.release_date.message as string}
+                {errors.release_date.message}
               </p>
             )}
           </div>
@@ -351,6 +392,8 @@ const ServiceResource = () => {
               alt="Preview"
             />
           )}
+
+
           <div>
             <fieldset className="flex flex-col border rounded-md px-2">
               <legend>
@@ -379,10 +422,12 @@ const ServiceResource = () => {
             </fieldset>
             {errors.logo && (
               <p className="text-red-500 text-12 px-2 pt-1">
-                {errors.logo.message as string}
+                {errors.logo.message}
               </p>
             )}
           </div>
+
+
           <div>
             <fieldset className="flex flex-col border rounded-md px-2">
               <legend>
@@ -415,18 +460,10 @@ const ServiceResource = () => {
                   <label htmlFor="pro">Pro</label>
                 </div>
               </div>
-
-              {/* <select
-                    {...register('paid_status', { required: "Paid Status is required" })}
-                    className="outline-none p-2 bg-white"
-                  >
-                    <option value="Free">Free</option>
-                    <option value="Pro">Pro</option>
-                  </select> */}
             </fieldset>
             {errors.paid_status && (
               <p className="text-red-500 text-12 px-2 pt-1">
-                {errors.paid_status.message as string}
+                {errors.paid_status.message}
               </p>
             )}
           </div>
@@ -453,7 +490,7 @@ const ServiceResource = () => {
             </fieldset>
             {errors.component && (
               <p className="text-red-500 text-12 px-2 pt-1">
-                {errors.component.message as string}
+                {errors.component.message}
               </p>
             )}
           </div>
@@ -465,7 +502,7 @@ const ServiceResource = () => {
                   htmlFor="ServiceName"
                   className="after:content-['_*'] after:text-red-500"
                 >
-                  user access
+                  User Access
                 </label>
               </legend>
 
@@ -484,10 +521,12 @@ const ServiceResource = () => {
             </fieldset>
             {errors.visit_type && (
               <p className="text-red-500 text-12 px-2 pt-1">
-                {errors.visit_type.message as string}
+                {errors.visit_type.message}
               </p>
             )}
           </div>
+
+
           {showItem == "Visit" || showItem == "Subscribe" ? (
             <div>
               <fieldset className="flex flex-col border rounded-md px-2">
@@ -511,7 +550,7 @@ const ServiceResource = () => {
               </fieldset>
               {errors.visit_link && (
                 <p className="text-red-500 text-12 px-2 pt-1">
-                  {errors.visit_link.message as string}
+                  {errors.visit_link.message}
                 </p>
               )}
             </div>
@@ -539,7 +578,7 @@ const ServiceResource = () => {
 
                   <input
                     {...register("resource_file", {
-                      required: "resource_file is required",
+                      required: "Resource File is required",
                     })}
                     id="file"
                     type="file"
@@ -550,43 +589,20 @@ const ServiceResource = () => {
                     }}
                     // accept="video/mp4, video/ogg, video/avi"
                     accept="image/*"
+                    size={500000}
                   />
                 </fieldset>
                 {errors.resource_file && (
                   <p className="text-red-500 text-12 px-2 pt-1">
-                    {errors.resource_file.message as string}
+                    {errors.resource_file.message}
                   </p>
                 )}
               </div>
             </>
           )}
-          <div>
-            <fieldset className="flex flex-col border rounded-md px-2">
-              <legend>
-                <label
-                  htmlFor="ServiceName"
-                  className="after:content-['_*'] after:text-red-500"
-                >
-                  Status
-                </label>
-              </legend>
 
-              <select
-                {...register("status", {
-                  required: "Type is required",
-                })}
-                className="outline-none p-2 bg-white"
-              >
-                <option value="1">Publish</option>
-                <option value="0">UnPublish</option>
-              </select>
-            </fieldset>
-            {errors.type && (
-              <p className="text-red-500 text-12 px-2 pt-1">
-                {errors.type.message as string}
-              </p>
-            )}
-          </div>
+
+
           <div className="flex justify-between pt-5">
             <p className="text-14">
               <span className="text-red-500">*</span> Required
@@ -609,10 +625,11 @@ const ServiceResource = () => {
             )}
           </div>
         </form>
+
+
         {isLoading && (
           <div className="absolute inset-0 bg-white bg-opacity-75 flex items-center justify-center z-10">
             <div className="flex flex-col items-center space-y-4">
-              {/* Loading Spinner */}
               <svg
                 className="animate-spin h-12 w-12 text-blue-600"
                 xmlns="http://www.w3.org/2000/svg"
@@ -633,11 +650,11 @@ const ServiceResource = () => {
                   d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
                 ></path>
               </svg>
-              {/* Loading Text */}
               <p className="text-gray-700 font-medium">Loading...</p>
             </div>
           </div>
         )}
+
       </div>
     </>
   );

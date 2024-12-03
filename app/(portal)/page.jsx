@@ -1,12 +1,10 @@
-'use client';
-import { useEffect } from "react";
-import { useRouter } from "next/navigation";
+import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
 const Home = () => {
-    const router = useRouter();
-    useEffect(() => {
-        router.push("/admin/services");
-    },[])
-    // router.push("/admin/services");
+    const userinfo = cookies().get("user");
+  if (!userinfo) {
+    redirect(process.env.NEXT_PUBLIC_PORTAL_URL + "/signin");
+  }
 };
 
 export default Home;

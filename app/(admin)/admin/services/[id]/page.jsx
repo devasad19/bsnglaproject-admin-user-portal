@@ -135,7 +135,6 @@ const Home = ({ params }) => {
       const error = validateField(key, formData[key]);
       if (error) validationErrors[key] = error;
     });
-    console.log("Error :", validationErrors);
 
     if (Object.keys(validationErrors).length > 0) {
       setErrors(validationErrors);
@@ -159,7 +158,6 @@ const Home = ({ params }) => {
       plans: plans,
       status: 1,
     };
-    // console.log(uploadData);
 
     const featureData = await uploadFeatureData(uploadData);
     if (featureData) {
@@ -209,7 +207,8 @@ const Home = ({ params }) => {
       }
     });
   };
-  // console.log("updateFeaturesPlan :", updateFeaturePlan);
+
+
   const handleUpdateFeature = async (e) => {
     e.preventDefault();
     let f_name = e.target.feature_name.value;
@@ -247,7 +246,7 @@ const Home = ({ params }) => {
       featureUpdateItem?.id,
       uploadData
     );
-    //  console.log("featureUpdateData :", featureUpdateData);
+
 
     if (featureUpdateData?.status === true) {
       setRefesh(!refesh);

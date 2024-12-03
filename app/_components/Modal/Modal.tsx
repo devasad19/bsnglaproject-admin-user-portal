@@ -1,3 +1,5 @@
+'use client';
+
 import { modelClose } from "@/helper";
 import { ModalType } from "@/types/ModalType";
 

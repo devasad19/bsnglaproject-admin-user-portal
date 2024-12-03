@@ -270,7 +270,7 @@ export const getSingleOrderByServiceId = async (serviceId) =>{
 
   export const getAllUsersApi = async ()=>{
     try {
-      const users = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/users`);
+      const users = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/system/users`);
       return users.data;
     } catch (error) {
       console.log(error);

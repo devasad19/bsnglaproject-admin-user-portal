@@ -27,8 +27,7 @@ const Home = (): JSX.Element => {
     };
     loadPayments();
   }, [page, limit]);
-
-  // console.log({ limit, page });
+ 
   return (
     <section>
       <h3 className="text-32 font-mono font-bold text-[#151D48] pb-5">Bills</h3>
@@ -67,10 +66,11 @@ const Home = (): JSX.Element => {
         <table className="w-full">
           <thead className="border-b   border-gray-200 rounded  bg-primary text-white  h-10 text-12 lg:text-16">
             <tr>
+              <th className="text-left px-2">SL</th>
               <th className="text-left px-2">Bill Id</th>
               <th className="text-center">Service Name</th>
               <th className="text-center">Amount</th>
-              <th className="text-center">Plan</th>
+              {/* <th className="text-center">Plan</th> */}
               <th className="text-center">User Name</th>
               <th className="text-center">Date</th>
               <th className="text-center">Status</th>
@@ -80,6 +80,11 @@ const Home = (): JSX.Element => {
             {payments?.length > 0 ? (
               payments?.map((item: any, index: number) => (
                 <tr key={index}>
+                <td className="px-3">
+                  <span className="border border-gray-300 px-2 py-1 rounded-md">
+                    {index + 1}
+                  </span>
+                </td>
                   <td className="px-2 border-r border-gray-200">
                     <Link
                       href={{
@@ -97,19 +102,19 @@ const Home = (): JSX.Element => {
                           <path d="M64 464l48 0 0 48-48 0c-35.3 0-64-28.7-64-64L0 64C0 28.7 28.7 0 64 0L229.5 0c17 0 33.3 6.7 45.3 18.7l90.5 90.5c12 12 18.7 28.3 18.7 45.3L384 304l-48 0 0-144-80 0c-17.7 0-32-14.3-32-32l0-80L64 48c-8.8 0-16 7.2-16 16l0 384c0 8.8 7.2 16 16 16zM176 352l32 0c30.9 0 56 25.1 56 56s-25.1 56-56 56l-16 0 0 32c0 8.8-7.2 16-16 16s-16-7.2-16-16l0-48 0-80c0-8.8 7.2-16 16-16zm32 80c13.3 0 24-10.7 24-24s-10.7-24-24-24l-16 0 0 48 16 0zm96-80l32 0c26.5 0 48 21.5 48 48l0 64c0 26.5-21.5 48-48 48l-32 0c-8.8 0-16-7.2-16-16l0-128c0-8.8 7.2-16 16-16zm32 128c8.8 0 16-7.2 16-16l0-64c0-8.8-7.2-16-16-16l-16 0 0 96 16 0zm80-112c0-8.8 7.2-16 16-16l48 0c8.8 0 16 7.2 16 16s-7.2 16-16 16l-32 0 0 32 32 0c8.8 0 16 7.2 16 16s-7.2 16-16 16l-32 0 0 48c0 8.8-7.2 16-16 16s-16-7.2-16-16l0-64 0-64z" />
                         </svg>
                       </span>
-                      <span>Billing #{item?.id}</span>
+                      <span>Billing no. {item?.id}</span>
                     </Link>
                   </td>
                   <td className="px-2 border-r border-gray-200 text-center">
                     {item?.service ? item?.service?.name : ""}
                   </td>
                   <td className="px-2 border-r border-gray-200 text-center">
-                    {item?.total} tk
+                    {item?.amount} tk
                   </td>
 
-                  <td className="px-2 border-r border-gray-200 text-center">
+                  {/* <td className="px-2 border-r border-gray-200 text-center">
                     Basic
-                  </td>
+                  </td> */}
                   <td className="px-2 border-r border-gray-200 text-center">
                     {item?.user?.name}
                   </td>
@@ -121,7 +126,10 @@ const Home = (): JSX.Element => {
                     })}
                   </td>
                   <td className="px-2 border-r border-gray-200 text-center">
-                    {item?.status == 1 ? "PAID" : "UNPAID"}
+                    {/* {item?.status == 1 ? "PAID" : "UNPAID"} */}
+                    {
+                      item?.payment_status
+                    }
                   </td>
                 </tr>
               ))
