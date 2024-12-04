@@ -260,7 +260,7 @@ const Sidebar = () => {
                     className={`text-15 text-primary group-hover:text-white  ${isOpen ? "block" : "hidden"
                       } ${pathname.includes("/admin/manage-citizen") && "text-white"}`}
                   >
-                    User Management
+                    Citizen Management
                   </span>
                 </div>
 
@@ -293,7 +293,7 @@ const Sidebar = () => {
                     >
                       Manage Citizens
                     </Link>                  
-                    <Link
+                    {/* <Link
                       href={{
                         pathname: "/admin/manage-user-type",
                       }}
@@ -304,7 +304,7 @@ const Sidebar = () => {
                         }`}
                     >
                       Manage user type
-                    </Link>
+                    </Link> */}
                     
                   </div>
                 </NewAccordion>

@@ -445,10 +445,27 @@ export const getSingleServiceResource = async (id) => {
   }
 };
 
-export const getUserFeedBacks = async () => {
+export const getAdminFeedBacks = async () => {
   try {
     const data = await axios
       .get(`${process.env.NEXT_PUBLIC_API_URL}/admin/feedbacks`)
+      .then((res) => {
+        return res?.data;
+      }).catch((err) => {
+        console.log(err);
+        return err;
+      });
+    return data;
+  } catch (error) {
+    console.log(error);
+    return error;
+  }
+};
+
+export const getUserFeedBacks = async (id) => {
+  try {
+    const data = await axios
+      .get(`${process.env.NEXT_PUBLIC_API_URL}/user/feedbacks/${id}`)
       .then((res) => {
         return res?.data;
       }).catch((err) => {

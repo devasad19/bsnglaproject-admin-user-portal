@@ -7,9 +7,7 @@ const Home = () => {
   const [data, setData] = useState();
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
-
-
-
+ 
   useEffect(() => {
     const userCookie = document.cookie.split(';').find(c => c.trim().startsWith('user='));
     if (userCookie != undefined) {

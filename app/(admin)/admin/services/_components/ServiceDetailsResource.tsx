@@ -272,12 +272,7 @@ const ServiceDetailsResource = () => {
     }
 
 
-
-
-
-
-
-
+ 
 
     setIsLoading(true);
 
