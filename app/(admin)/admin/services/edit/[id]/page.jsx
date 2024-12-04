@@ -1,7 +1,8 @@
 export const revalidate = 60;
 
-
-import ServiceEditContainer from '../../../../component/ServiceEditContainer/ServiceEditContainer';
+import dynamic from 'next/dynamic';
+const ServiceEditContainer = dynamic(() => import('../../../../component/ServiceEditContainer/ServiceEditContainer'), { ssr: false });
+// import ServiceEditContainer from '../../../../component/ServiceEditContainer/ServiceEditContainer';
 import { getSingleServiceDetailsResource, updateSingleServiceResource } from "@/app/(admin)/_api";
 const Home = async ({ params: { id } }) => {
 
