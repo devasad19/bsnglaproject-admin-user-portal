@@ -55,7 +55,8 @@ const ServiceListContainer = ({ services }) => {
 
         if (result?.status === true) {
             toast.success("Service status updated successfully");
-            setRefetch(!refetch);
+            window.location.reload();
+            // setRefetch(!refetch);
         } else {
             console.error("Update failed:", result?.message);
         }
