@@ -497,6 +497,23 @@ export const getSoldServices = async () => {
   }
 };
 
+export const getActiveServices = async () => {
+  try {
+    const data = await axios
+      .get(`${process.env.NEXT_PUBLIC_API_URL}/active/services`)
+      .then((res) => {
+        return res?.data;
+      }).catch((err) => {
+        console.log(err);
+        return err;
+      });
+    return data;
+  } catch (error) {
+    console.log(error);
+    return error;
+  }
+};
+
 
 export const deleteService = async (id) => {
   try {

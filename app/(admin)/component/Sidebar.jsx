@@ -293,7 +293,7 @@ const Sidebar = () => {
                     >
                       Manage Citizens
                     </Link>                  
-                    {/* <Link
+                    <Link
                       href={{
                         pathname: "/admin/manage-user-type",
                       }}
@@ -304,7 +304,7 @@ const Sidebar = () => {
                         }`}
                     >
                       Manage user type
-                    </Link> */}
+                    </Link>
                     
                   </div>
                 </NewAccordion>
