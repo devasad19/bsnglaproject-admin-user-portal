@@ -44,20 +44,21 @@ const Home = (): JSX.Element => {
             <select
               onChange={(e) => setLimit(Number(e.target.value))}
               className="w-20 border border-primary focus:outline-none rounded-md px-2 py-1"
+              defaultValue={limit}
             >
-              <option selected={limit === 5} value="5">
+              <option  value="5">
                 5
               </option>
-              <option selected={limit === 10} value="10">
+              <option  value="10">
                 10
               </option>
-              <option selected={limit === 20} value="20">
+              <option  value="20">
                 20
               </option>
-              <option selected={limit === 40} value="40">
+              <option  value="40">
                 40
               </option>
-              <option selected={limit === 80} value="80">
+              <option  value="80">
                 80
               </option>
             </select>

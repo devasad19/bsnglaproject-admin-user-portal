@@ -21,11 +21,10 @@ const ContextProvider = ({ children }: any) => {
   const [loading, setLoading] = useState<boolean>(false);
   const [user, setUser] = useState<TUser | {}>({});
 
-  useEffect(() => {
+  /* useEffect(() => {
     setLoading(true);
     const token = Cookies.get("token");
     const user:string | undefined =  Cookies.get("user");
-    // const userInfo = JSON.parse(user ?? "");
     const userInfo:any = {};
     if (token && userInfo) {
       axios.get(`${process.env.NEXT_PUBLIC_API_URL}/user/details/${userInfo?.id}`,{
@@ -42,7 +41,7 @@ const ContextProvider = ({ children }: any) => {
         // console.log(err);
       })
     }
-  }, []);
+  }, []); */
 
   const contextValue: TContextType = {
     setFeatureSelectedInfoAll,

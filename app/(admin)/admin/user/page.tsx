@@ -70,8 +70,6 @@ const Home = () => {
   };
 
 
-  console.log('user list: ', users)
-
   return (
     <>
       <section>
