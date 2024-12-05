@@ -1,6 +1,5 @@
 "use client"
 import { getServices } from '@/app/(portal)/_api';
-import axios from 'axios';
 import Image from 'next/image'
 import Link from 'next/link'
 import { useEffect, useState } from 'react'
@@ -18,6 +17,8 @@ const PurchaaseServicePage = () => {
     getServices().then((data) => { setServices(data), setIsLoading(false) }).catch((err) => console.log(err));
     getSoldServices().then((data) => { setSoldServices(data?.data), setIsLoading(false) }).catch((err) => console.log(err));
   }, []);
+
+
 
   return (
     <section>

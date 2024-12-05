@@ -27,7 +27,6 @@ const Home = () => {
     useEffect(() => {
         setLoading(true);
         getHeroRightData().then((res) => {
-            console.log(res);
             setFormData(
                 {
                     title: res?.title,

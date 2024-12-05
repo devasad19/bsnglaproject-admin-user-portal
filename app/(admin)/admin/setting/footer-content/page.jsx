@@ -73,7 +73,6 @@ const Home = () => {
 
 
         getFooterRightData().then((response) => {
-            console.log('3rd res: ',response)
             setRightForm({
                 title: response?.title,
                 address: response?.address,
