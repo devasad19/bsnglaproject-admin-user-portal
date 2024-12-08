@@ -1,7 +1,10 @@
 import Link from "next/link";
 import React from "react";
-
-const ManageUserTypeList = () => {
+import { FaRegEdit } from "react-icons/fa";
+import { MdOutlineDelete } from "react-icons/md";
+ 
+const ManageUserTypeList = ({features}: any) => {
+ 
   return (
     <>
       <section>
@@ -42,142 +45,51 @@ const ManageUserTypeList = () => {
               </tr>
             </thead>
             <tbody className="[&>tr]:border-b [&>tr]:border-gray-200 [&>tr]:text-left [&>tr]:h-16 text-12 lg:text-16 ">
-              <tr>
-                <td className="px-3">
-                  <span className="border border-gray-300 px-2 py-1 rounded-md">
-                    1
-                  </span>
-                </td>
-                <td  className="px-2 border-r border-gray-200">1</td>
-                <td className="text-center border-r border-gray-200">1</td>
-                <td className="text-center border-r border-gray-200">1</td>
-                <td className="text-center border-r border-gray-200">1</td>
-              </tr>
-
-              {/* {services?.length > 0
-                ? services?.map((item, index) => {
-                    const paidStatus = JSON?.parse(item?.paid_status || "{}");
-                    return (
-                      <tr key={index}>
-                        <td className="px-3">
-                          <span className="border border-gray-300 px-2 py-1 rounded-md">
-                            {index + 1}
+             {
+              features?.map((feature: any, index: number) => (
+                  <tr>
+                    <td className="px-3">
+                      <span className="border border-gray-300 px-2 py-1 rounded-md">
+                        {index+1}
+                      </span>
+                    </td>
+                    <td  className="px-2 border-r border-gray-200">{feature?.name_bn}</td>
+                    <td className="text-center border-r border-gray-200">1</td>
+                    <td className="text-center border-r border-gray-200">
+                      {
+                        feature?.status === '1'? (
+                          <span className="bg-green-500 text-white px-2 py-1 rounded-md">
+                            Active
                           </span>
-                        </td>
-                        <td className="px-2 border-r border-gray-200">
-                          <Link
-                            href={{
-                              pathname: `/admin/services/${item?.id}`,
-                            }}
-                            className="flex items-center gap-2 text-14"
-                            shallow
-                          >
-                            <span className="flex items-center gap-3">
-                              <Image
-                                className="w-10 h-10 rounded-md"
-                                src={`${process.env.NEXT_PUBLIC_IMAGE_URL}${item?.logo}`}
-                                height={1000}
-                                width={1000}
-                                alt="Bangla"
-                              />
-                              {item?.name || " "}
-                            </span>
-                          </Link>
-                        </td>
-                        <td className="text-center border-r border-gray-200">
-                          {JSON.parse(item?.type).toString()}
-                        </td>
-
-                        <td className="text-center border-r border-gray-200">
-                          {item?.production_status || ""}
-                        </td>
-                        <td className="text-center border-r border-gray-200">
-                          <div className="flex items-center gap-2">
-                            {paidStatus?.free == 1 ? (
-                              <button className="bg-[#2F93DF] px-1 py-1 lg:px-2 lg:py-1 text-sm text-white  rounded ">
-                                Free
-                              </button>
-                            ) : (
-                              ""
-                            )}
-
-                            {paidStatus?.pro == 1 && (
-                              <button className="bg-[#1AB17A] px-1 py-1 lg:px-2 lg:py-1 text-sm text-white  rounded ">
-                                Pro
-                              </button>
-                            )}
-                          </div>
-                        </td>
-                        <td className="text-center border-r border-gray-200">
-                          {item?.completion_status == 3 ? (
-                            <button
-                              onClick={() =>
-                                UpdateServicePublishStatus(
-                                  item?.id,
-                                  item?.status == 1 ? 0 : 1
-                                )
-                              }
-                              className={`text-white w-[6em] py-1 rounded transition-all duration-300 ${
-                                item?.status == 1
-                                  ? "bg-green-700"
-                                  : "bg-yellow-500"
-                              }`}
+                        ) : (
+                          <span className="bg-red-500 text-white px-2 py-1 rounded-md">Deactive</span>
+                        )
+                      }
+                    </td>
+                    <td className="flex justify-center items-center border- mt-4 border-gray-200">
+                          <button className="p-1 active:scale-90 transition-all duration-400 rounded-md border border-gray-300">
+                            <svg
+                              className="w-5 h-5 fill-[#A4A4A4]"
+                              xmlns="http://www.w3.org/2000/svg"
+                              viewBox="0 0 512 512"
                             >
-                              {item?.status == 1 ? "Publish" : "Unpublish"}
-                            </button>
-                          ) : (
-                            <button className="bg-white border border-red-500 text-red-500 text-center text-sm w-[6em] py-1 rounded">
-                              Incomplete
-                            </button>
-                          )}
+                              <path d="M441 58.9L453.1 71c9.4 9.4 9.4 24.6 0 33.9L424 134.1 377.9 88 407 58.9c9.4-9.4 24.6-9.4 33.9 0zM209.8 256.2L344 121.9 390.1 168 255.8 302.2c-2.9 2.9-6.5 5-10.4 6.1l-58.5 16.7 16.7-58.5c1.1-3.9 3.2-7.5 6.1-10.4zM373.1 25L175.8 222.2c-8.7 8.7-15 19.4-18.3 31.1l-28.6 100c-2.4 8.4-.1 17.4 6.1 23.6s15.2 8.5 23.6 6.1l100-28.6c11.8-3.4 22.5-9.7 31.1-18.3L487 138.9c28.1-28.1 28.1-73.7 0-101.8L474.9 25C446.8-3.1 401.2-3.1 373.1 25zM88 64C39.4 64 0 103.4 0 152V424c0 48.6 39.4 88 88 88H360c48.6 0 88-39.4 88-88V312c0-13.3-10.7-24-24-24s-24 10.7-24 24V424c0 22.1-17.9 40-40 40H88c-22.1 0-40-17.9-40-40V152c0-22.1 17.9-40 40-40H200c13.3 0 24-10.7 24-24s-10.7-24-24-24H88z" />
+                            </svg>
+                          </button>
+                          <button className="p-1 active:scale-90 transition-all duration-400 rounded-md border border-red-300 ml-2">
+                            <svg
+                              className="w-5 h-5 fill-[red]"
+                              xmlns="http://www.w3.org/2000/svg"
+                              viewBox="0 0 448 512"
+                            >
+                              <path d="M170.5 51.6L151.5 80h145l-19-28.4c-1.5-2.2-4-3.6-6.7-3.6H177.1c-2.7 0-5.2 1.3-6.7 3.6zm147-26.6L354.2 80H368h48 8c13.3 0 24 10.7 24 24s-10.7 24-24 24h-8V432c0 44.2-35.8 80-80 80H112c-44.2 0-80-35.8-80-80V128H24c-13.3 0-24-10.7-24-24S10.7 80 24 80h8H80 93.8l36.7-55.1C140.9 9.4 158.4 0 177.1 0h93.7c18.7 0 36.2 9.4 46.6 24.9zM80 128V432c0 17.7 14.3 32 32 32H336c17.7 0 32-14.3 32-32V128H80zm80 64V400c0 8.8-7.2 16-16 16s-16-7.2-16-16V192c0-8.8 7.2-16 16-16s16 7.2 16 16zm80 0V400c0 8.8-7.2 16-16 16s-16-7.2-16-16V192c0-8.8 7.2-16 16-16s16 7.2 16 16zm80 0V400c0 8.8-7.2 16-16 16s-16-7.2-16-16V192c0-8.8 7.2-16 16-16s16 7.2 16 16z" />
+                            </svg>
+                          </button>
                         </td>
-                        <td className="">
-                          <div className="w-full flex items-center justify-center gap-2">
-                            <>
-                              {item?.completion_status == 3 && (
-                                <Link
-                                  href={{
-                                    pathname: `/admin/services/${item?.id}`,
-                                  }}
-                                  shallow
-                                  className="px-2 py-1  bg-green-500 text-white active:scale-90 transition-all duration-400 rounded-md"
-                                >
-                                  View
-                                </Link>
-                              )}
-
-                              <Link
-                                href={{
-                                  pathname: `/admin/services/edit/${item?.id}`,
-                                }}
-                                className="px-2 py-1  bg-blue-500 text-white active:scale-90 transition-all duration-400 rounded-md"
-                              >
-                                {item?.completion_status == 3
-                                  ? "Edit"
-                                  : "Update"}
-                              </Link>
-
-                              {item?.completion_status == 3 && (
-                                <button
-                                  onClick={() => handleDelete(item?.id)}
-                                  className="p-1  bg-red-500 text-white active:scale-90 transition-all duration-400 rounded-md"
-                                >
-                                  <svg
-                                    className="w-4 h-4 fill-current"
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    viewBox="0 0 448 512"
-                                  >
-                                    <path d="M135.2 17.7C140.6 6.8 151.7 0 163.8 0H284.2c12.1 0 23.2 6.8 28.6 17.7L320 32h96c17.7 0 32 14.3 32 32s-14.3 32-32 32H32C14.3 96 0 81.7 0 64S14.3 32 32 32h96l7.2-14.3zM32 128H416V448c0 35.3-28.7 64-64 64H96c-35.3 0-64-28.7-64-64V128zm96 64c-8.8 0-16 7.2-16 16V432c0 8.8 7.2 16 16 16s16-7.2 16-16V208c0-8.8-7.2-16-16-16zm96 0c-8.8 0-16 7.2-16 16V432c0 8.8 7.2 16 16 16s16-7.2 16-16V208c0-8.8-7.2-16-16-16zm96 0c-8.8 0-16 7.2-16 16V432c0 8.8 7.2 16 16 16s16-7.2 16-16V208c0-8.8-7.2-16-16-16z" />
-                                  </svg>
-                                </button>
-                              )}
-                            </>
-                          </div>
-                        </td>
-                      </tr>
-                    );
-                  })
-                : ""} */}
+                  </tr>
+              ))
+             }
+              
             </tbody>
           </table>
         </div>

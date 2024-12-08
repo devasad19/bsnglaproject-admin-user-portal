@@ -71,6 +71,22 @@ export const getPortalMenu = async () => {
   }
 };
 
+export const getUserTypes = async () => {
+  try {
+    const data = await axios
+      .get(`${process.env.NEXT_PUBLIC_API_URL}/get-user-types`)
+      .then((res) => {
+        return res?.data?.data;
+      }).catch((err) => {
+        console.log(err);
+      });
+    return data;
+  } catch (error) {
+    console.log(error);
+    return error;
+  }
+};
+
 
 export const deletePortalMenu = async (id) => {
   try {

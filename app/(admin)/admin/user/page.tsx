@@ -79,9 +79,9 @@ const Home = () => {
               <button className="px-2 py-1 lg:px-4 lg:py-2 bg-[#E1F6F9] text-black active:scale-90 transition-all duration-400 rounded-md">
                 All Users
               </button>
-              <button className="px-2 py-1 lg:px-4 lg:py-2  text-black active:scale-90 transition-all duration-400 rounded-md">
+              {/* <button className="px-2 py-1 lg:px-4 lg:py-2  text-black active:scale-90 transition-all duration-400 rounded-md">
                 Admin
-              </button>
+              </button> */}
             </div>
             <div className="flex flex-col items-center lg:flex-row gap-4">
               <form className="bg-white rounded-md shadow-md text-[#515151] flex items-center gap-2 px-2 py-1 lg:py-0">

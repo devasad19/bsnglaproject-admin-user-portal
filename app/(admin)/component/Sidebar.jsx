@@ -66,6 +66,15 @@ const Sidebar = () => {
           // Close the other accordion
         }
       }
+      if(valueName1 === "aclManagement"){
+        return {
+          aclManagement: !prevIsToggleOpen.aclManagement,
+          setting: false,
+          alc: false,
+          accountsSettings: false,
+          // Close the other accordion
+        }
+      }
       return prevIsToggleOpen; // Default case if neither match
     });
   };
@@ -304,6 +313,84 @@ const Sidebar = () => {
                         }`}
                     >
                       Manage user type
+                    </Link>
+                    
+                  </div>
+                </NewAccordion>
+              )}
+
+              <li
+                onClick={() => toggleAccordionSub("aclManagement")}
+                className={`hover:bg-primary  group flex items-center justify-between   ${pathname.includes("/admin/manage-citizen") && "bg-primary"
+                  } cursor-pointer ${isToggleOpen.aclManagement ? "border-b-2 border-primary" : ""
+                  }`}
+              >
+                <div className="flex items-center gap-2">
+                  <span className="">
+                  <FaUsersCog size={20} className="fill-current text-primary" />
+                   
+                  </span>
+
+                  <span
+                    className={`text-15 text-primary group-hover:text-white  ${isOpen ? "block" : "hidden"
+                      } ${pathname.includes("/admin/manage-citizen") && "text-white"}`}
+                  >
+                    ACL(Access Control List)
+                  </span>
+                </div>
+
+                <span
+                  className={`transition-transform duration-300 ${isOpen ? "block" : "hidden"
+                    } ${isToggleOpen.setting ? "rotate-180" : ""}`}
+                >
+                  <svg
+                    className={`w-3 h-3 fill-current text-primary group-hover:text-white transition-colors duration-300 ${pathname.includes("/admin/setting") && "text-white"
+                      }`}
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 448 512"
+                  >
+                    <path d="M201.4 374.6c12.5 12.5 32.8 12.5 45.3 0l160-160c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L224 306.7 86.6 169.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l160 160z" />
+                  </svg>
+                </span>
+              </li>
+              {isOpen && (
+                <NewAccordion isOpen={isToggleOpen.aclManagement}>
+                  <div className="ms-3 flex flex-col gap-1">
+                    <Link
+                      href={{
+                        pathname: "/admin/permission-management",
+                      }}
+                      shallow
+                      className={`text-14 hover:bg-green-500 px-2 py-1 rounded hover:text-white ${pathname.includes("/admin/permission-management")
+                        ? "bg-green-500 text-white font-semibold"
+                        : "text-black"
+                        }`}
+                    >
+                      Manage Permissions
+                    </Link>                  
+                    <Link
+                      href={{
+                        pathname: "/admin/manage-role",
+                      }}
+                      shallow
+                      className={`text-14 hover:bg-green-500 px-2 py-1 rounded hover:text-white ${pathname.includes("/admin/manage-role")
+                        ? "bg-green-500 text-white font-semibold"
+                        : "text-black"
+                        }`}
+                    >
+                      Manage Roles
+                    </Link>
+                    <Link
+                      href={{
+                        pathname: "/admin/manage-user-type",
+                      }}
+                      shallow
+                      className={`text-14 hover:bg-green-500 px-2 py-1 rounded hover:text-white ${pathname.includes("/admin/manage-user-type")
+                        ? "bg-green-500 text-white font-semibold"
+                        : "text-black"
+                        }`}
+                    >
+                       Manage Citizen Types Permission
                     </Link>
                     
                   </div>
