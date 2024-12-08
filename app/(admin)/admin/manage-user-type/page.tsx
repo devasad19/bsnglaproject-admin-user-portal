@@ -1,14 +1,12 @@
-import React from 'react';
+
+import { getUserTypest } from '../../_api/MangeUserTypeApi';
 import ManageUserTypeList from '../../component/ManageUserTypeList/ManageUserTypeList';
 
-import { getUserTypes } from "@/app/(admin)/_api";
-
 const page = async () => {
-    
-  const features = await getUserTypes().catch((err) => console.log(err));
+    const userTyes = await getUserTypest();
     return (
         <div className='px-14'>
-            <ManageUserTypeList features={features} />
+            <ManageUserTypeList userType={userTyes?.data} />
         </div>
     );
 };

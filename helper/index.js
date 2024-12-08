@@ -230,7 +230,7 @@ export const modelClose = (modalRef, modalForm) => {
 };
 
 //model open
-export const modelOpen = (modalRef) => {
+export const modelOpen = (modalRef, updateModelForm) => {
   if (modalRef.current) modalRef.current.showModal();
 }
 

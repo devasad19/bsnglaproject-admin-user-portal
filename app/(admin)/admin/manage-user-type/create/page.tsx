@@ -1,11 +1,12 @@
 "use client";
 import { allFeaturesName } from "@/app/(portal)/_api";
-import { manageUserTypeCreate } from "@/app/(portal)/_api/MangeUserTypeApi";
+import { manageUserTypeCreate } from "@/app/(admin)/_api/MangeUserTypeApi";
 import FeaturesNameSkeleton from "@/app/_components/SekeletonALl/FeaturesNameSkeleton";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
+
 
 interface TFeatureName {
   id: number;
@@ -66,7 +67,7 @@ const CreateUserTypePage = () => {
       }
       // console.log({userType});
       
-      const response = await manageUserTypeCreate(userType);
+      const response:any = await manageUserTypeCreate(userType);
       console.log(response);
       if(response.status){
         reset();
