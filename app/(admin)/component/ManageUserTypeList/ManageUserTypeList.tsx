@@ -2,7 +2,7 @@
 import Modal from "@/app/_components/Modal/Modal";
 import { CountWords, modelClose, modelOpen } from "@/helper";
 import Link from "next/link";
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { FaRegEdit } from "react-icons/fa";
 import { MdOutlineDelete } from "react-icons/md";
 import {
@@ -12,20 +12,65 @@ import {
 } from "../../_api/MangeUserTypeApi";
 import { toast } from "react-toastify";
 import Swal from "sweetalert2";
-
+import { useForm } from "react-hook-form";
+import { allFeaturesName } from "@/app/(portal)/_api";
+import FeaturesNameSkeleton from "@/app/_components/SekeletonALl/FeaturesNameSkeleton";
+interface TFeatureName {
+  id: number;
+  name: string;
+}
 const ManageUserTypeList = ({ userType }: any) => {
   const [singleUserTypeInfo, setSingleUserTypeInfo] = useState<any>(null);
   const updateModal = useRef<any>(null);
   const updateModelForm = useRef<any>(null);
+  const permissionModal = useRef<any>(null);
+  const permissionModalForm = useRef<any>(null);
   const [error, setError] = useState<any>({
     bnName: "",
     enName: "",
   });
+  const [selected, setSelected] = useState("");
+  const [selectFeatureName, setSelectFeatureName] = useState<number[]>([]);
+  const [featureNames, setFeatureName] = useState<TFeatureName[]>([]);
+
+  const fetchFeatureName = async () => {
+    const featureNameData = await allFeaturesName();
+    setFeatureName(featureNameData?.data);
+  };
+
+  useEffect(() => {
+    fetchFeatureName();
+  }, []);
+
+  const handleCheckboxChange = (value: string) => {
+    setSelected(selected === value ? "" : value);
+  };
+
+  const handleFeatureName = (id: number) => {
+    if (selectFeatureName.includes(id)) {
+      const index = selectFeatureName.indexOf(id);
+      selectFeatureName.splice(index, 1);
+      return setSelectFeatureName([...selectFeatureName]);
+    } else {
+      setSelectFeatureName([...selectFeatureName, id]);
+    }
+  };
+
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm();
 
   const handleEdit = async (id: number) => {
     const singleUserType = await getUserType(id);
     setSingleUserTypeInfo(singleUserType?.data);
     modelOpen(updateModal, updateModelForm);
+  };
+
+  const handlePermission = async (id: number) => {
+    modelOpen(permissionModal, permissionModalForm);
   };
 
   const handleUpdateUserType = async (e: any) => {
@@ -64,11 +109,7 @@ const ManageUserTypeList = ({ userType }: any) => {
         name_en,
         status,
       };
-      // console.log(data);
-
       const response = await manageUserTypeUpdate(data);
-      console.log(response);
-
       if (response?.status) {
         setError({
           bnName: "",
@@ -82,6 +123,7 @@ const ManageUserTypeList = ({ userType }: any) => {
     }
   };
 
+  // delete user type handle
   const handleDelete = async (id: number) => {
     if (id) {
       Swal.fire({
@@ -176,34 +218,44 @@ const ManageUserTypeList = ({ userType }: any) => {
                       </span>
                     )}
                   </td>
-                  <td className="flex justify-center items-center border- mt-4 border-gray-200">
+                  <td className="border mt-4 border-gray-200">
+                    <div className="flex justify-center items-center">
+                      <button
+                        onClick={() => {
+                          handleEdit(item?.id);
+                        }}
+                        className="p-1 active:scale-90 transition-all duration-400 rounded-md border border-gray-300"
+                      >
+                        <svg
+                          className="w-5 h-5 fill-[#A4A4A4]"
+                          xmlns="http://www.w3.org/2000/svg"
+                          viewBox="0 0 512 512"
+                        >
+                          <path d="M441 58.9L453.1 71c9.4 9.4 9.4 24.6 0 33.9L424 134.1 377.9 88 407 58.9c9.4-9.4 24.6-9.4 33.9 0zM209.8 256.2L344 121.9 390.1 168 255.8 302.2c-2.9 2.9-6.5 5-10.4 6.1l-58.5 16.7 16.7-58.5c1.1-3.9 3.2-7.5 6.1-10.4zM373.1 25L175.8 222.2c-8.7 8.7-15 19.4-18.3 31.1l-28.6 100c-2.4 8.4-.1 17.4 6.1 23.6s15.2 8.5 23.6 6.1l100-28.6c11.8-3.4 22.5-9.7 31.1-18.3L487 138.9c28.1-28.1 28.1-73.7 0-101.8L474.9 25C446.8-3.1 401.2-3.1 373.1 25zM88 64C39.4 64 0 103.4 0 152V424c0 48.6 39.4 88 88 88H360c48.6 0 88-39.4 88-88V312c0-13.3-10.7-24-24-24s-24 10.7-24 24V424c0 22.1-17.9 40-40 40H88c-22.1 0-40-17.9-40-40V152c0-22.1 17.9-40 40-40H200c13.3 0 24-10.7 24-24s-10.7-24-24-24H88z" />
+                        </svg>
+                      </button>
+                      <button
+                        onClick={() => {
+                          handleDelete(item?.id);
+                        }}
+                        className="p-1 active:scale-90 transition-all duration-400 rounded-md border border-red-300 ml-2"
+                      >
+                        <svg
+                          className="w-5 h-5 fill-[red]"
+                          xmlns="http://www.w3.org/2000/svg"
+                          viewBox="0 0 448 512"
+                        >
+                          <path d="M170.5 51.6L151.5 80h145l-19-28.4c-1.5-2.2-4-3.6-6.7-3.6H177.1c-2.7 0-5.2 1.3-6.7 3.6zm147-26.6L354.2 80H368h48 8c13.3 0 24 10.7 24 24s-10.7 24-24 24h-8V432c0 44.2-35.8 80-80 80H112c-44.2 0-80-35.8-80-80V128H24c-13.3 0-24-10.7-24-24S10.7 80 24 80h8H80 93.8l36.7-55.1C140.9 9.4 158.4 0 177.1 0h93.7c18.7 0 36.2 9.4 46.6 24.9zM80 128V432c0 17.7 14.3 32 32 32H336c17.7 0 32-14.3 32-32V128H80zm80 64V400c0 8.8-7.2 16-16 16s-16-7.2-16-16V192c0-8.8 7.2-16 16-16s16 7.2 16 16zm80 0V400c0 8.8-7.2 16-16 16s-16-7.2-16-16V192c0-8.8 7.2-16 16-16s16 7.2 16 16zm80 0V400c0 8.8-7.2 16-16 16s-16-7.2-16-16V192c0-8.8 7.2-16 16-16s16 7.2 16 16z" />
+                        </svg>
+                      </button>
+                    </div>
                     <button
                       onClick={() => {
-                        handleEdit(item?.id);
+                        handlePermission(item?.id);
                       }}
-                      className="p-1 active:scale-90 transition-all duration-400 rounded-md border border-gray-300"
+                      className="py-1 px-2 bg-[#2F93DF] text-white rounded text-12 "
                     >
-                      <svg
-                        className="w-5 h-5 fill-[#A4A4A4]"
-                        xmlns="http://www.w3.org/2000/svg"
-                        viewBox="0 0 512 512"
-                      >
-                        <path d="M441 58.9L453.1 71c9.4 9.4 9.4 24.6 0 33.9L424 134.1 377.9 88 407 58.9c9.4-9.4 24.6-9.4 33.9 0zM209.8 256.2L344 121.9 390.1 168 255.8 302.2c-2.9 2.9-6.5 5-10.4 6.1l-58.5 16.7 16.7-58.5c1.1-3.9 3.2-7.5 6.1-10.4zM373.1 25L175.8 222.2c-8.7 8.7-15 19.4-18.3 31.1l-28.6 100c-2.4 8.4-.1 17.4 6.1 23.6s15.2 8.5 23.6 6.1l100-28.6c11.8-3.4 22.5-9.7 31.1-18.3L487 138.9c28.1-28.1 28.1-73.7 0-101.8L474.9 25C446.8-3.1 401.2-3.1 373.1 25zM88 64C39.4 64 0 103.4 0 152V424c0 48.6 39.4 88 88 88H360c48.6 0 88-39.4 88-88V312c0-13.3-10.7-24-24-24s-24 10.7-24 24V424c0 22.1-17.9 40-40 40H88c-22.1 0-40-17.9-40-40V152c0-22.1 17.9-40 40-40H200c13.3 0 24-10.7 24-24s-10.7-24-24-24H88z" />
-                      </svg>
-                    </button>
-                    <button
-                      onClick={() => {
-                        handleDelete(item?.id);
-                      }}
-                      className="p-1 active:scale-90 transition-all duration-400 rounded-md border border-red-300 ml-2"
-                    >
-                      <svg
-                        className="w-5 h-5 fill-[red]"
-                        xmlns="http://www.w3.org/2000/svg"
-                        viewBox="0 0 448 512"
-                      >
-                        <path d="M170.5 51.6L151.5 80h145l-19-28.4c-1.5-2.2-4-3.6-6.7-3.6H177.1c-2.7 0-5.2 1.3-6.7 3.6zm147-26.6L354.2 80H368h48 8c13.3 0 24 10.7 24 24s-10.7 24-24 24h-8V432c0 44.2-35.8 80-80 80H112c-44.2 0-80-35.8-80-80V128H24c-13.3 0-24-10.7-24-24S10.7 80 24 80h8H80 93.8l36.7-55.1C140.9 9.4 158.4 0 177.1 0h93.7c18.7 0 36.2 9.4 46.6 24.9zM80 128V432c0 17.7 14.3 32 32 32H336c17.7 0 32-14.3 32-32V128H80zm80 64V400c0 8.8-7.2 16-16 16s-16-7.2-16-16V192c0-8.8 7.2-16 16-16s16 7.2 16 16zm80 0V400c0 8.8-7.2 16-16 16s-16-7.2-16-16V192c0-8.8 7.2-16 16-16s16 7.2 16 16zm80 0V400c0 8.8-7.2 16-16 16s-16-7.2-16-16V192c0-8.8 7.2-16 16-16s16 7.2 16 16z" />
-                      </svg>
+                      Manage Permissions
                     </button>
                   </td>
                 </tr>
@@ -213,6 +265,7 @@ const ManageUserTypeList = ({ userType }: any) => {
         </div>
       </section>
 
+      {/* update user type modal */}
       <Modal
         modalRef={updateModal}
         modalForm={updateModelForm}
@@ -288,7 +341,7 @@ const ManageUserTypeList = ({ userType }: any) => {
                   Active
                 </option>
                 <option value="0" selected={singleUserTypeInfo?.status == 0}>
-                  Deactive
+                  Directive
                 </option>
               </select>
             </fieldset>
@@ -299,6 +352,194 @@ const ManageUserTypeList = ({ userType }: any) => {
               type="button"
               onClick={() => {
                 modelClose(updateModal, updateModelForm);
+              }}
+              className="bg-red-500 text-white px-4 py-2 rounded-md"
+            >
+              Cancel
+            </button>
+            <button
+              type="submit"
+              className="bg-blue-500 text-white px-4 py-2 rounded-md"
+            >
+              Update
+            </button>
+          </div>
+        </form>
+      </Modal>
+
+      {/* permission modal */}
+      <Modal
+        modalRef={permissionModal}
+        modalForm={permissionModalForm}
+        title="Manage Citizen Type Permissions"
+      >
+        <form>
+          <div>
+            <table className="border w-full">
+              <tbody>
+                <tr className="bg-slate-300">
+                  <td className="text-center py-3">Feature Name</td>
+                  <td className="text-center py-3 border-l">Configuration</td>
+                </tr>
+                <tr className="border-t">
+                  <td className="text-center py-3">Charge</td>
+                  <td className="text-center py-3 border-l">
+                    <div className="flex items-center justify-center gap-6">
+                      <div className="flex items-center gap-3">
+                        <input
+                          type="checkbox"
+                          id="charge_apply"
+                          className="w-4 h-4"
+                          checked={selected == "1"}
+                          onChange={() => handleCheckboxChange("1")}
+                        />
+                        <label htmlFor="charge"> Charge Apply</label>
+                      </div>
+                      <div className="flex items-center gap-3">
+                        <input
+                          type="checkbox"
+                          id="charge_no"
+                          className="w-4 h-4"
+                          checked={selected == "0"}
+                          onChange={() => handleCheckboxChange("0")}
+                        />
+                        <label htmlFor="charge">No Charge</label>
+                      </div>
+                    </div>
+                  </td>
+                </tr>
+                <tr className="border-t">
+                  <td className="text-center py-3">Discount(in percentage)</td>
+                  <td className="text-center py-3 border-l">
+                    <div className="flex items-end justify-center">
+                      <div className="w-2/3">
+                        <input
+                          type="number"
+                          {...register("discount", {
+                            required: "Discount is required",
+                            min: {
+                              value: 0,
+                              message: "Discount must be greater than 0",
+                            },
+                            max: {
+                              value: 100,
+                              message: "Discount must be less than 100",
+                            },
+                          })}
+                          className="w-full border py-2 px-3 outline-none rounded"
+                          placeholder="Enter percentage"
+                        />
+                        {errors.discount && (
+                          <p className="text-red-500 text-12 px-2 pt-1 text-start">
+                            {errors.discount.message as string}
+                          </p>
+                        )}
+                      </div>
+                    </div>
+                  </td>
+                </tr>
+                <tr className="border-t">
+                  <td className="text-center py-3">Max File upload (MB)</td>
+                  <td className="text-center py-3 border-l">
+                    <div className="flex items-end justify-center">
+                      <div className="w-2/3">
+                        <input
+                          type="number"
+                          className="w-full border py-2 px-3 outline-none rounded"
+                          {...register("maxFile", {
+                            required: "Max File is required",
+                            min: {
+                              value: 1,
+                              message: "Max File must be greater than 0",
+                            },
+                            max: {
+                              value: 256,
+                              message: "Max File must be less than 256",
+                            },
+                          })}
+                          placeholder="Enter Max File"
+                        />
+                        {errors.maxFile && (
+                          <p className="text-red-500 text-12 px-2 pt-1 text-start">
+                            {errors.maxFile.message as string}
+                          </p>
+                        )}
+                      </div>
+                    </div>
+                  </td>
+                </tr>
+                <tr className="border-t">
+                  <td className="text-center py-3">Max word limit (count)</td>
+                  <td className="text-center py-3 border-l">
+                    <div className="flex items-end justify-center">
+                      <div className="w-2/3">
+                        <input
+                          type="number"
+                          className="w-full border py-2 px-3 outline-none rounded"
+                          {...register("maxWord", {
+                            required: "Max word limit is required",
+                            min: {
+                              value: 1,
+                              message: "Max word limit must be greater than 0",
+                            },
+                            max: {
+                              value: 1000,
+                              message: "Max word limit must be less than 1000",
+                            },
+                          })}
+                          placeholder="Enter Max word limit"
+                        />
+                        {errors.maxWord && (
+                          <p className="text-red-500 text-12 px-2 pt-1 text-start">
+                            {errors.maxWord.message as string}
+                          </p>
+                        )}
+                      </div>
+                    </div>
+                  </td>
+                </tr>
+                <tr className="border-t">
+                  <td className="text-center py-3">
+                    <h1 className="text-16 leading-4">Features </h1>
+                    <span className="text-15 leading-4">
+                      (select to open/free features for this type)
+                    </span>
+                  </td>
+                  <td className="flex items-center justify-center py-3 border-l">
+                    <div>
+                      {featureNames.length > 0 ? (
+                        featureNames?.map(
+                          (featureName: TFeatureName, index: number) => (
+                            <div
+                              key={index}
+                              className="flex items-center gap-2"
+                            >
+                              <input
+                                type="checkbox"
+                                id="charge"
+                                className="w-4 h-4"
+                                onChange={() => {
+                                  handleFeatureName(featureName.id);
+                                }}
+                              />
+                              <label htmlFor="charge">{featureName.name}</label>
+                            </div>
+                          )
+                        )
+                      ) : (
+                        <FeaturesNameSkeleton />
+                      )}
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div className="flex justify-end gap-3 mt-7">
+            <button
+              type="button"
+              onClick={() => {
+                modelClose(permissionModal, permissionModalForm);
               }}
               className="bg-red-500 text-white px-4 py-2 rounded-md"
             >

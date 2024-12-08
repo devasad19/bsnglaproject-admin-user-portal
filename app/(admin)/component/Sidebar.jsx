@@ -312,7 +312,7 @@ const Sidebar = () => {
                         : "text-black"
                         }`}
                     >
-                      Manage user type
+                      Manage Citizen Types Permission
                     </Link>
                     
                   </div>
@@ -380,18 +380,7 @@ const Sidebar = () => {
                     >
                       Manage Roles
                     </Link>
-                    <Link
-                      href={{
-                        pathname: "/admin/manage-user-type",
-                      }}
-                      shallow
-                      className={`text-14 hover:bg-green-500 px-2 py-1 rounded hover:text-white ${pathname.includes("/admin/manage-user-type")
-                        ? "bg-green-500 text-white font-semibold"
-                        : "text-black"
-                        }`}
-                    >
-                       Manage Citizen Types Permission
-                    </Link>
+                   
                     
                   </div>
                 </NewAccordion>
