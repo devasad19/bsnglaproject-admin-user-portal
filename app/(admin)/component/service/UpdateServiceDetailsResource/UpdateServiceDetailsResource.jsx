@@ -436,176 +436,188 @@ const UpdateServiceDetailsResource = ({ id, secondTab }) => {
             )}
           </div>
 
-          <div>
-            <fieldset className="w-full flex flex-col border rounded-md px-2 m-1">
-              <legend>
-                <label className="font-bold after:content-['_*'] after:text-red-500">
-                  Left Side
-                </label>
-              </legend>
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-1">
+            <div>
+              <fieldset className="w-full flex flex-col border rounded-md px-2 m-1">
+                <legend>
+                  <label className="font-bold after:content-['_*'] after:text-red-500">
+                    Left Side
+                  </label>
+                </legend>
 
-              <div className="p-2">
-                <div className="flex gap-2">
-                  <p>Label:</p>
-                  <input
-                    type="text"
-                    className="outline-none border border-gray-500 rounded w-full"
-                    placeholder="Enter Label"
-                    value={formData?.promotion?.left_side?.label}
-                    onChange={(e) =>
-                      setFormData({
-                        ...formData,
-                        promotion: {
-                          ...formData?.promotion,
-                          left_side: {
-                            ...formData?.promotion?.left_side,
-                            label: e.target.value,
+                <div className="p-2">
+                  <div className="flex gap-2">
+                    <p>Label:</p>
+                    <input
+                      type="text"
+                      className="outline-none border border-gray-500 rounded w-full"
+                      placeholder="Enter Label"
+                      value={formData?.promotion?.left_side?.label}
+                      onChange={(e) =>
+                        setFormData({
+                          ...formData,
+                          promotion: {
+                            ...formData?.promotion,
+                            left_side: {
+                              ...formData?.promotion?.left_side,
+                              label: e.target.value,
+                            },
                           },
-                        },
-                      })
-                    }
-                  />
-                </div>
-                <div>
-                  <p>Image</p>
-                  <input
-                    type="file"
-                    accept="image/*"
-                    onChange={(e) =>
-                      setFormData({
-                        ...formData,
-                        promotion: {
-                          ...formData?.promotion,
-                          left_side: {
-                            ...formData?.promotion?.left_side,
-                            image: e.target.files[0],
-                          },
-                        },
-                      })
-                    }
-                  />
-                </div>
-
-                {typeof formData?.promotion?.left_side?.image == "string" && (
-                  <div>
-                    <img
-                      src={
-                        process.env.NEXT_PUBLIC_IMAGE_URL +
-                        formData?.promotion?.left_side?.image
+                        })
                       }
-                      height={100}
-                      width={100}
-                      alt="Bangla"
                     />
                   </div>
-                )}
 
-                {typeof formData?.promotion?.left_side?.image == "object" && (
-                  <div>
-                    <img
-                      src={URL.createObjectURL(
-                        formData?.promotion?.left_side?.image
+
+                  <div className="flex gap-2">
+                    <div>
+                      <p>Image</p>
+                      <input
+                        type="file"
+                        accept="image/*"
+                        onChange={(e) =>
+                          setFormData({
+                            ...formData,
+                            promotion: {
+                              ...formData?.promotion,
+                              left_side: {
+                                ...formData?.promotion?.left_side,
+                                image: e.target.files[0],
+                              },
+                            },
+                          })
+                        }
+                      />
+                    </div>
+
+                    <div>
+                      {typeof formData?.promotion?.left_side?.image == "string" && (
+                        <div>
+                          <img
+                            src={
+                              process.env.NEXT_PUBLIC_IMAGE_URL +
+                              formData?.promotion?.left_side?.image
+                            }
+                            height={50}
+                            width={50}
+                            alt="Bangla"
+                          />
+                        </div>
                       )}
-                      height={100}
-                      width={100}
-                      alt="Bangla"
-                    />
+
+                      {typeof formData?.promotion?.left_side?.image == "object" && (
+                        <div>
+                          <img
+                            src={URL.createObjectURL(
+                              formData?.promotion?.left_side?.image
+                            )}
+                            height={50}
+                            width={50}
+                            alt="Bangla"
+                          />
+                        </div>
+                      )}
+                    </div>
                   </div>
-                )}
-              </div>
-            </fieldset>
-
-            {error?.promotion?.left_side?.status && (
-              <p className="text-red-500 text-12 px-2 pt-1">
-                {error?.promotion?.left_side?.message}
-              </p>
-            )}
-          </div>
-
-          <div>
-            <fieldset className="w-full flex flex-col border rounded-md px-2 m-1">
-              <legend>
-                <label className="font-bold after:content-['_*'] after:text-red-500">
-                  Right Side
-                </label>
-              </legend>
-
-              <div className="p-2">
-                <div className="flex gap-2">
-                  <p>Label:</p>
-                  <input
-                    type="text"
-                    className="outline-none border border-gray-500 rounded w-full"
-                    placeholder="Enter Label"
-                    value={formData?.promotion?.right_side?.label}
-                    onChange={(e) =>
-                      setFormData({
-                        ...formData,
-                        promotion: {
-                          ...formData?.promotion,
-                          right_side: {
-                            ...formData?.promotion?.right_side,
-                            label: e.target.value,
-                          },
-                        },
-                      })
-                    }
-                  />
                 </div>
-                <div>
-                  <p>Image</p>
-                  <input
-                    type="file"
-                    accept="image/*"
-                    onChange={(e) =>
-                      setFormData({
-                        ...formData,
-                        promotion: {
-                          ...formData?.promotion,
-                          right_side: {
-                            ...formData?.promotion?.right_side,
-                            image: e.target.files[0],
-                          },
-                        },
-                      })
-                    }
-                  />
-                </div>
+              </fieldset>
 
-                {typeof formData?.promotion?.right_side?.image == "string" && (
-                  <div>
-                    <img
-                      src={
-                        process.env.NEXT_PUBLIC_IMAGE_URL +
-                        formData?.promotion?.right_side?.image
+              {error?.promotion?.left_side?.status && (
+                <p className="text-red-500 text-12 px-2 pt-1">
+                  {error?.promotion?.left_side?.message}
+                </p>
+              )}
+            </div>
+
+            <div>
+              <fieldset className="w-full flex flex-col border rounded-md px-2 m-1">
+                <legend>
+                  <label className="font-bold after:content-['_*'] after:text-red-500">
+                    Right Side
+                  </label>
+                </legend>
+
+                <div className="p-2">
+                  <div className="flex gap-2">
+                    <p>Label:</p>
+                    <input
+                      type="text"
+                      className="outline-none border border-gray-500 rounded w-full"
+                      placeholder="Enter Label"
+                      value={formData?.promotion?.right_side?.label}
+                      onChange={(e) =>
+                        setFormData({
+                          ...formData,
+                          promotion: {
+                            ...formData?.promotion,
+                            right_side: {
+                              ...formData?.promotion?.right_side,
+                              label: e.target.value,
+                            },
+                          },
+                        })
                       }
-                      height={100}
-                      width={100}
-                      alt="Bangla"
                     />
                   </div>
-                )}
 
-                {typeof formData?.promotion?.right_side?.image == "object" && (
-                  <div>
-                    <img
-                      src={URL.createObjectURL(
-                        formData?.promotion?.right_side?.image
-                      )}
-                      height={100}
-                      width={100}
-                      alt="Bangla"
-                    />
+
+                  <div className="flex gap-2">
+                    <div>
+                      <p>Image</p>
+                      <input
+                        type="file"
+                        accept="image/*"
+                        onChange={(e) =>
+                          setFormData({
+                            ...formData,
+                            promotion: {
+                              ...formData?.promotion,
+                              right_side: {
+                                ...formData?.promotion?.right_side,
+                                image: e.target.files[0],
+                              },
+                            },
+                          })
+                        }
+                      />
+                    </div>
+
+                    {typeof formData?.promotion?.right_side?.image == "string" && (
+                      <div>
+                        <img
+                          src={
+                            process.env.NEXT_PUBLIC_IMAGE_URL +
+                            formData?.promotion?.right_side?.image
+                          }
+                          height={50}
+                          width={50}
+                          alt="Bangla"
+                        />
+                      </div>
+                    )}
+
+                    {typeof formData?.promotion?.right_side?.image == "object" && (
+                      <div>
+                        <img
+                          src={URL.createObjectURL(
+                            formData?.promotion?.right_side?.image
+                          )}
+                          height={100}
+                          width={100}
+                          alt="Bangla"
+                        />
+                      </div>
+                    )}
                   </div>
-                )}
-              </div>
-            </fieldset>
+                </div>
+              </fieldset>
 
-            {error?.promotion?.right_side?.status && (
-              <p className="text-red-500 text-12 px-2 pt-1">
-                {error?.promotion?.right_side?.message}
-              </p>
-            )}
+              {error?.promotion?.right_side?.status && (
+                <p className="text-red-500 text-12 px-2 pt-1">
+                  {error?.promotion?.right_side?.message}
+                </p>
+              )}
+            </div>
           </div>
 
           <div>
@@ -750,52 +762,54 @@ const UpdateServiceDetailsResource = ({ id, secondTab }) => {
                     )}
                   </div>
 
-                  <div>
-                    <p>Right Side Image:</p>
-                    <input
-                      type="file"
-                      onChange={(e) =>
-                        setFormData({
-                          ...formData,
-                          infoSection: formData?.infoSection?.map((item, i) =>
-                            i === index
-                              ? { ...item, right_img: e.target.files[0] }
-                              : item
-                          ),
-                        })
-                      }
-                    />
+                  <div className="flex gap-2">
+                    <div>
+                      <p>Right Side Image:</p>
+                      <input
+                        type="file"
+                        onChange={(e) =>
+                          setFormData({
+                            ...formData,
+                            infoSection: formData?.infoSection?.map((item, i) =>
+                              i === index
+                                ? { ...item, right_img: e.target.files[0] }
+                                : item
+                            ),
+                          })
+                        }
+                      />
 
-                    {error?.infoSection?.right_img?.status && (
-                      <p className="text-red-500 text-12 px-2 pt-1">
-                        {error?.infoSection?.right_img?.message}
-                      </p>
+                      {error?.infoSection?.right_img?.status && (
+                        <p className="text-red-500 text-12 px-2 pt-1">
+                          {error?.infoSection?.right_img?.message}
+                        </p>
+                      )}
+                    </div>
+
+                    {typeof item?.right_img == "string" && (
+                      <div>
+                        <img
+                          src={
+                            process.env.NEXT_PUBLIC_IMAGE_URL + item?.right_img
+                          }
+                          height={50}
+                          width={50}
+                          alt="Bangla"
+                        />
+                      </div>
+                    )}
+
+                    {typeof item?.right_img == "object" && (
+                      <div>
+                        <img
+                          src={URL.createObjectURL(item?.right_img)}
+                          height={100}
+                          width={100}
+                          alt="Bangla"
+                        />
+                      </div>
                     )}
                   </div>
-
-                  {typeof item?.right_img == "string" && (
-                    <div>
-                      <img
-                        src={
-                          process.env.NEXT_PUBLIC_IMAGE_URL + item?.right_img
-                        }
-                        height={100}
-                        width={100}
-                        alt="Bangla"
-                      />
-                    </div>
-                  )}
-
-                  {typeof item?.right_img == "object" && (
-                    <div>
-                      <img
-                        src={URL.createObjectURL(item?.right_img)}
-                        height={100}
-                        width={100}
-                        alt="Bangla"
-                      />
-                    </div>
-                  )}
                 </fieldset>
 
                 <div>
@@ -853,7 +867,7 @@ const UpdateServiceDetailsResource = ({ id, secondTab }) => {
           {formData?.fourCol?.map((item, index) => {
             return (
               <div key={index} className="w-full flex gap-2 border border-b-gray-400 py-6">
-                <fieldset className="flex flex-col border rounded-md px-2 w-full">
+                <fieldset className="grid grid-cols-1 lg:grid-cols-2 gap-2 border rounded-md px-2 w-full">
                   <div>
                     <p>Background Color:</p>
                     <input
@@ -869,48 +883,50 @@ const UpdateServiceDetailsResource = ({ id, secondTab }) => {
                         })
                       }
                       type="color"
-                      className="w-full"
+                      className="w-full h-6"
                     />
                   </div>
 
-                  <div>
-                    <p>Icon:</p>
-                    <input
-                      type="file"
-                      onChange={(e) =>
-                        setFormData({
-                          ...formData,
-                          fourCol: formData?.fourCol?.map((item, i) =>
-                            i === index
-                              ? { ...item, icon: e.target.files[0] }
-                              : item
-                          ),
-                        })
-                      }
-                    />
+                  <div className="flex">
+                    <div>
+                      <p>Icon:</p>
+                      <input
+                        type="file"
+                        onChange={(e) =>
+                          setFormData({
+                            ...formData,
+                            fourCol: formData?.fourCol?.map((item, i) =>
+                              i === index
+                                ? { ...item, icon: e.target.files[0] }
+                                : item
+                            ),
+                          })
+                        }
+                      />
+                    </div>
+
+                    {typeof item?.icon == "string" && (
+                      <div>
+                        <img
+                          src={process.env.NEXT_PUBLIC_IMAGE_URL + item?.icon}
+                          height={50}
+                          width={50}
+                          alt="Bangla"
+                        />
+                      </div>
+                    )}
+
+                    {typeof item?.icon == "object" && (
+                      <div>
+                        <img
+                          src={URL.createObjectURL(item?.icon)}
+                          height={50}
+                          width={50}
+                          alt="Bangla"
+                        />
+                      </div>
+                    )}
                   </div>
-
-                  {typeof item?.icon == "string" && (
-                    <div>
-                      <img
-                        src={process.env.NEXT_PUBLIC_IMAGE_URL + item?.icon}
-                        height={100}
-                        width={100}
-                        alt="Bangla"
-                      />
-                    </div>
-                  )}
-
-                  {typeof item?.icon == "object" && (
-                    <div>
-                      <img
-                        src={URL.createObjectURL(item?.icon)}
-                        height={100}
-                        width={100}
-                        alt="Bangla"
-                      />
-                    </div>
-                  )}
 
                   <div>
                     <p>Title:</p>
@@ -1092,7 +1108,7 @@ const UpdateServiceDetailsResource = ({ id, secondTab }) => {
                         })
                       }
                       type="color"
-                      className="w-full"
+                      className="w-full h-6"
                     />
                   </div>
                 </fieldset>
@@ -1186,81 +1202,88 @@ const UpdateServiceDetailsResource = ({ id, secondTab }) => {
                             />
                           </div>
                         </div>
-                        <div className="grid grid-cols-4">
-                          <p>Icon:</p>
-                          <div className="col-span-3">
-                            <input
-                              type="file"
-                              className="w-full"
-                              onChange={(e) => {
-                                setFormData({
-                                  ...formData,
-                                  distribution: formData.distribution.map(
-                                    (dist, i) =>
-                                      i === index
-                                        ? { ...dist, icon: e.target.files?.[0] }
-                                        : dist
-                                  ),
-                                });
-                              }}
-                            />
-                          </div>
-                        </div>
-                        {item?.icon?.length > 0 && (
-                          <div className="mt-5 relative w-[5em] h-[5em]">
-                            <Image
-                              src={
-                                process.env.NEXT_PUBLIC_IMAGE_URL + item?.icon
-                              }
-                              alt="Bangla"
-                              width={100}
-                              height={100}
-                              className="w-[5em] h-[5em]"
-                            />
-                            <button
-                              className="absolute top-0 right-0 bg-red-500 p-0.5 rounded-full"
-                              onClick={() =>
-                                setFormData({
-                                  ...formData,
-                                  distribution: formData.distribution.map(
-                                    (dist, i) =>
-                                      i === index ? { ...dist, icon: "" } : dist
-                                  ),
-                                })
-                              }
-                              type="button"
-                            >
-                              <FaRegTimesCircle className="w-4 h-4 text-white" />
-                            </button>
-                          </div>
-                        )}
 
-                        {typeof item?.icon == "object" && (
-                          <div className="mt-5 relative w-[5em] h-[5em]">
-                            <Image
-                              src={URL.createObjectURL(item?.icon)}
-                              alt="Bangla"
-                              width={100}
-                              height={100}
-                              className="w-[5em] h-[5em]"
-                            />
-                            <button
-                              className="absolute top-0 right-0 bg-red-500 p-0.5 rounded-full"
-                              onClick={() =>
-                                setFormData({
-                                  ...formData,
-                                  distribution: formData.distribution.map(
-                                    (dist, i) =>
-                                      i === index ? { ...dist, icon: "" } : dist
-                                  ),
-                                })
-                              }
-                              type="button"
-                            >
-                              <FaRegTimesCircle className="w-4 h-4 text-white" />
-                            </button>
+
+
+                        <div className="flex gap-2">
+                          <div className="grid grid-cols-4">
+                            <p>Icon:</p>
+                            <div className="col-span-3">
+                              <input
+                                type="file"
+                                className="w-full"
+                                onChange={(e) => {
+                                  setFormData({
+                                    ...formData,
+                                    distribution: formData.distribution.map(
+                                      (dist, i) =>
+                                        i === index
+                                          ? { ...dist, icon: e.target.files?.[0] }
+                                          : dist
+                                    ),
+                                  });
+                                }}
+                              />
+                            </div>
                           </div>
-                        )}
+
+
+                          {item?.icon?.length > 0 && (
+                            <div className="mt-5 relative w-12 h-12">
+                              <Image
+                                src={
+                                  process.env.NEXT_PUBLIC_IMAGE_URL + item?.icon
+                                }
+                                alt="Bangla"
+                                width={50}
+                                height={50}
+                                className="w-12 h-12"
+                              />
+                              <button
+                                className="absolute top-0 right-0 bg-red-500 p-0.5 rounded-full"
+                                onClick={() =>
+                                  setFormData({
+                                    ...formData,
+                                    distribution: formData.distribution.map(
+                                      (dist, i) =>
+                                        i === index ? { ...dist, icon: "" } : dist
+                                    ),
+                                  })
+                                }
+                                type="button"
+                              >
+                                <FaRegTimesCircle className="w-4 h-4 text-white" />
+                              </button>
+                            </div>
+                          )}
+
+                          {typeof item?.icon == "object" && (
+                            <div className="mt-5 relative w-12 h-12">
+                              <Image
+                                src={URL.createObjectURL(item?.icon)}
+                                alt="Bangla"
+                                width={50}
+                                height={50}
+                                className="w-12 h-12"
+                              />
+                              <button
+                                className="absolute top-0 right-0 bg-red-500 p-0.5 rounded-full"
+                                onClick={() =>
+                                  setFormData({
+                                    ...formData,
+                                    distribution: formData.distribution.map(
+                                      (dist, i) =>
+                                        i === index ? { ...dist, icon: "" } : dist
+                                    ),
+                                  })
+                                }
+                                type="button"
+                              >
+                                <FaRegTimesCircle className="w-4 h-4 text-white" />
+                              </button>
+                            </div>
+                          )}
+                        </div>
                       </div>
                     </fieldset>
                   </div>
@@ -1406,65 +1429,43 @@ const UpdateServiceDetailsResource = ({ id, secondTab }) => {
               </div>
 
               <div>
-                <fieldset className="flex flex-col border rounded-md px-2 pb-2">
-                  <legend>
-                    <label
-                      htmlFor="user_doc_icon"
-                      className="after:content-['_*'] after:text-red-500"
-                    >
-                      Icon
-                    </label>
-                  </legend>
-                  <input
-                    onChange={(e) =>
-                      setFormData({
-                        ...formData,
-                        user_doc: {
-                          ...formData.user_doc,
-                          icon: e.target.files?.[0],
-                        },
-                      })
-                    }
-                    type="file"
-                    name="user_doc_icon"
-                  />
-
-                  {formData?.user_doc?.icon?.length > 0 && (
-                    <div className="mt-5 relative w-[5em] h-[5em]">
-                      <Image
-                        src={
-                          process.env.NEXT_PUBLIC_IMAGE_URL +
-                          formData?.user_doc?.icon
-                        }
-                        alt="Bangla"
-                        width={100}
-                        height={100}
-                        className="w-[5em] h-[5em]"
-                      />
-                      <button
-                        className="absolute top-0 right-0 bg-red-500 p-0.5 rounded-full"
-                        onClick={(e) =>
-                          setFormData({
-                            ...formData,
-                            user_doc: { ...formData.user_doc, icon: null },
-                          })
-                        }
-                        type="button"
+                <fieldset className="flex gap-2 border rounded-md px-2 pb-2">
+                  <div>
+                    <legend>
+                      <label
+                        htmlFor="user_doc_icon"
+                        className="after:content-['_*'] after:text-red-500"
                       >
-                        <FaRegTimesCircle className="w-4 h-4 text-white" />
-                      </button>
-                    </div>
-                  )}
+                        Icon
+                      </label>
+                    </legend>
+                    <input
+                      onChange={(e) =>
+                        setFormData({
+                          ...formData,
+                          user_doc: {
+                            ...formData.user_doc,
+                            icon: e.target.files?.[0],
+                          },
+                        })
+                      }
+                      type="file"
+                      name="user_doc_icon"
+                    />
+                  </div>
 
-                  {formData?.user_doc?.icon &&
-                    typeof formData?.user_doc?.icon == "object" && (
-                      <div className="mt-5 relative w-[5em] h-[5em]">
+                  <div>
+                    {formData?.user_doc?.icon?.length > 0 && (
+                      <div className="mt-5 relative w-12 h-12">
                         <Image
-                          src={URL.createObjectURL(formData?.user_doc?.icon)}
+                          src={
+                            process.env.NEXT_PUBLIC_IMAGE_URL +
+                            formData?.user_doc?.icon
+                          }
                           alt="Bangla"
                           width={100}
                           height={100}
-                          className="w-[5em] h-[5em]"
+                          className="w-12 h-12"
                         />
                         <button
                           className="absolute top-0 right-0 bg-red-500 p-0.5 rounded-full"
@@ -1480,6 +1481,32 @@ const UpdateServiceDetailsResource = ({ id, secondTab }) => {
                         </button>
                       </div>
                     )}
+
+                    {formData?.user_doc?.icon &&
+                      typeof formData?.user_doc?.icon == "object" && (
+                        <div className="mt-5 relative w-12 h-12">
+                          <Image
+                            src={URL.createObjectURL(formData?.user_doc?.icon)}
+                            alt="Bangla"
+                            width={100}
+                            height={100}
+                            className="w-12 h-12"
+                          />
+                          <button
+                            className="absolute top-0 right-0 bg-red-500 p-0.5 rounded-full"
+                            onClick={(e) =>
+                              setFormData({
+                                ...formData,
+                                user_doc: { ...formData.user_doc, icon: null },
+                              })
+                            }
+                            type="button"
+                          >
+                            <FaRegTimesCircle className="w-4 h-4 text-white" />
+                          </button>
+                        </div>
+                      )}
+                  </div>
                 </fieldset>
                 {error?.userDoc?.icon?.status && (
                   <p className="text-red-500 text-12 px-2 pt-1">
@@ -1561,59 +1588,65 @@ const UpdateServiceDetailsResource = ({ id, secondTab }) => {
               </div>
 
               <div>
-                <fieldset className="flex flex-col border rounded-md px-2">
-                  <legend>
-                    <label
-                      htmlFor="video_link"
-                      className="after:content-['_*'] after:text-red-500"
-                    >
-                      Video Thumbnail
-                    </label>
-                  </legend>
-                  <input
-                    onChange={(e) =>
-                      setFormData({
-                        ...formData,
-                        user_doc: {
-                          ...formData.user_doc,
-                          video: {
-                            ...formData.user_doc.video,
-                            thumbnail: e.target.files?.[0],
+                <div className="flex gap-2">
+                  <fieldset className="flex flex-col border rounded-md px-2">
+                    <legend>
+                      <label
+                        htmlFor="video_link"
+                        className="after:content-['_*'] after:text-red-500"
+                      >
+                        Video Thumbnail
+                      </label>
+                    </legend>
+                    <input
+                      onChange={(e) =>
+                        setFormData({
+                          ...formData,
+                          user_doc: {
+                            ...formData.user_doc,
+                            video: {
+                              ...formData.user_doc.video,
+                              thumbnail: e.target.files?.[0],
+                            },
                           },
-                        },
-                      })
-                    }
-                    type="file"
-                    name="video_thumbnail"
-                  />
-                </fieldset>
-
-                {typeof formData?.user_doc?.video?.thumbnail == "string" && (
-                  <div>
-                    <img
-                      src={
-                        process.env.NEXT_PUBLIC_IMAGE_URL +
-                        formData?.user_doc?.video?.thumbnail
+                        })
                       }
-                      height={100}
-                      width={100}
-                      alt="Bangla"
+                      type="file"
+                      name="video_thumbnail"
                     />
-                  </div>
-                )}
+                  </fieldset>
 
-                {typeof formData?.user_doc?.video?.thumbnail == "object" && (
                   <div>
-                    <img
-                      src={URL.createObjectURL(
-                        formData?.user_doc?.video?.thumbnail
-                      )}
-                      height={100}
-                      width={100}
-                      alt="Bangla"
-                    />
+                    {typeof formData?.user_doc?.video?.thumbnail == "string" && (
+                      <div>
+                        <img
+                          src={
+                            process.env.NEXT_PUBLIC_IMAGE_URL +
+                            formData?.user_doc?.video?.thumbnail
+                          }
+                          height={100}
+                          width={100}
+                          alt="Bangla"
+                          className="w-12 h-12"
+                        />
+                      </div>
+                    )}
+
+                    {typeof formData?.user_doc?.video?.thumbnail == "object" && (
+                      <div>
+                        <img
+                          src={URL.createObjectURL(
+                            formData?.user_doc?.video?.thumbnail
+                          )}
+                          height={100}
+                          width={100}
+                          alt="Bangla"
+                          className="w-12 h-12"
+                        />
+                      </div>
+                    )}
                   </div>
-                )}
+                </div>
 
                 {error?.userDoc?.video?.thumbnail?.status && (
                   <p className="text-red-500 text-12 px-2 pt-1">
@@ -1735,80 +1768,116 @@ const UpdateServiceDetailsResource = ({ id, secondTab }) => {
                                       />
                                     </div>
                                   </div>
-                                  <div className="grid grid-cols-4">
-                                    <p>Module:</p>
-                                    <div className="col-span-3">
-                                      <input
-                                        onChange={(e) => {
-                                          const newModuleFile = [
-                                            ...formData.user_doc.module_file,
-                                          ];
+                                  <div className="flex gap-2">
+                                    <div className="flex flex-col gap-2">
+                                      <p>Module:</p>
+                                      <div className="">
+                                        <input
+                                          onChange={(e) => {
+                                            const newModuleFile = [
+                                              ...formData.user_doc.module_file,
+                                            ];
 
-                                          newModuleFile[index] = {
-                                            ...newModuleFile[index],
-                                            module: e.target.files?.[0],
-                                          };
+                                            newModuleFile[index] = {
+                                              ...newModuleFile[index],
+                                              module: e.target.files?.[0],
+                                            };
 
-                                          setFormData({
-                                            ...formData,
-                                            user_doc: {
-                                              ...formData.user_doc,
-                                              module_file: newModuleFile,
-                                            },
-                                          });
-                                        }}
-                                        type="file"
-                                        className="w-full "
-                                      />
+                                            setFormData({
+                                              ...formData,
+                                              user_doc: {
+                                                ...formData.user_doc,
+                                                module_file: newModuleFile,
+                                              },
+                                            });
+                                          }}
+                                          type="file"
+                                          className="w-full "
+                                        />
+                                      </div>
                                     </div>
-                                  </div>
 
-                                  {item?.module?.length > 0 &&
-                                    (item?.module?.includes("pdf") ||
-                                    item?.module?.includes("exe") ? (
-                                      item?.module?.includes("pdf") ? (
-                                        <div className="mt-5 relative w-[5em] h-[5em]">
-                                          <Image
-                                            src={relative_image_path(
-                                              "pdf_file.png"
-                                            )}
-                                            alt="Bangla"
-                                            width={100}
-                                            height={100}
-                                            className="w-[5em] h-[5em]"
-                                          />
-                                          <button
-                                            className="absolute top-0 right-0 bg-red-500 p-0.5 rounded-full"
-                                            onClick={() =>
-                                              setFormData({
-                                                ...formData,
-                                                distribution:
-                                                  formData.distribution.map(
-                                                    (dist, i) =>
-                                                      i === index
-                                                        ? {
+                                    {item?.module?.length > 0 &&
+                                      (item?.module?.includes("pdf") ||
+                                        item?.module?.includes("exe") ? (
+                                        item?.module?.includes("pdf") ? (
+                                          <div className="mt-5 relative w-[5em] h-[5em]">
+                                            <Image
+                                              src={relative_image_path(
+                                                "pdf_file.png"
+                                              )}
+                                              alt="Bangla"
+                                              width={100}
+                                              height={100}
+                                              className="w-[5em] h-[5em]"
+                                            />
+                                            <button
+                                              className="absolute top-0 right-0 bg-red-500 p-0.5 rounded-full"
+                                              onClick={() =>
+                                                setFormData({
+                                                  ...formData,
+                                                  distribution:
+                                                    formData.distribution.map(
+                                                      (dist, i) =>
+                                                        i === index
+                                                          ? {
                                                             ...dist,
                                                             module: "",
                                                           }
-                                                        : dist
-                                                  ),
-                                              })
-                                            }
-                                            type="button"
-                                          >
-                                            <FaRegTimesCircle className="w-4 h-4 text-white" />
-                                          </button>
-                                        </div>
+                                                          : dist
+                                                    ),
+                                                })
+                                              }
+                                              type="button"
+                                            >
+                                              <FaRegTimesCircle className="w-4 h-4 text-white" />
+                                            </button>
+                                          </div>
+                                        ) : (
+                                          <div className="mt-5 relative w-[5em] h-[5em]">
+                                            <Image
+                                              src={relative_image_path(
+                                                "exe_file.png"
+                                              )}
+                                              alt="Bangla"
+                                              width={100}
+                                              height={100}
+                                              className="w-[5em] h-[5em]"
+                                            />
+                                            <button
+                                              className="absolute top-0 right-0 bg-red-500 p-0.5 rounded-full"
+                                              onClick={() =>
+                                                setFormData({
+                                                  ...formData,
+                                                  distribution:
+                                                    formData.distribution.map(
+                                                      (dist, i) =>
+                                                        i === index
+                                                          ? {
+                                                            ...dist,
+                                                            module: "",
+                                                          }
+                                                          : dist
+                                                    ),
+                                                })
+                                              }
+                                              type="button"
+                                            >
+                                              <FaRegTimesCircle className="w-4 h-4 text-white" />
+                                            </button>
+                                          </div>
+                                        )
                                       ) : (
-                                        <div className="mt-5 relative w-[5em] h-[5em]">
+                                        <div className="mt-5 relative w-12 h-12">
                                           <Image
-                                            src={relative_image_path(
-                                              "exe_file.png"
-                                            )}
+                                            src={
+                                              process.env.NEXT_PUBLIC_IMAGE_URL +
+                                              item?.module
+                                            }
                                             alt="Bangla"
                                             width={100}
                                             height={100}
-                                            className="w-[5em] h-[5em]"
+                                            className="w-12 h-12"
                                           />
                                           <button
                                             className="absolute top-0 right-0 bg-red-500 p-0.5 rounded-full"
@@ -1819,10 +1888,7 @@ const UpdateServiceDetailsResource = ({ id, secondTab }) => {
                                                   formData.distribution.map(
                                                     (dist, i) =>
                                                       i === index
-                                                        ? {
-                                                            ...dist,
-                                                            module: "",
-                                                          }
+                                                        ? { ...dist, module: "" }
                                                         : dist
                                                   ),
                                               })
@@ -1832,13 +1898,15 @@ const UpdateServiceDetailsResource = ({ id, secondTab }) => {
                                             <FaRegTimesCircle className="w-4 h-4 text-white" />
                                           </button>
                                         </div>
-                                      )
-                                    ) : (
+                                      ))}
+
+                                    {typeof item?.module === "object" && (
                                       <div className="mt-5 relative w-[5em] h-[5em]">
                                         <Image
                                           src={
-                                            process.env.NEXT_PUBLIC_IMAGE_URL +
-                                            item?.module
+                                            item?.module instanceof Blob
+                                              ? URL.createObjectURL(item.module)
+                                              : "/default-image.jpg"
                                           }
                                           alt="Bangla"
                                           width={100}
@@ -1864,41 +1932,8 @@ const UpdateServiceDetailsResource = ({ id, secondTab }) => {
                                           <FaRegTimesCircle className="w-4 h-4 text-white" />
                                         </button>
                                       </div>
-                                    ))}
-
-                                  {typeof item?.module === "object" && (
-                                    <div className="mt-5 relative w-[5em] h-[5em]">
-                                      <Image
-                                        src={
-                                          item?.module instanceof Blob
-                                            ? URL.createObjectURL(item.module)
-                                            : "/default-image.jpg"
-                                        }
-                                        alt="Bangla"
-                                        width={100}
-                                        height={100}
-                                        className="w-[5em] h-[5em]"
-                                      />
-                                      <button
-                                        className="absolute top-0 right-0 bg-red-500 p-0.5 rounded-full"
-                                        onClick={() =>
-                                          setFormData({
-                                            ...formData,
-                                            distribution:
-                                              formData.distribution.map(
-                                                (dist, i) =>
-                                                  i === index
-                                                    ? { ...dist, module: "" }
-                                                    : dist
-                                              ),
-                                          })
-                                        }
-                                        type="button"
-                                      >
-                                        <FaRegTimesCircle className="w-4 h-4 text-white" />
-                                      </button>
-                                    </div>
-                                  )}
+                                    )}
+                                  </div>
                                 </div>
                               </fieldset>
                             </div>
