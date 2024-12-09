@@ -116,7 +116,7 @@ const ProfileContainer = ({ citizen }) => {
                         <h3 className="text-20 font-mono font-bold text-[#151D48] pb-3 overflow-hidden">
                             Personal Information
                         </h3>
-                        <div className="grid grid-cols-1 lg:grid-cols-2 gap-2 lg:gap-4">
+                        <div className="grid grid-cols-1 lg:grid-cols-3 gap-2 lg:gap-4">
                             <div>
                                 <p className="text-gray-500 text-14">Name:</p>
 
