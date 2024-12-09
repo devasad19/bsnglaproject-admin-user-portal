@@ -11,10 +11,13 @@ import {
   manageUserTypeUpdate,
 } from "../../_api/MangeUserTypeApi";
 import { toast } from "react-toastify";
-import Swal from "sweetalert2";
 import { useForm } from "react-hook-form";
 import { allFeaturesName } from "@/app/(portal)/_api";
 import FeaturesNameSkeleton from "@/app/_components/SekeletonALl/FeaturesNameSkeleton";
+import { updateUserPermission } from "../../_api/MangeUserTypeApi";
+import Swal from "sweetalert2";
+
+
 interface TFeatureName {
   id: number;
   name: string;
@@ -29,7 +32,7 @@ const ManageUserTypeList = ({ userType }: any) => {
     bnName: "",
     enName: "",
   });
-  const [selected, setSelected] = useState("");
+  const [selected, setSelected] = useState('');
   const [selectFeatureName, setSelectFeatureName] = useState<number[]>([]);
   const [featureNames, setFeatureName] = useState<TFeatureName[]>([]);
 
@@ -61,6 +64,7 @@ const ManageUserTypeList = ({ userType }: any) => {
     handleSubmit,
     reset,
     formState: { errors },
+    setValue
   } = useForm();
 
   const handleEdit = async (id: number) => {
@@ -70,6 +74,16 @@ const ManageUserTypeList = ({ userType }: any) => {
   };
 
   const handlePermission = async (id: number) => {
+    const singlePermission = await getUserType(id).catch((err) => console.log(err));
+
+    setSelected(singlePermission?.data?.charge);
+  
+    setValue("discount", singlePermission?.data?.discount);
+    setValue("maxFile", singlePermission?.data?.max_file_limit);
+    setValue("maxWord", singlePermission?.data?.max_word_limit);
+
+    setSelectFeatureName(JSON.parse(singlePermission?.data?.free_features));
+
     modelOpen(permissionModal, permissionModalForm);
   };
 
@@ -152,6 +166,42 @@ const ManageUserTypeList = ({ userType }: any) => {
     }
   };
 
+
+  const HandleCitizenPermission = async (data: any) => {
+    const { discount, maxFile, maxWord } = data;
+
+    if (selected?.length < 1) {
+      toast.error("Please select at least one charge type.");
+      return;
+    }
+
+    if (selectFeatureName?.length < 1) {
+      toast.error("Please select at least one feature name.");
+      return;
+    }
+
+    const payload = {
+      id: 1,
+      charge: selected,
+      discount: discount,
+      max_file_limit: maxFile,
+      max_word_limit: maxWord,
+      free_features: selectFeatureName,
+    };
+
+
+    const response = await updateUserPermission(payload).catch((err) => {
+      console.log(err);
+    });
+
+    if(response?.status){
+      Swal.fire("Updated!", "The permission was updated..", "success");
+      modelClose(permissionModal, permissionModalForm);
+    }else {
+      Swal.fire("Error!", "Something went wrong.", "error");
+    }
+  }
+
   return (
     <>
       <section>
@@ -214,7 +264,7 @@ const ManageUserTypeList = ({ userType }: any) => {
                       </span>
                     ) : (
                       <span className="bg-red-500 text-white px-2 py-1 rounded-md">
-                        Deractive
+                        Inactive
                       </span>
                     )}
                   </td>
@@ -269,7 +319,7 @@ const ManageUserTypeList = ({ userType }: any) => {
       <Modal
         modalRef={updateModal}
         modalForm={updateModelForm}
-        title="প্যারেন্ট অনুমতির নাম তৈরি করুন"
+        title="প্যারেন্ট অনুমতির নাম আপডেট করুন"
       >
         <form
           onSubmit={handleUpdateUserType}
@@ -373,7 +423,7 @@ const ManageUserTypeList = ({ userType }: any) => {
         modalForm={permissionModalForm}
         title="Manage Citizen Type Permissions"
       >
-        <form>
+        <form onSubmit={handleSubmit(HandleCitizenPermission)}>
           <div>
             <table className="border w-full">
               <tbody>
@@ -515,6 +565,7 @@ const ManageUserTypeList = ({ userType }: any) => {
                               className="flex items-center gap-2"
                             >
                               <input
+                                checked={selectFeatureName.includes(featureName.id)}
                                 type="checkbox"
                                 id="charge"
                                 className="w-4 h-4"

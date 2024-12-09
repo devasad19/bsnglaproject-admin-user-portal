@@ -86,3 +86,16 @@ export const deleteUserType = async (id: number) => {
     return error;
   }
 }
+
+export const updateUserPermission = async (data: any) => {
+  try {
+    const response = await axiosInstance.post("/update/user-type/permissions", data, {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    return response.data;
+  } catch (error) {
+    return error;
+  }
+}
