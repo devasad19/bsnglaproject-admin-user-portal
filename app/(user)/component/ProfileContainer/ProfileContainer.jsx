@@ -26,14 +26,34 @@ const ProfileContainer = ({ citizen }) => {
         form.append("phone", formInputs.phone);
         form.append("photo", formInputs.photo);
 
-        console.log('payload: ', form);
-
         const response = await updateCitizenData(form).then((res) => res).catch((err) => console.log(err));
+
+
+
 
         setEdit(false);
 
         if (response.status == true) {
+            console.log('user profile update response: ', response);
             toast.success(response.message);
+
+            const user = {
+                id: response.data.id,
+                name: response.data.name,
+                role: response.data.role,
+                email: response.data.email,
+                phone: response.data.phone,
+                status: response.data.status,
+                photo: response.data.photo ?? null,
+                type: response.data.type,
+            };
+
+            const userinfo = JSON.stringify(user);
+            document.cookie = `user=${userinfo};path=/;max-age=31536000;SameSite=Strict;Secure;`
+
+            window.location.reload();
+
+
         } else {
             toast.error(response.message);
         }
