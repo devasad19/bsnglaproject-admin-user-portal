@@ -8,14 +8,32 @@ import { updateCitizenData } from "../../_api";
 import { FaCamera, FaRegEdit } from "react-icons/fa";
 
 
-const ProfileContainer = ({ citizen }) => {
+const ProfileContainer = ({ citizen, userTypes, grade }) => {
     const [edit, setEdit] = useState(false);
     const [formInputs, setFormInputs] = useState({
         username: citizen?.name,
         email: citizen?.email,
         phone: citizen?.phone,
         photo: citizen?.photo,
+        type: '',
+        teamSize: '',
+        companyUrl: '',
+        govt: {
+            name_of_ministry: '',
+            department_of_ministry: '',
+            job_position: '',
+            grade: '',
+        },
+        researcher: {
+            name_of_ministry: '',
+            research_topic: '',
+            research_title: '',
+            research_code: '',
+
+        }
     });
+
+    const [userType, setUserType] = useState({});
 
 
     const HandleUpdate = async () => {
@@ -25,13 +43,25 @@ const ProfileContainer = ({ citizen }) => {
         form.append("email", formInputs.email);
         form.append("phone", formInputs.phone);
         form.append("photo", formInputs.photo);
+        form.append("citizen_type_id", userType?.id);
+        form.append("team_size", formInputs.teamSize);
+        form.append("company_url", formInputs.companyUrl);
+        form.append("ministry_name", formInputs?.govt?.name_of_ministry);
+        form.append("ministry_department", formInputs?.govt?.department_of_ministry);
+        form.append("job_position", formInputs?.govt?.job_position);
+        form.append("grade", formInputs?.govt?.grade);
+        form.append("research_topic", formInputs?.researcher?.research_topic);
+        form.append("research_title", formInputs?.researcher?.research_title);
+        form.append("research_code", formInputs?.researcher?.research_code);
+
+
+        // console.log('form data: ', form);
 
         const response = await updateCitizenData(form).then((res) => res).catch((err) => console.log(err));
 
+        console.log('response: ',response);
 
-
-
-        setEdit(false);
+        /* setEdit(false);
 
         if (response.status == true) {
             console.log('user profile update response: ', response);
@@ -56,12 +86,17 @@ const ProfileContainer = ({ citizen }) => {
 
         } else {
             toast.error(response.message);
-        }
+        } */
+    };
+
+    const HandleUserType = (id) => {
+        const userType = userTypes.find((item) => item.id == id);
+        setUserType(userType);
+        setFormInputs((prev) => ({ ...prev, type: userType?.slug }));
     };
 
 
-    // console.log('forminputs: ', formInputs?.photo == null);
-
+    console.log('form inputs: ', formInputs);
 
     return (
         <>
@@ -73,7 +108,7 @@ const ProfileContainer = ({ citizen }) => {
                     {!edit && (
                         <button
                             onClick={() => setEdit(true)}
-                            className="flex items-center gap-2 border border-primary px-2 py-1 lg:px-4 lg:py-2 rounded-md text-primary text-14"
+                            className="flex items-center gap-2 border border-primary px-2 py-1 lg:px-4 lg:py-2 rounded-md text-primary text-14 bg-white"
                         >
                             <span>
                                 <FaRegEdit size={20} className="fill-current" />
@@ -138,7 +173,7 @@ const ProfileContainer = ({ citizen }) => {
                         </h3>
                         <div className="grid grid-cols-1 lg:grid-cols-3 gap-2 lg:gap-4">
                             <div>
-                                <p className="text-gray-500 text-14">Name:</p>
+                                <p className={`text-gray-500 text-14 ${edit && "after:content-['_*'] after:text-red-500"}`}>Name:</p>
 
                                 {edit ? (
                                     <input
@@ -154,7 +189,7 @@ const ProfileContainer = ({ citizen }) => {
                                 )}
                             </div>
                             <div>
-                                <p className="text-gray-500 text-14">Phone:</p>
+                                <p className={`text-gray-500 text-14 ${edit && "after:content-['_*'] after:text-red-500"}`}>Phone:</p>
                                 {edit ? (
                                     <input
                                         type="text"
@@ -169,7 +204,7 @@ const ProfileContainer = ({ citizen }) => {
                                 )}
                             </div>
                             <div>
-                                <p className="text-gray-500 text-14">Email:</p>
+                                <p className={`text-gray-500 text-14 ${edit && "after:content-['_*'] after:text-red-500"}`}>Email:</p>
                                 {edit ? (
                                     <input
                                         type="text"
@@ -187,8 +222,163 @@ const ProfileContainer = ({ citizen }) => {
                     </div>
                     <div className="border border-gray-300 p-4 rounded-md mb-2">
                         <h3 className="text-20 font-mono font-bold text-[#151D48] pb-3 overflow-hidden">
-                            User Type: Citizen User
+                            Other Information
                         </h3>
+
+                        <div className="">
+                            <div className="grid grid-cols-1 lg:grid-cols-2 gap-2 pb-3">
+                                <div className="flex flex-col  gap-2">
+                                    <p className="text-gray-500 text-14">User Type:</p>
+
+                                    {
+                                        edit ? (
+                                            <select onChange={(e) => {
+                                                HandleUserType(e.target.value)
+                                            }} name="" id="" className="outline-none border border-gray-300 px-2 py-1 rounded h-10">
+                                                <option value="">--select--</option>
+                                                {
+                                                    userTypes?.map((item, index) => {
+                                                        return (
+                                                            <option key={index} value={item?.id}>{item?.name_en}</option>
+                                                        )
+                                                    })
+                                                }
+                                            </select>
+                                        ) : (
+                                            <p>{formInputs?.type}</p>
+                                        )
+                                    }
+
+                                </div>
+                            </div>
+
+                            <div className="grid grid-cols-1 lg:grid-cols-2 gap-2">
+                                <div className="flex flex-col  gap-2">
+                                    <p className="text-gray-500 text-14 after:content-['_*'] after:text-red-500">Team Size (max persons):</p>
+                                    <input disabled={!edit} value={formInputs?.teamSize} onChange={(e) => setFormInputs({ ...formInputs, teamSize: e.target.value })} type="number" className="outline-none border border-gray-300 px-2 py-1 rounded" placeholder="Enter Team Size" />
+                                </div>
+                                <div className="flex flex-col  gap-2">
+                                    <p className="text-gray-500 text-14 ">Company URL:</p>
+                                    <input disabled={!edit} value={formInputs?.companyUrl} onChange={(e) => setFormInputs({ ...formInputs, companyUrl: e.target.value })} type="text" className="outline-none border border-gray-300 px-2 py-1 rounded" placeholder="Enter Company URL" />
+                                </div>
+                            </div>
+
+
+                            {
+                                formInputs?.type == 'govt_user' && (
+                                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-2">
+                                        <div>
+                                            <fieldset className="flex flex-col border border-gray-400 rounded-md px-2">
+                                                <legend>
+                                                    <label className="text-gray-500 text-12">
+                                                        Name of Ministry
+                                                    </label>
+                                                </legend>
+
+                                                <input disabled={!edit} value={formInputs?.govt?.name_of_ministry} onChange={(e) => setFormInputs({ ...formInputs, govt: { ...formInputs.govt, name_of_ministry: e.target.value } })} type="text" className="w-full outline-none text-14 py-1" placeholder="Enter Name of Ministry" />
+                                            </fieldset>
+                                        </div>
+                                        <div>
+                                            <fieldset className="flex flex-col border border-gray-400 rounded-md px-2">
+                                                <legend>
+                                                    <label className="text-gray-500 text-12">
+                                                        Department of Ministry
+                                                    </label>
+                                                </legend>
+
+                                                <input disabled={!edit} value={formInputs?.govt?.department_of_ministry} onChange={(e) => setFormInputs({ ...formInputs, govt: { ...formInputs.govt, department_of_ministry: e.target.value } })} type="text" className="w-full outline-none text-14 py-1" placeholder="Enter Department of Ministry" />
+                                            </fieldset>
+                                        </div>
+                                        <div>
+                                            <fieldset className="flex flex-col border border-gray-400 rounded-md px-2">
+                                                <legend>
+                                                    <label className="text-gray-500 text-12">
+                                                        Job Position
+                                                    </label>
+                                                </legend>
+
+                                                <input disabled={!edit} value={formInputs?.govt?.job_position} onChange={(e) => setFormInputs({ ...formInputs, govt: { ...formInputs.govt, job_position: e.target.value } })} type="text" className="w-full outline-none text-14 py-1" placeholder="Enter Job Position" />
+                                            </fieldset>
+                                        </div>
+                                        <div>
+                                            <fieldset className="flex flex-col border border-gray-400 rounded-md px-2">
+                                                <legend>
+                                                    <label className="text-gray-500 text-12">
+                                                        Grade
+                                                    </label>
+                                                </legend>
+
+
+                                                <select disabled={!edit} onChange={(e) => setFormInputs({ ...formInputs, govt: { ...formInputs.govt, grade: e.target.value } })} name="" id="" className="outline-none px-2 py-1 rounded bg-white">
+                                                    <option value="">--select--</option>
+                                                    {
+                                                        grade.map((item, index) => {
+                                                            return (
+                                                                <option value={item.value} key={index}>{item.title}</option>
+                                                            )
+                                                        })
+                                                    }
+                                                </select>
+
+                                            </fieldset>
+                                        </div>
+                                    </div>
+                                )
+                            }
+
+
+                            {
+                                formInputs?.type == 'researcher' && (
+                                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-2">
+                                        <div>
+                                            <fieldset className="flex flex-col border border-gray-400 rounded-md px-2">
+                                                <legend>
+                                                    <label className="text-gray-500 text-12">
+                                                        Name of Ministry
+                                                    </label>
+                                                </legend>
+
+                                                <input disabled={!edit} value={formInputs?.govt?.name_of_ministry} onChange={(e) => setFormInputs({ ...formInputs, researcher: { ...formInputs.researcher, name_of_ministry: e.target.value } })} type="text" className="w-full outline-none text-14 py-1" placeholder="Enter Name of Ministry" />
+                                            </fieldset>
+                                        </div>
+                                        <div>
+                                            <fieldset className="flex flex-col border border-gray-400 rounded-md px-2">
+                                                <legend>
+                                                    <label className="text-gray-500 text-12">
+                                                        Research Topic
+                                                    </label>
+                                                </legend>
+
+                                                <input disabled={!edit} value={formInputs?.researcher?.research_topic} onChange={(e) => setFormInputs({ ...formInputs, researcher: { ...formInputs.researcher, research_topic: e.target.value } })} type="text" className="w-full outline-none text-14 py-1" placeholder="Enter Research Topic" />
+                                            </fieldset>
+                                        </div>
+                                        <div>
+                                            <fieldset className="flex flex-col border border-gray-400 rounded-md px-2">
+                                                <legend>
+                                                    <label className="text-gray-500 text-12">
+                                                        Research Title
+                                                    </label>
+                                                </legend>
+
+                                                <input disabled={!edit} value={formInputs?.researcher?.research_title} onChange={(e) => setFormInputs({ ...formInputs, researcher: { ...formInputs.researcher, research_title: e.target.value } })} type="text" className="w-full outline-none text-14 py-1" placeholder="Enter Research Title" />
+                                            </fieldset>
+                                        </div>
+                                        <div>
+                                            <fieldset className="flex flex-col border border-gray-400 rounded-md px-2">
+                                                <legend>
+                                                    <label className="text-gray-500 text-12">
+                                                        Research Code
+                                                    </label>
+                                                </legend>
+
+                                                <input disabled={!edit} value={formInputs?.researcher?.research_code} onChange={(e) => setFormInputs({ ...formInputs, researcher: { ...formInputs.researcher, research_code: e.target.value } })} type="text" className="w-full outline-none text-14 py-1" placeholder="Enter Research Code" />
+                                            </fieldset>
+                                        </div>
+                                    </div>
+                                )
+                            }
+
+                        </div>
                     </div>
 
                     {edit && (
@@ -209,6 +399,9 @@ const ProfileContainer = ({ citizen }) => {
                     )}
                 </div>
             </section>
+
+
+
             <dialog id="my_modal_1" className="modal">
                 <div className="modal-box bg-white">
                     <h3 className="font-bold text-lg pb-5">Select Image</h3>
