@@ -268,7 +268,7 @@ const ManageUserTypeList = ({ userType }: any) => {
                       </span>
                     )}
                   </td>
-                  <td className="border mt-4 border-gray-200">
+                  <td className="border mt-4 border-gray-200 px-2">
                     <div className="flex justify-center items-center">
                       <button
                         onClick={() => {
@@ -299,6 +299,7 @@ const ManageUserTypeList = ({ userType }: any) => {
                         </svg>
                       </button>
                     </div>
+                    <div className="flex items-center justify-center py-1">
                     <button
                       onClick={() => {
                         handlePermission(item?.id);
@@ -307,6 +308,7 @@ const ManageUserTypeList = ({ userType }: any) => {
                     >
                       Manage Permissions
                     </button>
+                    </div>
                   </td>
                 </tr>
               )):<>
