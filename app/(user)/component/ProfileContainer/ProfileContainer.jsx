@@ -51,17 +51,13 @@ const ProfileContainer = ({ citizen }) => {
             const userinfo = JSON.stringify(user);
             document.cookie = `user=${userinfo};path=/;max-age=31536000;SameSite=Strict;Secure;`
 
-            window.location.reload();
+            // window.location.reload();
 
 
         } else {
             toast.error(response.message);
         }
     };
-
-
-    // console.log('forminputs: ', formInputs?.photo == null);
-
 
     return (
         <>
