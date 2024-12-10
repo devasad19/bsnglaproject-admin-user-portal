@@ -44,7 +44,7 @@ const PurchaaseServicePage = () => {
             {
               isLoading ? (
                 <tr>
-                  <td colSpan={6}>
+                  <td colSpan={7}>
                     <Skeleton width="100%" count={10} height={50} />
                   </td>
                 </tr>

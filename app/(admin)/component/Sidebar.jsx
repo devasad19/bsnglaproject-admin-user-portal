@@ -176,12 +176,6 @@ const Sidebar = () => {
                 </Link>
               </li>
               <li
-                // className={`hover:bg-primary group ${pathname === "/admin/services" ||
-                //   pathname === "/admin/services/create" ||
-                //   /^\/admin\/services\/\d+$/.test(pathname)
-                //   ? "bg-primary"
-                //   : ""
-                //   }`}
                 className={`hover:bg-primary group ${
                   pathname.startsWith("/admin/services") ? "bg-primary" : ""
                 }`}
@@ -215,7 +209,8 @@ const Sidebar = () => {
 
               <li
                 className={`hover:bg-primary group ${
-                  pathname.startsWith("/admin/user") ? "bg-primary" : ""}`}
+                  pathname == "/admin/user" ? "bg-primary" : ""
+                }`}
               >
                 <Link
                   href={{
@@ -224,7 +219,7 @@ const Sidebar = () => {
                   shallow
                   title="User"
                   className={`flex items-center gap-2 group-hover:text-white ${
-                    pathname.startsWith("/admin/user") ? "text-white" : "text-primary"
+                    pathname == "/admin/user" ? "text-white" : "text-primary"
                   }`}
                 >
                   <GrUserSettings size={20} className="fill-current" />
@@ -233,31 +228,13 @@ const Sidebar = () => {
                   </span>
                 </Link>
               </li>
-              {/* <li
-                className={`hover:bg-primary group ${pathname == "/admin/manage-citizen" ? "bg-primary" : ""
-                  }`}
-              >
-                <Link
-                  href={{
-                    pathname: "/admin/manage-citizen",
-                  }}
-                  shallow
-                  title="Manage Citizen"
-                  className={`flex items-center gap-2 group-hover:text-white ${pathname == "/admin/manage-citizen"
-                    ? "text-white"
-                    : "text-primary"
-                    }`}
-                >
-                  <FaUsersCog size={20} className="fill-current" />
-                  <span className={isOpen ? "block" : "hidden"}>
-                    Manage Citizens
-                  </span>
-                </Link>
-              </li> */}
+
               <li
                 onClick={() => toggleAccordionSub("userManagement")}
                 className={`hover:bg-primary  group flex items-center justify-between   ${
-                 ( pathname.startsWith("/admin/manage-citizen") || pathname.startsWith("/admin/manage-user-type")) && "bg-primary"
+                  (pathname.startsWith("/admin/manage-citizen") ||
+                    pathname.startsWith("/admin/manage-user-type")) &&
+                  "bg-primary"
                 } cursor-pointer ${
                   isToggleOpen.userManagement ? "border-b-2 border-primary" : ""
                 }`}
@@ -266,9 +243,13 @@ const Sidebar = () => {
                   <span className="">
                     <FaUsersCog
                       size={20}
-
                       // className=" "
-                      className={`text-primary group-hover:text-white transition-colors duration-300 ${( pathname.startsWith("/admin/manage-citizen") || pathname.startsWith("/admin/manage-user-type")) ? "text-white" : ""}`}
+                      className={`text-primary group-hover:text-white transition-colors duration-300 ${
+                        pathname.startsWith("/admin/manage-citizen") ||
+                        pathname.startsWith("/admin/manage-user-type")
+                          ? "text-white"
+                          : ""
+                      }`}
                     />
                   </span>
 
@@ -276,7 +257,9 @@ const Sidebar = () => {
                     className={`text-15 text-primary group-hover:text-white  ${
                       isOpen ? "block" : "hidden"
                     } ${
-                      ( pathname.startsWith("/admin/manage-citizen") || pathname.startsWith("/admin/manage-user-type")) && "text-white"
+                      (pathname.startsWith("/admin/manage-citizen") ||
+                        pathname.startsWith("/admin/manage-user-type")) &&
+                      "text-white"
                     }`}
                   >
                     Citizen Management
@@ -290,7 +273,9 @@ const Sidebar = () => {
                 >
                   <svg
                     className={`w-3 h-3 fill-current text-primary group-hover:text-white transition-colors duration-300 ${
-                      ( pathname.startsWith("/admin/manage-citizen") || pathname.startsWith("/admin/manage-user-type")) && "text-white"
+                      (pathname.startsWith("/admin/manage-citizen") ||
+                        pathname.startsWith("/admin/manage-user-type")) &&
+                      "text-white"
                     }`}
                     xmlns="http://www.w3.org/2000/svg"
                     viewBox="0 0 448 512"
@@ -335,7 +320,9 @@ const Sidebar = () => {
               <li
                 onClick={() => toggleAccordionSub("aclManagement")}
                 className={`hover:bg-primary  group flex items-center justify-between   ${
-                 ( pathname.startsWith("/admin/permission-management") || pathname.startsWith("/admin/manage-role")) && "bg-primary"
+                  (pathname.startsWith("/admin/permission-management") ||
+                    pathname.startsWith("/admin/manage-role")) &&
+                  "bg-primary"
                 } cursor-pointer ${
                   isToggleOpen.aclManagement ? "border-b-2 border-primary" : ""
                 }`}
@@ -344,8 +331,12 @@ const Sidebar = () => {
                   <span className="">
                     <FaUsersCog
                       size={20}
-                
-                      className={`text-primary group-hover:text-white transition-colors duration-300 ${ (pathname.startsWith("/admin/permission-management") || pathname.startsWith("/admin/manage-role")) ? "text-white" : ""}`}
+                      className={`text-primary group-hover:text-white transition-colors duration-300 ${
+                        pathname.startsWith("/admin/permission-management") ||
+                        pathname.startsWith("/admin/manage-role")
+                          ? "text-white"
+                          : ""
+                      }`}
                     />
                   </span>
 
@@ -353,7 +344,9 @@ const Sidebar = () => {
                     className={`text-15 text-primary group-hover:text-white  ${
                       isOpen ? "block" : "hidden"
                     } ${
-                     ( pathname.startsWith("/admin/permission-management") || pathname.startsWith("/admin/manage-role")) && "text-white"
+                      (pathname.startsWith("/admin/permission-management") ||
+                        pathname.startsWith("/admin/manage-role")) &&
+                      "text-white"
                     }`}
                   >
                     ACL(Access Control List)
@@ -367,7 +360,9 @@ const Sidebar = () => {
                 >
                   <svg
                     className={`w-3 h-3 fill-current text-primary group-hover:text-white transition-colors duration-300 ${
-                     ( pathname.startsWith("/admin/permission-management") || pathname.startsWith("/admin/manage-role")) && "text-white"
+                      (pathname.startsWith("/admin/permission-management") ||
+                        pathname.startsWith("/admin/manage-role")) &&
+                      "text-white"
                     }`}
                     xmlns="http://www.w3.org/2000/svg"
                     viewBox="0 0 448 512"
@@ -514,7 +509,9 @@ const Sidebar = () => {
               <li
                 onClick={() => toggleAccordionSub("accounts-settings")}
                 className={`hover:bg-primary  group flex items-center  justify-between ${
-                  pathname.includes("/admin/accounts-settings") && "bg-primary"
+                  (pathname.includes("/admin/accounts-settings") ||
+                    pathname.includes("/admin/bill")) &&
+                  "bg-primary"
                 } cursor-pointer ${
                   isToggleOpen.accountsSettings
                     ? "border-b-2 border-primary"
@@ -522,13 +519,22 @@ const Sidebar = () => {
                 }`}
               >
                 <div className="flex items-center gap-2">
-                  <FaComputer size={20} className="fill-current" />
+                  <FaComputer
+                    size={20}
+                    className={`group-hover:text-white transition-colors duration-300 ${
+                      pathname.includes("/admin/accounts-settings") ||
+                      pathname.includes("/admin/bill")
+                        ? "text-white"
+                        : "text-primary"
+                    }`}
+                  />
 
                   <span
                     className={`text-15 text-primary group-hover:text-white  ${
                       isOpen ? "block" : "hidden"
                     } ${
-                      pathname.includes("/admin/accounts-settings") &&
+                      (pathname.includes("/admin/accounts-settings") ||
+                        pathname.includes("/admin/bill")) &&
                       "text-white"
                     }`}
                   >
@@ -543,7 +549,8 @@ const Sidebar = () => {
                 >
                   <svg
                     className={`w-3 h-3 fill-current text-primary group-hover:text-white transition-colors duration-300 ${
-                      pathname.includes("/admin/accounts-settings") &&
+                      (pathname.includes("/admin/accounts-settings") ||
+                        pathname.includes("/admin/bill")) &&
                       "text-white"
                     }`}
                     xmlns="http://www.w3.org/2000/svg"
@@ -590,7 +597,7 @@ const Sidebar = () => {
 
               <li
                 className={`hover:bg-primary group ${
-                  pathname == "/admin/user-feedbacks" ? "bg-primary" : ""
+                  pathname.includes("/admin/user-feedbacks") ? "bg-primary" : ""
                 }`}
               >
                 <Link
