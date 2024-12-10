@@ -7,7 +7,6 @@ import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 
-
 interface TFeatureName {
   id: number;
   name: string;
@@ -53,23 +52,23 @@ const CreateUserTypePage = () => {
   const handleMangeUser = async (data: any) => {
     setIsLoading(true);
     // console.log(data);
-    
+
     try {
-      const userType ={
-        name_en: data.bnName,
-        name_bn: data.enName,
+      const userType = {
+        name_en: data.enName,
+        name_bn: data.bnName,
         charge: selected,
         discount: data.discount,
         max_file_limit: data.maxFile,
         max_word_limit: data.maxWord,
-        free_features:JSON.stringify(selectFeatureName),
-        status:1
-      }
+        free_features: JSON.stringify(selectFeatureName),
+        status: 1,
+      };
       // console.log({userType});
-      
-      const response:any = await manageUserTypeCreate(userType);
+
+      const response: any = await manageUserTypeCreate(userType);
       console.log(response);
-      if(response.status){
+      if (response.status) {
         reset();
         setSelected("");
         setSelectFeatureName([]);
@@ -77,15 +76,11 @@ const CreateUserTypePage = () => {
         toast.success("User Type Created Successfully");
       }
       setIsLoading(false);
-      
     } catch (error) {
       console.log(error);
       toast.error("User Type Created Failed");
       setIsLoading(false);
     }
-   
-    
-    
   };
 
   return (

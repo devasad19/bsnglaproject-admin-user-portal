@@ -12,7 +12,6 @@ import { FaRegEdit } from "react-icons/fa";
 import { FaTrashAlt } from "react-icons/fa";
 import { getUserTypest } from "../../_api/MangeUserTypeApi";
 import Modal from "@/app/_components/Modal/Modal";
-import { set } from "react-hook-form";
 import { toast } from "react-toastify";
 
 const Home = (): JSX.Element => {
@@ -218,7 +217,7 @@ const Home = (): JSX.Element => {
             </fieldset>
           </div>
           <div className="flex justify-end gap-3 mt-7">
-            <button
+            <button type="button"
               onClick={() => {
                 modelClose(userTypeModal, userTypesUpdateForm);
               }}
@@ -226,7 +225,7 @@ const Home = (): JSX.Element => {
             >
               Cancel
             </button>
-            <button className="bg-blue-500 text-white px-4 py-2 rounded-md">
+            <button type="submit" className="bg-blue-500 text-white px-4 py-2 rounded-md">
               Submit
             </button>
           </div>

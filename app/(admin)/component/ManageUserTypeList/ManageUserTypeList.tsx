@@ -243,7 +243,7 @@ const ManageUserTypeList = ({ userType }: any) => {
               </tr>
             </thead>
             <tbody className="[&>tr]:border-b [&>tr]:border-gray-200 [&>tr]:text-left [&>tr]:h-16 text-12 lg:text-16 ">
-              {userType?.map((item: any, index: number) => (
+              {userType.length > 0 ? userType?.map((item: any, index: number) => (
                 <tr key={index}>
                   <td className="px-3">
                     <span className="border border-gray-300 px-2 py-1 rounded-md">
@@ -309,7 +309,11 @@ const ManageUserTypeList = ({ userType }: any) => {
                     </button>
                   </td>
                 </tr>
-              ))}
+              )):<>
+              <tr>
+                <td colSpan={6} className="text-center text-red-400">Data Not Found</td>
+              </tr>
+              </>}
             </tbody>
           </table>
         </div>
