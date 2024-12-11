@@ -100,8 +100,6 @@ const Home = async () => {
     },
   ]
 
-  console.log('userTypes: ', userTypes, citizen);
-
   return (
     <ProfileContainer citizen={citizen} userTypes={userTypes} grade={grade} />
   );
