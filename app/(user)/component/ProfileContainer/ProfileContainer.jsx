@@ -15,25 +15,25 @@ const ProfileContainer = ({ citizen, userTypes, grade }) => {
         email: citizen?.email,
         phone: citizen?.phone,
         photo: citizen?.photo,
-        type: '',
-        teamSize: '',
-        companyUrl: '',
+        type:  userTypes?.find((item) => item?.id == citizen?.citizen_info?.citizen_type_id)?.slug,
+        teamSize: citizen?.citizen_info?.team_size,
+        companyUrl: citizen?.citizen_info?.company_url,
         govt: {
-            name_of_ministry: '',
-            department_of_ministry: '',
-            job_position: '',
-            grade: '',
+            name_of_ministry: citizen?.citizen_info?.ministry_name,
+            department_of_ministry: citizen?.citizen_info?.ministry_department,
+            job_position: citizen?.citizen_info?.job_position,
+            grade: citizen?.citizen_info?.grade,
         },
         researcher: {
-            name_of_ministry: '',
-            research_topic: '',
-            research_title: '',
-            research_code: '',
+            name_of_ministry: citizen?.citizen_info?.ministry_name,
+            research_topic: citizen?.citizen_info?.research_topic,
+            research_title: citizen?.citizen_info?.research_title,
+            research_code: citizen?.citizen_info?.research_code,
 
         }
     });
 
-    const [userType, setUserType] = useState({});
+    const [userType, setUserType] = useState(userTypes?.find((item) => item?.id == citizen?.citizen_info?.citizen_type_id));
 
 
     const HandleUpdate = async () => {
@@ -55,13 +55,10 @@ const ProfileContainer = ({ citizen, userTypes, grade }) => {
         form.append("research_code", formInputs?.researcher?.research_code);
 
 
-        // console.log('form data: ', form);
-
         const response = await updateCitizenData(form).then((res) => res).catch((err) => console.log(err));
 
-        console.log('response: ',response);
 
-        /* setEdit(false);
+        setEdit(false);
 
         if (response.status == true) {
             console.log('user profile update response: ', response);
@@ -86,7 +83,7 @@ const ProfileContainer = ({ citizen, userTypes, grade }) => {
 
         } else {
             toast.error(response.message);
-        } */
+        }
     };
 
     const HandleUserType = (id) => {
@@ -96,7 +93,6 @@ const ProfileContainer = ({ citizen, userTypes, grade }) => {
     };
 
 
-    console.log('form inputs: ', formInputs);
 
     return (
         <>
@@ -234,7 +230,7 @@ const ProfileContainer = ({ citizen, userTypes, grade }) => {
                                         edit ? (
                                             <select onChange={(e) => {
                                                 HandleUserType(e.target.value)
-                                            }} name="" id="" className="outline-none border border-gray-300 px-2 py-1 rounded h-10">
+                                            }} defaultValue={citizen?.citizen_info?.citizen_type_id} name="" id="" className="outline-none border border-gray-300 px-2 py-1 rounded h-10">
                                                 <option value="">--select--</option>
                                                 {
                                                     userTypes?.map((item, index) => {
@@ -309,7 +305,7 @@ const ProfileContainer = ({ citizen, userTypes, grade }) => {
                                                 </legend>
 
 
-                                                <select disabled={!edit} onChange={(e) => setFormInputs({ ...formInputs, govt: { ...formInputs.govt, grade: e.target.value } })} name="" id="" className="outline-none px-2 py-1 rounded bg-white">
+                                                <select defaultValue={formInputs?.govt?.grade} disabled={!edit} onChange={(e) => setFormInputs({ ...formInputs, govt: { ...formInputs.govt, grade: e.target.value } })} name="" id="" className="outline-none px-2 py-1 rounded bg-white">
                                                     <option value="">--select--</option>
                                                     {
                                                         grade.map((item, index) => {
