@@ -82,7 +82,7 @@ const ManageUserTypeList = ({ userType }: any) => {
     setValue("maxFile", singlePermission?.data?.max_file_limit);
     setValue("maxWord", singlePermission?.data?.max_word_limit);
 
-    setSelectFeatureName(JSON.parse(singlePermission?.data?.free_features));
+    setSelectFeatureName(JSON?.parse(singlePermission?.data?.free_features));
 
     modelOpen(permissionModal, permissionModalForm);
   };

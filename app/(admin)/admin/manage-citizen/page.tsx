@@ -35,18 +35,20 @@ const Home = (): JSX.Element => {
     }
   };
 
+  const fetchCitizenAll = async () => {
+    try {
+      setIsLoading(true);
+      const response = await getCitizenList();
+      setCitizen(response?.data);
+      setIsLoading(false);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   useEffect(() => {
-    setIsLoading(true);
-    getCitizenList()
-      .then((response) => {
-        setCitizen(response?.data);
-        // console.log(response);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+    fetchCitizenAll();
     fetchCitizenTypes();
-    setIsLoading(false);
   }, [isFetch]);
 
   // console.log({isLoading});
@@ -106,9 +108,7 @@ const Home = (): JSX.Element => {
               </tr>
             </thead>
             <tbody className="text-center">
-              {
-                isLoading && <TableSkeleton col={8} row={10}></TableSkeleton>
-              }
+              {isLoading && <TableSkeleton col={8} row={10}></TableSkeleton>}
               {citizen.length > 0 ? (
                 citizen.map((item: any, index: any) => (
                   <tr key={index} className="h-16 border-b border-gray-300">
@@ -176,9 +176,15 @@ const Home = (): JSX.Element => {
                   </tr>
                 ))
               ) : (
-                <tr>
-                  <td colSpan={8} className="text-center">No data available</td>
-                </tr>
+                <>
+                  {isLoading === false && (
+                    <tr>
+                      <td colSpan={8} className="text-center">
+                        No data available
+                      </td>
+                    </tr>
+                  )}
+                </>
               )}
             </tbody>
           </table>
