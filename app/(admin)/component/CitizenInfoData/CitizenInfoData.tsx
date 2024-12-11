@@ -3,7 +3,7 @@ import { relative_image_path } from "@/helper";
 import Image from "next/image";
 import React, { useEffect, useState } from "react";
 import { FaCamera, FaRegEdit } from "react-icons/fa";
-import { getSingleCitizenUserNotNull } from "../../_api";
+import { getSingleCitizenUserNotNull, updateCitizenUserStatus } from "../../_api";
 import { toast } from "react-toastify";
 
 const CitizenInfoData = ({ id }: { id: string }) => {
@@ -29,14 +29,26 @@ const CitizenInfoData = ({ id }: { id: string }) => {
   useEffect(() => {
     fetchCitizenTypes();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [id]);
+  }, [id,isFetch]);
   console.log({ user });
 
  const handleApprove = async () => {
     if(user){
-        const updateInfo ={
+        
+        try {
+          const updateInfo ={
             user_id:user.id,
             citizen_type_id:user.citizen_type_id,
+        }
+          const response = await updateCitizenUserStatus(updateInfo);
+          if(response.status){
+            toast.success("User Approved Successfully");
+            setIsFetch(!isFetch);
+          }else{
+            toast.error("Something went wrong");
+          }
+        } catch (error) {
+          toast.error("Something went wrong");
         }
     }
     
@@ -270,7 +282,7 @@ const CitizenInfoData = ({ id }: { id: string }) => {
                 }}
                   className={` text-white text-16 font-medium px-5 py-2 rounded bg-primary`}
                 >
-                  Approved
+                  Approve
                 </button>
               </div>
             </>

@@ -14,6 +14,7 @@ import { getUserTypest } from "../../_api/MangeUserTypeApi";
 import Modal from "@/app/_components/Modal/Modal";
 import { toast } from "react-toastify";
 import Link from "next/link";
+import TableSkeleton from "@/app/_components/TableSkeleton/TableSkeleton";
 
 const Home = (): JSX.Element => {
   const [citizen, setCitizen] = useState([]);
@@ -27,10 +28,8 @@ const Home = (): JSX.Element => {
 
   const fetchCitizenTypes = async () => {
     try {
-      setIsLoading(true);
       const response = await getUserTypest();
       setCitizenTypes(response?.data);
-      setIsLoading(false);
     } catch (error) {
       console.log(error);
     }
@@ -47,9 +46,10 @@ const Home = (): JSX.Element => {
         console.log(error);
       });
     fetchCitizenTypes();
+    setIsLoading(false);
   }, [isFetch]);
 
-  // console.log({citizenTypes});
+  // console.log({isLoading});
 
   const handleEditUser = (id: any) => {
     if (id) {
@@ -106,8 +106,11 @@ const Home = (): JSX.Element => {
               </tr>
             </thead>
             <tbody className="text-center">
-              {citizen?.map((item: any, index: any) => {
-                return (
+              {
+                isLoading && <TableSkeleton col={8} row={10}></TableSkeleton>
+              }
+              {citizen.length > 0 ? (
+                citizen.map((item: any, index: any) => (
                   <tr key={index} className="h-16 border-b border-gray-300">
                     <td className="px-3">
                       <span className="border border-gray-300 px-2 py-1 rounded-md">
@@ -159,24 +162,24 @@ const Home = (): JSX.Element => {
                         </button>
                       </div>
 
-                      {item?.citizen_info != null && (
-                        <>
-                          <div className="flex items-center justify-center py-1">
-                            <Link
-                            href={
-                              `/admin/citizen-info/${item?.id}`
-                            }
-                              className="py-1 px-2 bg-[#2F93DF] text-white rounded text-12 "
-                            >
-                              Citizen Info
-                            </Link>
-                          </div>
-                        </>
+                      {item?.citizen_info && (
+                        <div className="flex items-center justify-center py-1">
+                          <Link
+                            href={`/admin/citizen-info/${item?.id}`}
+                            className="py-1 px-2 bg-[#2F93DF] text-white rounded text-12"
+                          >
+                            Citizen Info
+                          </Link>
+                        </div>
                       )}
                     </td>
                   </tr>
-                );
-              })}
+                ))
+              ) : (
+                <tr>
+                  <td colSpan={8} className="text-center">No data available</td>
+                </tr>
+              )}
             </tbody>
           </table>
         </div>

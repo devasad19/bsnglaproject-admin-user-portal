@@ -378,6 +378,15 @@ export const getSingleCitizenUserNotNull = async(id)=>{
   }
 }
 
+export const updateCitizenUserStatus = async (payload)=>{
+  try {
+    const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/admin/update/citizen-info`,payload);
+    return response?.data;
+  } catch (error) {
+    return error;
+  }
+}
+
 
 export const getSingleCitizen = async (id)=>{
   try {
