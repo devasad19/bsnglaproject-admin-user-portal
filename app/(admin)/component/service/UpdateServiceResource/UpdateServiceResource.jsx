@@ -6,17 +6,21 @@ import { useForm, Controller, } from "react-hook-form";
 import { toast } from "react-toastify";
 import CustomEditor from "@/app/_components/CustomEditor/CustomEditor";
 import { getSingleServiceResource, updateServiceResource } from "@/app/(admin)/_api";
+import { FaCheckCircle } from "react-icons/fa";
+import { CountWords } from "@/helper";
 
 
 const UpdateServiceResource = ({ id }) => {
     const router = useRouter();
     const [serviceResource, setServiceResource] = useState(null);
     const [paidStatus, setPaidStatus] = useState();
-    const [status, setStatus] = useState("");
+    // const [status, setStatus] = useState("");
     const [serviceImg, setServiceImg] = useState(null);
     const [resourceFileImg, setResourceFileImg] = useState(null);
     const [isLoading, setIsLoading] = useState(false);
     const [showItem, setShowItem] = useState("");
+    const [type, setType] = useState([]);
+    const allTypes = ['Application', 'Plugin', 'Mobile Apps', 'Tools', 'Papers', 'Font'];
 
     const {
         register,
@@ -24,7 +28,9 @@ const UpdateServiceResource = ({ id }) => {
         reset,
         formState: { errors },
         control,
-        setValue
+        setValue,
+        getValues,
+        setError
     } = useForm();
 
 
@@ -40,16 +46,89 @@ const UpdateServiceResource = ({ id }) => {
             production_status,
             release_date,
             sub_title,
-            type,
+            // type,
             visit_link,
             visit_type,
             resource_file,
+            status,
+            description_title
         } = data;
+
+        // console.log('description count: ',errors);
+
+
+        /* if(CountWords(description) > 30) {
+            setIsLoading(false);
+            setError("description", { type: "manual", message: "Description cannot exceed 30 words" });
+            return;
+        }
+
+        if(CountWords(name) > 3) {
+            setIsLoading(false);
+            setError("name", { type: "manual", message: "Name cannot exceed 3 words" });
+            return;
+        }
+
+
+        if(CountWords(description_title) > 10){
+            setIsLoading(false);
+            setError("description_title", { type: "manual", message: "Description title cannot exceed 10 words" });
+            return;
+        }
+
+
+        if(type.length > 3){
+            setIsLoading(false);
+            setError("type", { type: "manual", message: "You can select only 3 types" });
+            return;
+        }
+
+        if(production_status.length < 1){
+            setIsLoading(false);
+            setError("production_status", { type: "manual", message: "Production status is required" });
+            return;
+        }
+
+        if(release_date.length < 1){
+            setIsLoading(false);
+            setError("release_date", { type: "manual", message: "Release date is required" });
+            return;
+        }
+
+        if(logo.length < 1 && !logo[0]){
+            setIsLoading(false);
+            setError("logo", { type: "manual", message: "Logo is required" });
+            return;
+        }
+
+        if(paidStatus?.free == 0 && paidStatus?.pro == 0){
+            setIsLoading(false);
+            setError("paid_status", { type: "manual", message: "Paid status is required" });
+            return;
+        }
+
+        if(component.length < 1){
+            setIsLoading(false);
+            setError("component", { type: "manual", message: "Component is required" });
+            return;
+        }
+
+        if(visit_type.length < 1){
+            setIsLoading(false);
+            setError("visit_type", { type: "manual", message: "Visit type is required" });
+            return;
+        }
+
+        if(visit_type == 'download' && resource_file.length < 1){
+            setIsLoading(false);
+            setError("resource_file", { type: "manual", message: "Resource file is required" });
+            return;
+        } */
 
         const formData = new FormData();
         formData.append("name", name);
         formData.append("description", description);
-        formData.append("status", status);
+        // formData.append("status", status);
         formData.append("component", component);
         formData.append("distribution", distribution);
         formData.append("logo", typeof logo[0] == "string" ? '' : logo[0]);
@@ -61,21 +140,25 @@ const UpdateServiceResource = ({ id }) => {
         formData.append("visit_link", visit_link || "");
         formData.append("visit_type", visit_type);
         formData.append("resource_file", typeof resource_file == "string" ? '' : resource_file[0]);
+        formData.append("description_title", description_title);
+
+
+        console.log('form data: ',formData);
 
 
         const response = await updateServiceResource(formData, id).then((res) => {
-            setIsLoading(false);
-            console.log('api response: ', res);
+
 
             if (res?.status == true) {
                 toast.success("Service Updated Successfully");
                 router.push("/admin/services");
-                reset();
-            }else{
+            } else {
                 toast.error("Service Update Failed");
             }
         }).catch((err) => {
             console.log(err);
+
+        }).finally(() => {
             setIsLoading(false);
         });
     };
@@ -83,11 +166,12 @@ const UpdateServiceResource = ({ id }) => {
 
     useEffect(() => {
         getSingleServiceResource(id).then((res) => {
+
             setServiceResource(res?.data);
             setValue("name", res?.data?.name);
             setValue("sub_title", res?.data?.sub_title);
             setValue("description", res?.data?.description);
-            setValue("type", res?.data?.type);
+            // setValue("type", JSON.parse(res?.data?.type));
             setValue("production_status", res?.data?.production_status);
             setValue("component", res?.data?.component);
             // setValue("distribution", res?.data?.distribution);
@@ -100,12 +184,26 @@ const UpdateServiceResource = ({ id }) => {
             setValue("free", JSON.parse(res?.data?.paid_status)?.free);
             setValue("pro", JSON.parse(res?.data?.paid_status)?.pro);
             setValue("status", res?.data?.status);
+            setValue("description_title", res?.data?.description_title);
+
+            setType(JSON.parse(res?.data?.type));
 
             setPaidStatus(JSON.parse(res?.data?.paid_status));
         }).catch((error) => {
             console.log(error);
         });
     }, []);
+
+
+    const handleToggleType = (value) => {
+        if (type.includes(value)) {
+          setType((prev) => prev.filter((item) => item !== value));
+        } else {
+          setType((prev) => [...prev, value]);
+        }
+      };
+
+    // console.log('service status: ',type);
 
     return (
         <>
@@ -118,7 +216,7 @@ const UpdateServiceResource = ({ id }) => {
                                     htmlFor="ServiceName"
                                     className="after:content-['_*'] after:text-red-500"
                                 >
-                                    Resoource Name
+                                    Service Name
                                 </label>
                             </legend>
                             <input
@@ -137,7 +235,7 @@ const UpdateServiceResource = ({ id }) => {
                                     },
                                 })}
                                 type="text"
-                                placeholder="Resoource Name"
+                                placeholder="Service Name"
                                 className="outline-none p-2"
                             />
                         </fieldset>
@@ -147,6 +245,7 @@ const UpdateServiceResource = ({ id }) => {
                             </p>
                         )}
                     </div>
+                    
                     <div>
                         <fieldset className="flex flex-col border rounded-md px-2">
                             <legend>
@@ -154,7 +253,7 @@ const UpdateServiceResource = ({ id }) => {
                                     htmlFor="ServiceName"
                                     className="after:content-['_*'] after:text-red-500"
                                 >
-                                    Resoource Sub Title
+                                    Resource Sub Title
                                 </label>
                             </legend>
                             <input
@@ -171,13 +270,48 @@ const UpdateServiceResource = ({ id }) => {
                                 })}
                                 id="sub_tile"
                                 type="text"
-                                placeholder="Resoource Sub Title"
+                                placeholder="Resource Sub Title"
                                 className="outline-none p-2"
                             />
                         </fieldset>
                         {errors.sub_title && (
                             <p className="text-red-500 text-12 px-2 pt-1">
                                 {errors.sub_title.message}
+                            </p>
+                        )}
+                    </div>
+
+                    <div>
+                        <fieldset className="flex flex-col border rounded-md px-2">
+                            <legend>
+                                <label
+                                    htmlFor="ServiceName"
+                                    className="after:content-['_*'] after:text-red-500"
+                                >
+                                    Description Title
+                                </label>
+                            </legend>
+                            <input
+                                {...register("description_title", {
+                                    required: "Description Title is required",
+                                    validate: {
+                                        maxWords: (value) => {
+                                            const wordCount = value.trim().split(/\s+/).length;
+                                            return (
+                                                wordCount <= 10 || "Description cannot exceed 10 words"
+                                            );
+                                        },
+                                    },
+                                })}
+                                id="description_title"
+                                type="text"
+                                placeholder="Description Title"
+                                className="outline-none p-2"
+                            />
+                        </fieldset>
+                        {errors.description_title && (
+                            <p className="text-red-500 text-12 px-2 pt-1">
+                                {errors.description_title.message}
                             </p>
                         )}
                     </div>
@@ -232,37 +366,36 @@ const UpdateServiceResource = ({ id }) => {
                     </div>
 
                     <div>
-                        <fieldset className="flex flex-col border rounded-md px-2">
+                        <fieldset className="flex flex-col border rounded-md p-2">
                             <legend>
-                                <label
-                                    htmlFor="ServiceName"
-                                    className="after:content-['_*'] after:text-red-500"
-                                >
-                                    Type
-                                </label>
+                                <label className="after:content-['_*'] after:text-red-500">Type</label>
                             </legend>
 
-                            <select
-                                {...register("type", {
-                                    required: "Type is required",
-                                })}
-                                className="outline-none p-2 bg-white"
-                            >
-                                <option selected={serviceResource?.type == 'Application'} value="Application">Application</option>
-                                <option selected={serviceResource?.type == 'Plugin'} value="Plugin">Plugin</option>
-                                <option selected={serviceResource?.type == 'Mobile Apps'} value="Mobile Apps">Mobile Apps</option>
-                                <option selected={serviceResource?.type == 'Datasets'} value="Datasets">Data Sets</option>
-                                <option selected={serviceResource?.type == 'Tools'} value="Tools">Tools</option>
-                                <option selected={serviceResource?.type == 'Papers'} value="Papers">Papers</option>
-                                <option selected={serviceResource?.type == 'Font'} value="Font">Font</option>
-                            </select>
+                            <div className="flex flex-wrap gap-2">
+                                {allTypes.map((item, index) => (
+                                    <button
+                                        key={index}
+                                        className={`px-4 py-1 rounded cursor-pointer ${type.includes(item)
+                                            ? "bg-green-600 text-white hover:bg-green-700 flex items-center gap-2"
+                                            : "bg-blue-600 text-white hover:bg-blue-700"
+                                            }`}
+                                        onClick={(e) => {
+                                            e.preventDefault();
+                                            handleToggleType(item);
+                                        }}
+                                    >
+                                        {item}
+                                        {
+                                            type.includes(item) && (
+                                                <FaCheckCircle />
+                                            )
+                                        }
+                                    </button>
+                                ))}
+                            </div>
                         </fieldset>
-                        {errors.type && (
-                            <p className="text-red-500 text-12 px-2 pt-1">
-                                {errors.type.message}
-                            </p>
-                        )}
                     </div>
+
 
                     <div>
                         <fieldset className="flex flex-col border rounded-md px-2">
@@ -367,6 +500,7 @@ const UpdateServiceResource = ({ id }) => {
                             </p>
                         )}
                     </div>
+
                     <div>
                         <fieldset className="flex flex-col border rounded-md px-2">
                             <legend>
@@ -558,7 +692,7 @@ const UpdateServiceResource = ({ id }) => {
                             </div>
                         </>
                     )}
-                    <div>
+                    {/* <div>
                         <fieldset className="flex flex-col border rounded-md px-2">
                             <legend>
                                 <label
@@ -571,11 +705,10 @@ const UpdateServiceResource = ({ id }) => {
 
                             <select
                                 {...register("status")}
-                                onChange={(e) => setStatus(e.target.value)}
                                 className="outline-none p-2 bg-white"
                             >
-                                <option selected={serviceResource?.status == "1"} value="1">Publish</option>
-                                <option selected={serviceResource?.status == "0"} value="0">UnPublish</option>
+                                <option selected={getValues("status") == "1"} value="1">Publish</option>
+                                <option selected={getValues("status") == "0"} value="0">UnPublish</option>
                             </select>
                         </fieldset>
                         {errors.status && (
@@ -583,7 +716,7 @@ const UpdateServiceResource = ({ id }) => {
                                 {errors.status.message}
                             </p>
                         )}
-                    </div>
+                    </div> */}
                     <div className="flex justify-between pt-5">
                         <p className="text-14">
                             <span className="text-red-500">*</span> Required

@@ -1,6 +1,6 @@
 "use client";
 import { getAllActivityLogsApi } from "@/app/(portal)/_api";
-import Pagination from "@/app/_components/Pagination/Pagination";
+// import Pagination from "@/app/_components/Pagination/Pagination";
 import TableSkeleton from "@/app/_components/TableSkeleton/TableSkeleton";
 import { TActivityLog } from "@/types/ActivityLog";
 import { PaginationTotalPage } from "@/utilis/PageNumberArr";
@@ -192,7 +192,7 @@ const Home = (): JSX.Element => {
               )}
             </div>
           </div> */}
-          <Pagination page={page} setPage={setPage} pageNumberArr={totalPaginationCalculate.pageNumberArr} totalNumberOfPage={totalPaginationCalculate.totalNumberOfPage} />
+          {/* <Pagination page={page} setPage={setPage} pageNumberArr={totalPaginationCalculate.pageNumberArr} totalNumberOfPage={totalPaginationCalculate.totalNumberOfPage} /> */}
         </div>
       </div>
     </section>

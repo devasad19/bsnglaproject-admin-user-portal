@@ -1,9 +1,335 @@
+
 import axios from "axios";
 import Cookies from "js-cookie";
 
-
 const token = Cookies.get("token");
 
+export const getDashboardStats = async () => {
+  try {
+    const data = await axios
+      .get(`${process.env.NEXT_PUBLIC_API_URL}/admin/dashboard/feature-count`)
+      .then((res) => {
+        return res?.data?.data;
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+    return data;
+  } catch (error) {
+    console.log(error);
+    return error;
+  }
+};
+
+export const updatePortalMenu = async (payload) => {
+  try {
+    const data = await axios
+      .post(`${process.env.NEXT_PUBLIC_API_URL}/update/menu-item`, payload)
+      .then((res) => {
+        return res?.data;
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+    return data;
+  } catch (error) {
+    console.log(error);
+    return error;
+  }
+};
+
+export const getSingleMenu = async (id) => {
+  try {
+    const data = await axios
+      .get(`${process.env.NEXT_PUBLIC_API_URL}/signle/portal/menu/${id}`)
+      .then((res) => {
+        return res?.data;
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+    return data;
+  } catch (error) {
+    console.log(error);
+    return error;
+  }
+};
+
+export const getPortalMenu = async () => {
+  try {
+    const data = await axios
+      .get(`${process.env.NEXT_PUBLIC_API_URL}/portal/menus`)
+      .then((res) => {
+        return res?.data?.data;
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+    return data;
+  } catch (error) {
+    console.log(error);
+    return error;
+  }
+};
+
+export const getUserTypes = async () => {
+  try {
+    const data = await axios
+      .get(`${process.env.NEXT_PUBLIC_API_URL}/get-user-types`)
+      .then((res) => {
+        return res?.data?.data;
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+    return data;
+  } catch (error) {
+    console.log(error);
+    return error;
+  }
+};
+
+export const deletePortalMenu = async (id) => {
+  try {
+    const data = await axios
+      .delete(`${process.env.NEXT_PUBLIC_API_URL}/portal/menu/delete/${id}`)
+      .then((res) => {
+        return res?.data;
+      })
+      .catch((err) => {
+        console.log(err);
+        return err;
+      });
+    return data;
+  } catch (error) {
+    console.log(error);
+    return error;
+  }
+};
+
+export const createPortalMenu = async (payload) => {
+  try {
+    const data = await axios
+      .post(`${process.env.NEXT_PUBLIC_API_URL}/store/portal/menu`, payload)
+      .then((res) => {
+        return res?.data;
+      })
+      .catch((err) => {
+        console.log(err);
+        return err;
+      });
+    return data;
+  } catch (error) {
+    console.log(error);
+    return error;
+  }
+};
+
+export const updateHeroRight = async (payload) => {
+  try {
+    const data = await axios
+      .post(
+        `${process.env.NEXT_PUBLIC_API_URL}/store/slider-right-content/1`,
+        payload
+      )
+      .then((res) => {
+        return res?.data;
+      })
+      .catch((err) => {
+        console.log(err);
+        return err;
+      });
+    return data;
+  } catch (error) {
+    console.log(error);
+    return error;
+  }
+};
+
+export const getHeroRightData = async () => {
+  try {
+    const data = await axios
+      .get(`${process.env.NEXT_PUBLIC_API_URL}/get/slider-right-content`)
+      .then((res) => {
+        return res?.data?.data;
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+    return data;
+  } catch (error) {
+    console.log(error);
+    return error;
+  }
+};
+
+export const updateFooterRight = async (payload) => {
+  try {
+    const data = await axios
+      .post(
+        `${process.env.NEXT_PUBLIC_API_URL}/store/footer/right-content`,
+        payload
+      )
+      .then((res) => {
+        return res?.data;
+      })
+      .catch((err) => {
+        console.log(err);
+        return err;
+      });
+    return data;
+  } catch (error) {
+    console.log(error);
+    return error;
+  }
+};
+
+export const getFooterRightData = async () => {
+  try {
+    const data = await axios
+      .get(`${process.env.NEXT_PUBLIC_API_URL}/footer/single/right-content`)
+      .then((res) => {
+        return res?.data?.data;
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+    return data;
+  } catch (error) {
+    console.log(error);
+    return error;
+  }
+};
+
+export const updateFooterMiddle = async (id, payload) => {
+  try {
+    const data = await axios
+      .post(
+        `${process.env.NEXT_PUBLIC_API_URL}/update/footer/middle-content`,
+        payload
+      )
+      .then((res) => {
+        return res?.data;
+      })
+      .catch((err) => {
+        console.log(err);
+        return err;
+      });
+    return data;
+  } catch (error) {
+    console.log(error);
+    return error;
+  }
+};
+
+export const getFooterMiddleData = async () => {
+  try {
+    const data = await axios
+      .get(`${process.env.NEXT_PUBLIC_API_URL}/footer/middle-content`)
+      .then((res) => {
+        return res?.data?.data;
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+    return data;
+  } catch (error) {
+    console.log(error);
+    return error;
+  }
+};
+
+export const upDateFooterLeft = async (payload) => {
+  try {
+    const data = await axios
+      .post(
+        `${process.env.NEXT_PUBLIC_API_URL}/footer/left/update/data`,
+        payload
+      )
+      .then((res) => {
+        return res?.data;
+      })
+      .catch((err) => {
+        console.log(err);
+        return err;
+      });
+    return data;
+  } catch (error) {
+    console.log(error);
+    return error;
+  }
+};
+
+export const getFooterLeftData = async () => {
+  try {
+    const data = await axios
+      .get(`${process.env.NEXT_PUBLIC_API_URL}/footer/left-content`)
+      .then((res) => {
+        return res?.data?.data;
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+    return data;
+  } catch (error) {
+    console.log(error);
+    return error;
+  }
+};
+
+export const updateSlider = async (id, payload) => {
+  console.log("before hitting api: ", payload, id);
+  try {
+    const data = await axios
+      .post(`${process.env.NEXT_PUBLIC_API_URL}/update/slider/${id}`, payload)
+      .then((res) => {
+        return res?.data;
+      })
+      .catch((err) => {
+        console.log(err);
+        return err;
+      });
+    return data;
+  } catch (error) {
+    console.log(error);
+    return error;
+  }
+};
+
+export const getSingleSlider = async (id) => {
+  try {
+    const data = await axios
+      .get(`${process.env.NEXT_PUBLIC_API_URL}/slider/${id}`)
+      .then((res) => {
+        return res?.data;
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+    return data;
+  } catch (error) {
+    console.log(error);
+    return error;
+  }
+};
+
+export const DeleteSlider = async (id) => {
+  try {
+    const data = await axios
+      .get(`${process.env.NEXT_PUBLIC_API_URL}/slider/delete/${id}`)
+      .then((res) => {
+        return res?.data;
+      })
+      .catch((err) => {
+        console.log(err);
+        return err;
+      });
+    return data;
+  } catch (error) {
+    console.log(error);
+    return error;
+  }
+};
 
 export const getAdminPurchaseServiceDetails = async (id) => {
   try {
@@ -11,7 +337,8 @@ export const getAdminPurchaseServiceDetails = async (id) => {
       .get(`${process.env.NEXT_PUBLIC_API_URL}/admin/get-service-orders/${id}`)
       .then((res) => {
         return res?.data;
-      }).catch((err) => {
+      })
+      .catch((err) => {
         console.log(err);
         return err;
       });
@@ -22,15 +349,15 @@ export const getAdminPurchaseServiceDetails = async (id) => {
   }
 };
 
-
-
+//get all citizenList
 export const getCitizenList = async () => {
   try {
     const data = await axios
       .get(`${process.env.NEXT_PUBLIC_API_URL}/citizen/users`)
       .then((res) => {
         return res?.data;
-      }).catch((err) => {
+      })
+      .catch((err) => {
         console.log(err);
         return err;
       });
@@ -40,6 +367,47 @@ export const getCitizenList = async () => {
     return error;
   }
 };
+
+// get single citizen user by citizen type in not null 
+export const getSingleCitizenUserNotNull = async(id)=>{
+  try {
+    const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/citizen/user/${id}`);
+    return response?.data;
+  } catch (error) {
+    return error;
+  }
+}
+
+export const updateCitizenUserStatus = async (payload)=>{
+  try {
+    const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/admin/update/citizen-info`,payload);
+    return response?.data;
+  } catch (error) {
+    return error;
+  }
+}
+
+
+export const getSingleCitizen = async (id)=>{
+  try {
+    const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/user/details/${id}`);
+    return response?.data;
+  } catch (error) {
+    return error;
+  }
+} 
+
+
+// get single citizen list 
+export const getSingleCitizenList = async (id)=>{
+  try {
+    const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/user/details/${id}`);
+    return response?.data;
+  } catch (error) {
+    return error;
+  }
+} 
+
 
 
 export const updateServiceBanglaResource = async (payload, id) => {
@@ -51,7 +419,8 @@ export const updateServiceBanglaResource = async (payload, id) => {
       )
       .then((res) => {
         return res?.data;
-      }).catch((err) => {
+      })
+      .catch((err) => {
         console.log(err);
         return err;
       });
@@ -68,7 +437,8 @@ export const getServiceBanglaResource = async (id) => {
       .get(`${process.env.NEXT_PUBLIC_API_URL}/bn-service-resource/${id}`)
       .then((res) => {
         return res?.data;
-      }).catch((err) => {
+      })
+      .catch((err) => {
         console.log(err);
         return err;
       });
@@ -85,7 +455,8 @@ export const getSingleServiceDetailsResource = async (id) => {
       .get(`${process.env.NEXT_PUBLIC_API_URL}/service-details/${id}`)
       .then((res) => {
         return res?.data;
-      }).catch((err) => {
+      })
+      .catch((err) => {
         console.log(err);
         return err;
       });
@@ -93,19 +464,16 @@ export const getSingleServiceDetailsResource = async (id) => {
   } catch (error) {
     console.log(error);
     return error;
-  }  
+  }
 };
-
 
 export const updateServiceResource = async (payload, id) => {
   const res = await axios
-    .post(
-      `${process.env.NEXT_PUBLIC_API_URL}/service/${id}`,
-      payload
-    )
+    .post(`${process.env.NEXT_PUBLIC_API_URL}/service/${id}`, payload)
     .then((res) => {
       return res?.data;
-    }).catch((err) => {
+    })
+    .catch((err) => {
       console.log(err);
       return err;
     });
@@ -113,8 +481,8 @@ export const updateServiceResource = async (payload, id) => {
 };
 
 export const updateSingleServiceResource = async (payload, id) => {
-  console.log('before hitting api: ',payload, id);
-  try{
+  console.log("before hitting api: ", payload, id);
+  try {
     const res = await axios
       .post(
         `${process.env.NEXT_PUBLIC_API_URL}/update/service-details-resource/${id}`,
@@ -122,12 +490,13 @@ export const updateSingleServiceResource = async (payload, id) => {
       )
       .then((res) => {
         return res?.data;
-      }).catch((err) => {
+      })
+      .catch((err) => {
         console.log(err);
         return err;
       });
     return res;
-  } catch(err){
+  } catch (err) {
     console.log(err);
   }
 };
@@ -138,7 +507,8 @@ export const getSingleServiceResource = async (id) => {
       .get(`${process.env.NEXT_PUBLIC_API_URL}/service/${id}`)
       .then((res) => {
         return res?.data;
-      }).catch((err) => {
+      })
+      .catch((err) => {
         console.log(err);
         return err;
       });
@@ -149,13 +519,14 @@ export const getSingleServiceResource = async (id) => {
   }
 };
 
-export const getUserFeedBacks = async () => {
+export const getAdminFeedBacks = async () => {
   try {
     const data = await axios
       .get(`${process.env.NEXT_PUBLIC_API_URL}/admin/feedbacks`)
       .then((res) => {
         return res?.data;
-      }).catch((err) => {
+      })
+      .catch((err) => {
         console.log(err);
         return err;
       });
@@ -166,6 +537,23 @@ export const getUserFeedBacks = async () => {
   }
 };
 
+export const getUserFeedBacks = async (id) => {
+  try {
+    const data = await axios
+      .get(`${process.env.NEXT_PUBLIC_API_URL}/user/feedbacks/${id}`)
+      .then((res) => {
+        return res?.data;
+      })
+      .catch((err) => {
+        console.log(err);
+        return err;
+      });
+    return data;
+  } catch (error) {
+    console.log(error);
+    return error;
+  }
+};
 
 export const getSoldServices = async () => {
   try {
@@ -173,7 +561,8 @@ export const getSoldServices = async () => {
       .get(`${process.env.NEXT_PUBLIC_API_URL}/admin/services`)
       .then((res) => {
         return res?.data;
-      }).catch((err) => {
+      })
+      .catch((err) => {
         console.log(err);
         return err;
       });
@@ -184,14 +573,14 @@ export const getSoldServices = async () => {
   }
 };
 
-
-export const deleteService = async (id) => {
+export const getActiveServices = async () => {
   try {
     const data = await axios
-      .delete(`${process.env.NEXT_PUBLIC_API_URL}/service-all/delete/${id}`)
+      .get(`${process.env.NEXT_PUBLIC_API_URL}/active/services`)
       .then((res) => {
-        return res;
-      }).catch((err) => {
+        return res?.data;
+      })
+      .catch((err) => {
         console.log(err);
         return err;
       });
@@ -199,5 +588,35 @@ export const deleteService = async (id) => {
   } catch (error) {
     console.log(error);
     return error;
+  }
+};
+
+export const deleteService = async (id) => {
+  try {
+    const data = await axios
+      .delete(`${process.env.NEXT_PUBLIC_API_URL}/service-all/delete/${id}`)
+      .then((res) => {
+        return res;
+      })
+      .catch((err) => {
+        console.log(err);
+        return err;
+      });
+    return data;
+  } catch (error) {
+    console.log(error);
+    return error;
+  }
+};
+
+//update citizen type in user
+export const updateCitizenTypes = async (payload) => {
+  try {
+    const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/update/citizen/admin`,payload);
+    return response?.data;
+  } catch (error) {
+    console.log(error);
+    return error;
+    // return new throw Error(error);
   }
 };

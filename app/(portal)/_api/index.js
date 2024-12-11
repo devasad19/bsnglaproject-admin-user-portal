@@ -1,9 +1,7 @@
-
 import axios from "axios";
 import Cookies from "js-cookie";
 
-
-const  token = Cookies.get("token");
+const token = Cookies.get("token");
 
 /* ...............service api start here...................*/
 
@@ -97,7 +95,6 @@ export const getMenuLinks = async () => {
   return menuLinks?.links;
 };
 
-
 /* ...............feature api end here...................*/
 
 //1. upload feature  data api feature Create
@@ -155,9 +152,24 @@ export const updateFeatureDataById = async (id, updateData) => {
   }
 };
 
+// 5. fetch all features names
+
+export const allFeaturesName = async () => {
+  try {
+    const features = await axios.get(
+      `${process.env.NEXT_PUBLIC_API_URL}/features/names`
+    );
+    // console.log("features:", features.data);
+    
+    return features.data;
+  } catch (error) {
+    console.log(error);
+    return error;
+  }
+};
 
 // order post api
-export const orderServiceApi = async (orderInfo)=>{
+export const orderServiceApi = async (orderInfo) => {
   try {
     const order = await axios.post(
       `${process.env.NEXT_PUBLIC_API_URL}/order/save`,
@@ -168,11 +180,11 @@ export const orderServiceApi = async (orderInfo)=>{
     console.log(error);
     return error;
   }
-}
+};
 
 // billing address post api
 
-export const billingAddressPostApi = async (billingAddressInfo)=>{
+export const billingAddressPostApi = async (billingAddressInfo) => {
   try {
     const billingAddress = await axios.post(
       `${process.env.NEXT_PUBLIC_API_URL}/order/billing-address/save`,
@@ -183,113 +195,126 @@ export const billingAddressPostApi = async (billingAddressInfo)=>{
     console.log(error);
     return error;
   }
-}
+};
 
 // payment post api
-export const paymentPostApi = async (paymentInfo)=>{
+export const paymentPostApi = async (paymentInfo) => {
   try {
-    const paymentRes = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/order/payment/save`,paymentInfo);
+    const paymentRes = await axios.post(
+      `${process.env.NEXT_PUBLIC_API_URL}/order/payment/save`,
+      paymentInfo
+    );
     return paymentRes.data;
   } catch (error) {
     console.log(error);
     return error;
   }
-}
+};
 
 // get all payment api
-export const getAllPaymentAPi = async (page,limit)=>{
+export const getAllPaymentAPi = async (page, limit) => {
   try {
-    const paymentRes = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/all/payments?page=${page}&limit=${limit}`);
+    const paymentRes = await axios.get(
+      `${process.env.NEXT_PUBLIC_API_URL}/all/payments?page=${page}&limit=${limit}`
+    );
     return paymentRes.data;
   } catch (error) {
     console.log(error);
     return error;
   }
-}
+};
 
-// get all orders api 
-export const getAllOrdersApi = async () =>{
+// get all orders api
+export const getAllOrdersApi = async () => {
   try {
-    const orders = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/all/orders`);
+    const orders = await axios.get(
+      `${process.env.NEXT_PUBLIC_API_URL}/all/orders`
+    );
     // console.log("order Api:",orders);
-    
+
     return orders.data;
   } catch (error) {
     console.log(error);
     return error;
   }
-}
+};
 
 //get single order api
-export const getSingleOrderByIdApi = async (id) =>{
+export const getSingleOrderByIdApi = async (id) => {
   try {
-    const singleOrder = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/order/${id}`);
+    const singleOrder = await axios.get(
+      `${process.env.NEXT_PUBLIC_API_URL}/order/${id}`
+    );
     return singleOrder.data;
-    
   } catch (error) {
     console.log(error);
     return error;
   }
-}
-
+};
 
 // get single order by service id
-export const getSingleOrderByServiceId = async (serviceId) =>{
-  try{
-    const singleOrderByserviceId = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/order/by-service-id/${serviceId}`);
+export const getSingleOrderByServiceId = async (serviceId) => {
+  try {
+    const singleOrderByserviceId = await axios.get(
+      `${process.env.NEXT_PUBLIC_API_URL}/order/by-service-id/${serviceId}`
+    );
     return singleOrderByserviceId.data;
-  }
-  catch(error){
+  } catch (error) {
     console.log(error);
     return error;
   }
-}
+};
 
+/* user management section all api is here */
 
+//  1.create user api
 
-   /* user management section all api is here */
+// export const createUserApi = async (userData) => {
+//   try {
+//     const user = await axios.post(
+//       `${process.env.NEXT_PUBLIC_API_URL}/user/create`,
+//       userData,
+//       {
+//         headers: {
+//           Authorization: `Bearer ${token}`,
+//         },
+//       }
+//     );
+//     return user.data;
+//   } catch (error) {
+//     console.log(error);
+//     return error;
+//   }
+// };
 
-  //  1.create user api
+// 2. get all users api
 
-  export const createUserApi = async (userData)=>{
-    try {
-      const user = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/user/create`,userData,{
-        headers: {
-          'Authorization': `Bearer ${token}`
-        }
-      });
-      return user.data;
-    } catch (error) {
-      console.log(error);
-      return error;
-    }
+export const getAllUsersApi = async () => {
+  try {
+    const users = await axios.get(
+      `${process.env.NEXT_PUBLIC_API_URL}/system/users`
+    );
+    return users.data;
+  } catch (error) {
+    console.log(error);
+    return error;
   }
+};
 
+/** ...................activity Logs api here start...............**** */
 
-  // 2. get all users api
+// 1.get all activity logs api with pagination and other functionality
 
-  export const getAllUsersApi = async ()=>{
-    try {
-      const users = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/system/users`);
-      return users.data;
-    } catch (error) {
-      console.log(error);
-      return error;
-    }
+export const getAllActivityLogsApi = async (page, limit) => {
+  try {
+    const activityLogs = await axios.get(
+      `${process.env.NEXT_PUBLIC_API_URL}/activity-logs/all?page=${page}&limit=${limit}`
+    );
+    return activityLogs.data;
+  } catch (error) {
+    console.log(error);
+    return error;
   }
+};
 
-
-
-  /** ...................activity Logs api here start...............**** */
-
-  // 1.get all activity logs api with pagination and other functionality
-
-  export const getAllActivityLogsApi = async (page,limit)=>{
-    try {
-      const activityLogs = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/activity-logs/all?page=${page}&limit=${limit}`);
-      return activityLogs.data;
-    } catch (error) {
-      console.log(error);
-      return error;
-    }
-  }
+/**  */

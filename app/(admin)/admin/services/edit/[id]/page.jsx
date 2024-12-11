@@ -1,79 +1,89 @@
-'use client';
-import { useState } from "react";
-import UpdateServiceResource from '../../../../component/service/UpdateServiceResource/UpdateServiceResource';
-import UpdateBanglaResource from '../../../../component/service/UpdateBanglaResource/UpdateBanglaResource';
-import UpdateServiceDetailsResource from '../../../../component/service/UpdateServiceDetailsResource/UpdateServiceDetailsResource';
+export const revalidate = 60;
 
-const Home = ({params: {id}}) => {
-  const [tab, setTab] = useState(0);
+import dynamic from 'next/dynamic';
+const ServiceEditContainer = dynamic(() => import('../../../../component/ServiceEditContainer/ServiceEditContainer'), { ssr: false });
+// import ServiceEditContainer from '../../../../component/ServiceEditContainer/ServiceEditContainer';
+import { getSingleServiceDetailsResource, updateSingleServiceResource } from "@/app/(admin)/_api";
+const Home = async ({ params: { id } }) => {
+
+  const response2 = await getSingleServiceDetailsResource(id).catch((err) => console.log(err));
+
+  // console.log('service response: ',response2);
+
+  const secondTab = {
+    description: response2?.data?.details?.broad_description,
+    mediaImages: response2?.data?.details?.media_images ? JSON.parse(response2?.data?.details?.media_images) : [],
+    distribution: response2?.data?.details?.distribution_items ? JSON.parse(response2?.data?.details?.distribution_items) : [
+      {
+        label: "",
+        icon: "",
+      }
+    ],
+    domain_name: response2?.data?.details?.domain_name ?? '',
+    domain_link: response2?.data?.details?.domain_link ?? '',
+    user_doc: {
+      label: response2?.data?.details?.user_doc_label ?? '',
+      icon: response2?.data?.details?.user_doc_icon ?? '',
+      short_description: response2?.data?.details?.user_desc ?? '',
+      external_links: response2?.data?.details?.user_external_links ? JSON.parse(response2?.data?.details?.user_external_links) : [
+        {
+          label: "",
+          link: ""
+        }
+      ],
+      video: {
+        link: response2?.data?.details?.user_youtube_link ?? '',
+        thumbnail: response2?.data?.details?.user_youtube_thumbnail ?? '',
+        title: response2?.data?.details?.youtube_video_title ?? ''
+      },
+      module_file: response2?.data?.details?.user_modules ? JSON.parse(response2?.data?.details?.user_modules) : [
+        {
+          label: "",
+          module: "",
+          download: 0
+        }
+      ]
+    },
+    promotion: {
+      title: response2?.data?.details?.promotion_title ?? '',
+      title_bg: response2?.data?.details?.prom_title_bg ?? '',
+      left_side: {
+        label: response2?.data?.details?.prom_left_label ?? '',
+        image: response2?.data?.details?.prom_left_icon ?? '',
+      },
+      right_side: {
+        label: response2?.data?.details?.prom_right_label ?? '',
+        image: response2?.data?.details?.prom_right_icon ?? '',
+      },
+      area_bg: response2?.data?.details?.prom_area_bg ?? '',
+    },
+    infoSection: response2?.data?.details?.featurs_and_usages ? JSON.parse(response2?.data?.details?.featurs_and_usages) : [
+      {
+        bg_color: '',
+        left_description: '',
+        right_description: '',
+        right_img: '',
+      }
+    ],
+    fourCol: response2?.data?.details?.distribution_card_items ? JSON.parse(response2?.data?.details?.distribution_card_items) : [
+      {
+        item_bg: '',
+        icon: '',
+        title: '',
+        version: '',
+        release_date: '',
+        btn_label: '',
+        btn_bg: '',
+        brows_type: '',
+        brows_file: '',
+        brows_link: '',
+      }
+    ],
+
+  }
 
   return (
-    <section className="pb-10">
-      <div>
-        <h1 className="text-32 font-mono font-bold text-[#151D48] pb-5">
-          Edit Service
-        </h1>
-      </div>
-      <div className="flex justify-center w-full">
-          <div className="bg-white p-4 w-full lg:w-[80%] overflow-hidden rounded">
-            <div className="flex flex-col gap-3">
-              <h1 className="text-20 font-mono font-bold text-[#151D48]">
-                Service Details
-              </h1>
-
-              <div>
-                <div className="grid  grid-cols-1 lg:grid-cols-3 gap-2 pb-5">
-                  <button
-                    type="button"
-                    onClick={() => setTab(0)}
-                    className={`text-white px-4 py-2 rounded ${
-                      tab == 0 ? "bg-primary" : "bg-primary/50"
-                    }`}
-                  >
-                    Service Resource
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => setTab(1)}
-                    className={`text-white px-4 py-2 rounded ${
-                      tab == 1 ? "bg-primary" : "bg-primary/50"
-                    }`}
-                  >
-                    Service Details Resource
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => setTab(2)}
-                    className={`text-white px-4 py-2 rounded ${
-                      tab == 2 ? "bg-primary" : "bg-primary/50"
-                    }`}
-                  >
-                    Bangla Resource
-                  </button>
-                </div>
-
-                <div className="flex flex-col gap-4">
-                  {tab == 0 && (
-                    <>
-                      <UpdateServiceResource id={id} />
-                    </>
-                  )}
-                  {tab == 1 && (
-                    <>
-                      <UpdateServiceDetailsResource id={id} />
-                    </>
-                  )}
-                  {tab == 2 && (
-                    <>
-                      <UpdateBanglaResource id={id} />
-                    </>
-                  )}
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-    </section>
+    <ServiceEditContainer id={id} secondTab={secondTab} />
   );
 };
 export default Home;

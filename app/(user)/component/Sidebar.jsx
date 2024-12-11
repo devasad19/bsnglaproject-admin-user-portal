@@ -1,5 +1,5 @@
 "use client";
-import { useContext, useState } from "react";
+import { useContext, useState, useEffect } from "react";
 import Image from "next/image";
 import { relative_image_path } from "@/helper";
 import Link from "next/link";
@@ -7,9 +7,27 @@ import Accordion from "@/app/_components/Accordion/Accordion";
 import { usePathname } from "next/navigation";
 import { MyContext } from "@/ContextProvider/ContextProvider";
 const Sidebar = () => {
-  const { user } = useContext(MyContext);
   const pathname = usePathname();
+  const [user, setUser] = useState(null);
   const [isOpen, setIsOpen] = useState(true);
+
+
+  useEffect(() => {
+    const userCookie = document.cookie.split(';').find(c => c.trim().startsWith('user='));
+    if (userCookie != undefined) {
+      setUser(JSON.parse(decodeURIComponent(userCookie.split('=')[1])));
+    }
+  }, []);
+
+
+  const HandleLogout = () => {
+    document.cookie = "token=; path=/; domain=localhost; expires=Thu, 01 Jan 1970 00:00:00 UTC;";
+    document.cookie = "user=; path=/; domain=localhost; expires=Thu, 01 Jan 1970 00:00:00 UTC;";
+    // window.location.href='http://localhost:3000/signin';
+    window.location.href=process.env.NEXT_PUBLIC_PORTAL_URL+'/signin';
+  }
+
+  // console.log('user cookie: ',process.env.NEXT_PUBLIC_PORTAL_URL);
   return (
     <>
       <div className="min-h-screen flex flex-col justify-between">
@@ -191,8 +209,8 @@ const Sidebar = () => {
                     icon={
                       <svg
                         className={`w-5 h-5 fill-current ${pathname.includes("accounts-settings")
-                            ? "text-white"
-                            : "text-primary"
+                          ? "text-white"
+                          : "text-primary"
                           }`}
                         xmlns="http://www.w3.org/2000/svg"
                         viewBox="0 0 640 512"
@@ -207,7 +225,7 @@ const Sidebar = () => {
                           pathname: "/user/accounts-settings/purchase-services",
                         }}
                         shallow
-                        className={`text-14 hover:bg-green-500 hover:text-white p-2 rounded ${ pathname.includes("purchase-services")
+                        className={`text-14 hover:bg-green-500 hover:text-white p-2 rounded ${pathname.includes("purchase-services")
                           ? "bg-green-500 text-white"
                           : ""}`}
                       >
@@ -218,7 +236,7 @@ const Sidebar = () => {
                           pathname: "/user/accounts-settings/payment-history",
                         }}
                         shallow
-                        className={`text-14 hover:bg-green-500 hover:text-white p-2 rounded ${ pathname.includes("payment-history")
+                        className={`text-14 hover:bg-green-500 hover:text-white p-2 rounded ${pathname.includes("payment-history")
                           ? "bg-green-500 text-white"
                           : ""}`}
                       >
@@ -240,8 +258,8 @@ const Sidebar = () => {
                     icon={
                       <svg
                         className={`w-5 h-5 fill-current ${pathname.includes("profile-settings")
-                            ? "text-white"
-                            : "text-primary"
+                          ? "text-white"
+                          : "text-primary"
                           }`}
                         xmlns="http://www.w3.org/2000/svg"
                         viewBox="0 0 640 512"
@@ -256,7 +274,7 @@ const Sidebar = () => {
                           pathname: "/user/profile-settings/manage-profile",
                         }}
                         shallow
-                        className={`text-14 hover:bg-green-500 hover:text-white p-2 rounded ${ pathname.includes("manage-profile")
+                        className={`text-14 hover:bg-green-500 hover:text-white p-2 rounded ${pathname.includes("manage-profile")
                           ? "bg-green-500 text-white"
                           : ""}`}
                       >
@@ -267,7 +285,7 @@ const Sidebar = () => {
                           pathname: "/user/profile-settings/change-password",
                         }}
                         shallow
-                        className={`text-14 hover:bg-green-500 hover:text-white p-2 rounded ${ pathname.includes("change-password")
+                        className={`text-14 hover:bg-green-500 hover:text-white p-2 rounded ${pathname.includes("change-password")
                           ? "bg-green-500 text-white"
                           : ""}`}
                       >
@@ -337,18 +355,18 @@ const Sidebar = () => {
             <div className="flex items-center gap-2">
               <Image
                 className="w-10 h-10 rounded-md"
-                src={relative_image_path("dummy_image1.jpg")}
+                src={user?.photo ? process.env.NEXT_PUBLIC_IMAGE_URL + user?.photo : relative_image_path('dummy_image1.jpg')}
                 width={1000}
                 height={1000}
                 alt="Bangla"
               />
               <div>
                 <h3> {user ? user?.name : ""} </h3>
-                <p className="text-12">{user ? user?.role : ""}</p>
+                <p className="text-12">{user ? user?.type : ""}</p>
               </div>
             </div>
           )}
-          <button title="Logout">
+          <button onClick={HandleLogout} title="Logout">
             <svg
               className="w-5 h-5 fill-white"
               xmlns="http://www.w3.org/2000/svg"

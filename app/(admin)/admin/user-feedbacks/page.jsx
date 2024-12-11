@@ -24,26 +24,31 @@ const Home = async () => {
       {
         response ? (
           <div className="w-full overflow-x-auto">
-            <table className="w-full text-left border border-gray-500">
-              <thead className="h-16 bg-blue-300 text-white">
+            <table className="w-full text-left ">
+              <thead className="h-16 ">
                 <tr>
-                  <th className="pl-2 border border-gray-500 w-10">SI</th>
-                  <th className="pl-2 border border-gray-500 w-40">Service Name</th>
-                  <th className="pl-2 border border-gray-500 w-52">Username</th>
-                  <th className="pl-2 border border-gray-500">Comment</th>
-                  <th className="pl-2 border border-gray-500 w-44">Rating</th>
-                  <th className="pl-2 border border-gray-500 w-36">Date</th>
+                  <th className="pl-2 w-10">SL</th>
+                  <th className="pl-2 w-40">Service Name</th>
+                  <th className="pl-2 w-52">User Name</th>
+                  <th className="pl-2">Comment</th>
+                  <th className="pl-2 w-44">Rating</th>
+                  <th className="pl-2 w-36">Date</th>
                 </tr>
               </thead>
               <tbody className="text-14">
-                {
+                { 
+                data?.length === 0? (
+                  <tr>
+                    <td colSpan="6" className=" mt-4 text-center">No Data Found</td>
+                    </tr>
+                ) : (
                   data?.map((item, index) => (
                     <tr key={index} className="border-b border-gray-500 h-12">
-                      <td className="pl-2 border border-gray-500">{index + 1}</td>
-                      <td className="pl-2 border border-gray-500">{item?.service?.name}</td>
-                      <td className="pl-2 border border-gray-500">{item?.user?.name}</td>
-                      <td className="pl-2 border border-gray-500">{item?.msg}</td>
-                      <td className="pl-2 border border-gray-500">
+                      <td className="pl-2">{index + 1}</td>
+                      <td className="pl-2">{item?.service?.name}</td>
+                      <td className="pl-2">{item?.user?.name}</td>
+                      <td className="pl-2">{item?.msg}</td>
+                      <td className="pl-2">
                         <div className="flex items-center gap-2">
                           <div className="flex gap-1">
 
@@ -80,6 +85,7 @@ const Home = async () => {
                       </td>
                     </tr>
                   ))
+                  )
                 }
               </tbody>
             </table>

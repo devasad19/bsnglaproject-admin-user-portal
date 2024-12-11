@@ -5,21 +5,27 @@ import { getUserFeedBacks } from "@/app/(admin)/_api";
 
 const Home = () => {
   const [data, setData] = useState();
+  const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
+ 
+  useEffect(() => {
+    const userCookie = document.cookie.split(';').find(c => c.trim().startsWith('user='));
+    if (userCookie != undefined) {
+      setUser(JSON.parse(decodeURIComponent(userCookie.split('=')[1])));
+    }
+  }, []);
 
 
   useEffect(() => {
-    getUserFeedBacks(12).then((res) => {
+    getUserFeedBacks(user?.id).then((res) => {
       setData(res?.data);
 
       setLoading(false);
     }).catch((error) => {
       console.log(error);
     })
-  }, []);
+  }, [user]);
 
-
-  // console.log('user feedback response: ', data);
 
   return (
     <>

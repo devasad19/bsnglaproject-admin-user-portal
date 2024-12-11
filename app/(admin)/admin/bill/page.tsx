@@ -27,8 +27,7 @@ const Home = (): JSX.Element => {
     };
     loadPayments();
   }, [page, limit]);
-
-  console.log('payments: ',payments);
+ 
   return (
     <section>
       <h3 className="text-32 font-mono font-bold text-[#151D48] pb-5">Bills</h3>
@@ -45,20 +44,21 @@ const Home = (): JSX.Element => {
             <select
               onChange={(e) => setLimit(Number(e.target.value))}
               className="w-20 border border-primary focus:outline-none rounded-md px-2 py-1"
+              defaultValue={limit}
             >
-              <option selected={limit === 5} value="5">
+              <option  value="5">
                 5
               </option>
-              <option selected={limit === 10} value="10">
+              <option  value="10">
                 10
               </option>
-              <option selected={limit === 20} value="20">
+              <option  value="20">
                 20
               </option>
-              <option selected={limit === 40} value="40">
+              <option  value="40">
                 40
               </option>
-              <option selected={limit === 80} value="80">
+              <option  value="80">
                 80
               </option>
             </select>
@@ -67,6 +67,7 @@ const Home = (): JSX.Element => {
         <table className="w-full">
           <thead className="border-b   border-gray-200 rounded  bg-primary text-white  h-10 text-12 lg:text-16">
             <tr>
+              <th className="text-left px-2">SL</th>
               <th className="text-left px-2">Bill Id</th>
               <th className="text-center">Service Name</th>
               <th className="text-center">Amount</th>
@@ -80,6 +81,11 @@ const Home = (): JSX.Element => {
             {payments?.length > 0 ? (
               payments?.map((item: any, index: number) => (
                 <tr key={index}>
+                <td className="px-3">
+                  <span className="border border-gray-300 px-2 py-1 rounded-md">
+                    {index + 1}
+                  </span>
+                </td>
                   <td className="px-2 border-r border-gray-200">
                     <Link
                       href={{

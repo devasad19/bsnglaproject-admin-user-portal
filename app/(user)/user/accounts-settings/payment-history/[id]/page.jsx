@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useRef, useState, useEffect } from "react";
 import Image from "next/image";
 import { relative_image_path } from "@/helper";
 import { usePDF } from "react-to-pdf";
@@ -24,6 +24,28 @@ const Home = ({ params }) => {
   const [loading, setLoading] = useState(true);
 
 
+  const divRef = useRef();
+
+  const handleDownloadPDF = async () => {
+    const div = divRef.current;
+    if (!div) return;
+
+    // Capture the div as a canvas image
+    const canvas = await html2canvas(div);
+    const imgData = canvas.toDataURL('image/png');
+
+    // Generate PDF
+    const pdf = new jsPDF({
+      orientation: 'portrait',
+      unit: 'px',
+      format: [canvas.width, canvas.height],
+    });
+
+    pdf.addImage(imgData, 'PNG', 0, 0, canvas.width, canvas.height);
+    pdf.save('citizen-invoice.pdf');
+  };
+
+
   const PrintInvoice = () => {
     var printContents = document.getElementById("invoice").innerHTML;
     var originalContents = document.body.innerHTML;
@@ -42,51 +64,6 @@ const Home = ({ params }) => {
       setLoading(false);
     }).catch((err) => console.log(err));
   }, []);
-
-
-
-  const HandlePdfDownload = async (elementId) => {
-    const invoiceElement = document.getElementById(elementId);
-
-    if (!invoiceElement) {
-      console.error("Invoice element not found.");
-      return;
-    }
-
-    const doc = new jsPDF();
-
-    doc.html(invoiceElement, {
-      callback: (doc) => {
-        console.log(doc);
-        doc.save("invoice.pdf");
-      },
-    })
-    doc.save("a4.pdf");
-
-    // window.location.reload();
-
-    /* try {
-      
-  
-      
-      const canvas = await html2canvas(invoiceElement);
-      const imageData = canvas.toDataURL("image/png");
-  
-      const pdf = new jsPDF("p", "pt", "a4");
-      const pdfWidth = pdf.internal.pageSize.getWidth();
-      const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
-  
-      pdf.addImage(imageData, "PNG", 0, 0, pdfWidth, pdfHeight);
-      pdf.save("invoice.pdf");
-    } catch (error) {
-      console.error("Error generating PDF:", error);
-    } */
-  };
-
-
-
-
-
 
 
   return (
@@ -109,111 +86,115 @@ const Home = ({ params }) => {
                     Print
                   </button>
                   <button
-                    onClick={() => HandlePdfDownload("invoice")}
+                    // onClick={() => HandlePdfDownload("invoice")}
+                    onClick={handleDownloadPDF}
                     className="bg-blue-500 text-white text-14 lg:text-16 px-2 py-1 lg:px-4 lg:py-2 rounded active:scale-75 transition-all duration-300"
                   >
                     Download
                   </button>
                 </div>
               </div>
-              <div className="flex justify-center items-center text-14">
-                <div
-                  // ref={targetRef}
-                  id="invoice"
-                  className="w-2/3 bg-white p-6 shadow-lg rounded-md"
-                >
-                  <div className="pb-5">
-                    <div className="w-24 flex flex-col items-center gap-1 pb-3">
-                      <Image
-                        src={relative_image_path("logo.png")}
-                        className="h-10"
-                        width={1000}
-                        height={1000}
-                        alt="Bangla"
-                      />
-                      <p className="">Bangla Project</p>
-                    </div>
-                    <div className="grid grid-cols-2 pb-5">
-                      <div className="flex flex-col gap-1 ">
-                        <p>Address: ICT Tower,9th Floor, E-14/X, Sher-E-Bangla nagar, Dhaka-1207</p>
-                        <p>Phone: +88-02-55006880</p>
-                        <p>Email: pdeblict@bcc.net.bd</p>
-                        <p>www.bangla.com</p>
-                      </div>
-                      <div className="flex flex-col gap-1">
-                        <h3 className="text-20 text-red-500 font-bold">Invoice</h3>
-                        <p className="">Invoice No: {data?.invoice_no}</p>
-                        <p className="">Invoice Date: {data?.created_at}</p>
-                      </div>
-                    </div>
-                    <div className="w-full flex flex-col ">
-                      <p>Name: {data?.citizen_name}</p>
-                      <div className="grid grid-cols-2">
-                        <p>Phone: {data?.phone}</p>
-                        <p>Email: {data?.email}</p>
-                      </div>
-                      <p>Address: {data?.address}</p>
-                    </div>
-                  </div>
-                  <div>
-                    <div className="w-full overflow-x-auto pb-5">
-                      <table className="w-full text-center border-collapse">
-                        <thead>
-                          <tr className="border border-gray-500 h-10">
-                            <th className="border border-gray-500">SI</th>
-                            <th className="border border-gray-500">Service</th>
-                            <th className="border border-gray-500">Plan</th>
-                            <th className="border border-gray-500">Price</th>
-                            <th className="border border-gray-500">Quantity</th>
-                            <th className="border border-gray-500">Amount</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          <tr className="h-52">
-                            <td className="border border-gray-500">1</td>
-                            <td className="border border-gray-500">{data?.service_name}</td>
-                            <td className="border border-gray-500">{data?.feature_name}</td>
-                            <td className="border border-gray-500">{plan[0]?.price}</td>
-                            <td className="border border-gray-500">1</td>
-                            <td className="border border-gray-500">{plan[0]?.price}</td>
-                          </tr>
-                          <tr className="border border-gray-500 h-10">
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td className="border border-gray-500">Total</td>
-                            <td>{data?.total}</td>
-                          </tr>
-                        </tbody>
-                      </table>
-                      <div className="border-b border-gray-500 h-10 flex items-center">
-                        <p>Taka in Words: </p>
-                      </div>
-                    </div>
-                    <div className="flex justify-between">
-                      <div>
-                        <p>Terms and Conditions</p>
-                        <ul className="list-disc list-inside">
-                          <li>Lorem ipsum dolor sit amet</li>
-                          <li>Lorem ipsum dolor sit amet</li>
-                          <li>Lorem ipsum dolor sit amet</li>
-                        </ul>
-                      </div>
-                      <div className="pr-4 flex flex-col items-center">
+              <div className="flex justify-center">
+                <div  className="text-14 flex justify-center">
+                  <div
+                    ref={divRef}
+                    id="invoice"
+                    className="w-2/3 bg-white p-6 shadow-lg rounded-md"
+                  >
+                    <div className="pb-5">
+                      <div className="w-24 flex flex-col items-center gap-1 pb-3">
                         <Image
-                          src={relative_image_path("sign.jpg")}
-                          className="w-32 h-20"
+                          src={relative_image_path("logo.png")}
+                          className="h-10"
                           width={1000}
                           height={1000}
                           alt="Bangla"
                         />
-                        <p>Signature</p>
+                        <p className="">Bangla Project</p>
+                      </div>
+                      <div className="grid grid-cols-2 pb-5">
+                        <div className="flex flex-col gap-1 ">
+                          <p>Address: ICT Tower,9th Floor, E-14/X, Sher-E-Bangla nagar, Dhaka-1207</p>
+                          <p>Phone: +88-02-55006880</p>
+                          <p>Email: pdeblict@bcc.net.bd</p>
+                          <p>www.bangla.com</p>
+                        </div>
+                        <div className="flex flex-col gap-1">
+                          <h3 className="text-20 text-red-500 font-bold">Invoice</h3>
+                          <p className="">Invoice No: {data?.invoice_no}</p>
+                          <p className="">Invoice Date: {data?.created_at}</p>
+                        </div>
+                      </div>
+                      <div className="w-full flex flex-col ">
+                        <p>Name: {data?.citizen_name}</p>
+                        <div className="grid grid-cols-2">
+                          <p>Phone: {data?.phone}</p>
+                          <p>Email: {data?.email}</p>
+                        </div>
+                        <p>Address: {data?.address}</p>
+                      </div>
+                    </div>
+                    <div>
+                      <div className="w-full overflow-x-auto pb-5">
+                        <table className="w-full text-center border-collapse">
+                          <thead>
+                            <tr className="border border-gray-500 h-10">
+                              <th className="border border-gray-500">SI</th>
+                              <th className="border border-gray-500">Service</th>
+                              <th className="border border-gray-500">Plan</th>
+                              <th className="border border-gray-500">Price</th>
+                              <th className="border border-gray-500">Quantity</th>
+                              <th className="border border-gray-500">Amount</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <tr className="h-52">
+                              <td className="border border-gray-500">1</td>
+                              <td className="border border-gray-500">{data?.service_name}</td>
+                              <td className="border border-gray-500">{data?.feature_name}</td>
+                              <td className="border border-gray-500">{plan[0]?.price}</td>
+                              <td className="border border-gray-500">1</td>
+                              <td className="border border-gray-500">{plan[0]?.price}</td>
+                            </tr>
+                            <tr className="border border-gray-500 h-10">
+                              <td></td>
+                              <td></td>
+                              <td></td>
+                              <td></td>
+                              <td className="border border-gray-500">Total</td>
+                              <td>{data?.total}</td>
+                            </tr>
+                          </tbody>
+                        </table>
+                        <div className="border-b border-gray-500 h-10 flex items-center">
+                          <p>Taka in Words: </p>
+                        </div>
+                      </div>
+                      <div className="flex justify-between">
+                        <div>
+                          <p>Terms and Conditions</p>
+                          <ul className="list-disc list-inside">
+                            <li>Lorem ipsum dolor sit amet</li>
+                            <li>Lorem ipsum dolor sit amet</li>
+                            <li>Lorem ipsum dolor sit amet</li>
+                          </ul>
+                        </div>
+                        <div className="pr-4 flex flex-col items-center">
+                          <Image
+                            src={relative_image_path("sign.jpg")}
+                            className="w-32 h-20"
+                            width={1000}
+                            height={1000}
+                            alt="Bangla"
+                          />
+                          <p>Signature</p>
+                        </div>
                       </div>
                     </div>
                   </div>
                 </div>
               </div>
+
             </div>
           </section>
         )

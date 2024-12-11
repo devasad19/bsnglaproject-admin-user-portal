@@ -1,6 +1,5 @@
 "use client"
 import { getServices } from '@/app/(portal)/_api';
-import axios from 'axios';
 import Image from 'next/image'
 import Link from 'next/link'
 import { useEffect, useState } from 'react'
@@ -19,6 +18,8 @@ const PurchaaseServicePage = () => {
     getSoldServices().then((data) => { setSoldServices(data?.data), setIsLoading(false) }).catch((err) => console.log(err));
   }, []);
 
+
+
   return (
     <section>
       <div className="flex flex-wrap justify-between">
@@ -30,6 +31,7 @@ const PurchaaseServicePage = () => {
         <table className="w-full">
           <thead className="border-b border-[#151D48] text-[#151D48] h-10 text-12 lg:text-16">
             <tr>
+              <th className="text-center">SL</th>
               <th className="text-center">Name</th>
               <th className="text-center">Description</th>
               <th className="text-center">Link</th>
@@ -42,13 +44,18 @@ const PurchaaseServicePage = () => {
             {
               isLoading ? (
                 <tr>
-                  <td colSpan={6}>
+                  <td colSpan={7}>
                     <Skeleton width="100%" count={10} height={50} />
                   </td>
                 </tr>
               ) : (
                 soldServices?.map((item: any, index: number) => (
                   <tr key={index}>
+                  <td className="px-3">
+                    <span className="border border-gray-300 px-2 py-1 rounded-md">
+                      {index + 1}
+                    </span>
+                  </td>
                     <td className="px-2">
                       <Link
                         href={{
