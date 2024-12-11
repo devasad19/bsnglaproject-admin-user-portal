@@ -13,6 +13,7 @@ import { FaTrashAlt } from "react-icons/fa";
 import { getUserTypest } from "../../_api/MangeUserTypeApi";
 import Modal from "@/app/_components/Modal/Modal";
 import { toast } from "react-toastify";
+import Link from "next/link";
 
 const Home = (): JSX.Element => {
   const [citizen, setCitizen] = useState([]);
@@ -99,6 +100,7 @@ const Home = (): JSX.Element => {
                 <th>Name</th>
                 <th>Phone</th>
                 <th>Citizen Type</th>
+                <th>Citizen Request</th>
                 <th>Status</th>
                 <th>Action</th>
               </tr>
@@ -137,19 +139,40 @@ const Home = (): JSX.Element => {
                     </td>
                     <td>{item?.phone}</td>
                     <td>{item?.citizen_type?.name_en ?? ""}</td>
-                    {/* <td className="font-medium text-13">5</td> */}
+                    <td className="font-medium text-13">
+                      {item?.citizen_info?.status === 0
+                        ? "Pending"
+                        : "Approved"}
+                    </td>
                     <td>{item?.status === 1 ? "Active" : "Inactive"}</td>
-                    <td>
-                      <button
-                        onClick={() => handleEditUser(item?.id)}
-                        className="bg-blue-500 text-white rounded p-2"
-                      >
-                        <FaRegEdit />
-                      </button>
+                    <td className="px-2">
+                      <div className="flex justify-center items-center">
+                        <button
+                          onClick={() => handleEditUser(item?.id)}
+                          className="bg-blue-500 text-white rounded p-2"
+                        >
+                          <FaRegEdit />
+                        </button>
 
-                      <button className="ml-2 bg-red-500 text-white rounded p-2">
-                        <FaTrashAlt />
-                      </button>
+                        <button className="ml-2 bg-red-500 text-white rounded p-2">
+                          <FaTrashAlt />
+                        </button>
+                      </div>
+
+                      {item?.citizen_info != null && (
+                        <>
+                          <div className="flex items-center justify-center py-1">
+                            <Link
+                            href={
+                              "/admin/citizen-info"
+                            }
+                              className="py-1 px-2 bg-[#2F93DF] text-white rounded text-12 "
+                            >
+                              Citizen Info
+                            </Link>
+                          </div>
+                        </>
+                      )}
                     </td>
                   </tr>
                 );
@@ -217,7 +240,8 @@ const Home = (): JSX.Element => {
             </fieldset>
           </div>
           <div className="flex justify-end gap-3 mt-7">
-            <button type="button"
+            <button
+              type="button"
               onClick={() => {
                 modelClose(userTypeModal, userTypesUpdateForm);
               }}
@@ -225,7 +249,10 @@ const Home = (): JSX.Element => {
             >
               Cancel
             </button>
-            <button type="submit" className="bg-blue-500 text-white px-4 py-2 rounded-md">
+            <button
+              type="submit"
+              className="bg-blue-500 text-white px-4 py-2 rounded-md"
+            >
               Submit
             </button>
           </div>

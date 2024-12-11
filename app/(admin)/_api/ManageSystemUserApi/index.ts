@@ -37,6 +37,26 @@ export const getAllSystemUser = async () => {
   } catch (error) {}
 };
 
+
+export const createUserApi = async (userData:any) => {
+  try {
+    const user = await axiosInstance.post(
+      `${process.env.NEXT_PUBLIC_API_URL}/user/create`,
+      userData,
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    revalidateTag("get-all-system-user");
+    return user.data;
+  } catch (error) {
+    console.log(error);
+    return error;
+  }
+};
+
 // get single user type
 export const getUserType = async (id:number) => {
   try {
