@@ -164,7 +164,7 @@ const Home = (): JSX.Element => {
                           <div className="flex items-center justify-center py-1">
                             <Link
                             href={
-                              "/admin/citizen-info"
+                              `/admin/citizen-info/${item?.id}`
                             }
                               className="py-1 px-2 bg-[#2F93DF] text-white rounded text-12 "
                             >

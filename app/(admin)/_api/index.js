@@ -368,6 +368,27 @@ export const getCitizenList = async () => {
   }
 };
 
+// get single citizen user by citizen type in not null 
+export const getSingleCitizenUserNotNull = async(id)=>{
+  try {
+    const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/citizen/user/${id}`);
+    return response?.data;
+  } catch (error) {
+    return error;
+  }
+}
+
+
+export const getSingleCitizen = async (id)=>{
+  try {
+    const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/user/details/${id}`);
+    return response?.data;
+  } catch (error) {
+    return error;
+  }
+} 
+
+
 // get single citizen list 
 export const getSingleCitizenList = async (id)=>{
   try {
