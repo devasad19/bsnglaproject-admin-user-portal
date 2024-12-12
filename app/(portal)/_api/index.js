@@ -269,23 +269,23 @@ export const getSingleOrderByServiceId = async (serviceId) => {
 
 //  1.create user api
 
-export const createUserApi = async (userData) => {
-  try {
-    const user = await axios.post(
-      `${process.env.NEXT_PUBLIC_API_URL}/user/create`,
-      userData,
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    );
-    return user.data;
-  } catch (error) {
-    console.log(error);
-    return error;
-  }
-};
+// export const createUserApi = async (userData) => {
+//   try {
+//     const user = await axios.post(
+//       `${process.env.NEXT_PUBLIC_API_URL}/user/create`,
+//       userData,
+//       {
+//         headers: {
+//           Authorization: `Bearer ${token}`,
+//         },
+//       }
+//     );
+//     return user.data;
+//   } catch (error) {
+//     console.log(error);
+//     return error;
+//   }
+// };
 
 // 2. get all users api
 

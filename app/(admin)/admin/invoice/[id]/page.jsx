@@ -31,14 +31,16 @@ const Home = ({ params: { id } }) => {
   },[id]) */
 
   useEffect(() => {
-    getInvoiceDetails(4).then((res) => {
+    getInvoiceDetails(id).then((res) => {
       setData(res.data);
-
+ 
       setPlan(JSON.parse(res.data?.plans));
 
       setLoading(false);
     }).catch((err) => console.log(err));
   }, []);
+  console.log({data});
+  
 
 
   return (

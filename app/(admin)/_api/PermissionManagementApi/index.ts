@@ -2,32 +2,35 @@
 import axiosInstance from "@/lib/AxiosInstance";
 import { revalidateTag } from "next/cache";
 // create user Type api
-export const manageUserTypeCreate = async (data: any) => {
-  try {
-    const response = await axiosInstance.post("/store/user-type", data, {
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
-    revalidateTag("get-user-types");
-    return response.data;
-  } catch (error) {
-    return error;
-  }
-};
+
+
+// create single Parent Permission api
+export const createParentPermission = async (data: any) => {
+    try {
+        const response = await axiosInstance.post("/permission-parents", data, {
+            headers: {
+              "Content-Type": "application/json",
+            },
+          });
+          revalidateTag("get-parent-permissions");
+          return response.data;
+    } catch (error) {
+        throw new Error("Failed to Create Parent Permission data");
+    }
+}
 
 
 
-// get all user types
-export const getUserTypest = async () => {
+// get all Parent Permissions api
+export const getAllParentPermission = async () => {
   try {
     const fetchOption = {
         next: {
-          tags: ["get-user-types"],
+          tags: ["get-parent-permissions"],
         },
       };
     const res = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/get-user-types`,
+      `${process.env.NEXT_PUBLIC_API_URL}/permission-parents`,
       fetchOption
     );
     if (!res.ok) {

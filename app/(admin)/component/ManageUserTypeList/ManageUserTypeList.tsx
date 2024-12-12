@@ -82,7 +82,7 @@ const ManageUserTypeList = ({ userType }: any) => {
     setValue("maxFile", singlePermission?.data?.max_file_limit);
     setValue("maxWord", singlePermission?.data?.max_word_limit);
 
-    setSelectFeatureName(JSON.parse(singlePermission?.data?.free_features));
+    setSelectFeatureName(JSON?.parse(singlePermission?.data?.free_features));
 
     modelOpen(permissionModal, permissionModalForm);
   };
@@ -243,7 +243,7 @@ const ManageUserTypeList = ({ userType }: any) => {
               </tr>
             </thead>
             <tbody className="[&>tr]:border-b [&>tr]:border-gray-200 [&>tr]:text-left [&>tr]:h-16 text-12 lg:text-16 ">
-              {userType?.map((item: any, index: number) => (
+              {userType.length > 0 ? userType?.map((item: any, index: number) => (
                 <tr key={index}>
                   <td className="px-3">
                     <span className="border border-gray-300 px-2 py-1 rounded-md">
@@ -268,7 +268,7 @@ const ManageUserTypeList = ({ userType }: any) => {
                       </span>
                     )}
                   </td>
-                  <td className="border mt-4 border-gray-200">
+                  <td className="border mt-4 border-gray-200 px-2">
                     <div className="flex justify-center items-center">
                       <button
                         onClick={() => {
@@ -299,6 +299,7 @@ const ManageUserTypeList = ({ userType }: any) => {
                         </svg>
                       </button>
                     </div>
+                    <div className="flex items-center justify-center py-1">
                     <button
                       onClick={() => {
                         handlePermission(item?.id);
@@ -307,9 +308,14 @@ const ManageUserTypeList = ({ userType }: any) => {
                     >
                       Manage Permissions
                     </button>
+                    </div>
                   </td>
                 </tr>
-              ))}
+              )):<>
+              <tr>
+                <td colSpan={6} className="text-center text-red-400">Data Not Found</td>
+              </tr>
+              </>}
             </tbody>
           </table>
         </div>

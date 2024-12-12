@@ -16,7 +16,6 @@ import { FaChalkboardUser } from "react-icons/fa6";
 import { GrDocumentUser } from "react-icons/gr";
 import { FaComputer } from "react-icons/fa6";
 
-
 const Sidebar = () => {
   const pathname = usePathname();
   const [user, setUser] = useState(null);
@@ -27,7 +26,6 @@ const Sidebar = () => {
     setting: false,
     alc: false,
     accountsSettings: false,
-
   });
 
   const toggleAccordionSub = (valueName1) => {
@@ -64,7 +62,7 @@ const Sidebar = () => {
           alc: false,
           accountsSettings: false,
           // Close the other accordion
-        }
+        };
       }
       if (valueName1 === "aclManagement") {
         return {
@@ -73,24 +71,26 @@ const Sidebar = () => {
           alc: false,
           accountsSettings: false,
           // Close the other accordion
-        }
+        };
       }
       return prevIsToggleOpen; // Default case if neither match
     });
   };
 
-
   useEffect(() => {
-    const userCookie = document.cookie.split(';').find(c => c.trim().startsWith('user='));
+    const userCookie = document.cookie
+      .split(";")
+      .find((c) => c.trim().startsWith("user="));
     if (userCookie != undefined) {
-      setUser(JSON.parse(decodeURIComponent(userCookie.split('=')[1])));
+      setUser(JSON.parse(decodeURIComponent(userCookie.split("=")[1])));
     }
   }, []);
 
-
   const HandleLogout = () => {
-    document.cookie = "token=; path=/; domain=localhost; expires=Thu, 01 Jan 1970 00:00:00 UTC;";
-    document.cookie = "user=; path=/; domain=localhost; expires=Thu, 01 Jan 1970 00:00:00 UTC;";
+    document.cookie =
+      "token=; path=/; domain=localhost; expires=Thu, 01 Jan 1970 00:00:00 UTC;";
+    document.cookie =
+      "user=; path=/; domain=localhost; expires=Thu, 01 Jan 1970 00:00:00 UTC;";
     // window.location.href='http://localhost:3000/signin';
     window.location.href = 'https://service.bangla.gov.bd/signin';
   }
@@ -99,17 +99,20 @@ const Sidebar = () => {
     <>
       <div className="min-h-screen flex flex-col justify-between">
         <div
-          className={`p-4 bg-white transition-all duration-500  ${isOpen ? "w-60" : "w-12"
-            }`}
+          className={`p-4 bg-white transition-all duration-500  ${
+            isOpen ? "w-60" : "w-12"
+          }`}
         >
           <div className="flex flex-col items-center">
             <div
-              className={`w-full flex items-center pb-5 ${isOpen ? "justify-between" : "justify-end"
-                }`}
+              className={`w-full flex items-center pb-5 ${
+                isOpen ? "justify-between" : "justify-end"
+              }`}
             >
               <Image
-                className={`w-24 transition-all duration-500 ${isOpen ? "opacity-100 block" : "opacity-0 hidden"
-                  }`}
+                className={`w-24 transition-all duration-500 ${
+                  isOpen ? "opacity-100 block" : "opacity-0 hidden"
+                }`}
                 src={relative_image_path("logo.png")}
                 width={1000}
                 height={1000}
@@ -139,8 +142,9 @@ const Sidebar = () => {
               </button>
             </div>
             <ul
-              className={`[&>li]:text-slate-900  [&>li]:py-2 w-11/12 [&>li]:rounded-md [&>li]:transition-all [&>li]:duration-500 [&>li]:text-14 [&>li>a]:text-14 flex flex-col gap-2 ${isOpen ? "[&>li]:px-3" : ""
-                }`}
+              className={`[&>li]:text-slate-900  [&>li]:py-2 w-11/12 [&>li]:rounded-md [&>li]:transition-all [&>li]:duration-500 [&>li]:text-14 [&>li>a]:text-14 flex flex-col gap-2 ${
+                isOpen ? "[&>li]:px-3" : ""
+              }`}
             >
               <li
                 className={` ${isOpen ? 'hover:bg-primary' : ''} group ${isOpen && pathname == "/admin" ? "bg-primary" : ""
@@ -235,8 +239,13 @@ const Sidebar = () => {
                   </span>
 
                   <span
-                    className={`text-15 text-primary group-hover:text-white  ${isOpen ? "block" : "hidden"
-                      } ${pathname.includes("/admin/manage-citizen") && "text-white"}`}
+                    className={`text-15 text-primary group-hover:text-white  ${
+                      isOpen ? "block" : "hidden"
+                    } ${
+                      (pathname.startsWith("/admin/manage-citizen") ||
+                        pathname.startsWith("/admin/manage-user-type")) &&
+                      "text-white"
+                    }`}
                   >
                     Citizen Management
                   </span>
@@ -247,8 +256,11 @@ const Sidebar = () => {
                     } `}
                 >
                   <svg
-                    className={`w-3 h-3 fill-current text-primary group-hover:text-white transition-colors duration-300 ${pathname.includes("/admin/setting") && "text-white"
-                      }`}
+                    className={`w-3 h-3 fill-current text-primary group-hover:text-white transition-colors duration-300 ${
+                      (pathname.startsWith("/admin/manage-citizen") ||
+                        pathname.startsWith("/admin/manage-user-type")) &&
+                      "text-white"
+                    }`}
                     xmlns="http://www.w3.org/2000/svg"
                     viewBox="0 0 448 512"
                   >
@@ -264,10 +276,11 @@ const Sidebar = () => {
                         pathname: "/admin/manage-citizen",
                       }}
                       shallow
-                      className={`text-14 hover:bg-green-500 px-2 py-1 rounded hover:text-white ${pathname.includes("/admin/manage-citizen")
-                        ? "bg-green-500 text-white font-semibold"
-                        : "text-black"
-                        }`}
+                      className={`text-14 hover:bg-green-500 px-2 py-1 rounded hover:text-white ${
+                        pathname.startsWith("/admin/manage-citizen")
+                          ? "bg-green-500 text-white font-semibold"
+                          : "text-black"
+                      }`}
                     >
                       Manage Citizens
                     </Link>
@@ -276,14 +289,14 @@ const Sidebar = () => {
                         pathname: "/admin/manage-user-type",
                       }}
                       shallow
-                      className={`text-14 hover:bg-green-500 px-2 py-1 rounded hover:text-white ${pathname.includes("/admin/manage-user-type")
-                        ? "bg-green-500 text-white font-semibold"
-                        : "text-black"
-                        }`}
+                      className={`text-14 hover:bg-green-500 px-2 py-1 rounded hover:text-white ${
+                        pathname.startsWith("/admin/manage-user-type")
+                          ? "bg-green-500 text-white font-semibold"
+                          : "text-black"
+                      }`}
                     >
                       Manage Citizen Types Permission
                     </Link>
-
                   </div>
                 </NewAccordion>
               )}
@@ -300,20 +313,29 @@ const Sidebar = () => {
                   </span>
 
                   <span
-                    className={`text-15 text-primary group-hover:text-white  ${isOpen ? "block" : "hidden"
-                      } ${pathname.includes("/admin/manage-citizen") && "text-white"}`}
+                    className={`text-15 text-primary group-hover:text-white  ${
+                      isOpen ? "block" : "hidden"
+                    } ${
+                      (pathname.startsWith("/admin/permission-management") ||
+                        pathname.startsWith("/admin/manage-role")) &&
+                      "text-white"
+                    }`}
                   >
                     ACL(Access Control List)
                   </span>
                 </div>
 
                 <span
-                  className={`transition-transform duration-300 ${isOpen ? "block" : "hidden"
-                    } ${isToggleOpen.setting ? "rotate-180" : ""}`}
+                  className={`transition-transform duration-300 ${
+                    isOpen ? "block" : "hidden"
+                  } ${isToggleOpen.setting ? "rotate-180" : ""}`}
                 >
                   <svg
-                    className={`w-3 h-3 fill-current text-primary group-hover:text-white transition-colors duration-300 ${pathname.includes("/admin/setting") && "text-white"
-                      }`}
+                    className={`w-3 h-3 fill-current text-primary group-hover:text-white transition-colors duration-300 ${
+                      (pathname.startsWith("/admin/permission-management") ||
+                        pathname.startsWith("/admin/manage-role")) &&
+                      "text-white"
+                    }`}
                     xmlns="http://www.w3.org/2000/svg"
                     viewBox="0 0 448 512"
                   >
@@ -329,10 +351,11 @@ const Sidebar = () => {
                         pathname: "/admin/permission-management",
                       }}
                       shallow
-                      className={`text-14 hover:bg-green-500 px-2 py-1 rounded hover:text-white ${pathname.includes("/admin/permission-management")
-                        ? "bg-green-500 text-white font-semibold"
-                        : "text-black"
-                        }`}
+                      className={`text-14 hover:bg-green-500 px-2 py-1 rounded hover:text-white ${
+                        pathname.includes("/admin/permission-management")
+                          ? "bg-green-500 text-white font-semibold"
+                          : "text-black"
+                      }`}
                     >
                       Manage Permissions
                     </Link>
@@ -341,10 +364,11 @@ const Sidebar = () => {
                         pathname: "/admin/manage-role",
                       }}
                       shallow
-                      className={`text-14 hover:bg-green-500 px-2 py-1 rounded hover:text-white ${pathname.includes("/admin/manage-role")
-                        ? "bg-green-500 text-white font-semibold"
-                        : "text-black"
-                        }`}
+                      className={`text-14 hover:bg-green-500 px-2 py-1 rounded hover:text-white ${
+                        pathname.includes("/admin/manage-role")
+                          ? "bg-green-500 text-white font-semibold"
+                          : "text-black"
+                      }`}
                     >
                       Manage Roles
                     </Link>
@@ -380,8 +404,9 @@ const Sidebar = () => {
                 </div>
 
                 <span
-                  className={`transition-transform duration-300 ${isOpen ? "block" : "hidden"
-                    } ${isToggleOpen.setting ? "rotate-180" : ""}`}
+                  className={`transition-transform duration-300 ${
+                    isOpen ? "block" : "hidden"
+                  } ${isToggleOpen.setting ? "rotate-180" : ""}`}
                 >
                   <svg
                     className={`w-3 h-3 fill-current text-primary  transition-colors duration-300 ${isOpen && pathname.includes("/admin/setting") && "text-white"
@@ -401,10 +426,11 @@ const Sidebar = () => {
                         pathname: "/admin/setting/frontend-setting",
                       }}
                       shallow
-                      className={`text-14 hover:bg-green-500 px-2 py-1 rounded hover:text-white ${pathname.includes("/admin/setting/frontend-setting")
-                        ? "bg-green-500 text-white font-semibold"
-                        : "text-black"
-                        }`}
+                      className={`text-14 hover:bg-green-500 px-2 py-1 rounded hover:text-white ${
+                        pathname.includes("/admin/setting/frontend-setting")
+                          ? "bg-green-500 text-white font-semibold"
+                          : "text-black"
+                      }`}
                     >
                       General Portal Settings
                     </Link>
@@ -413,10 +439,11 @@ const Sidebar = () => {
                         pathname: "/admin/setting/sidebar-links",
                       }}
                       shallow
-                      className={`text-14 hover:bg-green-500 px-2 py-1 rounded hover:text-white ${pathname.includes("/admin/setting/sidebar-links")
-                        ? "bg-green-500 text-white font-semibold"
-                        : "text-black"
-                        }`}
+                      className={`text-14 hover:bg-green-500 px-2 py-1 rounded hover:text-white ${
+                        pathname.includes("/admin/setting/sidebar-links")
+                          ? "bg-green-500 text-white font-semibold"
+                          : "text-black"
+                      }`}
                     >
                       Hamburger Menu
                     </Link>
@@ -425,10 +452,11 @@ const Sidebar = () => {
                         pathname: "/admin/setting/footer-content",
                       }}
                       shallow
-                      className={`text-14 hover:bg-green-500 px-2 py-1 rounded hover:text-white ${pathname.includes("/admin/setting/footer-content")
-                        ? "bg-green-500 text-white font-semibold"
-                        : "text-black"
-                        }`}
+                      className={`text-14 hover:bg-green-500 px-2 py-1 rounded hover:text-white ${
+                        pathname.includes("/admin/setting/footer-content")
+                          ? "bg-green-500 text-white font-semibold"
+                          : "text-black"
+                      }`}
                     >
                       Manage Footer Content
                     </Link>
@@ -437,10 +465,11 @@ const Sidebar = () => {
                         pathname: "/admin/setting/hero-section",
                       }}
                       shallow
-                      className={`text-14 hover:bg-green-500 px-2 py-1 rounded hover:text-white ${pathname.includes("/admin/setting/hero-section")
-                        ? "bg-green-500 text-white font-semibold"
-                        : "text-black"
-                        }`}
+                      className={`text-14 hover:bg-green-500 px-2 py-1 rounded hover:text-white ${
+                        pathname.includes("/admin/setting/hero-section")
+                          ? "bg-green-500 text-white font-semibold"
+                          : "text-black"
+                      }`}
                     >
                       Banner Right Section
                     </Link>
@@ -453,16 +482,24 @@ const Sidebar = () => {
                   } cursor-pointer ${isOpen && isToggleOpen.accountsSettings
                     ? "border-b-2 border-primary"
                     : ""
-                  }`}
+                }`}
               >
                 <div className="flex items-center gap-2">
-                  <FaComputer size={20} className="fill-current" />
+                  <FaComputer
+                    size={20}
+                    className={`group-hover:text-white transition-colors duration-300 ${
+                      pathname.includes("/admin/accounts-settings") ||
+                      pathname.includes("/admin/bill")
+                        ? "text-white"
+                        : "text-primary"
+                    }`}
+                  />
 
                   <span
                     className={`text-15 text-primary group-hover:text-white  ${isOpen ? "block" : "hidden"
                       } ${isOpen && pathname.includes("/admin/accounts-settings") &&
                       "text-white"
-                      }`}
+                    }`}
                   >
                     Manage Sales
                   </span>
@@ -475,7 +512,7 @@ const Sidebar = () => {
                   <svg
                     className={`w-3 h-3 fill-current text-primary group-hover:text-white transition-colors duration-300 ${isOpen && pathname.includes("/admin/accounts-settings") &&
                       "text-white"
-                      }`}
+                    }`}
                     xmlns="http://www.w3.org/2000/svg"
                     viewBox="0 0 448 512"
                   >
@@ -484,23 +521,20 @@ const Sidebar = () => {
                 </span>
               </li>
               {isOpen && (
-
-
-
                 <NewAccordion isOpen={isToggleOpen.accountsSettings}>
-
-
                   <div className="ms-3 flex flex-col gap-2 p-1">
-
                     <Link
                       href={{
                         pathname: "/admin/accounts-settings/purchase-services",
                       }}
                       shallow
-                      className={`text-14 hover:bg-green-500 px-2 py-1 rounded hover:text-white ${pathname.includes("/admin/accounts-settings/purchase-services")
-                        ? "bg-green-500 text-white font-semibold"
-                        : "text-black"
-                        }`}
+                      className={`text-14 hover:bg-green-500 px-2 py-1 rounded hover:text-white ${
+                        pathname.includes(
+                          "/admin/accounts-settings/purchase-services"
+                        )
+                          ? "bg-green-500 text-white font-semibold"
+                          : "text-black"
+                      }`}
                     >
                       Sold Services
                     </Link>
@@ -509,18 +543,16 @@ const Sidebar = () => {
                         pathname: "/admin/bill",
                       }}
                       shallow
-                      className={`text-14 hover:bg-green-500 px-2 py-1 rounded hover:text-white ${pathname.includes("/admin/bill")
-                        ? "bg-green-500 text-white font-semibold"
-                        : "text-black"
-                        }`}
+                      className={`text-14 hover:bg-green-500 px-2 py-1 rounded hover:text-white ${
+                        pathname.includes("/admin/bill")
+                          ? "bg-green-500 text-white font-semibold"
+                          : "text-black"
+                      }`}
                     >
                       Citizen Payments List
                     </Link>
-
                   </div>
                 </NewAccordion>
-
-
               )}
 
               <li

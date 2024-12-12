@@ -10,7 +10,7 @@ const TableSkeleton = ({ col, row }: TTableSkeletonProps) => {
   return (
     <>
       <tr>
-        <td colSpan={3}>
+        <td colSpan={col}>
           <Skeleton width="100%" count={row} height={50} />
         </td>
       </tr>

@@ -2,40 +2,59 @@
 import axiosInstance from "@/lib/AxiosInstance";
 import { revalidateTag } from "next/cache";
 // create user Type api
-export const manageUserTypeCreate = async (data: any) => {
-  try {
-    const response = await axiosInstance.post("/store/user-type", data, {
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
-    revalidateTag("get-user-types");
-    return response.data;
-  } catch (error) {
-    return error;
-  }
-};
+// export const manageUserTypeCreate = async (data: any) => {
+//   try {
+//     const response = await axiosInstance.post("/store/user-type", data, {
+//       headers: {
+//         "Content-Type": "application/json",
+//       },
+//     });
+//     revalidateTag("get-user-types");
+//     return response.data;
+//   } catch (error) {
+//     return error;
+//   }
+// };
 
 
 
 // get all user types
-export const getUserTypest = async () => {
+export const getAllSystemUser = async () => {
   try {
     const fetchOption = {
         next: {
-          tags: ["get-user-types"],
+          tags: ["get-all-system-user"],
         },
       };
     const res = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/get-user-types`,
+      `${process.env.NEXT_PUBLIC_API_URL}/system/users`,
       fetchOption
     );
     if (!res.ok) {
       throw new Error("Failed to fetch data");
     }
-
     return res.json();
   } catch (error) {}
+};
+
+
+export const createUserApi = async (userData:any) => {
+  try {
+    const user = await axiosInstance.post(
+      `${process.env.NEXT_PUBLIC_API_URL}/user/create`,
+      userData,
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    revalidateTag("get-all-system-user");
+    return user.data;
+  } catch (error) {
+    console.log(error);
+    return error;
+  }
 };
 
 // get single user type
