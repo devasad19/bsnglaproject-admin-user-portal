@@ -2,7 +2,7 @@
 import axiosInstance from "@/lib/AxiosInstance";
 import { revalidateTag } from "next/cache";
 import { permission } from "process";
-// create user Type api
+
 
 // create single Parent Permission api
 export const createParentPermission = async (data: any) => {
@@ -111,16 +111,17 @@ export const manageUserTypeUpdate = async (data: any) => {
 };
 
 // delete user type api
-export const deleteUserType = async (id: number) => {
+export const deletePermission = async (id: number) => {
   try {
-    const response = await axiosInstance.delete(`/delete/user-type/${id}`, {
+    const response = await axiosInstance.delete(`/permissions/${id}`, {
       headers: {
         "Content-Type": "application/json",
       },
     });
-    revalidateTag("get-user-types");
+    revalidateTag("get-permissions");
     return response.data;
   } catch (error) {
+    console.log(error);
     return error;
   }
 };

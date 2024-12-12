@@ -7,11 +7,13 @@ import { useForm } from "react-hook-form";
 import {
   createParentPermission,
   createSinglePermission,
+  deletePermission,
 } from "../../_api/PermissionManagementApi";
 import { toast } from "react-toastify";
 
 import { CiEdit } from "react-icons/ci";
 import { GrView } from "react-icons/gr";
+import Swal from "sweetalert2";
 
 interface PermissionManagementListProps {
   parentPermissionData: { id: number; name: string }[];
@@ -104,7 +106,7 @@ const PermissionManagementList = ({
       const permissionData = {
         name,
         display_name,
-        parent_id,
+        permission_parent_id: parent_id,
       };
       console.log(permissionData);
 
@@ -113,7 +115,7 @@ const PermissionManagementList = ({
 
       if (response.status) {
         modelClose(permissionModal, permissionModalForm);
-        reset();
+        e.target.reset();
         setValidationError({
           name: "",
           display_name: "",
@@ -128,9 +130,50 @@ const PermissionManagementList = ({
 
   const handlePermissionEdit = (id:string) =>{
     if(id){
-      modelOpen(permissionUpdateModalForm);
+
+      if(permissionsData.length>0){
+
+        const updatedData = permissionsData.find((item: { id: any }) => item.id == id);
+        console.log({updatedData});
+      }
+
+
+      modelOpen(permissionModalUpdate,permissionUpdateModalForm);
       console.log(id);
+
       
+    }
+  }
+
+  // delete single permission handler
+
+  const handleDeletePermission = async (id:any)=>{
+    if(id){
+      Swal.fire({
+              title: "Are you sure?",
+              text: "You won't be able to revert this!",
+              icon: "warning",
+              showCancelButton: true,
+              confirmButtonColor: "#3085d6",
+              cancelButtonColor: "#d33",
+              confirmButtonText: "Yes, delete it!",
+            }).then((result) => {
+              if (result.isConfirmed) {
+                const dataRes = deletePermission(id)
+                  .then((data) => {
+                    if (data) {
+                      Swal.fire("Deleted!", "Your file has been deleted.", "success");
+                    } else {
+                      Swal.fire("Error!", "Something went wrong.", "error");
+                    }
+                  })
+                  .catch((err) => {
+                    console.log(err);
+                  });
+                  console.log(dataRes);
+                  
+              }
+            });
     }
   }
 
@@ -196,7 +239,7 @@ const PermissionManagementList = ({
                               <CiEdit />
                             </button>
                             <button
-                              onClick={() => confirm("Are you sure?")}
+                              onClick={()=>handleDeletePermission(item?.id)}
                               className="bg-red-500 text-white px-2 py-1 rounded-md"
                             >
                               <svg
