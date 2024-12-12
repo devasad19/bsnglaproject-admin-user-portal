@@ -92,7 +92,7 @@ const Sidebar = () => {
     document.cookie = "token=; path=/; domain=localhost; expires=Thu, 01 Jan 1970 00:00:00 UTC;";
     document.cookie = "user=; path=/; domain=localhost; expires=Thu, 01 Jan 1970 00:00:00 UTC;";
     // window.location.href='http://localhost:3000/signin';
-    window.location.href = process.env.NEXT_PUBLIC_PORTAL_URL + '/signin';
+    window.location.href = 'https://service.bangla.gov.bd/signin';
   }
 
   return (
