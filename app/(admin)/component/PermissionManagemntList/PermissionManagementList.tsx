@@ -19,6 +19,14 @@ interface PermissionManagementListProps {
   parentPermissionData: { id: number; name: string }[];
   permissionsData: any;
 }
+interface Permission {
+  id: number;
+  name: string;
+  display_name: string;
+  permission_parent_id: number;
+  parent?: { name: string };
+  isActive: boolean;
+}
 
 const PermissionManagementList = ({
   parentPermissionData,
@@ -29,16 +37,19 @@ const PermissionManagementList = ({
   const permissionModal = useRef<any>(null);
   const permissionModalUpdate = useRef<any>(null);
   const permissionUpdateModalForm = useRef<any>(null);
-  // const protectedModal = useRef<any>(null);
-  // console.log(parentPermissionData);
   const addModelForm = useRef<any>(null);
   const permissionModalForm = useRef<any>(null);
-  // const updateModalForm = useRef<any>(null);
-  // const protectedModalForm = useRef<any>(null);
+  
+  
+  const [updateSinglePermission, setUpdateSinglePermission] = useState<Partial<Permission>>({});
 
   const [validationError, setValidationError] = useState({
     name: "",
     display_name: "",
+  });
+  const [updateValidationError, setUpdateValidationError] = useState({
+    Up_name: "",
+    Up_display_name: "",
   });
 
   const {
@@ -130,18 +141,14 @@ const PermissionManagementList = ({
 
   const handlePermissionEdit = (id:string) =>{
     if(id){
-
       if(permissionsData.length>0){
 
         const updatedData = permissionsData.find((item: { id: any }) => item.id == id);
-        console.log({updatedData});
+       setUpdateSinglePermission(updatedData);
+       modelOpen(permissionModalUpdate,permissionUpdateModalForm);
+      }else{
+        toast.error("Data Not Found");
       }
-
-
-      modelOpen(permissionModalUpdate,permissionUpdateModalForm);
-      console.log(id);
-
-      
     }
   }
 
@@ -175,6 +182,42 @@ const PermissionManagementList = ({
               }
             });
     }
+  }
+
+
+  // handle permission update 
+  const handlePermissionSubmitUpdate = async (e:any) =>{
+    e.preventDefault();
+
+    const name = e.target.up_name.value;
+    const display_name = e.target.up_display_name.value;
+    const parent_id = e.target.up_parent_id.value;
+
+    if(name == "" || display_name == ""){
+      setUpdateValidationError({
+        Up_name: "Name is Required",
+        Up_display_name: "Display Name is Required"
+      });
+      return;
+    }
+
+    if(name == ""){
+      setUpdateValidationError({
+        Up_name: "Name is Required",
+        Up_display_name: ""
+      });
+      return;
+    }
+
+    if(display_name == ""){
+      setUpdateValidationError({
+        Up_name: "",
+        Up_display_name: "Display Name is Required"
+      });
+      return;
+    }
+
+
   }
 
   return (
@@ -219,8 +262,8 @@ const PermissionManagementList = ({
                         className="h-16 border-b border-gray-300 hover:bg-gray-100"
                       >
                         <td>{index + 1}</td>
-                        <td>{item?.name || ""}</td>
                         <td>{item?.display_name || ""}</td>
+                        <td>{item?.name || ""}</td>
                         <td>{item?.parent?.name || ""}</td>
                         <td>
                           <span
@@ -325,7 +368,7 @@ const PermissionManagementList = ({
       <Modal
         modalRef={permissionModal}
         modalForm={permissionModalForm}
-        title="প্যারেন্ট অনুমতির নাম তৈরি করুন"
+        title="অনুমতির তৈরি করুন"
         setServiceValidation={setValidationError}
       >
         <form
@@ -426,11 +469,11 @@ const PermissionManagementList = ({
       <Modal
         modalRef={permissionModalUpdate}
         modalForm={permissionUpdateModalForm}
-        title="প্যারেন্ট অনুমতির নাম তৈরি করুন"
+        title="অনুমতির আপডেট করুন"
         setServiceValidation={setValidationError}
       >
         <form
-          onSubmit={handlePermissionSubmit}
+          onSubmit={handlePermissionSubmitUpdate}
           className="pt-3"
           ref={permissionModalForm}
         >
@@ -446,12 +489,12 @@ const PermissionManagementList = ({
               </legend>
               <select
                 disabled={parentPermissionData?.length > 0 ? false : true}
-                name="parent_id"
+                name="up_parent_id"
                 id=""
                 className="w-full bg-white py-2"
               >
                 {parentPermissionData?.map((item: any, index: number) => (
-                  <option key={index} value={item.id}>
+                  <option key={index} value={item.id} selected={item.id == updateSinglePermission?.permission_parent_id ? true : false}>
                     {item.name}
                   </option>
                 ))}
@@ -468,14 +511,15 @@ const PermissionManagementList = ({
               </legend>
               <input
                 type="text"
-                name="display_name"
+                defaultValue={updateSinglePermission?.display_name}
+                name="up_display_name"
                 className="w-full text-14 outline-none py-1"
                 placeholder="অনুমতির প্রদর্শনী নাম লিখুন"
               />
             </fieldset>
-            {validationError.display_name && (
+            {updateValidationError.Up_display_name && (
               <span className="text-red-500">
-                {validationError.display_name}
+                {updateValidationError.Up_display_name}
               </span>
             )}
             <fieldset className="flex flex-col border border-gray-300 rounded-md px-2">
@@ -489,13 +533,14 @@ const PermissionManagementList = ({
               </legend>
               <input
                 type="text"
-                name="name"
+                defaultValue={updateSinglePermission?.name}
+                name="up_name"
                 className="w-full text-14 outline-none py-1"
                 placeholder="Enter Permission Name"
               />
             </fieldset>
-            {validationError.name && (
-              <span className="text-red-500">{validationError.name}</span>
+            {updateValidationError.Up_name && (
+              <span className="text-red-500">{updateValidationError.Up_name}</span>
             )}
           </div>
           <div className="flex justify-end gap-3 mt-7">
