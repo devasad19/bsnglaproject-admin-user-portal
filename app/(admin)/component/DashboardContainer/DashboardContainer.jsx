@@ -85,18 +85,16 @@ const DashboardContainer = ({ data }) => {
             </div>
 
 
-            <div className="grid grid-cols-2 mt-3 gap-4">
-                {/* <!-- Sessions by Channel Card --> */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 mt-3 gap-4">
                 <div className="">
                     <div className="bg-white rounded-lg shadow-md">
                         <div className="p-4">
                             <div className="flex justify-between mb-3">
                                 <h4 className="text-lg font-semibold">Service Visits</h4>
                             </div>
-                            <div className="flex">
-                                <div className="w-[40%] p-3">
+                            <div className="flex flex-col lg:flex-row">
+                                <div className="lg:w-[40%] p-3">
                                     <div id="circleProgress6" className="relative rounded-full bg-gray-100 p-4">
-                                        {/* <!-- Placeholder for progress circle --> */}
                                         <svg viewBox="0 0 100 100" className="w-full">
                                             <path d="M 50,50 m 0,-45 a 45,45 0 1 1 0,90 a 45,45 0 1 1 0,-90" stroke="#eee" strokeWidth="10" fillOpacity="0"></path>
                                             <path d="M 50,50 m 0,-45 a 45,45 0 1 1 0,90 a 45,45 0 1 1 0,-90" stroke="rgb(46,32,199)" strokeWidth="10" fillOpacity="0"></path>
@@ -107,7 +105,7 @@ const DashboardContainer = ({ data }) => {
                                         </div>
                                     </div>
                                 </div>
-                                <div className="w-[60%]">
+                                <div className="lg:w-[60%]">
                                     <ul className="space-y-2">
                                         {
                                             data?.visits?.map((item, index) => (
@@ -124,7 +122,7 @@ const DashboardContainer = ({ data }) => {
                     </div>
                 </div>
 
-                {/* <!-- Events Card --> */}
+                
                 <div className="">
                     <div className="bg-white rounded-lg shadow-md h-full">
                         <div className="p-4">
@@ -135,51 +133,13 @@ const DashboardContainer = ({ data }) => {
                                 <div className="my-3 text-gray-600">Total Payments<span className="text-gray-800 font-bold float-right">{ data?.totalPayments }</span></div>
                                 <div className="my-3 text-red-500">Today Payments <span className="text-gray-800 font-bold float-right">{ data?.todayPayments }</span></div>
                                 <div className="my-3 text-yellow-500">Last Month Payments <span className="text-gray-800 font-bold float-right">{ data?.lastMonthPayments }</span></div>
-
                             </div>
-
                         </div>
                     </div>
                 </div>
-
-                {/* <!-- Device Stats Card --> */}
-                {/* <div className="w-full xl:w-1/3 p-2">
-                    <div className="bg-white rounded-lg shadow-md">
-                        <div className="p-4">
-                            <div className="flex justify-between mb-3">
-                                <h4 className="text-lg font-semibold">Device stats</h4>
-                            </div>
-                            <div className="space-y-4">
-                                <div className="flex justify-between">
-                                    <div>Uptime</div>
-                                    <div className="text-gray-500">195 Days, 8 hours</div>
-                                </div>
-                                <div className="flex justify-between">
-                                    <div>First Seen</div>
-                                    <div className="text-gray-500">23 Sep 2019, 2.04PM</div>
-                                </div>
-                                <div className="flex justify-between">
-                                    <div>Collected time</div>
-                                    <div className="text-gray-500">23 Sep 2019, 2.04PM</div>
-                                </div>
-                                <div className="flex justify-between">
-                                    <div>Memory space</div>
-                                    <div className="text-gray-500">168.3GB</div>
-                                </div>
-                                <div className="relative w-full bg-gray-200 rounded h-2 mt-4">
-                                    <div className="bg-green-500 h-full rounded w-1/2"></div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div> */}
             </div>
-
-
         </section>
     )
 };
-
-
 
 export default DashboardContainer;
