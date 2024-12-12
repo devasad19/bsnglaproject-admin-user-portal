@@ -92,8 +92,8 @@ const Sidebar = () => {
     document.cookie =
       "user=; path=/; domain=localhost; expires=Thu, 01 Jan 1970 00:00:00 UTC;";
     // window.location.href='http://localhost:3000/signin';
-    window.location.href = process.env.NEXT_PUBLIC_PORTAL_URL + "/signin";
-  };
+    window.location.href = 'https://service.bangla.gov.bd/signin';
+  }
 
   return (
     <>
@@ -147,9 +147,8 @@ const Sidebar = () => {
               }`}
             >
               <li
-                className={`hover:bg-primary group ${
-                  pathname == "/admin" ? "bg-primary" : ""
-                }`}
+                className={` ${isOpen ? 'hover:bg-primary' : ''} group ${isOpen && pathname == "/admin" ? "bg-primary" : ""
+                  }`}
               >
                 <Link
                   href={{
@@ -157,9 +156,7 @@ const Sidebar = () => {
                   }}
                   shallow
                   title="Dashboard"
-                  className={`flex items-center gap-2 group-hover:text-white ${
-                    pathname == "/admin" ? "text-white" : "text-primary"
-                  }`}
+                  className={`flex items-center gap-2 ${isOpen && 'group-hover:text-white'} ${isOpen && pathname == "/admin" ? "text-white" : "text-primary"}`}
                 >
                   <span>
                     <svg
@@ -176,9 +173,12 @@ const Sidebar = () => {
                 </Link>
               </li>
               <li
-                className={`hover:bg-primary group ${
-                  pathname.startsWith("/admin/services") ? "bg-primary" : ""
-                }`}
+                className={`${isOpen ? 'hover:bg-primary' : ''} group ${isOpen && pathname === "/admin/services" ||
+                  pathname === "/admin/services/create" ||
+                  /^\/admin\/services\/\d+$/.test(pathname)
+                  ? "bg-primary"
+                  : ""
+                  }`}
               >
                 <Link
                   href={{
@@ -186,11 +186,12 @@ const Sidebar = () => {
                   }}
                   shallow
                   title="Show All Services"
-                  className={`flex items-center gap-2 group-hover:text-white ${
-                    pathname.startsWith("/admin/services")
-                      ? "text-white"
-                      : "text-primary"
-                  }`}
+                  className={`flex items-center gap-2 ${isOpen && 'group-hover:text-white'} ${isOpen && pathname == "/admin/services" ||
+                    pathname == "/admin/services/create" ||
+                    /^\/admin\/services\/\d+$/.test(pathname)
+                    ? "text-white"
+                    : "text-primary"
+                    }`}
                 >
                   <span>
                     <svg
@@ -208,9 +209,8 @@ const Sidebar = () => {
               </li>
 
               <li
-                className={`hover:bg-primary group ${
-                  pathname == "/admin/user" ? "bg-primary" : ""
-                }`}
+                className={`${isOpen ? 'hover:bg-primary' : ''} group ${isOpen && pathname == "/admin/user" ? "bg-primary" : ""
+                  }`}
               >
                 <Link
                   href={{
@@ -218,9 +218,8 @@ const Sidebar = () => {
                   }}
                   shallow
                   title="User"
-                  className={`flex items-center gap-2 group-hover:text-white ${
-                    pathname == "/admin/user" ? "text-white" : "text-primary"
-                  }`}
+                  className={`flex items-center gap-2 ${isOpen && 'group-hover:text-white'} ${isOpen && pathname == "/admin/user" ? "text-white" : "text-primary"
+                    }`}
                 >
                   <GrUserSettings size={20} className="fill-current" />
                   <span className={isOpen ? "block" : "hidden"}>
@@ -228,29 +227,15 @@ const Sidebar = () => {
                   </span>
                 </Link>
               </li>
-
               <li
                 onClick={() => toggleAccordionSub("userManagement")}
-                className={`hover:bg-primary  group flex items-center justify-between   ${
-                  (pathname.startsWith("/admin/manage-citizen") ||
-                    pathname.startsWith("/admin/manage-user-type")) &&
-                  "bg-primary"
-                } cursor-pointer ${
-                  isToggleOpen.userManagement ? "border-b-2 border-primary" : ""
-                }`}
+                className={`${ isOpen ? 'hover:bg-primary' : '' }  group flex items-center justify-between   ${ isOpen && pathname.includes("/admin/manage-citizen") ? "bg-primary text-white" : "text-primary bg-white"
+                  } cursor-pointer ${isOpen && isToggleOpen.userManagement ? "border-b-2 border-primary" : ""
+                  }`}
               >
                 <div className="flex items-center gap-2">
-                  <span className="">
-                    <FaUsersCog
-                      size={20}
-                      // className=" "
-                      className={`text-primary group-hover:text-white transition-colors duration-300 ${
-                        pathname.startsWith("/admin/manage-citizen") ||
-                        pathname.startsWith("/admin/manage-user-type")
-                          ? "text-white"
-                          : ""
-                      }`}
-                    />
+                  <span className={`${ isOpen && pathname.includes("/admin/manage-citizen") ? "text-white" : 'text-primary'}`}>
+                    <FaUsersCog size={20} className={'fill-current'} />
                   </span>
 
                   <span
@@ -267,9 +252,8 @@ const Sidebar = () => {
                 </div>
 
                 <span
-                  className={`transition-transform duration-300 ${
-                    isOpen ? "block" : "hidden"
-                  } ${isToggleOpen.setting ? "rotate-180" : ""}`}
+                  className={`transition-transform duration-300 ${isOpen ? "block" : "hidden"
+                    } `}
                 >
                   <svg
                     className={`w-3 h-3 fill-current text-primary group-hover:text-white transition-colors duration-300 ${
@@ -319,25 +303,13 @@ const Sidebar = () => {
 
               <li
                 onClick={() => toggleAccordionSub("aclManagement")}
-                className={`hover:bg-primary  group flex items-center justify-between   ${
-                  (pathname.startsWith("/admin/permission-management") ||
-                    pathname.startsWith("/admin/manage-role")) &&
-                  "bg-primary"
-                } cursor-pointer ${
-                  isToggleOpen.aclManagement ? "border-b-2 border-primary" : ""
-                }`}
+                className={`${ isOpen && 'hover:bg-primary' }  group flex items-center justify-between   ${isOpen && pathname.includes("/admin/manage-citizen") && "bg-primary"
+                  } cursor-pointer ${isToggleOpen.aclManagement ? "border-b-2 border-primary" : ""
+                  }`}
               >
                 <div className="flex items-center gap-2">
-                  <span className="">
-                    <FaUsersCog
-                      size={20}
-                      className={`text-primary group-hover:text-white transition-colors duration-300 ${
-                        pathname.startsWith("/admin/permission-management") ||
-                        pathname.startsWith("/admin/manage-role")
-                          ? "text-white"
-                          : ""
-                      }`}
-                    />
+                  <span className={isOpen && pathname.includes("/admin/manage-citizen") ? "text-white" : 'text-primary'}>
+                    <FaUsersCog size={20} className="fill-current " />
                   </span>
 
                   <span
@@ -400,22 +372,22 @@ const Sidebar = () => {
                     >
                       Manage Roles
                     </Link>
+
+
                   </div>
                 </NewAccordion>
               )}
               <li
                 onClick={() => toggleAccordionSub("setting")}
-                className={`hover:bg-primary  group flex items-center justify-between   ${
-                  pathname.includes("/admin/setting") && "bg-primary"
-                } cursor-pointer ${
-                  isToggleOpen.setting ? "border-b-2 border-primary" : ""
-                }`}
+                className={`${ isOpen && 'hover:bg-primary' }  group flex items-center justify-between   ${isOpen && pathname.includes("/admin/setting") && "bg-primary"
+                  } cursor-pointer ${isOpen && isToggleOpen.setting ? "border-b-2 border-primary" : ""
+                  }`}
               >
                 <div className="flex items-center gap-2">
                   <span className="">
                     <svg
-                      className={`w-5 h-5 fill-current text-primary group-hover:text-white transition-colors duration-300
-                      ${pathname.includes("/admin/setting") && "text-white"}`}
+                      className={`w-5 h-5 fill-current transition-colors duration-300
+                      ${isOpen && pathname.includes("/admin/setting") ? "text-white" : "text-primary"}`}
                       xmlns="http://www.w3.org/2000/svg"
                       viewBox="0 0 640 512"
                     >
@@ -424,9 +396,8 @@ const Sidebar = () => {
                   </span>
 
                   <span
-                    className={`text-15 text-primary group-hover:text-white  ${
-                      isOpen ? "block" : "hidden"
-                    } ${pathname.includes("/admin/setting") && "text-white"}`}
+                    className={`text-15 text-primary group-hover:text-white  ${isOpen ? "block" : "hidden"
+                      } ${isOpen && pathname.includes("/admin/setting") && "text-white"}`}
                   >
                     Portal Settings
                   </span>
@@ -438,9 +409,8 @@ const Sidebar = () => {
                   } ${isToggleOpen.setting ? "rotate-180" : ""}`}
                 >
                   <svg
-                    className={`w-3 h-3 fill-current text-primary group-hover:text-white transition-colors duration-300 ${
-                      pathname.includes("/admin/setting") && "text-white"
-                    }`}
+                    className={`w-3 h-3 fill-current text-primary  transition-colors duration-300 ${isOpen && pathname.includes("/admin/setting") && "text-white"
+                      }`}
                     xmlns="http://www.w3.org/2000/svg"
                     viewBox="0 0 448 512"
                   >
@@ -508,12 +478,8 @@ const Sidebar = () => {
               )}
               <li
                 onClick={() => toggleAccordionSub("accounts-settings")}
-                className={`hover:bg-primary  group flex items-center  justify-between ${
-                  (pathname.includes("/admin/accounts-settings") ||
-                    pathname.includes("/admin/bill")) &&
-                  "bg-primary"
-                } cursor-pointer ${
-                  isToggleOpen.accountsSettings
+                className={`${ isOpen ? 'hover:bg-primary' : '' } group flex items-center  justify-between ${isOpen && pathname.includes("/admin/accounts-settings") && "bg-primary"
+                  } cursor-pointer ${isOpen && isToggleOpen.accountsSettings
                     ? "border-b-2 border-primary"
                     : ""
                 }`}
@@ -530,11 +496,8 @@ const Sidebar = () => {
                   />
 
                   <span
-                    className={`text-15 text-primary group-hover:text-white  ${
-                      isOpen ? "block" : "hidden"
-                    } ${
-                      (pathname.includes("/admin/accounts-settings") ||
-                        pathname.includes("/admin/bill")) &&
+                    className={`text-15 text-primary group-hover:text-white  ${isOpen ? "block" : "hidden"
+                      } ${isOpen && pathname.includes("/admin/accounts-settings") &&
                       "text-white"
                     }`}
                   >
@@ -543,14 +506,11 @@ const Sidebar = () => {
                 </div>
 
                 <span
-                  className={`transition-transform duration-300 ${
-                    isOpen ? "block" : "hidden"
-                  } ${isToggleOpen.accountsSettings ? "rotate-180" : ""}`}
+                  className={`transition-transform duration-300 ${isOpen ? "block" : "hidden"
+                    } ${isOpen && isToggleOpen.accountsSettings ? "rotate-180" : ""}`}
                 >
                   <svg
-                    className={`w-3 h-3 fill-current text-primary group-hover:text-white transition-colors duration-300 ${
-                      (pathname.includes("/admin/accounts-settings") ||
-                        pathname.includes("/admin/bill")) &&
+                    className={`w-3 h-3 fill-current text-primary group-hover:text-white transition-colors duration-300 ${isOpen && pathname.includes("/admin/accounts-settings") &&
                       "text-white"
                     }`}
                     xmlns="http://www.w3.org/2000/svg"
@@ -596,9 +556,8 @@ const Sidebar = () => {
               )}
 
               <li
-                className={`hover:bg-primary group ${
-                  pathname.includes("/admin/user-feedbacks") ? "bg-primary" : ""
-                }`}
+                className={`${ isOpen ? 'hover:bg-primary' : '' } group ${isOpen && pathname == "/admin/user-feedbacks" ? "bg-primary" : ""
+                  }`}
               >
                 <Link
                   href={{
@@ -606,11 +565,10 @@ const Sidebar = () => {
                   }}
                   shallow
                   title="User Feedbacks"
-                  className={`flex items-center gap-2 group-hover:text-white ${
-                    pathname == "/admin/user-feedbacks"
-                      ? "text-white"
-                      : "text-primary"
-                  }`}
+                  className={`flex items-center gap-2 ${ isOpen && 'group-hover:text-white' } ${isOpen && pathname == "/admin/user-feedbacks"
+                    ? "text-white"
+                    : "text-primary"
+                    }`}
                 >
                   <VscFeedback size={20} className="fill-current" />
                   <span className={isOpen ? "block" : "hidden"}>

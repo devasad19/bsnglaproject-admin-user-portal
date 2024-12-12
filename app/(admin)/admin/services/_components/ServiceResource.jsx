@@ -136,7 +136,8 @@ const ServiceResource = () => {
       if (uploadRes.status === true) {
         setIsLoading(false);
         toast.success("Service Created Successfully");
-        router.push("/admin/services");
+        // router.push("/admin/services");
+        window.location.href = "/admin/services";
         reset();
       } else {
         setIsLoading(false);
