@@ -16,8 +16,6 @@ export const manageUserTypeCreate = async (data: any) => {
   }
 };
 
-
-
 // get all user types
 export const getUserTypest = async () => {
   try {
@@ -94,6 +92,7 @@ export const updateUserPermission = async (data: any) => {
         "Content-Type": "application/json",
       },
     });
+    revalidateTag("get-user-types");
     return response.data;
   } catch (error) {
     return error;

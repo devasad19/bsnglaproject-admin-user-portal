@@ -35,6 +35,7 @@ const ManageUserTypeList = ({ userType }: any) => {
   const [selected, setSelected] = useState('');
   const [selectFeatureName, setSelectFeatureName] = useState<number[]>([]);
   const [featureNames, setFeatureName] = useState<TFeatureName[]>([]);
+  const [typeId,setTypeId] = useState(0);
 
   const fetchFeatureName = async () => {
     const featureNameData = await allFeaturesName();
@@ -74,17 +75,19 @@ const ManageUserTypeList = ({ userType }: any) => {
   };
 
   const handlePermission = async (id: number) => {
-    const singlePermission = await getUserType(id).catch((err) => console.log(err));
-
+    if(id){
+      const singlePermission = await getUserType(id).catch((err) => console.log(err));
+      setTypeId(id);
     setSelected(singlePermission?.data?.charge);
-  
     setValue("discount", singlePermission?.data?.discount);
     setValue("maxFile", singlePermission?.data?.max_file_limit);
     setValue("maxWord", singlePermission?.data?.max_word_limit);
 
-    setSelectFeatureName(JSON?.parse(singlePermission?.data?.free_features));
+    setSelectFeatureName(singlePermission?.data?.free_features && JSON?.parse(singlePermission?.data?.free_features));
 
     modelOpen(permissionModal, permissionModalForm);
+    }
+    
   };
 
   const handleUpdateUserType = async (e: any) => {
@@ -167,6 +170,7 @@ const ManageUserTypeList = ({ userType }: any) => {
   };
 
 
+  // handle permission update citizen 
   const HandleCitizenPermission = async (data: any) => {
     const { discount, maxFile, maxWord } = data;
 
@@ -179,25 +183,25 @@ const ManageUserTypeList = ({ userType }: any) => {
       toast.error("Please select at least one feature name.");
       return;
     }
-
-    const payload = {
-      id: 1,
-      charge: selected,
-      discount: discount,
-      max_file_limit: maxFile,
-      max_word_limit: maxWord,
-      free_features: selectFeatureName,
-    };
-
-
-    const response = await updateUserPermission(payload).catch((err) => {
-      console.log(err);
-    });
-
-    if(response?.status){
-      Swal.fire("Updated!", "The permission was updated..", "success");
-      modelClose(permissionModal, permissionModalForm);
-    }else {
+    try {
+      const payload = {
+        id: typeId,
+        charge: selected,
+        discount: discount,
+        max_file_limit: maxFile,
+        max_word_limit: maxWord,
+        free_features: JSON.stringify(selectFeatureName),
+      };
+      const response = await updateUserPermission(payload);
+      console.log({response});
+      
+      if(response?.status){
+        toast.success("Updated successfully");
+        modelClose(permissionModal, permissionModalForm);
+      }else {
+        Swal.fire("Error!", "Something went wrong.", "error");
+      }
+    } catch (error) {
       Swal.fire("Error!", "Something went wrong.", "error");
     }
   }

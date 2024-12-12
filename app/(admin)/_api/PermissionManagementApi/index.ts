@@ -1,34 +1,50 @@
 "use server";
 import axiosInstance from "@/lib/AxiosInstance";
 import { revalidateTag } from "next/cache";
-// create user Type api
+import { permission } from "process";
 
 
 // create single Parent Permission api
 export const createParentPermission = async (data: any) => {
-    try {
-        const response = await axiosInstance.post("/permission-parents", data, {
-            headers: {
-              "Content-Type": "application/json",
-            },
-          });
-          revalidateTag("get-parent-permissions");
-          return response.data;
-    } catch (error) {
-        throw new Error("Failed to Create Parent Permission data");
-    }
-}
+  try {
+    const response = await axiosInstance.post("/permission-parents", data, {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    revalidateTag("get-parent-permissions");
+    return response.data;
+  } catch (error) {
+    throw new Error("Failed to Create Parent Permission data");
+  }
+};
 
+// create single permission api
 
+export const createSinglePermission = async (data: any) => {
+  try {
+    const response = await axiosInstance.post("/permissions", data, {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    revalidateTag("get-permissions");
+    return response.data;
+  } catch (error) {
+    console.log(error);
+
+    throw new Error("Failed to Create Permission data");
+  }
+};
 
 // get all Parent Permissions api
 export const getAllParentPermission = async () => {
   try {
     const fetchOption = {
-        next: {
-          tags: ["get-parent-permissions"],
-        },
-      };
+      next: {
+        tags: ["get-parent-permissions"],
+      },
+    };
     const res = await fetch(
       `${process.env.NEXT_PUBLIC_API_URL}/permission-parents`,
       fetchOption
@@ -41,10 +57,30 @@ export const getAllParentPermission = async () => {
   } catch (error) {}
 };
 
-// get single user type
-export const getUserType = async (id:number) => {
+// get all permissions api
+export const getAllPermission = async () => {
   try {
-    const response = await axiosInstance.get(`/user-type/${id}`,{
+    const fetchOption = {
+      next: {
+        tags: ["get-permissions"],
+      },
+    };
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/permissions`,
+      fetchOption
+    );
+    if (!res.ok) {
+      throw new Error("Failed to fetch data");
+    }
+
+    return res.json();
+  } catch (error) {}
+};
+
+// get single user type
+export const getUserType = async (id: number) => {
+  try {
+    const response = await axiosInstance.get(`/user-type/${id}`, {
       headers: {
         "Content-Type": "application/json",
       },
@@ -59,14 +95,13 @@ export const getUserType = async (id:number) => {
 
 export const manageUserTypeUpdate = async (data: any) => {
   try {
-    
     const response = await axiosInstance.post("/update/user-type", data, {
       headers: {
         "Content-Type": "application/json",
       },
     });
     // console.log(response);
-    
+
     revalidateTag("get-user-types");
 
     return response.data;
@@ -76,32 +111,34 @@ export const manageUserTypeUpdate = async (data: any) => {
 };
 
 // delete user type api
-export const deleteUserType = async (id: number) => {
+export const deletePermission = async (id: number) => {
   try {
-    const response = await axiosInstance.delete(`/delete/user-type/${id}`, {
+    const response = await axiosInstance.delete(`/permissions/${id}`, {
       headers: {
         "Content-Type": "application/json",
       },
     });
-    revalidateTag("get-user-types");
+    revalidateTag("get-permissions");
     return response.data;
   } catch (error) {
+    console.log(error);
     return error;
   }
-}
+};
 
 export const updateUserPermission = async (data: any) => {
   try {
-    const response = await axiosInstance.post("/update/user-type/permissions", data, {
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
+    const response = await axiosInstance.post(
+      "/update/user-type/permissions",
+      data,
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
     return response.data;
   } catch (error) {
     return error;
   }
-}
-
-
-
+};
