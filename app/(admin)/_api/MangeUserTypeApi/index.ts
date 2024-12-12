@@ -16,8 +16,6 @@ export const manageUserTypeCreate = async (data: any) => {
   }
 };
 
-
-
 // get all user types
 export const getUserTypest = async () => {
   try {
