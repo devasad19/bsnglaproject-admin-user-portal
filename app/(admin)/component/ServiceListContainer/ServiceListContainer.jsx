@@ -191,7 +191,7 @@ const ServiceListContainer = ({ services }) => {
                             {item?.completion_status == 3 && (
                               <Link
                                 href={{
-                                  pathname: `/admin/services/${item?.id}`,
+                                  pathname: `http://localhost:3000/services/${item?.id}`,
                                 }}
                                 shallow
                                 className="px-2 py-1 bg-primary  text-white active:scale-90 transition-all duration-400 rounded-md"
