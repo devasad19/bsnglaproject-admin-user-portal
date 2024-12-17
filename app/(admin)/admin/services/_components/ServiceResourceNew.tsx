@@ -13,6 +13,7 @@ const CustomEditor = dynamic(
   }
 );
 import { FaCheckCircle } from "react-icons/fa";
+import { replaceSpaces } from "@/helper";
 
 const ServiceResourceNew = () => {
   const router = useRouter();
@@ -21,7 +22,7 @@ const ServiceResourceNew = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [showItem, setShowItem] = useState("");
   const [type, setType] = useState<string[]>([]);
-  const[customError, setCustomError] = useState<any>(null);
+  const [customError, setCustomError] = useState<any>(null);
 
   const allTypes = ["Software", "Publication", "Font", "Dataset", "AI Model"];
 
@@ -35,14 +36,18 @@ const ServiceResourceNew = () => {
 
   const onSubmitServiceResource = async (data: any) => {
     // setIsLoading(true);
-    console.log("length:",type?.length);
-    
+    let newType: any = [];
+    type?.forEach((item) => {
+      const newReplaceSpaces = replaceSpaces(item);
+      newType.push(newReplaceSpaces);
+    });
+    // console.log({ newType });
     setCustomError(null);
 
     if (type.length < 1) {
-        setCustomError("Please select at least one type");
-        return;
-      }
+      setCustomError("Please select at least one type");
+      return;
+    }
     const {
       component,
       description,
@@ -77,7 +82,7 @@ const ServiceResourceNew = () => {
     formData.append("resource_file", resource_file[0] || "");
     formData.append("description_title", description_title);
     formData.append("status", "1");
-    formData.append("type", JSON.stringify(type));
+    formData.append("type", JSON.stringify(newType));
     const uploadRes = await uploadServiceData(formData);
 
     if (uploadRes.status === true) {
@@ -261,9 +266,7 @@ const ServiceResourceNew = () => {
               </div>
             </fieldset>
             {customError && (
-              <p className="text-red-500 text-12 px-2 pt-1">
-                {customError}
-              </p>
+              <p className="text-red-500 text-12 px-2 pt-1">{customError}</p>
             )}
           </div>
 
