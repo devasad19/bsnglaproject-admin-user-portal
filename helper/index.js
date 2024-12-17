@@ -273,3 +273,7 @@ export const sweetAlert = () => {
     }
   });
 }
+
+export const replaceSpaces = (str) => {
+  return str.replaceAll(" ", "_");
+};

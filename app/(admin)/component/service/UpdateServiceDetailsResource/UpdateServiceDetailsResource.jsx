@@ -916,7 +916,7 @@ const UpdateServiceDetailsResource = ({ id, secondTab }) => {
                       </div>
                     )}
 
-                    {typeof item?.icon == "object" && (
+                    {typeof item?.icon == "object" && item?.icon !== null && (
                       <div>
                         <img
                           src={URL.createObjectURL(item?.icon)}
@@ -1257,7 +1257,7 @@ const UpdateServiceDetailsResource = ({ id, secondTab }) => {
                             </div>
                           )}
 
-                          {typeof item?.icon == "object" && (
+                          {typeof item?.icon == "object" && item?.icon !== null && (
                             <div className="mt-5 relative w-12 h-12">
                               <Image
                                 src={URL.createObjectURL(item?.icon)}

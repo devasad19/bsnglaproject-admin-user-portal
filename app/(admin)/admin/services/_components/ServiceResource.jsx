@@ -18,8 +18,12 @@ const ServiceResource = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [showItem, setShowItem] = useState("");
   const [type, setType] = useState([]);
+  const [typeError, setTypeError] =useState({
+    title:'',
+    message:''
+  })
 
-  const allTypes = ['Application', 'Plugin', 'Mobile Apps', 'Tools', 'Papers', 'Font'];
+  const allTypes = ['Software', 'Publication', 'Font', 'Dataset', 'AI Model'];
 
   const {
     register,
@@ -32,7 +36,6 @@ const ServiceResource = () => {
 
   const onSubmitServiceResource = async (data) => {
     // setIsLoading(true);
-
     const {
       component,
       description,
@@ -51,7 +54,8 @@ const ServiceResource = () => {
       pro: data.pro ? 1 : 0,
     };
 
-    console.log('resource file img:', resourceFileImg.size);
+    // console.log('resource file img:', resourceFileImg.size);
+console.log(type?.length);
 
     if (name.length < 3) {
       setIsLoading(false);
@@ -61,7 +65,7 @@ const ServiceResource = () => {
       setIsLoading(false);
       setError("description", { type: "manual", message: "Service description must be at least 3 characters long" });
       return;
-    } else if (type.length < 1) {
+    } else if (type?.length < 1) {
       setIsLoading(false);
       setError("type", { type: "manual", message: "Please select at least one type" });
       return;
@@ -110,8 +114,6 @@ const ServiceResource = () => {
       setError("visit_link", { type: "manual", message: "Please enter visit link" });
       return;
     } else {
-
-
       const formData = new FormData();
       formData.append("name", name);
       formData.append("description", description);
@@ -125,12 +127,8 @@ const ServiceResource = () => {
       formData.append("completion_status", '1');
       formData.append("resource_file", resource_file[0] || "");
       formData.append("description_title", description_title);
+      formData.append("status", 1);
       formData.append("type", JSON.stringify(type));
-
-
-
-
-
       const uploadRes = await uploadServiceData(formData);
 
       if (uploadRes.status === true) {
@@ -144,16 +142,12 @@ const ServiceResource = () => {
         toast.error("Service Creation Failed");
       }
     }
-
-
-
   };
-
 
   const handleToggleType = (value) => {
 
     if (type.includes(value)) {
-      setType((prev) => prev.filter((item) => item !== value));
+      setType((prev) => prev?.filter((item) => item !== value));
 
     } else {
       if (type.length < 3) {
@@ -166,8 +160,8 @@ const ServiceResource = () => {
 
   };
 
-
-
+  
+  
 
   return (
     <>
@@ -326,6 +320,13 @@ const ServiceResource = () => {
                 ))}
               </div>
             </fieldset>
+            {
+              errors.type && (
+                <p className="text-red-500 text-12 px-2 pt-1">
+                  {errors.type.message}
+                </p>
+              )
+            }
           </div>
 
           <div>
