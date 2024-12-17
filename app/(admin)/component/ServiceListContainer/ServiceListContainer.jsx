@@ -6,8 +6,11 @@ import Swal from "sweetalert2";
 import { deleteService } from "../../_api";
 import { CiEdit } from "react-icons/ci";
 import { GrView } from "react-icons/gr";
+import { useRouter } from "next/navigation";
 
 const ServiceListContainer = ({ services }) => {
+  const router = useRouter();
+
   const handleDelete = (id) => {
     if (id) {
       Swal.fire({
@@ -62,6 +65,20 @@ const ServiceListContainer = ({ services }) => {
       console.error("Update failed:", result?.message);
     }
   };
+
+  const handleRedirect = (id) =>{
+    // const devPosition = `${process.env.NEXT_MODE}`;
+    // console.log(devPosition);
+    
+    // if(devPosition === "development"){
+    //   router.replace(`${process.env.NEXT_PUBLIC_DEV_PORTAL_URL}/service/${id}`);
+    // }else{
+    //   router.replace(`${process.env.NEXT_PUBLIC_SERVER_PORTAL_URL}/service/${id}`);
+    // }
+
+    router.replace(`${process.env.NEXT_PUBLIC_SERVER_PORTAL_URL}/services/${id}`);
+
+  }
 
   return (
     <section>
@@ -189,15 +206,15 @@ const ServiceListContainer = ({ services }) => {
                         <div className="w-full flex  items-center justify-center gap-2">
                           <>
                             {item?.completion_status == 3 && (
-                              <Link
-                                href={{
-                                  pathname: `/admin/services/${item?.id}`,
+                              <button
+                                onClick={()=>{
+                                  handleRedirect(item?.id);
                                 }}
                                 shallow
                                 className="px-2 py-1 bg-primary  text-white active:scale-90 transition-all duration-400 rounded-md"
                               >
                                <GrView className="text-white w-4 h-4" />
-                              </Link>
+                              </button>
                             )}
 
                             <Link
