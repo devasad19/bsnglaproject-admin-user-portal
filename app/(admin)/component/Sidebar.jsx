@@ -183,7 +183,7 @@ const Sidebar = () => {
                 className={`${isOpen ? "hover:bg-primary" : ""} group ${
                   (isOpen && pathname === "/admin/services") ||
                   pathname === "/admin/services/create" ||
-                  /^\/admin\/services\/\d+$/.test(pathname)
+                  pathname.includes("/admin/services/edit/")
                     ? "bg-primary"
                     : ""
                 }`}
@@ -199,7 +199,7 @@ const Sidebar = () => {
                   } ${
                     (isOpen && pathname == "/admin/services") ||
                     pathname == "/admin/services/create" ||
-                    /^\/admin\/services\/\d+$/.test(pathname)
+                    pathname.includes("/admin/services/edit/")
                       ? "text-white"
                       : "text-primary"
                   }`}
