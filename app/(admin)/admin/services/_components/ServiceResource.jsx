@@ -189,10 +189,8 @@ const ServiceResource = () => {
                   validate: {
                     wordCount: (value) => {
                       const wordCount = value.trim().split(/\s+/).length;
-                      if (wordCount < 1) {
-                        return "Description must have at least 1 words";
-                      } else if (wordCount > 3) {
-                        return "Description cannot exceed 3 words";
+                      if (wordCount > 5) {
+                        return "Description must have at least 5 words";
                       }
                       return true;
                     },
@@ -227,9 +225,10 @@ const ServiceResource = () => {
                   validate: {
                     maxWords: (value) => {
                       const wordCount = value.trim().split(/\s+/).length;
-                      return (
-                        wordCount <= 1 || "Description cannot exceed 1 words"
-                      );
+                      if(wordCount > 8) {
+                        return "Description cannot exceed 8 words";
+                      }
+                      return true;
                     },
                   },
                 })}
@@ -268,9 +267,10 @@ const ServiceResource = () => {
                   validate: {
                     maxWords: (value) => {
                       const wordCount = value.trim().split(/\s+/).length;
-                      return (
-                        wordCount <= 15 || "Description cannot exceed 80 words"
-                      );
+                      if(wordCount > 30) {
+                        return "Description cannot exceed 30 words";
+                      }
+                      return true;
                     },
                   },
                 }}
