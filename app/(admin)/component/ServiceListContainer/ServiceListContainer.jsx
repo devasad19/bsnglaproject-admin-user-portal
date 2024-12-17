@@ -10,6 +10,7 @@ import { useRouter } from "next/navigation";
 
 const ServiceListContainer = ({ services }) => {
   const router = useRouter();
+  const devPosition = process.env.NEXT_PUBLIC_MODE;
 
   const handleDelete = (id) => {
     if (id) {
@@ -66,19 +67,15 @@ const ServiceListContainer = ({ services }) => {
     }
   };
 
-  const handleRedirect = (id) =>{
-    // const devPosition = `${process.env.NEXT_MODE}`;
+  const handleRedirect = (id) => {
     // console.log(devPosition);
-    
     // if(devPosition === "development"){
-    //   router.replace(`${process.env.NEXT_PUBLIC_DEV_PORTAL_URL}/service/${id}`);
+    //   router.replace(`${process.env.NEXT_PUBLIC_DEV_PORTAL_URL}/services/${id}`);
     // }else{
-    //   router.replace(`${process.env.NEXT_PUBLIC_SERVER_PORTAL_URL}/service/${id}`);
+    //   router.replace(`${process.env.NEXT_PUBLIC_SERVER_PORTAL_URL}/services/${id}`);
     // }
-
-    router.replace(`${process.env.NEXT_PUBLIC_SERVER_PORTAL_URL}/services/${id}`);
-
-  }
+    router.replace("https://service.bangla.gov.bd/services/" + id);
+  };
 
   return (
     <section>
@@ -179,19 +176,21 @@ const ServiceListContainer = ({ services }) => {
                         {item?.completion_status == 3 ? (
                           <>
                             <button
-                            onClick={() =>
+                              onClick={() =>
                                 UpdateServicePublishStatus(
                                   item?.id,
                                   item?.status == 1 ? 0 : 1
                                 )
                               }
                               className={`relative w-14 h-6 rounded-full transition-colors duration-300 ${
-                                item?.status == 1 ? "bg-green-500" : "bg-gray-400"
+                                item?.status == 1
+                                  ? "bg-green-500"
+                                  : "bg-gray-400"
                               }`}
                             >
                               <span
                                 className={`absolute top-1 left-1 w-4 h-4 rounded-full bg-white shadow-md transform transition-transform duration-300 ${
-                                    item?.status == 1 ? "translate-x-8" : ""
+                                  item?.status == 1 ? "translate-x-8" : ""
                                 }`}
                               ></span>
                             </button>
@@ -207,13 +206,13 @@ const ServiceListContainer = ({ services }) => {
                           <>
                             {item?.completion_status == 3 && (
                               <button
-                                onClick={()=>{
+                                onClick={() => {
                                   handleRedirect(item?.id);
                                 }}
                                 shallow
                                 className="px-2 py-1 bg-primary  text-white active:scale-90 transition-all duration-400 rounded-md"
                               >
-                               <GrView className="text-white w-4 h-4" />
+                                <GrView className="text-white w-4 h-4" />
                               </button>
                             )}
 
@@ -223,10 +222,30 @@ const ServiceListContainer = ({ services }) => {
                               }}
                               className="px-2 py-1  bg-blue-500 text-white active:scale-90 transition-all duration-400 rounded-md"
                             >
-                              {item?.completion_status == 3 ? (<><CiEdit /></>) : "Update"}
+                              {item?.completion_status == 3 ? (
+                                <>
+                                  <CiEdit />
+                                </>
+                              ) : (
+                                <>
+                                  <CiEdit />
+                                </>
+                              )}
                             </Link>
+                            <button
+                                onClick={() => handleDelete(item?.id)}
+                                className="p-1  bg-red-500 text-white active:scale-90 transition-all duration-400 rounded-md"
+                              >
+                                <svg
+                                  className="w-4 h-4 fill-current"
+                                  xmlns="http://www.w3.org/2000/svg"
+                                  viewBox="0 0 448 512"
+                                >
+                                  <path d="M135.2 17.7C140.6 6.8 151.7 0 163.8 0H284.2c12.1 0 23.2 6.8 28.6 17.7L320 32h96c17.7 0 32 14.3 32 32s-14.3 32-32 32H32C14.3 96 0 81.7 0 64S14.3 32 32 32h96l7.2-14.3zM32 128H416V448c0 35.3-28.7 64-64 64H96c-35.3 0-64-28.7-64-64V128zm96 64c-8.8 0-16 7.2-16 16V432c0 8.8 7.2 16 16 16s16-7.2 16-16V208c0-8.8-7.2-16-16-16zm96 0c-8.8 0-16 7.2-16 16V432c0 8.8 7.2 16 16 16s16-7.2 16-16V208c0-8.8-7.2-16-16-16zm96 0c-8.8 0-16 7.2-16 16V432c0 8.8 7.2 16 16 16s16-7.2 16-16V208c0-8.8-7.2-16-16-16z" />
+                                </svg>
+                              </button>
 
-                            {item?.completion_status == 3 && (
+                            {/* {item?.completion_status == 3 && (
                               <button
                                 onClick={() => handleDelete(item?.id)}
                                 className="p-1  bg-red-500 text-white active:scale-90 transition-all duration-400 rounded-md"
@@ -239,7 +258,7 @@ const ServiceListContainer = ({ services }) => {
                                   <path d="M135.2 17.7C140.6 6.8 151.7 0 163.8 0H284.2c12.1 0 23.2 6.8 28.6 17.7L320 32h96c17.7 0 32 14.3 32 32s-14.3 32-32 32H32C14.3 96 0 81.7 0 64S14.3 32 32 32h96l7.2-14.3zM32 128H416V448c0 35.3-28.7 64-64 64H96c-35.3 0-64-28.7-64-64V128zm96 64c-8.8 0-16 7.2-16 16V432c0 8.8 7.2 16 16 16s16-7.2 16-16V208c0-8.8-7.2-16-16-16zm96 0c-8.8 0-16 7.2-16 16V432c0 8.8 7.2 16 16 16s16-7.2 16-16V208c0-8.8-7.2-16-16-16zm96 0c-8.8 0-16 7.2-16 16V432c0 8.8 7.2 16 16 16s16-7.2 16-16V208c0-8.8-7.2-16-16-16z" />
                                 </svg>
                               </button>
-                            )}
+                            )} */}
                           </>
                         </div>
                       </td>

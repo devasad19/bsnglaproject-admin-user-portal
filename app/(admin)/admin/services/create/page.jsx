@@ -1,4 +1,5 @@
 import ServiceResource from "../_components/ServiceResource";
+import ServiceResourceNew from "../_components/ServiceResourceNew";
 
 const Home = () => {
   return (
@@ -13,7 +14,8 @@ const Home = () => {
 
               <div>
                 <div className="flex flex-col gap-4">
-                  <ServiceResource />
+                  {/* <ServiceResource /> */}
+                  <ServiceResourceNew/>
                 </div>
               </div>
             </div>

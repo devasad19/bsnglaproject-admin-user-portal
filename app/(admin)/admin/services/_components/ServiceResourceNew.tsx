@@ -1,28 +1,29 @@
 "use client";
+import dynamic from "next/dynamic";
+import { uploadServiceData } from "@/app/(portal)/_api";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { useForm, Controller } from "react-hook-form";
 import { toast } from "react-toastify";
-import CustomEditor from "@/app/_components/CustomEditor/CustomEditor";
-import {
-  getSingleServiceResource,
-  updateServiceResource,
-} from "@/app/(admin)/_api";
+const CustomEditor = dynamic(
+  () => import("@/app/_components/CustomEditor/CustomEditor"),
+  {
+    ssr: false,
+  }
+);
 import { FaCheckCircle } from "react-icons/fa";
-import { CountWords } from "@/helper";
 
-const UpdateServiceResource = ({ id }) => {
+const ServiceResourceNew = () => {
   const router = useRouter();
-  const [serviceResource, setServiceResource] = useState(null);
-  const [paidStatus, setPaidStatus] = useState();
-  // const [status, setStatus] = useState("");
-  const [serviceImg, setServiceImg] = useState(null);
-  const [resourceFileImg, setResourceFileImg] = useState(null);
+  const [serviceImg, setServiceImg] = useState<File | null>(null);
+  const [resourceFileImg, setResourceFileImg] = useState<File | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [showItem, setShowItem] = useState("");
-  const [type, setType] = useState([]);
-  const allTypes = ['Software', 'Publication', 'Font', 'Dataset', 'AI Model'];
+  const [type, setType] = useState<string[]>([]);
+  const[customError, setCustomError] = useState<any>(null);
+
+  const allTypes = ["Software", "Publication", "Font", "Dataset", "AI Model"];
 
   const {
     register,
@@ -30,185 +31,86 @@ const UpdateServiceResource = ({ id }) => {
     reset,
     formState: { errors },
     control,
-    setValue,
-    getValues,
-    setError,
   } = useForm();
 
-  const onSubmitServiceResource = async (data) => {
-    setIsLoading(true);
+  const onSubmitServiceResource = async (data: any) => {
+    // setIsLoading(true);
+    console.log("length:",type?.length);
+    
+    setCustomError(null);
 
+    if (type.length < 1) {
+        setCustomError("Please select at least one type");
+        return;
+      }
     const {
       component,
       description,
-      distribution,
       logo,
       name,
       production_status,
       release_date,
-      sub_title,
-      // type,
       visit_link,
       visit_type,
       resource_file,
-      status,
       description_title,
     } = data;
 
-    // console.log('description count: ',errors);
+    let paid_status = {
+      free: data.free ? 1 : 0,
+      pro: data.pro ? 1 : 0,
+    };
 
-    /* if(CountWords(description) > 30) {
-            setIsLoading(false);
-            setError("description", { type: "manual", message: "Description cannot exceed 30 words" });
-            return;
-        }
-
-        if(CountWords(name) > 3) {
-            setIsLoading(false);
-            setError("name", { type: "manual", message: "Name cannot exceed 3 words" });
-            return;
-        }
-
-
-        if(CountWords(description_title) > 10){
-            setIsLoading(false);
-            setError("description_title", { type: "manual", message: "Description title cannot exceed 10 words" });
-            return;
-        }
-
-
-        if(type.length > 3){
-            setIsLoading(false);
-            setError("type", { type: "manual", message: "You can select only 3 types" });
-            return;
-        }
-
-        if(production_status.length < 1){
-            setIsLoading(false);
-            setError("production_status", { type: "manual", message: "Production status is required" });
-            return;
-        }
-
-        if(release_date.length < 1){
-            setIsLoading(false);
-            setError("release_date", { type: "manual", message: "Release date is required" });
-            return;
-        }
-
-        if(logo.length < 1 && !logo[0]){
-            setIsLoading(false);
-            setError("logo", { type: "manual", message: "Logo is required" });
-            return;
-        }
-
-        if(paidStatus?.free == 0 && paidStatus?.pro == 0){
-            setIsLoading(false);
-            setError("paid_status", { type: "manual", message: "Paid status is required" });
-            return;
-        }
-
-        if(component.length < 1){
-            setIsLoading(false);
-            setError("component", { type: "manual", message: "Component is required" });
-            return;
-        }
-
-        if(visit_type.length < 1){
-            setIsLoading(false);
-            setError("visit_type", { type: "manual", message: "Visit type is required" });
-            return;
-        }
-
-        if(visit_type == 'download' && resource_file.length < 1){
-            setIsLoading(false);
-            setError("resource_file", { type: "manual", message: "Resource file is required" });
-            return;
-        } */
+    // console.log('resource file img:', resourceFileImg.size);
 
     const formData = new FormData();
     formData.append("name", name);
     formData.append("description", description);
-    // formData.append("status", status);
     formData.append("component", component);
-    formData.append("distribution", distribution);
-    formData.append("logo", typeof logo[0] == "string" ? "" : logo[0]);
-    formData.append("paid_status", JSON.stringify(paidStatus));
+    formData.append("logo", logo[0]);
+    formData.append("paid_status", JSON.stringify(paid_status));
     formData.append("production_status", production_status);
     formData.append("release_date", release_date);
-    formData.append("type", type);
-    formData.append("sub_title", sub_title);
     formData.append("visit_link", visit_link || "");
     formData.append("visit_type", visit_type);
-    formData.append(
-      "resource_file",
-      typeof resource_file == "string" ? "" : resource_file[0]
-    );
+    formData.append("completion_status", "1");
+    formData.append("resource_file", resource_file[0] || "");
     formData.append("description_title", description_title);
+    formData.append("status", "1");
+    formData.append("type", JSON.stringify(type));
+    const uploadRes = await uploadServiceData(formData);
 
-    console.log("form data: ", formData);
-
-    const response = await updateServiceResource(formData, id)
-      .then((res) => {
-        if (res?.status == true) {
-          toast.success("Service Updated Successfully");
-          router.push("/admin/services");
-        } else {
-          toast.error("Service Update Failed");
-        }
-      })
-      .catch((err) => {
-        console.log(err);
-      })
-      .finally(() => {
-        setIsLoading(false);
-      });
-  };
-
-  useEffect(() => {
-    getSingleServiceResource(id)
-      .then((res) => {
-        setServiceResource(res?.data);
-        setValue("name", res?.data?.name);
-        setValue("sub_title", res?.data?.sub_title);
-        setValue("description", res?.data?.description);
-        // setValue("type", JSON.parse(res?.data?.type));
-        setValue("production_status", res?.data?.production_status);
-        setValue("component", res?.data?.component);
-        // setValue("distribution", res?.data?.distribution);
-        setValue("logo", res?.data?.logo);
-        setValue("release_date", res?.data?.release_date);
-        setValue("paid_status", JSON.parse(res?.data?.paid_status));
-        setValue("visit_link", res?.data?.visit_link);
-        setValue("visit_type", res?.data?.visit_type);
-        setValue("resource_file", res?.data?.resource_file);
-        setValue("free", JSON.parse(res?.data?.paid_status)?.free);
-        setValue("pro", JSON.parse(res?.data?.paid_status)?.pro);
-        setValue("status", res?.data?.status);
-        setValue("description_title", res?.data?.description_title);
-
-        setType(JSON.parse(res?.data?.type));
-
-        setPaidStatus(JSON.parse(res?.data?.paid_status));
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  }, []);
-
-  const handleToggleType = (value) => {
-    if (type.includes(value)) {
-      setType((prev) => prev.filter((item) => item !== value));
+    if (uploadRes.status === true) {
+      setIsLoading(false);
+      toast.success("Service Created Successfully");
+      // router.push("/admin/services");
+      window.location.href = "/admin/services";
+      reset();
     } else {
-      setType((prev) => [...prev, value]);
+      setIsLoading(false);
+      toast.error("Service Creation Failed");
     }
   };
 
-  // console.log('service status: ',type);
+  const handleToggleType = (value: string) => {
+    if (type.includes(value)) {
+      setType((prev) => prev?.filter((item) => item !== value));
+    } else {
+      if (type.length < 3) {
+        setType((prev) => [...prev, value]);
+      } else {
+        toast.warning("You can select only 3 types");
+      }
+    }
+  };
 
   return (
     <>
       <div className="relative">
-        <form onSubmit={handleSubmit(onSubmitServiceResource)}>
+        <form
+          onSubmit={handleSubmit(onSubmitServiceResource)}
+          className="flex flex-col gap-3"
+        >
           <div>
             <fieldset className="flex flex-col border rounded-md px-2">
               <legend>
@@ -226,7 +128,7 @@ const UpdateServiceResource = ({ id }) => {
                     wordCount: (value) => {
                       const wordCount = value.trim().split(/\s+/).length;
                       if (wordCount > 5) {
-                        return "Description cannot exceed 5 words";
+                        return "Description must have at least 5 words";
                       }
                       return true;
                     },
@@ -239,7 +141,7 @@ const UpdateServiceResource = ({ id }) => {
             </fieldset>
             {errors.name && (
               <p className="text-red-500 text-12 px-2 pt-1">
-                {errors.name.message}
+                {errors.name.message as string}
               </p>
             )}
           </div>
@@ -261,8 +163,9 @@ const UpdateServiceResource = ({ id }) => {
                     maxWords: (value) => {
                       const wordCount = value.trim().split(/\s+/).length;
                       if (wordCount > 8) {
-                        return "Description Title cannot exceed 8 words";
+                        return "Description cannot exceed 8 words";
                       }
+                      return true;
                     },
                   },
                 })}
@@ -274,7 +177,7 @@ const UpdateServiceResource = ({ id }) => {
             </fieldset>
             {errors.description_title && (
               <p className="text-red-500 text-12 px-2 pt-1">
-                {errors.description_title.message}
+                {errors.description_title.message as string}
               </p>
             )}
           </div>
@@ -320,7 +223,7 @@ const UpdateServiceResource = ({ id }) => {
                     />
                     {errors.description && (
                       <p className="text-red-500 text-12 px-2 pt-1">
-                        {errors.description.message}
+                        {errors.description.message as string}
                       </p>
                     )}
                   </>
@@ -357,6 +260,11 @@ const UpdateServiceResource = ({ id }) => {
                 ))}
               </div>
             </fieldset>
+            {customError && (
+              <p className="text-red-500 text-12 px-2 pt-1">
+                {customError}
+              </p>
+            )}
           </div>
 
           <div>
@@ -376,29 +284,14 @@ const UpdateServiceResource = ({ id }) => {
                 })}
                 className="outline-none p-2 bg-white"
               >
-                <option
-                  selected={serviceResource?.production_status == "Live"}
-                  value="Live"
-                >
-                  Live
-                </option>
-                <option
-                  selected={serviceResource?.production_status == "Beta"}
-                  value="Beta"
-                >
-                  Beta
-                </option>
-                <option
-                  selected={serviceResource?.production_status == "On Test"}
-                  value="On Test"
-                >
-                  On Test
-                </option>
+                <option value="Live">Live</option>
+                <option value="Beta">Beta</option>
+                <option value="On Test">On Test</option>
               </select>
             </fieldset>
             {errors.production_status && (
               <p className="text-red-500 text-12 px-2 pt-1">
-                {errors.production_status.message}
+                {errors.production_status.message as string}
               </p>
             )}
           </div>
@@ -424,10 +317,20 @@ const UpdateServiceResource = ({ id }) => {
             </fieldset>
             {errors.release_date && (
               <p className="text-red-500 text-12 px-2 pt-1">
-                {errors.release_date.message}
+                {errors.release_date.message as string}
               </p>
             )}
           </div>
+
+          {serviceImg && (
+            <Image
+              src={URL.createObjectURL(serviceImg)}
+              width={320}
+              height={192}
+              className="w-80 h-48 rounded-md"
+              alt="Preview"
+            />
+          )}
 
           <div>
             <fieldset className="flex flex-col border rounded-md px-2">
@@ -441,7 +344,9 @@ const UpdateServiceResource = ({ id }) => {
               </legend>
 
               <input
-                {...register("logo")}
+                {...register("logo", {
+                  required: "Logo is required",
+                })}
                 id="file"
                 type="file"
                 onChange={(e) => {
@@ -452,33 +357,10 @@ const UpdateServiceResource = ({ id }) => {
                 // accept="video/mp4, video/ogg, video/avi"
                 accept="image/*"
               />
-
-              {serviceImg && (
-                <Image
-                  src={URL.createObjectURL(serviceImg)}
-                  width={320}
-                  height={192}
-                  className="w-[10em] h-[10em] rounded-md mt-3"
-                  alt="Preview"
-                />
-              )}
-              {!serviceImg && serviceResource?.logo && (
-                <div className="pt-3">
-                  <Image
-                    src={
-                      process.env.NEXT_PUBLIC_IMAGE_URL + serviceResource?.logo
-                    }
-                    className="w-[10em] h-[10em]"
-                    width={1000}
-                    height={1000}
-                    alt="Bangla"
-                  />
-                </div>
-              )}
             </fieldset>
             {errors.logo && (
               <p className="text-red-500 text-12 px-2 pt-1">
-                {errors.logo.message}
+                {errors.logo.message as string}
               </p>
             )}
           </div>
@@ -501,13 +383,6 @@ const UpdateServiceResource = ({ id }) => {
                     id=""
                     className="w-4 h-4"
                     value={"Free"}
-                    checked={paidStatus?.free == 1}
-                    onChange={() => {
-                      setPaidStatus({
-                        free: 1,
-                        pro: 0,
-                      });
-                    }}
                   />
                   <label htmlFor="free">Free</label>
                 </div>
@@ -518,13 +393,6 @@ const UpdateServiceResource = ({ id }) => {
                     id=""
                     className="w-4 h-4"
                     value={"Pro"}
-                    checked={paidStatus?.pro == 1}
-                    onChange={() => {
-                      setPaidStatus({
-                        free: 0,
-                        pro: 1,
-                      });
-                    }}
                   />
                   <label htmlFor="pro">Pro</label>
                 </div>
@@ -532,7 +400,7 @@ const UpdateServiceResource = ({ id }) => {
             </fieldset>
             {errors.paid_status && (
               <p className="text-red-500 text-12 px-2 pt-1">
-                {errors.paid_status.message}
+                {errors.paid_status.message as string}
               </p>
             )}
           </div>
@@ -559,7 +427,7 @@ const UpdateServiceResource = ({ id }) => {
             </fieldset>
             {errors.component && (
               <p className="text-red-500 text-12 px-2 pt-1">
-                {errors.component.message}
+                {errors.component.message as string}
               </p>
             )}
           </div>
@@ -571,7 +439,7 @@ const UpdateServiceResource = ({ id }) => {
                   htmlFor="ServiceName"
                   className="after:content-['_*'] after:text-red-500"
                 >
-                  user access
+                  User Access
                 </label>
               </legend>
 
@@ -590,10 +458,11 @@ const UpdateServiceResource = ({ id }) => {
             </fieldset>
             {errors.visit_type && (
               <p className="text-red-500 text-12 px-2 pt-1">
-                {errors.visit_type.message}
+                {errors.visit_type.message as string}
               </p>
             )}
           </div>
+
           {showItem == "Visit" || showItem == "Subscribe" ? (
             <div>
               <fieldset className="flex flex-col border rounded-md px-2">
@@ -617,12 +486,21 @@ const UpdateServiceResource = ({ id }) => {
               </fieldset>
               {errors.visit_link && (
                 <p className="text-red-500 text-12 px-2 pt-1">
-                  {errors.visit_link.message}
+                  {errors.visit_link.message as string}
                 </p>
               )}
             </div>
           ) : (
             <>
+              {resourceFileImg && (
+                <Image
+                  src={URL.createObjectURL(resourceFileImg)}
+                  width={320}
+                  height={192}
+                  className="w-80 h-48 rounded-md"
+                  alt="Preview"
+                />
+              )}
               <div>
                 <fieldset className="flex flex-col border rounded-md px-2">
                   <legend>
@@ -635,7 +513,9 @@ const UpdateServiceResource = ({ id }) => {
                   </legend>
 
                   <input
-                    {...register("resource_file")}
+                    {...register("resource_file", {
+                      required: "Resource File is required",
+                    })}
                     id="file"
                     type="file"
                     onChange={(e) => {
@@ -645,66 +525,18 @@ const UpdateServiceResource = ({ id }) => {
                     }}
                     // accept="video/mp4, video/ogg, video/avi"
                     accept="image/*"
+                    size={500000}
                   />
-
-                  {resourceFileImg && (
-                    <Image
-                      src={URL.createObjectURL(resourceFileImg)}
-                      width={320}
-                      height={192}
-                      className="w-[10em] h-[10em] rounded-md mt-3"
-                      alt="Preview"
-                    />
-                  )}
-
-                  {!resourceFileImg && serviceResource?.resource_file && (
-                    <div className="pt-3">
-                      <Image
-                        src={
-                          process.env.NEXT_PUBLIC_IMAGE_URL +
-                          serviceResource?.resource_file
-                        }
-                        className="w-[10em] h-[10em]"
-                        width={1000}
-                        height={1000}
-                        alt="Bangla"
-                      />
-                    </div>
-                  )}
                 </fieldset>
                 {errors.resource_file && (
                   <p className="text-red-500 text-12 px-2 pt-1">
-                    {errors.resource_file.message}
+                    {errors.resource_file.message as string}
                   </p>
                 )}
               </div>
             </>
           )}
-          {/* <div>
-                        <fieldset className="flex flex-col border rounded-md px-2">
-                            <legend>
-                                <label
-                                    htmlFor="ServiceName"
-                                    className="after:content-['_*'] after:text-red-500"
-                                >
-                                    Status
-                                </label>
-                            </legend>
 
-                            <select
-                                {...register("status")}
-                                className="outline-none p-2 bg-white"
-                            >
-                                <option selected={getValues("status") == "1"} value="1">Publish</option>
-                                <option selected={getValues("status") == "0"} value="0">UnPublish</option>
-                            </select>
-                        </fieldset>
-                        {errors.status && (
-                            <p className="text-red-500 text-12 px-2 pt-1">
-                                {errors.status.message}
-                            </p>
-                        )}
-                    </div> */}
           <div className="flex justify-between pt-5">
             <p className="text-14">
               <span className="text-red-500">*</span> Required
@@ -722,11 +554,12 @@ const UpdateServiceResource = ({ id }) => {
                 type="submit"
                 className="px-4 py-2 bg-violet-700 text-white active:scale-90 transition-all duration-400 rounded-md"
               >
-                Update
+                Create
               </button>
             )}
           </div>
         </form>
+
         {isLoading && (
           <div className="absolute inset-0 bg-white bg-opacity-75 flex items-center justify-center z-10">
             <div className="flex flex-col items-center space-y-4">
@@ -750,7 +583,6 @@ const UpdateServiceResource = ({ id }) => {
                   d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
                 ></path>
               </svg>
-              {/* Loading Text */}
               <p className="text-gray-700 font-medium">Loading...</p>
             </div>
           </div>
@@ -760,4 +592,4 @@ const UpdateServiceResource = ({ id }) => {
   );
 };
 
-export default UpdateServiceResource;
+export default ServiceResourceNew;
