@@ -7,6 +7,11 @@ import { deleteService } from "../../_api";
 import { CiEdit } from "react-icons/ci";
 import { GrView } from "react-icons/gr";
 import { useRouter } from "next/navigation";
+import { replaceUnderscore } from "@/helper";
+import {
+  deleteServiceCodeApi,
+  publishUnpublishService,
+} from "../../_api/ServiceApi";
 
 const ServiceListContainer = ({ services }) => {
   const router = useRouter();
@@ -24,12 +29,12 @@ const ServiceListContainer = ({ services }) => {
         confirmButtonText: "Yes, delete it!",
       }).then((result) => {
         if (result.isConfirmed) {
-          const serviceDeleteData = deleteService(id)
+          const serviceDeleteData = deleteServiceCodeApi(id)
             .then((data) => {
               if (data) {
                 // setRefetch(!refetch);
                 Swal.fire("Deleted!", "Your file has been deleted.", "success");
-                window.location.reload();
+                // window.location.reload();
               } else {
                 Swal.fire("Error!", "Something went wrong.", "error");
               }
@@ -43,27 +48,19 @@ const ServiceListContainer = ({ services }) => {
   };
 
   const UpdateServicePublishStatus = async (id, status) => {
-    const result = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/service/publish-unpublish/${id}`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ status: status }),
+    console.log(id, status);  
+    
+    try {
+      const response = await publishUnpublishService(id, status);
+      console.log(response);
+      
+      if (response?.status === true) {
+        toast.success("Service status updated successfully");
+      } else {
+        toast.error("Service status update failed");
       }
-    )
-      .then((res) => res.json())
-      .catch((err) => {
-        console.log(err);
-      });
-
-    if (result?.status === true) {
-      toast.success("Service status updated successfully");
-      window.location.reload();
-      // setRefetch(!refetch);
-    } else {
-      console.error("Update failed:", result?.message);
+    } catch (error) {
+      toast.error("Service status update failed");
     }
   };
 
@@ -121,6 +118,19 @@ const ServiceListContainer = ({ services }) => {
             {services?.length > 0
               ? services?.map((item, index) => {
                   const paidStatus = JSON?.parse(item?.paid_status || "{}");
+                  let types = [];
+                  try {
+                    types = JSON?.parse(item?.type) || [];
+                  } catch (error) {
+                    console.error("Error parsing type:", error);
+                  }
+                  let newTypes = [];
+                  if (Array.isArray(types)) {
+                    types.forEach((element) => {
+                      const dataEle = replaceUnderscore(element);
+                      newTypes.push(dataEle);
+                    });
+                  }
                   return (
                     <tr key={index}>
                       <td className="px-3">
@@ -149,7 +159,7 @@ const ServiceListContainer = ({ services }) => {
                         </Link>
                       </td>
                       <td className="text-center border-r border-gray-200 px-1">
-                        {JSON.parse(item?.type).toString()}
+                        {newTypes.toString()}
                       </td>
 
                       <td className="text-center border-r border-gray-200">
@@ -233,17 +243,17 @@ const ServiceListContainer = ({ services }) => {
                               )}
                             </Link>
                             <button
-                                onClick={() => handleDelete(item?.id)}
-                                className="p-1  bg-red-500 text-white active:scale-90 transition-all duration-400 rounded-md"
+                              onClick={() => handleDelete(item?.id)}
+                              className="p-1  bg-red-500 text-white active:scale-90 transition-all duration-400 rounded-md"
+                            >
+                              <svg
+                                className="w-4 h-4 fill-current"
+                                xmlns="http://www.w3.org/2000/svg"
+                                viewBox="0 0 448 512"
                               >
-                                <svg
-                                  className="w-4 h-4 fill-current"
-                                  xmlns="http://www.w3.org/2000/svg"
-                                  viewBox="0 0 448 512"
-                                >
-                                  <path d="M135.2 17.7C140.6 6.8 151.7 0 163.8 0H284.2c12.1 0 23.2 6.8 28.6 17.7L320 32h96c17.7 0 32 14.3 32 32s-14.3 32-32 32H32C14.3 96 0 81.7 0 64S14.3 32 32 32h96l7.2-14.3zM32 128H416V448c0 35.3-28.7 64-64 64H96c-35.3 0-64-28.7-64-64V128zm96 64c-8.8 0-16 7.2-16 16V432c0 8.8 7.2 16 16 16s16-7.2 16-16V208c0-8.8-7.2-16-16-16zm96 0c-8.8 0-16 7.2-16 16V432c0 8.8 7.2 16 16 16s16-7.2 16-16V208c0-8.8-7.2-16-16-16zm96 0c-8.8 0-16 7.2-16 16V432c0 8.8 7.2 16 16 16s16-7.2 16-16V208c0-8.8-7.2-16-16-16z" />
-                                </svg>
-                              </button>
+                                <path d="M135.2 17.7C140.6 6.8 151.7 0 163.8 0H284.2c12.1 0 23.2 6.8 28.6 17.7L320 32h96c17.7 0 32 14.3 32 32s-14.3 32-32 32H32C14.3 96 0 81.7 0 64S14.3 32 32 32h96l7.2-14.3zM32 128H416V448c0 35.3-28.7 64-64 64H96c-35.3 0-64-28.7-64-64V128zm96 64c-8.8 0-16 7.2-16 16V432c0 8.8 7.2 16 16 16s16-7.2 16-16V208c0-8.8-7.2-16-16-16zm96 0c-8.8 0-16 7.2-16 16V432c0 8.8 7.2 16 16 16s16-7.2 16-16V208c0-8.8-7.2-16-16-16zm96 0c-8.8 0-16 7.2-16 16V432c0 8.8 7.2 16 16 16s16-7.2 16-16V208c0-8.8-7.2-16-16-16z" />
+                              </svg>
+                            </button>
 
                             {/* {item?.completion_status == 3 && (
                               <button
