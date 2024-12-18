@@ -3,7 +3,8 @@ import { useState } from "react";
 
 import UpdateServiceResource from "../service/UpdateServiceResource/UpdateServiceResource";
 import UpdateBanglaResource from "../service/UpdateBanglaResource/UpdateBanglaResource";
-import UpdateServiceDetailsResource from "../service/UpdateServiceDetailsResource/UpdateServiceDetailsResource";
+// import UpdateServiceDetailsResource from "../service/UpdateServiceDetailsResource/UpdateServiceDetailsResource";
+ import UpdateServiceDetailsResourceNew from "../service/UpdateServiceDetailsResource/UpdateServiceDetailsResourceNew";
 
 const ServiceEditContainer = ({ id, secondTab }) => {
   const [tab, setTab] = useState(0);
@@ -60,10 +61,12 @@ const ServiceEditContainer = ({ id, secondTab }) => {
                 )}
                 {tab == 1 && (
                   <>
-                    <UpdateServiceDetailsResource
+                  <UpdateServiceDetailsResourceNew id={id}
+                      secondTab={secondTab}/>
+                    {/* <UpdateServiceDetailsResource
                       id={id}
                       secondTab={secondTab}
-                    />
+                    /> */}
                   </>
                 )}
                 {tab == 2 && (

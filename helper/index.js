@@ -277,3 +277,7 @@ export const sweetAlert = () => {
 export const replaceSpaces = (str) => {
   return str.replaceAll(" ", "_");
 };
+
+export const replaceUnderscore = (str) => {
+  return str.replaceAll("_", " ");
+}

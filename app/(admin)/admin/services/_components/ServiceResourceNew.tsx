@@ -14,6 +14,7 @@ const CustomEditor = dynamic(
 );
 import { FaCheckCircle } from "react-icons/fa";
 import { replaceSpaces } from "@/helper";
+import { createService } from "@/app/(admin)/_api/ServiceApi";
 
 const ServiceResourceNew = () => {
   const router = useRouter();
@@ -35,7 +36,7 @@ const ServiceResourceNew = () => {
   } = useForm();
 
   const onSubmitServiceResource = async (data: any) => {
-    // setIsLoading(true);
+    setIsLoading(true);
     let newType: any = [];
     type?.forEach((item) => {
       const newReplaceSpaces = replaceSpaces(item);
@@ -45,6 +46,7 @@ const ServiceResourceNew = () => {
     setCustomError(null);
 
     if (type.length < 1) {
+      setIsLoading(false);
       setCustomError("Please select at least one type");
       return;
     }
@@ -68,33 +70,40 @@ const ServiceResourceNew = () => {
 
     // console.log('resource file img:', resourceFileImg.size);
 
-    const formData = new FormData();
-    formData.append("name", name);
-    formData.append("description", description);
-    formData.append("component", component);
-    formData.append("logo", logo[0]);
-    formData.append("paid_status", JSON.stringify(paid_status));
-    formData.append("production_status", production_status);
-    formData.append("release_date", release_date);
-    formData.append("visit_link", visit_link || "");
-    formData.append("visit_type", visit_type);
-    formData.append("completion_status", "1");
-    formData.append("resource_file", resource_file[0] || "");
-    formData.append("description_title", description_title);
-    formData.append("status", "1");
-    formData.append("type", JSON.stringify(newType));
-    const uploadRes = await uploadServiceData(formData);
+    try {
+      const formData = new FormData();
+      formData.append("name", name);
+      formData.append("description", description);
+      formData.append("component", component);
+      formData.append("logo", logo[0]);
+      formData.append("paid_status", JSON.stringify(paid_status));
+      formData.append("production_status", production_status);
+      formData.append("release_date", release_date);
+      formData.append("visit_link", visit_link || "");
+      formData.append("visit_type", visit_type);
+      formData.append("completion_status", "1");
+      formData.append("resource_file", resource_file[0] || "");
+      formData.append("description_title", description_title);
+      formData.append("status", "1");
+      formData.append("type", JSON.stringify(newType));
 
-    if (uploadRes.status === true) {
+      const response: any = await createService(formData);
+      // console.log(response);
+      if (response.status) {
+        setIsLoading(false);
+        reset();
+        toast.success("Service Created Successfully");
+        router.push("/admin/services");
+      }
       setIsLoading(false);
-      toast.success("Service Created Successfully");
-      // router.push("/admin/services");
-      window.location.href = "/admin/services";
-      reset();
-    } else {
+    } catch (error) {
+      console.log(error);
       setIsLoading(false);
       toast.error("Service Creation Failed");
+    } finally {
+      setIsLoading(false);
     }
+    
   };
 
   const handleToggleType = (value: string) => {

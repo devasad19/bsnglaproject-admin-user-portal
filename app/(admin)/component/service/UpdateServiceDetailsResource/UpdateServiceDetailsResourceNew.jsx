@@ -12,9 +12,10 @@ import CustomEditor from "@/app/_components/CustomEditor/CustomEditor";
 import { FaMinus } from "react-icons/fa";
 import { FaPlus } from "react-icons/fa";
 import Validation from "./Validation";
+import { updateSingleServiceDetailsResource } from "@/app/(admin)/_api/ServiceApi";
 
-const UpdateServiceDetailsResource = ({ id, secondTab }) => {
-  console.log({secondTab});
+const UpdateServiceDetailsResourceNew = ({ id, secondTab }) => {
+    // console.log({secondTab});
   
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
@@ -107,136 +108,257 @@ const UpdateServiceDetailsResource = ({ id, secondTab }) => {
     },
   });
 
-  const HandleFormSubmit = async (e) => {
+//   const HandleFormSubmit = async (e) => {
+//     e.preventDefault();
+//     setIsLoading(true);
+
+//     // const res = await Validation(formData, setError);
+
+ 
+//       const payload = new FormData();
+
+//       payload.append("service_id", id);
+//       payload.append("broad_description", formData.description);
+
+//       formData?.mediaImages.forEach((item, index) => {
+//         payload.append(`media_images[${index}]`, item);
+//       });
+
+//       formData?.infoSection.forEach((item, index) => {
+//         payload.append(`featurs_and_usages[${index}][bg_color]`, item.bg_color);
+//         payload.append(
+//           `featurs_and_usages[${index}][left_description]`,
+//           item.left_description
+//         );
+//         payload.append(
+//           `featurs_and_usages[${index}][right_description]`,
+//           item.right_description
+//         );
+//         payload.append(
+//           `featurs_and_usages[${index}][right_img]`,
+//           item.right_img
+//         );
+//       });
+
+//       formData?.fourCol?.forEach((item, index) => {
+//         payload.append(
+//           `distribution_card_items[${index}][item_bg]`,
+//           item.item_bg
+//         );
+//         payload.append(`distribution_card_items[${index}][icon]`, item.icon);
+//         payload.append(`distribution_card_items[${index}][title]`, item.title);
+//         payload.append(
+//           `distribution_card_items[${index}][version]`,
+//           item.version
+//         );
+//         payload.append(
+//           `distribution_card_items[${index}][release_date]`,
+//           item.release_date
+//         );
+//         payload.append(
+//           `distribution_card_items[${index}][btn_label]`,
+//           item.btn_label
+//         );
+//         payload.append(
+//           `distribution_card_items[${index}][btn_bg]`,
+//           item.btn_bg
+//         );
+//         payload.append(
+//           `distribution_card_items[${index}][brows_type]`,
+//           item.brows_type
+//         );
+//         payload.append(
+//           `distribution_card_items[${index}][brows_file]`,
+//           item.brows_file
+//         );
+//         payload.append(
+//           `distribution_card_items[${index}][brows_link]`,
+//           item.brows_link
+//         );
+//       });
+
+//       payload.append("promotion_title", formData?.promotion?.title);
+//       payload.append("prom_title_bg", formData?.promotion?.title_bg);
+//       payload.append("prom_area_bg", formData?.promotion?.area_bg);
+//       payload.append("prom_left_label", formData?.promotion?.left_side?.label);
+//       payload.append("prom_left_icon", formData?.promotion?.left_side?.image);
+//       payload.append(
+//         "prom_right_label",
+//         formData?.promotion?.right_side?.label
+//       );
+//       payload.append("prom_right_icon", formData?.promotion?.right_side?.image);
+
+//       payload.append("domain_name", formData.domain_name);
+//       payload.append("domain_link", formData.domain_link);
+
+//       payload.append("user_doc_label", formData.user_doc.label);
+//       payload.append("user_doc_icon", formData.user_doc.icon);
+//       payload.append("user_desc", formData.user_doc.short_description);
+//       payload.append(
+//         "user_external_links",
+//         JSON.stringify(formData.user_doc.external_links)
+//       );
+//       payload.append("user_youtube_link", formData.user_doc?.video?.link);
+//       payload.append(
+//         "user_youtube_thumbnail",
+//         formData.user_doc?.video?.thumbnail
+//       );
+//       payload.append("youtube_video_title", formData.user_doc?.video?.title);
+
+//       formData.distribution.forEach((item, index) => {
+//         payload.append(`distribution_items[${index}][label]`, item.label);
+//         payload.append(`distribution_items[${index}][icon]`, item.icon);
+//       });
+
+//       formData.user_doc.module_file.forEach((item, index) => {
+//         payload.append(`user_modules[${index}][id]`, index + 1);
+//         payload.append(`user_modules[${index}][label]`, item.label);
+//         payload.append(`user_modules[${index}][download]`, item.download);
+//         payload.append(`user_modules[${index}][module]`, item.module);
+//       });
+
+//       const res = await updateSingleServiceResource(payload, id).catch(
+//         (err) => {
+//           console.log(err);
+//         }
+//       );
+
+//       if (res?.status == true) {
+//         toast.success(res.message);
+//         router.push("/admin/services");
+//       } else {
+//         toast.error(res.message);
+//         setIsLoading(false);
+//       }
+    
+//   };
+
+const HandleFormSubmit = async (e) => {
     e.preventDefault();
     setIsLoading(true);
 
-    const res = await Validation(formData, setError);
-
-    if (!res) {
-      const payload = new FormData();
-
-      payload.append("service_id", id);
-      payload.append("broad_description", formData.description);
-
-      formData?.mediaImages.forEach((item, index) => {
-        payload.append(`media_images[${index}]`, item);
-      });
-
-      formData?.infoSection.forEach((item, index) => {
-        payload.append(`featurs_and_usages[${index}][bg_color]`, item.bg_color);
+    // const res = await Validation(formData, setError);
+    try {
+        const payload = new FormData();
+        payload.append("service_id", id);
+        payload.append("broad_description", formData.description);
+  
+        formData?.mediaImages.forEach((item, index) => {
+          payload.append(`media_images[${index}]`, item);
+        });
+  
+        formData?.infoSection.forEach((item, index) => {
+          payload.append(`featurs_and_usages[${index}][bg_color]`, item.bg_color);
+          payload.append(
+            `featurs_and_usages[${index}][left_description]`,
+            item.left_description
+          );
+          payload.append(
+            `featurs_and_usages[${index}][right_description]`,
+            item.right_description
+          );
+          payload.append(
+            `featurs_and_usages[${index}][right_img]`,
+            item.right_img
+          );
+        });
+  
+        formData?.fourCol?.forEach((item, index) => {
+          payload.append(
+            `distribution_card_items[${index}][item_bg]`,
+            item.item_bg
+          );
+          payload.append(`distribution_card_items[${index}][icon]`, item.icon);
+          payload.append(`distribution_card_items[${index}][title]`, item.title);
+          payload.append(
+            `distribution_card_items[${index}][version]`,
+            item.version
+          );
+          payload.append(
+            `distribution_card_items[${index}][release_date]`,
+            item.release_date
+          );
+          payload.append(
+            `distribution_card_items[${index}][btn_label]`,
+            item.btn_label
+          );
+          payload.append(
+            `distribution_card_items[${index}][btn_bg]`,
+            item.btn_bg
+          );
+          payload.append(
+            `distribution_card_items[${index}][brows_type]`,
+            item.brows_type
+          );
+          payload.append(
+            `distribution_card_items[${index}][brows_file]`,
+            item.brows_file
+          );
+          payload.append(
+            `distribution_card_items[${index}][brows_link]`,
+            item.brows_link
+          );
+        });
+  
+        payload.append("promotion_title", formData?.promotion?.title);
+        payload.append("prom_title_bg", formData?.promotion?.title_bg);
+        payload.append("prom_area_bg", formData?.promotion?.area_bg);
+        payload.append("prom_left_label", formData?.promotion?.left_side?.label);
+        payload.append("prom_left_icon", formData?.promotion?.left_side?.image);
         payload.append(
-          `featurs_and_usages[${index}][left_description]`,
-          item.left_description
+          "prom_right_label",
+          formData?.promotion?.right_side?.label
         );
+        payload.append("prom_right_icon", formData?.promotion?.right_side?.image);
+  
+        payload.append("domain_name", formData.domain_name);
+        payload.append("domain_link", formData.domain_link);
+  
+        payload.append("user_doc_label", formData.user_doc.label);
+        payload.append("user_doc_icon", formData.user_doc.icon);
+        payload.append("user_desc", formData.user_doc.short_description);
         payload.append(
-          `featurs_and_usages[${index}][right_description]`,
-          item.right_description
+          "user_external_links",
+          JSON.stringify(formData.user_doc.external_links)
         );
+        payload.append("user_youtube_link", formData.user_doc?.video?.link);
         payload.append(
-          `featurs_and_usages[${index}][right_img]`,
-          item.right_img
+          "user_youtube_thumbnail",
+          formData.user_doc?.video?.thumbnail
         );
-      });
+        payload.append("youtube_video_title", formData.user_doc?.video?.title);
+  
+        formData.distribution.forEach((item, index) => {
+          payload.append(`distribution_items[${index}][label]`, item.label);
+          payload.append(`distribution_items[${index}][icon]`, item.icon);
+        });
+  
+        formData.user_doc.module_file.forEach((item, index) => {
+          payload.append(`user_modules[${index}][id]`, index + 1);
+          payload.append(`user_modules[${index}][label]`, item.label);
+          payload.append(`user_modules[${index}][download]`, item.download);
+          payload.append(`user_modules[${index}][module]`, item.module);
+        });
 
-      formData?.fourCol?.forEach((item, index) => {
-        payload.append(
-          `distribution_card_items[${index}][item_bg]`,
-          item.item_bg
-        );
-        payload.append(`distribution_card_items[${index}][icon]`, item.icon);
-        payload.append(`distribution_card_items[${index}][title]`, item.title);
-        payload.append(
-          `distribution_card_items[${index}][version]`,
-          item.version
-        );
-        payload.append(
-          `distribution_card_items[${index}][release_date]`,
-          item.release_date
-        );
-        payload.append(
-          `distribution_card_items[${index}][btn_label]`,
-          item.btn_label
-        );
-        payload.append(
-          `distribution_card_items[${index}][btn_bg]`,
-          item.btn_bg
-        );
-        payload.append(
-          `distribution_card_items[${index}][brows_type]`,
-          item.brows_type
-        );
-        payload.append(
-          `distribution_card_items[${index}][brows_file]`,
-          item.brows_file
-        );
-        payload.append(
-          `distribution_card_items[${index}][brows_link]`,
-          item.brows_link
-        );
-      });
-
-      payload.append("promotion_title", formData?.promotion?.title);
-      payload.append("prom_title_bg", formData?.promotion?.title_bg);
-      payload.append("prom_area_bg", formData?.promotion?.area_bg);
-      payload.append("prom_left_label", formData?.promotion?.left_side?.label);
-      payload.append("prom_left_icon", formData?.promotion?.left_side?.image);
-      payload.append(
-        "prom_right_label",
-        formData?.promotion?.right_side?.label
-      );
-      payload.append("prom_right_icon", formData?.promotion?.right_side?.image);
-
-      payload.append("domain_name", formData.domain_name);
-      payload.append("domain_link", formData.domain_link);
-
-      payload.append("user_doc_label", formData.user_doc.label);
-      payload.append("user_doc_icon", formData.user_doc.icon);
-      payload.append("user_desc", formData.user_doc.short_description);
-      payload.append(
-        "user_external_links",
-        JSON.stringify(formData.user_doc.external_links)
-      );
-      payload.append("user_youtube_link", formData.user_doc?.video?.link);
-      payload.append(
-        "user_youtube_thumbnail",
-        formData.user_doc?.video?.thumbnail
-      );
-      payload.append("youtube_video_title", formData.user_doc?.video?.title);
-
-      formData.distribution.forEach((item, index) => {
-        payload.append(`distribution_items[${index}][label]`, item.label);
-        payload.append(`distribution_items[${index}][icon]`, item.icon);
-      });
-
-      formData.user_doc.module_file.forEach((item, index) => {
-        payload.append(`user_modules[${index}][id]`, index + 1);
-        payload.append(`user_modules[${index}][label]`, item.label);
-        payload.append(`user_modules[${index}][download]`, item.download);
-        payload.append(`user_modules[${index}][module]`, item.module);
-      });
-
-      const res = await updateSingleServiceResource(payload, id).catch(
-        (err) => {
-          console.log(err);
+        const response = await updateSingleServiceDetailsResource(payload, id);
+        if (response.status === true) {
+            toast.success(response.message);
+            router.push("/admin/services");
+        } else {
+            toast.error(response.message);
         }
-      );
-
-      if (res?.status == true) {
-        toast.success(res.message);
-        router.push("/admin/services");
-      } else {
-        toast.error(res.message);
+    } catch (error) {
+        toast.error(error.message);
+    } finally {
         setIsLoading(false);
-      }
-    } else {
-      setIsLoading(false);
-      toast.warn("Validation Error.");
     }
   };
 
-  return (
-    <>
+
+
+
+    return (
+        <>
       <form
         onSubmit={HandleFormSubmit}
         className="flex flex-col gap-4"
@@ -918,7 +1040,7 @@ const UpdateServiceDetailsResource = ({ id, secondTab }) => {
                       </div>
                     )}
 
-                    {typeof item?.icon == "object" && item?.icon !== null && (
+                    {typeof item?.icon == "object" && (
                       <div>
                         <Image
                           src={item?.icon instanceof Blob ? URL.createObjectURL(item?.icon) : "/default-image.jpg"}
@@ -2173,7 +2295,7 @@ const UpdateServiceDetailsResource = ({ id, secondTab }) => {
         </div>
       )}
     </>
-  );
+    );
 };
 
-export default UpdateServiceDetailsResource;
+export default UpdateServiceDetailsResourceNew;
