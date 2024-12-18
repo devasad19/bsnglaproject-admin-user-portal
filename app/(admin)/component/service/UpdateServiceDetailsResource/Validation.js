@@ -2,7 +2,7 @@ const Validation = async (formData, setError) => {
     let hasError = false;
 
 
-    if (formData?.description?.length < 10 || formData?.description?.length > 1980) {
+    if (formData?.description?.length < 10 || formData?.description?.length > 100) {
         setError((prev) => ({
             ...prev,
             description: { status: true, message: "Description has to be 10 to 100 words." },

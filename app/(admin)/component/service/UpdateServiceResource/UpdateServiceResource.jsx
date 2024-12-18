@@ -10,19 +10,22 @@ import {
   updateServiceResource,
 } from "@/app/(admin)/_api";
 import { FaCheckCircle } from "react-icons/fa";
-import { CountWords } from "@/helper";
+import { CountWords, replaceSpaces, replaceUnderscore } from "@/helper";
+import { getSingleServiceResourceCodeApi, updateSingleServiceResourceCodeUpdate } from "@/app/(admin)/_api/ServiceApi";
 
 const UpdateServiceResource = ({ id }) => {
   const router = useRouter();
   const [serviceResource, setServiceResource] = useState(null);
   const [paidStatus, setPaidStatus] = useState();
+  const [selectFeatureName, setSelectFeatureName] = useState([]);
   // const [status, setStatus] = useState("");
   const [serviceImg, setServiceImg] = useState(null);
   const [resourceFileImg, setResourceFileImg] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [showItem, setShowItem] = useState("");
   const [type, setType] = useState([]);
-  const allTypes = ['Software', 'Publication', 'Font', 'Dataset', 'AI Model'];
+  const [customError, setCustomError] = useState(null);
+  const allTypes = ["Software", "Publication", "Font", "Dataset", "AI Model"];
 
   const {
     register,
@@ -35,8 +38,103 @@ const UpdateServiceResource = ({ id }) => {
     setError,
   } = useForm();
 
+  // const onSubmitServiceResource = async (data) => {
+  //   setIsLoading(true);
+  //   let newType = [];
+  //   type?.forEach((item) => {
+  //     const newReplaceSpaces = replaceSpaces(item);
+  //     newType.push(newReplaceSpaces);
+  //   });
+  //   // console.log({ newType });
+  //   setCustomError(null);
+
+  //   if (type.length < 1) {
+  //     setIsLoading(false);
+  //     setCustomError("Please select at least one type");
+  //     return;
+  //   }
+
+  //   let dataJson = JSON.stringify(newType);
+  //   // console.log(dataJson);
+
+  //   const {
+  //     component,
+  //     description,
+  //     distribution,
+  //     logo,
+  //     name,
+  //     production_status,
+  //     release_date,
+  //     sub_title,
+  //     // type,
+  //     visit_link,
+  //     visit_type,
+  //     resource_file,
+  //     status,
+  //     description_title,
+  //   } = data;
+
+  //   // console.log('description count: ',errors);
+
+  //   const formData = new FormData();
+  //   formData.append("name", name);
+  //   formData.append("description", description);
+  //   // formData.append("status", status);
+  //   formData.append("component", component);
+  //   formData.append("distribution", distribution);
+  //   formData.append("logo", typeof logo[0] == "string" ? "" : logo[0]);
+  //   formData.append("paid_status", JSON.stringify(paidStatus));
+  //   formData.append("production_status", production_status);
+  //   formData.append("release_date", release_date);
+  //   formData.append("type", dataJson);
+  //   formData.append("sub_title", sub_title);
+  //   formData.append("visit_link", visit_link || "");
+  //   formData.append("visit_type", visit_type);
+  //   if (resource_file) {
+  //     formData.append(
+  //       "resource_file",
+  //       typeof resource_file == "string" ? "" : resource_file[0]
+  //     );
+  //   }
+  //   formData.append("description_title", description_title);
+
+  //   console.log("form data: ", formData);
+
+  //   const response = await updateServiceResource(formData, id)
+  //     .then((res) => {
+  //       if (res?.status == true) {
+  //         toast.success("Service Updated Successfully");
+  //         router.push("/admin/services");
+  //       } else {
+  //         toast.error("Service Update Failed");
+  //       }
+  //     })
+  //     .catch((err) => {
+  //       console.log(err);
+  //     })
+  //     .finally(() => {
+  //       setIsLoading(false);
+  //     });
+  // };
+
   const onSubmitServiceResource = async (data) => {
     setIsLoading(true);
+    let newType = [];
+    type?.forEach((item) => {
+      const newReplaceSpaces = replaceSpaces(item);
+      newType.push(newReplaceSpaces);
+    });
+    // console.log({ newType });
+    setCustomError(null);
+
+    if (type.length < 1) {
+      setIsLoading(false);
+      setCustomError("Please select at least one type");
+      return;
+    }
+
+    let dataJson = JSON.stringify(newType);
+    // console.log(dataJson);
 
     const {
       component,
@@ -54,119 +152,55 @@ const UpdateServiceResource = ({ id }) => {
       status,
       description_title,
     } = data;
+    try {
+      const formData = new FormData();
+      formData.append("name", name);
+      formData.append("description", description);
+      // formData.append("status", status);
+      formData.append("component", component);
+      formData.append("distribution", distribution);
+      formData.append("logo", typeof logo[0] == "string" ? "" : logo[0]);
+      formData.append("paid_status", JSON.stringify(paidStatus));
+      formData.append("production_status", production_status);
+      formData.append("release_date", release_date);
+      formData.append("type", dataJson);
+      formData.append("sub_title", sub_title);
+      formData.append("visit_link", visit_link || "");
+      formData.append("visit_type", visit_type);
+      if (resource_file) {
+        formData.append(
+          "resource_file",
+          typeof resource_file == "string" ? "" : resource_file[0]
+        );
+      }
+      formData.append("description_title", description_title);
 
-    // console.log('description count: ',errors);
+      const response = await updateSingleServiceResourceCodeUpdate(
+        id,
+        formData
+      );
+      console.log("response", response);
 
-    /* if(CountWords(description) > 30) {
-            setIsLoading(false);
-            setError("description", { type: "manual", message: "Description cannot exceed 30 words" });
-            return;
-        }
-
-        if(CountWords(name) > 3) {
-            setIsLoading(false);
-            setError("name", { type: "manual", message: "Name cannot exceed 3 words" });
-            return;
-        }
-
-
-        if(CountWords(description_title) > 10){
-            setIsLoading(false);
-            setError("description_title", { type: "manual", message: "Description title cannot exceed 10 words" });
-            return;
-        }
-
-
-        if(type.length > 3){
-            setIsLoading(false);
-            setError("type", { type: "manual", message: "You can select only 3 types" });
-            return;
-        }
-
-        if(production_status.length < 1){
-            setIsLoading(false);
-            setError("production_status", { type: "manual", message: "Production status is required" });
-            return;
-        }
-
-        if(release_date.length < 1){
-            setIsLoading(false);
-            setError("release_date", { type: "manual", message: "Release date is required" });
-            return;
-        }
-
-        if(logo.length < 1 && !logo[0]){
-            setIsLoading(false);
-            setError("logo", { type: "manual", message: "Logo is required" });
-            return;
-        }
-
-        if(paidStatus?.free == 0 && paidStatus?.pro == 0){
-            setIsLoading(false);
-            setError("paid_status", { type: "manual", message: "Paid status is required" });
-            return;
-        }
-
-        if(component.length < 1){
-            setIsLoading(false);
-            setError("component", { type: "manual", message: "Component is required" });
-            return;
-        }
-
-        if(visit_type.length < 1){
-            setIsLoading(false);
-            setError("visit_type", { type: "manual", message: "Visit type is required" });
-            return;
-        }
-
-        if(visit_type == 'download' && resource_file.length < 1){
-            setIsLoading(false);
-            setError("resource_file", { type: "manual", message: "Resource file is required" });
-            return;
-        } */
-
-    const formData = new FormData();
-    formData.append("name", name);
-    formData.append("description", description);
-    // formData.append("status", status);
-    formData.append("component", component);
-    formData.append("distribution", distribution);
-    formData.append("logo", typeof logo[0] == "string" ? "" : logo[0]);
-    formData.append("paid_status", JSON.stringify(paidStatus));
-    formData.append("production_status", production_status);
-    formData.append("release_date", release_date);
-    formData.append("type", type);
-    formData.append("sub_title", sub_title);
-    formData.append("visit_link", visit_link || "");
-    formData.append("visit_type", visit_type);
-    formData.append(
-      "resource_file",
-      typeof resource_file == "string" ? "" : resource_file[0]
-    );
-    formData.append("description_title", description_title);
-
-    console.log("form data: ", formData);
-
-    const response = await updateServiceResource(formData, id)
-      .then((res) => {
-        if (res?.status == true) {
-          toast.success("Service Updated Successfully");
-          router.push("/admin/services");
-        } else {
-          toast.error("Service Update Failed");
-        }
-      })
-      .catch((err) => {
-        console.log(err);
-      })
-      .finally(() => {
-        setIsLoading(false);
-      });
+      if (response?.status) {
+        toast.success("Service Updated Successfully");
+        router.push("/admin/services");
+      } else {
+        console.log("Response did not indicate success:", response);
+        toast.error("Service Update Failed");
+      }
+    } catch (error) {
+      console.log("Error during service update:", error);
+      toast.error("Service Update Failed");
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   useEffect(() => {
-    getSingleServiceResource(id)
+    getSingleServiceResourceCodeApi(id)
       .then((res) => {
+        // console.log();
+        setShowItem(res?.data?.visit_type);
         setServiceResource(res?.data);
         setValue("name", res?.data?.name);
         setValue("sub_title", res?.data?.sub_title);
@@ -185,25 +219,36 @@ const UpdateServiceResource = ({ id }) => {
         setValue("pro", JSON.parse(res?.data?.paid_status)?.pro);
         setValue("status", res?.data?.status);
         setValue("description_title", res?.data?.description_title);
+        const types = JSON.parse(res?.data?.type);
+        let newType = [];
+        types?.forEach((item) => {
+          const newReplaceUnderscore = replaceUnderscore(item);
+          newType.push(newReplaceUnderscore);
+        });
+        setType(newType);
 
-        setType(JSON.parse(res?.data?.type));
+        // setType(JSON.parse(res?.data?.type));
 
         setPaidStatus(JSON.parse(res?.data?.paid_status));
       })
       .catch((error) => {
         console.log(error);
       });
-  }, []);
+  }, [id, setValue]);
 
   const handleToggleType = (value) => {
     if (type.includes(value)) {
       setType((prev) => prev.filter((item) => item !== value));
     } else {
-      setType((prev) => [...prev, value]);
+      if (type.length < 3) {
+        setType((prev) => [...prev, value]);
+      } else {
+        toast.warning("You can select only 3 types");
+      }
     }
   };
 
-  // console.log('service status: ',type);
+  // console.log({serviceResource});
 
   return (
     <>
@@ -352,11 +397,14 @@ const UpdateServiceResource = ({ id }) => {
                     }}
                   >
                     {item}
-                    {type.includes(item) && <FaCheckCircle />}
+                    {type?.includes(item) && <FaCheckCircle />}
                   </button>
                 ))}
               </div>
             </fieldset>
+            {customError && (
+              <p className="text-red-500 text-12 px-2 pt-1">{customError}</p>
+            )}
           </div>
 
           <div>
@@ -503,10 +551,17 @@ const UpdateServiceResource = ({ id }) => {
                     value={"Free"}
                     checked={paidStatus?.free == 1}
                     onChange={() => {
-                      setPaidStatus({
-                        free: 1,
-                        pro: 0,
-                      });
+                      if (paidStatus?.free == 1) {
+                        setPaidStatus({
+                          ...paidStatus,
+                          free: 0,
+                        });
+                      } else {
+                        setPaidStatus({
+                          ...paidStatus,
+                          free: 1,
+                        });
+                      }
                     }}
                   />
                   <label htmlFor="free">Free</label>
@@ -520,10 +575,18 @@ const UpdateServiceResource = ({ id }) => {
                     value={"Pro"}
                     checked={paidStatus?.pro == 1}
                     onChange={() => {
-                      setPaidStatus({
-                        free: 0,
-                        pro: 1,
-                      });
+                      if (paidStatus?.pro == 1) {
+                        setPaidStatus({
+                          ...paidStatus,
+                          pro: 0,
+                        });
+                        return;
+                      } else {
+                        setPaidStatus({
+                          ...paidStatus,
+                          pro: 1,
+                        });
+                      }
                     }}
                   />
                   <label htmlFor="pro">Pro</label>
@@ -580,7 +643,6 @@ const UpdateServiceResource = ({ id }) => {
                   required: "Button is required",
                 })}
                 onChange={(e) => setShowItem(e.target.value)}
-                id=""
                 className="outline-none p-2 bg-white"
               >
                 <option value="Download">Download</option>
@@ -611,6 +673,7 @@ const UpdateServiceResource = ({ id }) => {
                   {...register("visit_link", {
                     required: "Visit Link is required",
                   })}
+                  defaultValue={serviceResource?.visit_link}
                   className="w-full outline-none p-2"
                   placeholder="Enter Link"
                 />
