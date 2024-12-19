@@ -14,9 +14,9 @@ import { FaPlus } from "react-icons/fa";
 import Validation from "./Validation";
 import { updateSingleServiceDetailsResource } from "@/app/(admin)/_api/ServiceApi";
 
-const UpdateServiceDetailsResourceNew = ({ id, secondTab }) => {
-    // console.log({secondTab});
-  
+const UpdateServiceDetailsResourceNew = ({ id, secondTab, setTab }) => {
+  // console.log({secondTab});
+
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
   const [formData, setFormData] = useState(secondTab);
@@ -108,147 +108,28 @@ const UpdateServiceDetailsResourceNew = ({ id, secondTab }) => {
     },
   });
 
-//   const HandleFormSubmit = async (e) => {
-//     e.preventDefault();
-//     setIsLoading(true);
-
-//     // const res = await Validation(formData, setError);
-
- 
-//       const payload = new FormData();
-
-//       payload.append("service_id", id);
-//       payload.append("broad_description", formData.description);
-
-//       formData?.mediaImages.forEach((item, index) => {
-//         payload.append(`media_images[${index}]`, item);
-//       });
-
-//       formData?.infoSection.forEach((item, index) => {
-//         payload.append(`featurs_and_usages[${index}][bg_color]`, item.bg_color);
-//         payload.append(
-//           `featurs_and_usages[${index}][left_description]`,
-//           item.left_description
-//         );
-//         payload.append(
-//           `featurs_and_usages[${index}][right_description]`,
-//           item.right_description
-//         );
-//         payload.append(
-//           `featurs_and_usages[${index}][right_img]`,
-//           item.right_img
-//         );
-//       });
-
-//       formData?.fourCol?.forEach((item, index) => {
-//         payload.append(
-//           `distribution_card_items[${index}][item_bg]`,
-//           item.item_bg
-//         );
-//         payload.append(`distribution_card_items[${index}][icon]`, item.icon);
-//         payload.append(`distribution_card_items[${index}][title]`, item.title);
-//         payload.append(
-//           `distribution_card_items[${index}][version]`,
-//           item.version
-//         );
-//         payload.append(
-//           `distribution_card_items[${index}][release_date]`,
-//           item.release_date
-//         );
-//         payload.append(
-//           `distribution_card_items[${index}][btn_label]`,
-//           item.btn_label
-//         );
-//         payload.append(
-//           `distribution_card_items[${index}][btn_bg]`,
-//           item.btn_bg
-//         );
-//         payload.append(
-//           `distribution_card_items[${index}][brows_type]`,
-//           item.brows_type
-//         );
-//         payload.append(
-//           `distribution_card_items[${index}][brows_file]`,
-//           item.brows_file
-//         );
-//         payload.append(
-//           `distribution_card_items[${index}][brows_link]`,
-//           item.brows_link
-//         );
-//       });
-
-//       payload.append("promotion_title", formData?.promotion?.title);
-//       payload.append("prom_title_bg", formData?.promotion?.title_bg);
-//       payload.append("prom_area_bg", formData?.promotion?.area_bg);
-//       payload.append("prom_left_label", formData?.promotion?.left_side?.label);
-//       payload.append("prom_left_icon", formData?.promotion?.left_side?.image);
-//       payload.append(
-//         "prom_right_label",
-//         formData?.promotion?.right_side?.label
-//       );
-//       payload.append("prom_right_icon", formData?.promotion?.right_side?.image);
-
-//       payload.append("domain_name", formData.domain_name);
-//       payload.append("domain_link", formData.domain_link);
-
-//       payload.append("user_doc_label", formData.user_doc.label);
-//       payload.append("user_doc_icon", formData.user_doc.icon);
-//       payload.append("user_desc", formData.user_doc.short_description);
-//       payload.append(
-//         "user_external_links",
-//         JSON.stringify(formData.user_doc.external_links)
-//       );
-//       payload.append("user_youtube_link", formData.user_doc?.video?.link);
-//       payload.append(
-//         "user_youtube_thumbnail",
-//         formData.user_doc?.video?.thumbnail
-//       );
-//       payload.append("youtube_video_title", formData.user_doc?.video?.title);
-
-//       formData.distribution.forEach((item, index) => {
-//         payload.append(`distribution_items[${index}][label]`, item.label);
-//         payload.append(`distribution_items[${index}][icon]`, item.icon);
-//       });
-
-//       formData.user_doc.module_file.forEach((item, index) => {
-//         payload.append(`user_modules[${index}][id]`, index + 1);
-//         payload.append(`user_modules[${index}][label]`, item.label);
-//         payload.append(`user_modules[${index}][download]`, item.download);
-//         payload.append(`user_modules[${index}][module]`, item.module);
-//       });
-
-//       const res = await updateSingleServiceResource(payload, id).catch(
-//         (err) => {
-//           console.log(err);
-//         }
-//       );
-
-//       if (res?.status == true) {
-//         toast.success(res.message);
-//         router.push("/admin/services");
-//       } else {
-//         toast.error(res.message);
-//         setIsLoading(false);
-//       }
-    
-//   };
-
-const HandleFormSubmit = async (e) => {
+  const HandleFormSubmit = async (e) => {
     e.preventDefault();
     setIsLoading(true);
 
+    const res = await Validation(formData, setError);
+
     // const res = await Validation(formData, setError);
-    try {
+    if (!res) {
+      try {
         const payload = new FormData();
         payload.append("service_id", id);
         payload.append("broad_description", formData.description);
-  
+
         formData?.mediaImages.forEach((item, index) => {
           payload.append(`media_images[${index}]`, item);
         });
-  
+
         formData?.infoSection.forEach((item, index) => {
-          payload.append(`featurs_and_usages[${index}][bg_color]`, item.bg_color);
+          payload.append(
+            `featurs_and_usages[${index}][bg_color]`,
+            item.bg_color
+          );
           payload.append(
             `featurs_and_usages[${index}][left_description]`,
             item.left_description
@@ -262,14 +143,17 @@ const HandleFormSubmit = async (e) => {
             item.right_img
           );
         });
-  
+
         formData?.fourCol?.forEach((item, index) => {
           payload.append(
             `distribution_card_items[${index}][item_bg]`,
             item.item_bg
           );
           payload.append(`distribution_card_items[${index}][icon]`, item.icon);
-          payload.append(`distribution_card_items[${index}][title]`, item.title);
+          payload.append(
+            `distribution_card_items[${index}][title]`,
+            item.title
+          );
           payload.append(
             `distribution_card_items[${index}][version]`,
             item.version
@@ -299,21 +183,27 @@ const HandleFormSubmit = async (e) => {
             item.brows_link
           );
         });
-  
+
         payload.append("promotion_title", formData?.promotion?.title);
         payload.append("prom_title_bg", formData?.promotion?.title_bg);
         payload.append("prom_area_bg", formData?.promotion?.area_bg);
-        payload.append("prom_left_label", formData?.promotion?.left_side?.label);
+        payload.append(
+          "prom_left_label",
+          formData?.promotion?.left_side?.label
+        );
         payload.append("prom_left_icon", formData?.promotion?.left_side?.image);
         payload.append(
           "prom_right_label",
           formData?.promotion?.right_side?.label
         );
-        payload.append("prom_right_icon", formData?.promotion?.right_side?.image);
-  
+        payload.append(
+          "prom_right_icon",
+          formData?.promotion?.right_side?.image
+        );
+
         payload.append("domain_name", formData.domain_name);
         payload.append("domain_link", formData.domain_link);
-  
+
         payload.append("user_doc_label", formData.user_doc.label);
         payload.append("user_doc_icon", formData.user_doc.icon);
         payload.append("user_desc", formData.user_doc.short_description);
@@ -327,12 +217,12 @@ const HandleFormSubmit = async (e) => {
           formData.user_doc?.video?.thumbnail
         );
         payload.append("youtube_video_title", formData.user_doc?.video?.title);
-  
+
         formData.distribution.forEach((item, index) => {
           payload.append(`distribution_items[${index}][label]`, item.label);
           payload.append(`distribution_items[${index}][icon]`, item.icon);
         });
-  
+
         formData.user_doc.module_file.forEach((item, index) => {
           payload.append(`user_modules[${index}][id]`, index + 1);
           payload.append(`user_modules[${index}][label]`, item.label);
@@ -342,23 +232,34 @@ const HandleFormSubmit = async (e) => {
 
         const response = await updateSingleServiceDetailsResource(payload, id);
         if (response.status === true) {
-            toast.success(response.message);
-            router.push("/admin/services");
+          toast.success(response.message);
+          setTab(1);
         } else {
-            toast.error(response.message);
+          setTab(1);
+          console.log("else block :", error);
+          toast.error(response.message);
         }
-    } catch (error) {
+      } catch (error) {
+        setTab(1);
+        console.log("catch block :", error);
+
         toast.error(error.message);
-    } finally {
+      } finally {
+        setTab(1);
         setIsLoading(false);
+      }
+    } else {
+      setTab(1);
+      setIsLoading(false);
+      toast.warn("Validation Error.");
     }
   };
+  // console.log({ formData });
 
+  console.log({ error });
 
-
-
-    return (
-        <>
+  return (
+    <>
       <form
         onSubmit={HandleFormSubmit}
         className="flex flex-col gap-4"
@@ -379,7 +280,7 @@ const HandleFormSubmit = async (e) => {
               onChange={(event, editor) =>
                 setFormData({ ...formData, description: editor.getData() })
               }
-              data={formData?.description}
+              data={formData?.description === "null" ? "" : formData?.description}
             />
           </fieldset>
 
@@ -503,7 +404,7 @@ const HandleFormSubmit = async (e) => {
               <input
                 type="text"
                 id="promotion_title"
-                value={formData?.promotion?.title}
+                value={formData?.promotion?.title =="null" ? "" : formData?.promotion?.title}
                 onChange={(e) =>
                   setFormData({
                     ...formData,
@@ -536,7 +437,7 @@ const HandleFormSubmit = async (e) => {
                 </label>
               </legend>
               <input
-                value={formData?.promotion?.title_bg}
+                value={formData?.promotion?.title_bg =="null" ? "" :formData?.promotion?.title_bg}
                 onChange={(e) =>
                   setFormData({
                     ...formData,
@@ -560,9 +461,9 @@ const HandleFormSubmit = async (e) => {
             )}
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-1">
-            <div>
-              <fieldset className="w-full flex flex-col border rounded-md px-2 m-1">
+          {/* <div className="w-full grid grid-cols-1 lg:grid-cols-2 gap-1">
+            <div className="flex flex-col items-center lg:items-start">
+              <fieldset className="w-full lg:w-[80%] flex flex-col border rounded-md px-2 m-1">
                 <legend>
                   <label className="font-bold after:content-['_*'] after:text-red-500">
                     Left Side
@@ -591,7 +492,11 @@ const HandleFormSubmit = async (e) => {
                       }
                     />
                   </div>
-
+                  {error?.promotion?.left_side?.label?.status && (
+                    <p className="text-red-500 text-12 px-2 pt-1">
+                      {error?.promotion?.left_side?.label?.message}
+                    </p>
+                  )}
 
                   <div className="flex gap-2">
                     <div>
@@ -615,7 +520,8 @@ const HandleFormSubmit = async (e) => {
                     </div>
 
                     <div>
-                      {typeof formData?.promotion?.left_side?.image == "string" && (
+                      {typeof formData?.promotion?.left_side?.image ==
+                        "string" && (
                         <div>
                           <img
                             src={
@@ -629,7 +535,8 @@ const HandleFormSubmit = async (e) => {
                         </div>
                       )}
 
-                      {typeof formData?.promotion?.left_side?.image == "object" && (
+                      {typeof formData?.promotion?.left_side?.image ==
+                        "object" && (
                         <div>
                           <img
                             src={URL.createObjectURL(
@@ -653,8 +560,8 @@ const HandleFormSubmit = async (e) => {
               )}
             </div>
 
-            <div>
-              <fieldset className="w-full flex flex-col border rounded-md px-2 m-1">
+            <div className="flex flex-col items-center lg:items-start">
+              <fieldset className="w-full lg:w-[80%] flex flex-col border rounded-md px-2 m-1">
                 <legend>
                   <label className="font-bold after:content-['_*'] after:text-red-500">
                     Right Side
@@ -684,6 +591,11 @@ const HandleFormSubmit = async (e) => {
                     />
                   </div>
 
+                  {error?.promotion?.right_side?.label?.status && (
+                    <p className="text-red-500 text-12 px-2 pt-1">
+                      {error?.promotion?.right_side?.label?.message}
+                    </p>
+                  )}
 
                   <div className="flex gap-2">
                     <div>
@@ -706,7 +618,8 @@ const HandleFormSubmit = async (e) => {
                       />
                     </div>
 
-                    {typeof formData?.promotion?.right_side?.image == "string" && (
+                    {typeof formData?.promotion?.right_side?.image ==
+                      "string" && (
                       <div>
                         <img
                           src={
@@ -720,7 +633,8 @@ const HandleFormSubmit = async (e) => {
                       </div>
                     )}
 
-                    {typeof formData?.promotion?.right_side?.image == "object" && (
+                    {typeof formData?.promotion?.right_side?.image ==
+                      "object" && (
                       <div>
                         <img
                           src={URL.createObjectURL(
@@ -742,6 +656,183 @@ const HandleFormSubmit = async (e) => {
                 </p>
               )}
             </div>
+          </div> */}
+
+          <div className="w-full grid grid-cols-1 lg:grid-cols-2 gap-4 px-2">
+            <div className="flex flex-col items-center lg:items-start">
+              <fieldset className="w-full  border rounded-md p-4">
+                <legend className="px-2">
+                  <label className="font-bold text-lg after:content-['_*'] after:text-red-500">
+                    Left Side
+                  </label>
+                </legend>
+
+                <div className="space-y-4">
+                  {/* Label Input */}
+                  <div>
+                    <label className="block font-medium mb-1">Label:</label>
+                    <input
+                      type="text"
+                      className="outline-none border border-gray-300 rounded px-3 py-2 w-full focus:ring-2 focus:ring-blue-500"
+                      placeholder="Enter Label"
+                      value={formData?.promotion?.left_side?.label =="null" ? "" : formData?.promotion?.left_side?.label}
+                      onChange={(e) =>
+                        setFormData({
+                          ...formData,
+                          promotion: {
+                            ...formData?.promotion,
+                            left_side: {
+                              ...formData?.promotion?.left_side,
+                              label: e.target.value,
+                            },
+                          },
+                        })
+                      }
+                    />
+                    {error?.promotion?.left_side?.label?.status && (
+                      <p className="text-red-500 text-sm mt-1">
+                        {error?.promotion?.left_side?.label?.message}
+                      </p>
+                    )}
+                  </div>
+
+                  {/* Image Input */}
+                  <div>
+                    <label className="block font-medium mb-1">Image:</label>
+                    <input
+                      type="file"
+                      accept="image/*"
+                      className="w-full"
+                      onChange={(e) =>
+                        setFormData({
+                          ...formData,
+                          promotion: {
+                            ...formData?.promotion,
+                            left_side: {
+                              ...formData?.promotion?.left_side,
+                              image: e.target.files[0],
+                            },
+                          },
+                        })
+                      }
+                    />
+                    <div className="mt-2">
+                      {typeof formData?.promotion?.left_side?.image ===
+                      "string" ? (
+                        <img
+                          src={
+                            process.env.NEXT_PUBLIC_IMAGE_URL +
+                            formData?.promotion?.left_side?.image
+                          }
+                          className="w-24 h-24 rounded-md object-cover"
+                          alt="Left Side"
+                        />
+                      ) : formData?.promotion?.left_side?.image ? (
+                        <img
+                          src={URL.createObjectURL(
+                            formData?.promotion?.left_side?.image
+                          )}
+                          className="w-24 h-24 rounded-md object-cover"
+                          alt="Left Side"
+                        />
+                      ) : (
+                        <img
+                          src={relative_image_path + "default.png"}
+                          className="w-24 h-24 rounded-md object-cover"
+                          alt="Left Side"
+                        />
+                      )}
+                    </div>
+                  </div>
+                </div>
+              </fieldset>
+            </div>
+
+            {/* Right Side */}
+            <div className="flex flex-col items-center lg:items-start">
+              <fieldset className="w-full  border rounded-md p-4">
+                <legend className="px-2">
+                  <label className="font-bold text-lg after:content-['_*'] after:text-red-500">
+                    Right Side
+                  </label>
+                </legend>
+
+                <div className="space-y-4">
+                  {/* Label Input */}
+                  <div>
+                    <label className="block font-medium mb-1">Label:</label>
+                    <input
+                      type="text"
+                      className="outline-none border border-gray-300 rounded px-3 py-2 w-full focus:ring-2 focus:ring-blue-500"
+                      placeholder="Enter Label"
+                      value={formData?.promotion?.right_side?.label =="null" ? "" : formData?.promotion?.right_side?.label}
+                      onChange={(e) =>
+                        setFormData({
+                          ...formData,
+                          promotion: {
+                            ...formData?.promotion,
+                            right_side: {
+                              ...formData?.promotion?.right_side,
+                              label: e.target.value,
+                            },
+                          },
+                        })
+                      }
+                    />
+                    {error?.promotion?.right_side?.label?.status && (
+                      <p className="text-red-500 text-sm mt-1">
+                        {error?.promotion?.right_side?.label?.message}
+                      </p>
+                    )}
+                  </div>
+
+                  {/* Image Input */}
+                  <div>
+                    <label className="block font-medium mb-1">Image:</label>
+                    <input
+                      type="file"
+                      accept="image/*"
+                      className="w-full"
+                      onChange={(e) =>
+                        setFormData({
+                          ...formData,
+                          promotion: {
+                            ...formData?.promotion,
+                            right_side: {
+                              ...formData?.promotion?.right_side,
+                              image: e.target.files[0],
+                            },
+                          },
+                        })
+                      }
+                    />
+                    <div className="mt-2">
+                      {typeof formData?.promotion?.right_side?.image ===
+                      "string" ? (
+                        <img
+                          src={
+                            process.env.NEXT_PUBLIC_IMAGE_URL +
+                            formData?.promotion?.right_side?.image
+                          }
+                          className="w-24 h-24 rounded-md object-cover"
+                          alt="Right Side"
+                        />
+                      ) : (
+                        formData?.promotion?.right_side?.image && (
+                          <img
+                            src={URL.createObjectURL(
+                              formData?.promotion?.right_side?.image
+                            )}
+                            className="w-24 h-24 rounded-md object-cover"
+                            alt="Right Side"
+                          />
+                        )
+                      )}
+                    </div>
+                  </div>
+                </div>
+              </fieldset>
+            </div>
           </div>
 
           <div>
@@ -755,7 +846,7 @@ const HandleFormSubmit = async (e) => {
                 </label>
               </legend>
               <input
-                value={formData?.promotion?.area_bg}
+                value={formData?.promotion?.area_bg =="null" ? "" : formData?.promotion?.area_bg}
                 onChange={(e) =>
                   setFormData({
                     ...formData,
@@ -819,7 +910,7 @@ const HandleFormSubmit = async (e) => {
                   <div>
                     <p>Background Color:</p>
                     <input
-                      value={item?.bg_color}
+                      value={item?.bg_color =="null" ?"":item?.bg_color}
                       onChange={(e) =>
                         setFormData({
                           ...formData,
@@ -854,7 +945,7 @@ const HandleFormSubmit = async (e) => {
                           ),
                         })
                       }
-                      data={item?.right_description}
+                      data={item?.right_description == "null" ? "":item?.right_description}
                     />
 
                     {error?.infoSection?.left_description?.status && (
@@ -876,7 +967,7 @@ const HandleFormSubmit = async (e) => {
                           ),
                         })
                       }
-                      data={item?.left_description}
+                      data={item?.left_description == "null" ?"" :item?.left_description}
                     />
 
                     {error?.infoSection?.right_description?.status && (
@@ -925,8 +1016,13 @@ const HandleFormSubmit = async (e) => {
 
                     {typeof item?.right_img == "object" && (
                       <div>
-                        <img
-                          src={URL.createObjectURL(item?.right_img)}
+                        <Image
+                          className="w-[70px] h-[70px]"
+                          src={
+                            item?.right_img instanceof Blob
+                              ? URL.createObjectURL(item?.right_img)
+                              : "/default-image.jpg"
+                          }
                           height={100}
                           width={100}
                           alt="Bangla"
@@ -990,12 +1086,15 @@ const HandleFormSubmit = async (e) => {
 
           {formData?.fourCol?.map((item, index) => {
             return (
-              <div key={index} className="w-full flex gap-2 border border-b-gray-400 py-6">
+              <div
+                key={index}
+                className="w-full flex gap-2 border border-b-gray-400 py-6"
+              >
                 <fieldset className="grid grid-cols-1 lg:grid-cols-2 gap-2 border rounded-md px-2 w-full">
                   <div>
                     <p>Background Color:</p>
                     <input
-                      value={item?.item_bg}
+                      value={item?.item_bg == "null" ?"":item?.item_bg}
                       onChange={(e) =>
                         setFormData({
                           ...formData,
@@ -1029,7 +1128,7 @@ const HandleFormSubmit = async (e) => {
                       />
                     </div>
 
-                    {typeof item?.icon == "string" && (
+                    {typeof item?.icon == "string" ? (
                       <div>
                         <img
                           src={process.env.NEXT_PUBLIC_IMAGE_URL + item?.icon}
@@ -1038,12 +1137,15 @@ const HandleFormSubmit = async (e) => {
                           alt="Bangla"
                         />
                       </div>
-                    )}
+                    ): <></>}
 
                     {typeof item?.icon == "object" && (
                       <div>
                         <Image
-                          src={item?.icon instanceof Blob ? URL.createObjectURL(item?.icon) : "/default-image.jpg"}
+                          src={
+                            item?.icon instanceof Blob
+                              && URL.createObjectURL(item?.icon)
+                          }
                           height={50}
                           width={50}
                           alt="Bangla"
@@ -1055,7 +1157,7 @@ const HandleFormSubmit = async (e) => {
                   <div>
                     <p>Title:</p>
                     <input
-                      value={item?.title}
+                      value={item?.title == 'null' ?"":item?.title}
                       onChange={(e) =>
                         setFormData({
                           ...formData,
@@ -1074,7 +1176,7 @@ const HandleFormSubmit = async (e) => {
                   <div>
                     <p>Version:</p>
                     <input
-                      value={item?.version}
+                      value={item?.version == "null" ? "":item?.version}
                       onChange={(e) =>
                         setFormData({
                           ...formData,
@@ -1093,7 +1195,7 @@ const HandleFormSubmit = async (e) => {
                   <div>
                     <p>Release Date:</p>
                     <input
-                      value={item?.release_date}
+                      value={item?.release_date =="null" ? "":item?.release_date}
                       onChange={(e) =>
                         setFormData({
                           ...formData,
@@ -1104,7 +1206,7 @@ const HandleFormSubmit = async (e) => {
                           ),
                         })
                       }
-                      type="text"
+                      type="date"
                       className="w-full outline-none border border-gray-500 px-2 rounded"
                     />
                   </div>
@@ -1112,7 +1214,7 @@ const HandleFormSubmit = async (e) => {
                   <div>
                     <p>Button Label:</p>
                     <input
-                      value={item?.btn_label}
+                      value={item?.btn_label == "null" ? '':item?.btn_label}
                       onChange={(e) =>
                         setFormData({
                           ...formData,
@@ -1239,6 +1341,7 @@ const HandleFormSubmit = async (e) => {
 
                 <div>
                   <button
+                    type="button"
                     onClick={() => {
                       if (formData?.fourCol?.length > 1) {
                         setFormData({
@@ -1311,7 +1414,7 @@ const HandleFormSubmit = async (e) => {
                               type="text"
                               placeholder="Enter Link"
                               className="border border-black w-full px-2 outline-none"
-                              value={item?.label}
+                              value={item?.label == "null" ? "" : item?.label}
                               onChange={(e) => {
                                 setFormData({
                                   ...formData,
@@ -1327,8 +1430,6 @@ const HandleFormSubmit = async (e) => {
                           </div>
                         </div>
 
-
-
                         <div className="flex gap-2">
                           <div className="grid grid-cols-4">
                             <p>Icon:</p>
@@ -1342,7 +1443,10 @@ const HandleFormSubmit = async (e) => {
                                     distribution: formData.distribution.map(
                                       (dist, i) =>
                                         i === index
-                                          ? { ...dist, icon: e.target.files?.[0] }
+                                          ? {
+                                              ...dist,
+                                              icon: e.target.files?.[0],
+                                            }
                                           : dist
                                     ),
                                   });
@@ -1350,7 +1454,6 @@ const HandleFormSubmit = async (e) => {
                               />
                             </div>
                           </div>
-
 
                           {item?.icon?.length > 0 && (
                             <div className="mt-5 relative w-12 h-12">
@@ -1370,7 +1473,9 @@ const HandleFormSubmit = async (e) => {
                                     ...formData,
                                     distribution: formData.distribution.map(
                                       (dist, i) =>
-                                        i === index ? { ...dist, icon: "" } : dist
+                                        i === index
+                                          ? { ...dist, icon: "" }
+                                          : dist
                                     ),
                                   })
                                 }
@@ -1397,7 +1502,9 @@ const HandleFormSubmit = async (e) => {
                                     ...formData,
                                     distribution: formData.distribution.map(
                                       (dist, i) =>
-                                        i === index ? { ...dist, icon: "" } : dist
+                                        i === index
+                                          ? { ...dist, icon: "" }
+                                          : dist
                                     ),
                                   })
                                 }
@@ -1545,9 +1652,9 @@ const HandleFormSubmit = async (e) => {
                   />
                 </fieldset>
 
-                {error?.userDoc?.label?.status && (
+                {error?.user_doc?.label?.status && (
                   <p className="text-red-500 text-12 px-2 pt-1">
-                    {error?.userDoc?.label?.message}
+                    {error?.user_doc?.label?.message}
                   </p>
                 )}
               </div>
@@ -1632,9 +1739,9 @@ const HandleFormSubmit = async (e) => {
                       )}
                   </div>
                 </fieldset>
-                {error?.userDoc?.icon?.status && (
+                {error?.user_doc?.icon?.status && (
                   <p className="text-red-500 text-12 px-2 pt-1">
-                    {error?.userDoc?.icon?.message}
+                    {error?.user_doc?.icon?.message}
                   </p>
                 )}
               </div>
@@ -1704,9 +1811,9 @@ const HandleFormSubmit = async (e) => {
                   />
                 </fieldset>
 
-                {error?.userDoc?.video?.link?.status && (
+                {error?.user_doc?.video?.link?.status && (
                   <p className="text-red-500 text-12 px-2 pt-1">
-                    {error?.userDoc?.video?.link?.message}
+                    {error?.user_doc?.video?.link?.message}
                   </p>
                 )}
               </div>
@@ -1741,7 +1848,8 @@ const HandleFormSubmit = async (e) => {
                   </fieldset>
 
                   <div>
-                    {typeof formData?.user_doc?.video?.thumbnail == "string" && (
+                    {typeof formData?.user_doc?.video?.thumbnail ==
+                      "string" && (
                       <div>
                         <img
                           src={
@@ -1756,7 +1864,8 @@ const HandleFormSubmit = async (e) => {
                       </div>
                     )}
 
-                    {typeof formData?.user_doc?.video?.thumbnail == "object" && (
+                    {typeof formData?.user_doc?.video?.thumbnail ==
+                      "object" && (
                       <div>
                         <img
                           src={URL.createObjectURL(
@@ -1772,9 +1881,9 @@ const HandleFormSubmit = async (e) => {
                   </div>
                 </div>
 
-                {error?.userDoc?.video?.thumbnail?.status && (
+                {error?.user_doc?.video?.thumbnail?.status && (
                   <p className="text-red-500 text-12 px-2 pt-1">
-                    {error?.userDoc?.video?.thumbnail?.message}
+                    {error?.user_doc?.video?.thumbnail?.message}
                   </p>
                 )}
               </div>
@@ -1807,9 +1916,9 @@ const HandleFormSubmit = async (e) => {
                   ></textarea>
                 </fieldset>
 
-                {error?.userDoc?.shortDes?.status && (
+                {error?.user_doc?.shortDes?.status && (
                   <p className="text-red-500 text-12 px-2 pt-1">
-                    {error?.userDoc?.shortDes?.message}
+                    {error?.user_doc?.shortDes?.message}
                   </p>
                 )}
               </div>
@@ -1917,13 +2026,14 @@ const HandleFormSubmit = async (e) => {
                                           }}
                                           type="file"
                                           className="w-full "
+                                          accept=".pdf,.doc,.docx,.xls,.xlsx,.zip"
                                         />
                                       </div>
                                     </div>
 
                                     {item?.module?.length > 0 &&
                                       (item?.module?.includes("pdf") ||
-                                        item?.module?.includes("exe") ? (
+                                      item?.module?.includes("exe") ? (
                                         item?.module?.includes("pdf") ? (
                                           <div className="mt-5 relative w-[5em] h-[5em]">
                                             <Image
@@ -1945,9 +2055,9 @@ const HandleFormSubmit = async (e) => {
                                                       (dist, i) =>
                                                         i === index
                                                           ? {
-                                                            ...dist,
-                                                            module: "",
-                                                          }
+                                                              ...dist,
+                                                              module: "",
+                                                            }
                                                           : dist
                                                     ),
                                                 })
@@ -1978,9 +2088,9 @@ const HandleFormSubmit = async (e) => {
                                                       (dist, i) =>
                                                         i === index
                                                           ? {
-                                                            ...dist,
-                                                            module: "",
-                                                          }
+                                                              ...dist,
+                                                              module: "",
+                                                            }
                                                           : dist
                                                     ),
                                                 })
@@ -1995,7 +2105,8 @@ const HandleFormSubmit = async (e) => {
                                         <div className="mt-5 relative w-12 h-12">
                                           <Image
                                             src={
-                                              process.env.NEXT_PUBLIC_IMAGE_URL +
+                                              process.env
+                                                .NEXT_PUBLIC_IMAGE_URL +
                                               item?.module
                                             }
                                             alt="Bangla"
@@ -2012,7 +2123,10 @@ const HandleFormSubmit = async (e) => {
                                                   formData.distribution.map(
                                                     (dist, i) =>
                                                       i === index
-                                                        ? { ...dist, module: "" }
+                                                        ? {
+                                                            ...dist,
+                                                            module: "",
+                                                          }
                                                         : dist
                                                   ),
                                               })
@@ -2295,7 +2409,7 @@ const HandleFormSubmit = async (e) => {
         </div>
       )}
     </>
-    );
+  );
 };
 
 export default UpdateServiceDetailsResourceNew;

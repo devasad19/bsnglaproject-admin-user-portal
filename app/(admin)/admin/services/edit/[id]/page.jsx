@@ -1,10 +1,8 @@
-export const revalidate = 60;
+
 
 import { getSingleServiceDetailsResource } from '@/app/(admin)/_api/ServiceApi';
 import dynamic from 'next/dynamic';
 const ServiceEditContainer = dynamic(() => import('../../../../component/ServiceEditContainer/ServiceEditContainer'), { ssr: false });
-// import ServiceEditContainer from '../../../../component/ServiceEditContainer/ServiceEditContainer';
-// import { getSingleServiceDetailsResource, updateSingleServiceResource } from "@/app/(admin)/_api";
 const Home = async ({ params: { id } }) => {
 
   const response2 = await getSingleServiceDetailsResource(id).catch((err) => console.log(err));
@@ -12,7 +10,7 @@ const Home = async ({ params: { id } }) => {
   // console.log('service response: ',response2?.date);
 
   const secondTab = {
-    description: response2?.data?.details?.broad_description,
+    description: response2?.data?.details?.broad_description ?? '',
     mediaImages: response2?.data?.details?.media_images ? JSON.parse(response2?.data?.details?.media_images) : [],
     distribution: response2?.data?.details?.distribution_items ? JSON.parse(response2?.data?.details?.distribution_items) : [
       {
