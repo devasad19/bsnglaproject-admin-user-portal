@@ -918,7 +918,7 @@ const UpdateServiceDetailsResource = ({ id, secondTab }) => {
                       </div>
                     )}
 
-                    {typeof item?.icon == "object" && (
+                    {typeof item?.icon == "object" && item?.icon !== null && (
                       <div>
                         <Image
                           src={item?.icon instanceof Blob ? URL.createObjectURL(item?.icon) : "/default-image.jpg"}
