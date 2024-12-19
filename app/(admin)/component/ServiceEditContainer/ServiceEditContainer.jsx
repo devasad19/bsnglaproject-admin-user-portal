@@ -7,6 +7,8 @@ import UpdateBanglaResource from "../service/UpdateBanglaResource/UpdateBanglaRe
  import UpdateServiceDetailsResourceNew from "../service/UpdateServiceDetailsResource/UpdateServiceDetailsResourceNew";
 
 const ServiceEditContainer = ({ id, secondTab }) => {
+  console.log("secondTab", secondTab);
+  
   const [tab, setTab] = useState(0);
   return (
     <section className="pb-10">
@@ -62,7 +64,7 @@ const ServiceEditContainer = ({ id, secondTab }) => {
                 {tab == 1 && (
                   <>
                   <UpdateServiceDetailsResourceNew id={id}
-                      secondTab={secondTab}/>
+                      secondTab={secondTab} setTab={setTab}/>
                     {/* <UpdateServiceDetailsResource
                       id={id}
                       secondTab={secondTab}
