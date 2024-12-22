@@ -573,6 +573,19 @@ const Sidebar = () => {
                     >
                         System Icon Management
                     </Link>
+                    <Link
+                      href={{
+                        pathname: "/admin/setting/system-colors",
+                      }}
+                      shallow
+                      className={`text-14 hover:bg-green-500 px-2 py-1 rounded hover:text-white ${
+                        pathname.includes("/admin/setting/system-colors")
+                          ? "bg-green-500 text-white font-semibold"
+                          : "text-black"
+                      }`}
+                    >
+                        System Colors Management
+                    </Link>
                   </div>
                 </NewAccordion>
               )}

@@ -1,8 +1,5 @@
 "use client";
-import Modal from "@/app/_components/Modal/Modal";
-import { modelClose, modelOpen } from "@/helper";
-import Image from "next/image";
-import { useRef, useState } from "react";
+import React, { useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import {
   createIcon,
@@ -10,17 +7,20 @@ import {
   settingIconUpdate,
 } from "../../_api/Setting/SettingIconApi";
 import { toast } from "react-toastify";
-import { CiEdit } from "react-icons/ci";
+import { modelClose, modelOpen } from "@/helper";
 import Swal from "sweetalert2";
+import Image from "next/image";
+import { CiEdit } from "react-icons/ci";
+import Modal from "@/app/_components/Modal/Modal";
+import { createColor, deleteColor, settingColorUpdate } from "../../_api/Setting/ColorApi";
 
-const SystemIconList = ({ systemIconData }: any) => {
+const SystemColorList = ({ systemColorData }: any) => {
   const addModal = useRef<any>(null);
   const addModelForm = useRef<any>(null);
   const updateModal = useRef<any>(null);
   const updateModelForm = useRef<any>(null);
-  const [iconData, setIconData] = useState<any>();
-  const [updateIconData, setUpdateIconData] = useState<any>();
-  const [updateSingleIconInfo, setUpdateSingleIconInfo] = useState<any>(null);
+  const [updateColorData, setUpdateColorData] = useState<any>();
+  const [updateSingleColorInfo, setUpdateSingleColorInfo] = useState<any>(null);
 
   const {
     register,
@@ -29,21 +29,22 @@ const SystemIconList = ({ systemIconData }: any) => {
     formState: { errors },
   } = useForm();
 
-  const handleIconSubmit = async (data: any) => {
-    const { name } = data;
-    const formData = new FormData();
-    formData.append("name", name);
-    formData.append("icon", iconData);
-    formData.append("status", "1");
+  const handleColorSubmit = async (data: any) => {
+    const { name, color } = data;
 
     try {
-      const response = await createIcon(formData);
+      const insertData = {
+        name,
+        color,
+        status: 1,
+      };
+      const response = await createColor(insertData);
       if (response?.status) {
-        toast.success("Icon Created Successfully");
+        toast.success("Color Created Successfully");
         modelClose(addModal, addModelForm);
         reset();
       } else {
-        toast.error("Icon Created Failed");
+        toast.error("Color Created Failed");
       }
     } catch (error) {
       console.log(error);
@@ -63,7 +64,7 @@ const SystemIconList = ({ systemIconData }: any) => {
         confirmButtonText: "Yes, delete it!",
       }).then((result) => {
         if (result.isConfirmed) {
-          const iconResponse = deleteIcon(id)
+          const iconResponse = deleteColor(id)
             .then((data) => {
               if (data) {
                 Swal.fire("Deleted!", "Your file has been deleted.", "success");
@@ -79,50 +80,54 @@ const SystemIconList = ({ systemIconData }: any) => {
     }
   };
 
-  const handleIconEdit = async (id: number) => {
+  const handleColorEdit = async (id: number) => {
     if (id) {
-      const updatedInfo = systemIconData?.find((item: any) => item.id === id);
-      setUpdateSingleIconInfo(updatedInfo);
+      const updatedInfo = systemColorData?.find((item: any) => item.id === id);
+      setUpdateSingleColorInfo(updatedInfo);
       modelOpen(updateModal);
     }
   };
 
-  const handleIconUpdateSubmit = async (e: any) => {
+  const handleColorUpdateSubmit = async (e: any) => {
     e.preventDefault();
     const name = e.target.name.value;
     const status = e.target.status.value;
-    const formData = new FormData();
-    formData.append("id", updateSingleIconInfo?.id);
-    formData.append("name", name);
-    formData.append("status", status);
-    formData.append("icon", updateIconData || updateSingleIconInfo?.icon);
+    const color = e.target.color.value;
+    
     try {
-      const response = await settingIconUpdate(formData);
+      const updateData ={
+        id: updateSingleColorInfo?.id,
+        name,
+        status,
+        color
+      }
+      // console.log({updateData});
+      // return;
+      
+      const response = await settingColorUpdate(updateData);
       if (response?.status) {
-        toast.success("Icon Updated Successfully");
+        toast.success("Color Updated Successfully");
         modelClose(updateModal, updateModelForm);
-        setUpdateSingleIconInfo(null);
-        setUpdateIconData(null);
+        setUpdateSingleColorInfo(null);
         e.target.reset();
       } else {
-        toast.error("Icon Updated Failed");
+        toast.error("Color Updated Failed");
       }
     } catch (error) {
       toast.error((error as Error)?.message);
     }
   };
-
   return (
     <>
       <div className="bg-white p-6">
         <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 pb-10">
-          <h3 className="text-24 font-bold">সিস্টেম আইকন তালিকা</h3>
+          <h3 className="text-24 font-bold">System Colors List</h3>
           <div className="space-x-4">
             <button
               onClick={() => modelOpen(addModal)}
               className="bg-primary text-white px-4 py-2 rounded-md"
             >
-              সিস্টেম আইকন তৈরি করুন
+              Create Color
             </button>
           </div>
         </div>
@@ -132,36 +137,23 @@ const SystemIconList = ({ systemIconData }: any) => {
               <thead>
                 <tr className="bg-[#E1F6F9] h-12">
                   <th>#</th>
-                  <th>আইকন নাম</th>
-                  <th>আইকন ছবি</th>
-                  <th>স্ট্যাটাস</th>
-                  <th>অ্যাকশন</th>
+                  <th>Color Name</th>
+                  <th>Color Code</th>
+                  <th>Status</th>
+                  <th>Action</th>
                 </tr>
               </thead>
               <tbody>
-                {systemIconData?.length > 0 ? (
+                {systemColorData?.length > 0 ? (
                   <>
-                    {systemIconData?.map((item: any, index: number) => (
+                    {systemColorData?.map((item: any, index: number) => (
                       <tr
                         key={index}
                         className="h-16 border-b border-gray-300 hover:bg-gray-100"
                       >
                         <td>{index + 1}</td>
                         <td>{item?.name || ""}</td>
-                        <td>
-                          {item?.icon && (
-                            <Image
-                              className="w-[50px] h-[50px] object-cover"
-                              src={
-                                `${process.env.NEXT_PUBLIC_IMAGE_URL}${item?.icon}` ||
-                                ""
-                              }
-                              width={50}
-                              height={50}
-                              alt="icon"
-                            />
-                          )}
-                        </td>
+                        <td>{item?.color || ""}</td>
                         <td>
                           <span
                             className={`px-2 py-1 rounded-md ${
@@ -170,13 +162,13 @@ const SystemIconList = ({ systemIconData }: any) => {
                                 : "bg-violet-500 text-white"
                             }`}
                           >
-                            {item.status == 1 ? "সক্রিয়" : "নিষ্ক্রিয়"}
+                            {item.status == 1 ? "Active" : "Inactive"}
                           </span>
                         </td>
                         <td className="flex items-center justify-center my-2">
                           <div className="flex flex-row gap-2">
                             <button
-                              onClick={() => handleIconEdit(item?.id)}
+                              onClick={() => handleColorEdit(item?.id)}
                               className="px-2 py-1 bg-blue-500 text-white active:scale-90 transition-all duration-400 rounded-md"
                             >
                               <CiEdit />
@@ -214,11 +206,10 @@ const SystemIconList = ({ systemIconData }: any) => {
       <Modal
         modalRef={addModal}
         modalForm={addModelForm}
-        setPreviewSrc={setIconData}
-        title=" সিস্টেম আইকন তৈরি করুন"
+        title=" System Color Create"
       >
         <form
-          onSubmit={handleSubmit(handleIconSubmit)}
+          onSubmit={handleSubmit(handleColorSubmit)}
           className="pt-3"
           ref={addModelForm}
         >
@@ -229,18 +220,18 @@ const SystemIconList = ({ systemIconData }: any) => {
                   htmlFor=""
                   className="after:content-['_*'] after:text-red-400"
                 >
-                  আইকন নাম
+                  Color Name
                 </label>
               </legend>
               <input
                 type="text"
                 {...register("name", { required: "Name is Required" })}
                 className="w-full text-14 outline-none py-1"
-                placeholder="আইকন নাম লিখুন"
+                placeholder="Color Name"
               />
             </fieldset>
             {errors.name && (
-              <span className="text-red-500">
+              <span className="text-red-500 text-12 ps-2">
                 {errors.name.message as String}
               </span>
             )}
@@ -252,45 +243,27 @@ const SystemIconList = ({ systemIconData }: any) => {
                   htmlFor=""
                   className="after:content-['_*'] after:text-red-400"
                 >
-                  আইকন ছবি
+                  Color Code
                 </label>
               </legend>
               <input
-                type="file"
-                {...register("icon", { required: "Icon is Required" })}
-                onChange={(e) => {
-                  if (e.target.files) {
-                    setIconData(e.target.files[0]);
-                  }
-                }}
+                type="text"
+                {...register("color", { required: "Color Code is Required" })}
                 className="w-full text-14 outline-none py-1"
-                placeholder="আইকন ছবি লিখুন"
-                accept="image/*"
+                placeholder="Color code"
               />
             </fieldset>
-            {errors.icon && (
-              <span className="text-red-500">
-                {errors.icon.message as String}
+            {errors.color && (
+              <span className="text-red-500 text-12 ps-2">
+                {errors.color.message as String}
               </span>
             )}
           </div>
-          {iconData && (
-            <div className="pt-3 flex flex-col gap-3">
-              <Image
-                className="w-[50px] h-[50px]"
-                src={URL.createObjectURL(iconData)}
-                width={50}
-                height={50}
-                alt="icon"
-              />
-            </div>
-          )}
 
           <div className="flex justify-end gap-3 mt-7">
             <button
               type="button"
               onClick={() => {
-                setIconData(null);
                 modelClose(addModal, addModelForm);
               }}
               className="bg-red-500 text-white px-4 py-2 rounded-md"
@@ -311,11 +284,11 @@ const SystemIconList = ({ systemIconData }: any) => {
       <Modal
         modalRef={updateModal}
         modalForm={updateModelForm}
-        setPreviewSrc={setUpdateIconData}
-        title=" সিস্টেম আইকন তৈরি করুন"
+        setPreviewSrc={setUpdateColorData}
+        title=" System Color Update"
       >
         <form
-          onSubmit={handleIconUpdateSubmit}
+          onSubmit={handleColorUpdateSubmit}
           className="pt-3"
           ref={updateModelForm}
         >
@@ -326,15 +299,15 @@ const SystemIconList = ({ systemIconData }: any) => {
                   htmlFor=""
                   className="after:content-['_*'] after:text-red-400"
                 >
-                  আইকন নাম
+                  Color Name
                 </label>
               </legend>
               <input
                 type="text"
-                defaultValue={updateSingleIconInfo?.name}
+                defaultValue={updateSingleColorInfo?.name}
                 name="name"
                 className="w-full text-14 outline-none py-1"
-                placeholder="আইকন নাম লিখুন"
+                placeholder="Color Name"
               />
             </fieldset>
           </div>
@@ -354,13 +327,13 @@ const SystemIconList = ({ systemIconData }: any) => {
               >
                 <option
                   value="1"
-                  selected={updateSingleIconInfo?.status == "1"}
+                  selected={updateSingleColorInfo?.status == "1"}
                 >
                   Active
                 </option>
                 <option
                   value="0"
-                  selected={updateSingleIconInfo?.status == "0"}
+                  selected={updateSingleColorInfo?.status == "0"}
                 >
                   Inactive
                 </option>
@@ -374,67 +347,23 @@ const SystemIconList = ({ systemIconData }: any) => {
                   htmlFor=""
                   className="after:content-['_*'] after:text-red-400"
                 >
-                  আইকন ছবি
+                  Color Code
                 </label>
               </legend>
               <input
-                type="file"
-                onChange={(e) => {
-                  if (e.target.files) {
-                    setUpdateIconData(e.target.files[0]);
-                  }
-                }}
+                type="text"
+                defaultValue={updateSingleColorInfo?.color}
+                name="color"
                 className="w-full text-14 outline-none py-1"
-                placeholder="আইকন ছবি লিখুন"
-                accept="image/*"
+                placeholder="Color Name"
               />
             </fieldset>
           </div>
-          {updateIconData ? (
-            <div className="pt-3 flex flex-col gap-3">
-              <Image
-                className="w-[50px] h-[50px] object-cover"
-                src={URL.createObjectURL(updateIconData)}
-                width={50}
-                height={50}
-                alt="icon"
-              />
-            </div>
-          ) : (
-            updateSingleIconInfo?.icon && (
-              <div className="pt-3 flex flex-col gap-3">
-                <Image
-                  className="w-[50px] h-[50px]"
-                  src={
-                    `${process.env.NEXT_PUBLIC_IMAGE_URL}${updateSingleIconInfo?.icon}` ||
-                    ""
-                  }
-                  width={50}
-                  height={50}
-                  alt="icon"
-                />
-              </div>
-            )
-          )}
-
-          {iconData && (
-            <div className="pt-3 flex flex-col gap-3">
-              <Image
-                className="w-[50px] h-[50px]"
-                src={URL.createObjectURL(iconData)}
-                width={50}
-                height={50}
-                alt="icon"
-              />
-            </div>
-          )}
-
           <div className="flex justify-end gap-3 mt-7">
             <button
               type="button"
               onClick={() => {
-                setUpdateIconData(null);
-                setUpdateIconData(null);
+                setUpdateColorData(null);
                 modelClose(updateModal, updateModelForm);
               }}
               className="bg-red-500 text-white px-4 py-2 rounded-md"
@@ -454,4 +383,4 @@ const SystemIconList = ({ systemIconData }: any) => {
   );
 };
 
-export default SystemIconList;
+export default SystemColorList;

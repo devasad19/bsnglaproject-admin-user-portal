@@ -114,6 +114,11 @@ const UpdateServiceDetailsResourceNew = ({ id, secondTab, setTab }) => {
 
     const res = await Validation(formData, setError);
 
+    // formData.user_doc.module_file.forEach((item, index) => {
+    //   console.log("download",item.download);
+
+    // });
+
     // const res = await Validation(formData, setError);
     if (!res) {
       try {
