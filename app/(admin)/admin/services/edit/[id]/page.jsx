@@ -1,11 +1,22 @@
 
 
 import { getSingleServiceDetailsResource } from '@/app/(admin)/_api/ServiceApi';
+import { getSettingActiveColors } from '@/app/(admin)/_api/Setting/ColorApi';
 import dynamic from 'next/dynamic';
 const ServiceEditContainer = dynamic(() => import('../../../../component/ServiceEditContainer/ServiceEditContainer'), { ssr: false });
 const Home = async ({ params: { id } }) => {
 
   const response2 = await getSingleServiceDetailsResource(id).catch((err) => console.log(err));
+
+  const response = await getSettingActiveColors()
+          .then((res) => {
+            return res;
+          })
+          .catch((error) => {
+            return error;
+          });
+
+
 
   // console.log('service response: ',response2?.date);
 
@@ -82,7 +93,7 @@ const Home = async ({ params: { id } }) => {
   }
 
   return (
-    <ServiceEditContainer id={id} secondTab={secondTab} />
+    <ServiceEditContainer id={id} secondTab={secondTab} allColors={response?.data}/>
   );
 };
 export default Home;

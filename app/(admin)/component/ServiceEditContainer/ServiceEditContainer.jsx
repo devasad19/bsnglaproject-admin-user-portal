@@ -6,8 +6,8 @@ import UpdateBanglaResource from "../service/UpdateBanglaResource/UpdateBanglaRe
 // import UpdateServiceDetailsResource from "../service/UpdateServiceDetailsResource/UpdateServiceDetailsResource";
  import UpdateServiceDetailsResourceNew from "../service/UpdateServiceDetailsResource/UpdateServiceDetailsResourceNew";
 
-const ServiceEditContainer = ({ id, secondTab }) => {
-  console.log("secondTab", secondTab);
+const ServiceEditContainer = ({ id, secondTab,allColors }) => {
+  // console.log("secondTab", secondTab);
   
   const [tab, setTab] = useState(0);
   return (
@@ -64,7 +64,7 @@ const ServiceEditContainer = ({ id, secondTab }) => {
                 {tab == 1 && (
                   <>
                   <UpdateServiceDetailsResourceNew id={id}
-                      secondTab={secondTab} setTab={setTab}/>
+                      secondTab={secondTab} setTab={setTab} allColors={allColors}/>
                     {/* <UpdateServiceDetailsResource
                       id={id}
                       secondTab={secondTab}

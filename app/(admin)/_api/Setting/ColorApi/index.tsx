@@ -41,6 +41,27 @@ export const getSettingColors = async () => {
   }
 };
 
+export const getSettingActiveColors = async () => {
+  try {
+    const fetchOption = {
+        next: {
+          tags: ["get-setting-colors"],
+        },
+      };
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/get-active/colors`,
+      fetchOption
+    );
+    if (!res.ok) {
+      throw new Error("Failed to fetch data");
+    }
+
+    return res.json();
+  } catch (error) {
+    return error;
+  }
+};
+
 // delete setting icon api
 export const deleteColor = async (id: number) => {
     try {

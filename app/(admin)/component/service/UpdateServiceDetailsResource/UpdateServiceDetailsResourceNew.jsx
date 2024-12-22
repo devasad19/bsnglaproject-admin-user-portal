@@ -6,21 +6,27 @@ import { toast } from "react-toastify";
 import { CountWords, GetFileSize, sanitizeYoutubeUrl } from "@/helper";
 import { updateSingleServiceResource } from "@/app/(admin)/_api";
 import Image from "next/image";
-import { FaRegTimesCircle } from "react-icons/fa";
+import { FaCheckCircle, FaRegTimesCircle } from "react-icons/fa";
 import { relative_image_path } from "@/helper";
 import CustomEditor from "@/app/_components/CustomEditor/CustomEditor";
 import { FaMinus } from "react-icons/fa";
 import { FaPlus } from "react-icons/fa";
 import Validation from "./Validation";
 import { updateSingleServiceDetailsResource } from "@/app/(admin)/_api/ServiceApi";
+import ColorBtn from "@/app/_components/Shared/ColorBtn";
 
-const UpdateServiceDetailsResourceNew = ({ id, secondTab, setTab }) => {
-  // console.log({secondTab});
+const UpdateServiceDetailsResourceNew = ({
+  id,
+  secondTab,
+  setTab,
+  allColors,
+}) => {
+  console.log({ allColors });
 
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
   const [formData, setFormData] = useState(secondTab);
-
+  console.log("infoSection :", formData?.infoSection);
   const [error, setError] = useState({
     description: {
       status: false,
@@ -285,7 +291,9 @@ const UpdateServiceDetailsResourceNew = ({ id, secondTab, setTab }) => {
               onChange={(event, editor) =>
                 setFormData({ ...formData, description: editor.getData() })
               }
-              data={formData?.description === "null" ? "" : formData?.description}
+              data={
+                formData?.description === "null" ? "" : formData?.description
+              }
             />
           </fieldset>
 
@@ -409,7 +417,11 @@ const UpdateServiceDetailsResourceNew = ({ id, secondTab, setTab }) => {
               <input
                 type="text"
                 id="promotion_title"
-                value={formData?.promotion?.title =="null" ? "" : formData?.promotion?.title}
+                value={
+                  formData?.promotion?.title == "null"
+                    ? ""
+                    : formData?.promotion?.title
+                }
                 onChange={(e) =>
                   setFormData({
                     ...formData,
@@ -441,23 +453,31 @@ const UpdateServiceDetailsResourceNew = ({ id, secondTab, setTab }) => {
                   Title Background Color
                 </label>
               </legend>
-              <input
-                value={formData?.promotion?.title_bg =="null" ? "" :formData?.promotion?.title_bg}
-                onChange={(e) =>
-                  setFormData({
-                    ...formData,
-                    promotion: {
-                      ...formData?.promotion,
-                      title_bg: e.target.value,
-                    },
-                  })
-                }
-                type="color"
-                name="title_bg"
-                id="title_bg"
-                className="w-full"
-              />
             </fieldset>
+            <div className="flex flex-wrap gap-2 items-center px-4 py-2">
+              {allColors?.map((item, index) => (
+                <button
+                  type="button"
+                  onClick={() => {
+                    setFormData({
+                      ...formData,
+                      promotion: {
+                        ...formData?.promotion,
+                        title_bg: item?.color,
+                      },
+                    });
+                  }}
+                  style={{ backgroundColor: item?.color }}
+                  key={index}
+                  className={`py-1 text-10 px-2 rounded-md flex items-center gap-2`}
+                >
+                  {item?.name}
+                  {formData?.promotion?.title_bg == item?.color && (
+                    <FaCheckCircle className="text-white" />
+                  )}
+                </button>
+              ))}
+            </div>
 
             {error?.promotion?.title_bg?.status && (
               <p className="text-red-500 text-12 px-2 pt-1">
@@ -680,7 +700,11 @@ const UpdateServiceDetailsResourceNew = ({ id, secondTab, setTab }) => {
                       type="text"
                       className="outline-none border border-gray-300 rounded px-3 py-2 w-full focus:ring-2 focus:ring-blue-500"
                       placeholder="Enter Label"
-                      value={formData?.promotion?.left_side?.label =="null" ? "" : formData?.promotion?.left_side?.label}
+                      value={
+                        formData?.promotion?.left_side?.label == "null"
+                          ? ""
+                          : formData?.promotion?.left_side?.label
+                      }
                       onChange={(e) =>
                         setFormData({
                           ...formData,
@@ -770,7 +794,11 @@ const UpdateServiceDetailsResourceNew = ({ id, secondTab, setTab }) => {
                       type="text"
                       className="outline-none border border-gray-300 rounded px-3 py-2 w-full focus:ring-2 focus:ring-blue-500"
                       placeholder="Enter Label"
-                      value={formData?.promotion?.right_side?.label =="null" ? "" : formData?.promotion?.right_side?.label}
+                      value={
+                        formData?.promotion?.right_side?.label == "null"
+                          ? ""
+                          : formData?.promotion?.right_side?.label
+                      }
                       onChange={(e) =>
                         setFormData({
                           ...formData,
@@ -850,23 +878,31 @@ const UpdateServiceDetailsResourceNew = ({ id, secondTab, setTab }) => {
                   Area Background Color
                 </label>
               </legend>
-              <input
-                value={formData?.promotion?.area_bg =="null" ? "" : formData?.promotion?.area_bg}
-                onChange={(e) =>
-                  setFormData({
-                    ...formData,
-                    promotion: {
-                      ...formData?.promotion,
-                      area_bg: e.target.value,
-                    },
-                  })
-                }
-                type="color"
-                name="area_background"
-                id="area_background"
-                className="w-full"
-              />
             </fieldset>
+            <div className="flex flex-wrap gap-2 items-center px-4 py-2">
+              {allColors?.map((item, index) => (
+                <button
+                  type="button"
+                  onClick={() => {
+                    setFormData({
+                      ...formData,
+                      promotion: {
+                        ...formData?.promotion,
+                        area_bg: item?.color,
+                      },
+                    });
+                  }}
+                  style={{ backgroundColor: item?.color }}
+                  key={index}
+                  className={`py-1 text-10 px-2 rounded-md flex items-center gap-2`}
+                >
+                  {item?.name}
+                  {formData?.promotion?.area_bg == item?.color && (
+                    <FaCheckCircle className="text-white" />
+                  )}
+                </button>
+              ))}
+            </div>
 
             {error?.promotion?.area_bg?.status && (
               <p className="text-red-500 text-12 px-2 pt-1">
@@ -911,24 +947,35 @@ const UpdateServiceDetailsResourceNew = ({ id, secondTab, setTab }) => {
                   <legend>
                     <label>Section {index + 1}</label>
                   </legend>
-
                   <div>
                     <p>Background Color:</p>
-                    <input
-                      value={item?.bg_color =="null" ?"":item?.bg_color}
-                      onChange={(e) =>
-                        setFormData({
-                          ...formData,
-                          infoSection: formData?.infoSection?.map((item, i) =>
-                            i === index
-                              ? { ...item, bg_color: e.target.value }
-                              : item
-                          ),
-                        })
-                      }
-                      type="color"
-                      className="w-full"
-                    />
+                    
+                    <div className="flex flex-wrap gap-2 items-center px-4 py-2">
+                      {allColors?.map((colorItem, AllColorIndex) => (
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setFormData({
+                              ...formData,
+                              infoSection: formData?.infoSection?.map((item, i) =>
+                                i === index
+                                  ? { ...item, bg_color: colorItem?.color }
+                                  : item
+                              ),
+                            })
+                          }}
+                          style={{ backgroundColor: colorItem?.color }}
+                          key={index}
+                          className={`py-1 text-10 px-2 rounded-md flex items-center gap-2`}
+                        >
+                          {colorItem?.name}
+                         
+                          {item?.bg_color == colorItem?.color && (
+                            <FaCheckCircle className="text-white" />
+                          )}
+                        </button>
+                      ))}
+                    </div>
 
                     {error?.infoSection?.bg_color?.status && (
                       <p className="text-red-500 text-12 px-2 pt-1">
@@ -950,7 +997,11 @@ const UpdateServiceDetailsResourceNew = ({ id, secondTab, setTab }) => {
                           ),
                         })
                       }
-                      data={item?.right_description == "null" ? "":item?.right_description}
+                      data={
+                        item?.right_description == "null"
+                          ? ""
+                          : item?.right_description
+                      }
                     />
 
                     {error?.infoSection?.left_description?.status && (
@@ -972,7 +1023,11 @@ const UpdateServiceDetailsResourceNew = ({ id, secondTab, setTab }) => {
                           ),
                         })
                       }
-                      data={item?.left_description == "null" ?"" :item?.left_description}
+                      data={
+                        item?.left_description == "null"
+                          ? ""
+                          : item?.left_description
+                      }
                     />
 
                     {error?.infoSection?.right_description?.status && (
@@ -1098,21 +1153,32 @@ const UpdateServiceDetailsResourceNew = ({ id, secondTab, setTab }) => {
                 <fieldset className="grid grid-cols-1 lg:grid-cols-2 gap-2 border rounded-md px-2 w-full">
                   <div>
                     <p>Background Color:</p>
-                    <input
-                      value={item?.item_bg == "null" ?"":item?.item_bg}
-                      onChange={(e) =>
-                        setFormData({
-                          ...formData,
-                          fourCol: formData?.fourCol?.map((item, i) =>
-                            i === index
-                              ? { ...item, item_bg: e.target.value }
-                              : item
-                          ),
-                        })
-                      }
-                      type="color"
-                      className="w-full h-6"
-                    />
+                    <div className="flex flex-wrap gap-2 items-center px-4 py-2">
+                      {allColors?.map((colorItem, AllColorIndex) => (
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setFormData({
+                              ...formData,
+                              fourCol: formData?.fourCol?.map((item, i) =>
+                                i === index
+                                  ? { ...item, item_bg: colorItem?.color }
+                                  : item
+                              ),
+                            })
+                          }}
+                          style={{ backgroundColor: colorItem?.color }}
+                          key={index}
+                          className={`py-1 text-10 px-2 rounded-md flex items-center gap-2`}
+                        >
+                          {colorItem?.name}
+                         
+                          {item?.item_bg == colorItem?.color && (
+                            <FaCheckCircle className="text-white" />
+                          )}
+                        </button>
+                      ))}
+                    </div>
                   </div>
 
                   <div className="flex">
@@ -1142,14 +1208,16 @@ const UpdateServiceDetailsResourceNew = ({ id, secondTab, setTab }) => {
                           alt="Bangla"
                         />
                       </div>
-                    ): <></>}
+                    ) : (
+                      <></>
+                    )}
 
                     {typeof item?.icon == "object" && (
                       <div>
                         <Image
                           src={
-                            item?.icon instanceof Blob
-                              && URL.createObjectURL(item?.icon)
+                            item?.icon instanceof Blob &&
+                            URL.createObjectURL(item?.icon)
                           }
                           height={50}
                           width={50}
@@ -1162,7 +1230,7 @@ const UpdateServiceDetailsResourceNew = ({ id, secondTab, setTab }) => {
                   <div>
                     <p>Title:</p>
                     <input
-                      value={item?.title == 'null' ?"":item?.title}
+                      value={item?.title == "null" ? "" : item?.title}
                       onChange={(e) =>
                         setFormData({
                           ...formData,
@@ -1181,7 +1249,7 @@ const UpdateServiceDetailsResourceNew = ({ id, secondTab, setTab }) => {
                   <div>
                     <p>Version:</p>
                     <input
-                      value={item?.version == "null" ? "":item?.version}
+                      value={item?.version == "null" ? "" : item?.version}
                       onChange={(e) =>
                         setFormData({
                           ...formData,
@@ -1200,7 +1268,9 @@ const UpdateServiceDetailsResourceNew = ({ id, secondTab, setTab }) => {
                   <div>
                     <p>Release Date:</p>
                     <input
-                      value={item?.release_date =="null" ? "":item?.release_date}
+                      value={
+                        item?.release_date == "null" ? "" : item?.release_date
+                      }
                       onChange={(e) =>
                         setFormData({
                           ...formData,
@@ -1219,7 +1289,7 @@ const UpdateServiceDetailsResourceNew = ({ id, secondTab, setTab }) => {
                   <div>
                     <p>Button Label:</p>
                     <input
-                      value={item?.btn_label == "null" ? '':item?.btn_label}
+                      value={item?.btn_label == "null" ? "" : item?.btn_label}
                       onChange={(e) =>
                         setFormData({
                           ...formData,
@@ -1326,21 +1396,32 @@ const UpdateServiceDetailsResourceNew = ({ id, secondTab, setTab }) => {
 
                   <div>
                     <p>Button Background Color:</p>
-                    <input
-                      value={item?.btn_bg}
-                      onChange={(e) =>
-                        setFormData({
-                          ...formData,
-                          fourCol: formData?.fourCol?.map((item, i) =>
-                            i === index
-                              ? { ...item, btn_bg: e.target.value }
-                              : item
-                          ),
-                        })
-                      }
-                      type="color"
-                      className="w-full h-6"
-                    />
+                    <div className="flex flex-wrap gap-2 items-center px-4 py-2">
+                      {allColors?.map((colorItem, AllColorIndex) => (
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setFormData({
+                              ...formData,
+                              fourCol: formData?.fourCol?.map((item, i) =>
+                                i === index
+                                  ? { ...item, btn_bg: colorItem?.color }
+                                  : item
+                              ),
+                            })
+                          }}
+                          style={{ backgroundColor: colorItem?.color }}
+                          key={index}
+                          className={`py-1 text-10 px-2 rounded-md flex items-center gap-2`}
+                        >
+                          {colorItem?.name}
+                         
+                          {item?.btn_bg == colorItem?.color && (
+                            <FaCheckCircle className="text-white" />
+                          )}
+                        </button>
+                      ))}
+                    </div>
                   </div>
                 </fieldset>
 
