@@ -87,12 +87,28 @@ const Sidebar = () => {
   }, []);
 
   const HandleLogout = () => {
-    document.cookie =
-      "token=; path=/; domain=localhost; expires=Thu, 01 Jan 1970 00:00:00 UTC;";
-    document.cookie =
-      "user=; path=/; domain=localhost; expires=Thu, 01 Jan 1970 00:00:00 UTC;";
-    // window.location.href='http://localhost:3000/signin';
-    window.location.href = "https://service.bangla.gov.bd/signin";
+
+    const isLocalhost = window.location.hostname === "localhost";
+    if (isLocalhost) {
+      document.cookie =
+        "token=; path = /; domain=localhost; expires = Thu, 01 Jan 1970 00:00:00 UTC;";
+      document.cookie =
+        "user=; path = /; domain=localhost; expires = Thu, 01 Jan 1970 00:00:00 UTC;";
+        window.location.href = "http://localhost:3000/signin";
+    } else {
+      document.cookie =
+        "token=; path = /; domain=.bangla.gov.bd; expires = Thu, 01 Jan 1970 00:00:00 UTC;";
+      document.cookie =
+        "user=; path = /; domain=.bangla.gov.bd; expires = Thu, 01 Jan 1970 00:00:00 UTC;";
+        window.location.href = "https://service.bangla.gov.bd/signin";
+    }
+
+    // document.cookie =
+    //   "token=; path=/; domain=localhost; expires=Thu, 01 Jan 1970 00:00:00 UTC;";
+    // document.cookie =
+    //   "user=; path=/; domain=localhost; expires=Thu, 01 Jan 1970 00:00:00 UTC;";
+    // // window.location.href='http://localhost:3000/signin';
+    // window.location.href = "https://service.bangla.gov.bd/signin";
   };
 
   return (
