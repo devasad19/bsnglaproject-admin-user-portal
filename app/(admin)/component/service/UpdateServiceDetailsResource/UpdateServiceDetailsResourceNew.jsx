@@ -3,8 +3,6 @@
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { toast } from "react-toastify";
-import { CountWords, GetFileSize, sanitizeYoutubeUrl } from "@/helper";
-import { updateSingleServiceResource } from "@/app/(admin)/_api";
 import Image from "next/image";
 import { FaCheckCircle, FaRegTimesCircle } from "react-icons/fa";
 import { relative_image_path } from "@/helper";
@@ -13,7 +11,7 @@ import { FaMinus } from "react-icons/fa";
 import { FaPlus } from "react-icons/fa";
 import Validation from "./Validation";
 import { updateSingleServiceDetailsResource } from "@/app/(admin)/_api/ServiceApi";
-import ColorBtn from "@/app/_components/Shared/ColorBtn";
+
 
 const UpdateServiceDetailsResourceNew = ({
   id,
@@ -21,7 +19,6 @@ const UpdateServiceDetailsResourceNew = ({
   setTab,
   allColors,
 }) => {
-  console.log({ allColors });
 
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
@@ -117,15 +114,9 @@ const UpdateServiceDetailsResourceNew = ({
   const HandleFormSubmit = async (e) => {
     e.preventDefault();
     setIsLoading(true);
-
+    // console.log("submited all data", formData);
+    // return;
     const res = await Validation(formData, setError);
-
-    // formData.user_doc.module_file.forEach((item, index) => {
-    //   console.log("download",item.download);
-
-    // });
-
-    // const res = await Validation(formData, setError);
     if (!res) {
       try {
         const payload = new FormData();
@@ -463,7 +454,7 @@ const UpdateServiceDetailsResourceNew = ({
                       ...formData,
                       promotion: {
                         ...formData?.promotion,
-                        title_bg: item?.color,
+                        title_bg: item?.id,
                       },
                     });
                   }}
@@ -472,7 +463,7 @@ const UpdateServiceDetailsResourceNew = ({
                   className={`py-1 text-10 px-2 rounded-md flex items-center gap-2`}
                 >
                   {item?.name}
-                  {formData?.promotion?.title_bg == item?.color && (
+                  {formData?.promotion?.title_bg == item?.id && (
                     <FaCheckCircle className="text-white" />
                   )}
                 </button>
@@ -888,7 +879,7 @@ const UpdateServiceDetailsResourceNew = ({
                       ...formData,
                       promotion: {
                         ...formData?.promotion,
-                        area_bg: item?.color,
+                        area_bg: item?.id,
                       },
                     });
                   }}
@@ -897,7 +888,7 @@ const UpdateServiceDetailsResourceNew = ({
                   className={`py-1 text-10 px-2 rounded-md flex items-center gap-2`}
                 >
                   {item?.name}
-                  {formData?.promotion?.area_bg == item?.color && (
+                  {formData?.promotion?.area_bg == item?.id && (
                     <FaCheckCircle className="text-white" />
                   )}
                 </button>
@@ -959,7 +950,7 @@ const UpdateServiceDetailsResourceNew = ({
                               ...formData,
                               infoSection: formData?.infoSection?.map((item, i) =>
                                 i === index
-                                  ? { ...item, bg_color: colorItem?.color }
+                                  ? { ...item, bg_color: colorItem?.id }
                                   : item
                               ),
                             })
@@ -970,7 +961,7 @@ const UpdateServiceDetailsResourceNew = ({
                         >
                           {colorItem?.name}
                          
-                          {item?.bg_color == colorItem?.color && (
+                          {item?.bg_color == colorItem?.id && (
                             <FaCheckCircle className="text-white" />
                           )}
                         </button>
@@ -1162,7 +1153,7 @@ const UpdateServiceDetailsResourceNew = ({
                               ...formData,
                               fourCol: formData?.fourCol?.map((item, i) =>
                                 i === index
-                                  ? { ...item, item_bg: colorItem?.color }
+                                  ? { ...item, item_bg: colorItem?.id }
                                   : item
                               ),
                             })
@@ -1173,7 +1164,7 @@ const UpdateServiceDetailsResourceNew = ({
                         >
                           {colorItem?.name}
                          
-                          {item?.item_bg == colorItem?.color && (
+                          {item?.item_bg == colorItem?.id && (
                             <FaCheckCircle className="text-white" />
                           )}
                         </button>
@@ -1405,7 +1396,7 @@ const UpdateServiceDetailsResourceNew = ({
                               ...formData,
                               fourCol: formData?.fourCol?.map((item, i) =>
                                 i === index
-                                  ? { ...item, btn_bg: colorItem?.color }
+                                  ? { ...item, btn_bg: colorItem?.id }
                                   : item
                               ),
                             })
@@ -1416,7 +1407,7 @@ const UpdateServiceDetailsResourceNew = ({
                         >
                           {colorItem?.name}
                          
-                          {item?.btn_bg == colorItem?.color && (
+                          {item?.btn_bg == colorItem?.id && (
                             <FaCheckCircle className="text-white" />
                           )}
                         </button>
