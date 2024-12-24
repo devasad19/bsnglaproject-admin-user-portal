@@ -36,6 +36,26 @@ export const getSettingIcon = async () => {
     return error;
   }
 };
+export const getActiveSettingIcon = async () => {
+  try {
+    const fetchOption = {
+        next: {
+          tags: ["get-setting-icon"],
+        },
+      };
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/get-active/icons`,
+      fetchOption
+    );
+    if (!res.ok) {
+      throw new Error("Failed to fetch data");
+    }
+
+    return res.json();
+  } catch (error) {
+    return error;
+  }
+};
 
 // delete setting icon api
 export const deleteIcon = async (id: number) => {
