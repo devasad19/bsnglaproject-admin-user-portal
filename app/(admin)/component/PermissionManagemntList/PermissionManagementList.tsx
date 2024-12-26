@@ -122,7 +122,7 @@ const PermissionManagementList = ({
       console.log(permissionData);
 
       const response = await createSinglePermission(permissionData);
-      console.log(response);
+      // console.log(response);
 
       if (response.status) {
         modelClose(permissionModal, permissionModalForm);
