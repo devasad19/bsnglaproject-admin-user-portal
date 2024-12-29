@@ -1,5 +1,5 @@
 "use client";
-
+import React from "react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { toast } from "react-toastify";
@@ -2572,4 +2572,4 @@ const UpdateServiceDetailsResourceNew = ({
   );
 };
 
-export default UpdateServiceDetailsResourceNew;
+export default React.memo(UpdateServiceDetailsResourceNew);

@@ -41,6 +41,16 @@ const ManageRoleList = ({ allParentPermissionList }: TManageRoleProps) => {
     const banglaName = e.target.bnName.value;
     const englishName = e.target.enName.value;
 
+    if (!banglaName && !englishName) {
+      setIsLoading(false);
+      setSubmitError((prev: any) => ({
+        ...prev,
+        name_bn: "Bangla name is required",
+        name_en: "English name is required",
+      }));
+      return;
+    }
+
     if (!banglaName) {
       setIsLoading(false);
       setSubmitError((prev: any) => ({
@@ -67,11 +77,10 @@ const ManageRoleList = ({ allParentPermissionList }: TManageRoleProps) => {
       };
 
       console.log(payload);
-      
 
       const response = await createRolePermission(payload);
       console.log(response);
-      
+
       if (response.status === true) {
         setIsLoading(false);
         toast.success(response.message);
@@ -281,7 +290,12 @@ const ManageRoleList = ({ allParentPermissionList }: TManageRoleProps) => {
       </div>
 
       {/* add modal start one disable*/}
-      <Modal modalRef={addModal} modalForm={addModelForm} title="Create Role">
+      <Modal
+        modalRef={addModal}
+        modalForm={addModelForm}
+        setServiceValidation={setSubmitError}
+        title="Create Role"
+      >
         <>
           <form
             className="pt-3"
@@ -330,12 +344,12 @@ const ManageRoleList = ({ allParentPermissionList }: TManageRoleProps) => {
                     className="w-full outline-none text-14 py-1"
                     placeholder="Enter Role Name in English"
                   />
-                  {submitError?.name_en && (
-                    <p className="text-red-500 text-12 ps-2">
-                      {submitError.name_en}
-                    </p>
-                  )}
                 </fieldset>
+                {submitError?.name_en && (
+                  <p className="text-red-500 text-12 ps-2">
+                    {submitError.name_en}
+                  </p>
+                )}
               </div>
             </div>
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
@@ -393,6 +407,7 @@ const ManageRoleList = ({ allParentPermissionList }: TManageRoleProps) => {
                   type="button"
                   className="btn"
                   onClick={() => {
+                    setSubmitError(null);
                     modelClose(addModal, addModelForm);
                   }}
                 >
@@ -411,182 +426,13 @@ const ManageRoleList = ({ allParentPermissionList }: TManageRoleProps) => {
         </>
       </Modal>
 
-      {/* add modal start one disable*/}
-      {/* <Modal
-        modalRef={addModal}
-        modalForm={addModelForm}
-        title="ভুমিকা তৈরি করুন"
-      >
-        <form className="pt-3" ref={addModelForm}>
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-2 border-b border-gray-300 pb-5 mb-5">
-            <fieldset className="flex flex-col border rounded-md px-2">
-              <legend>
-                <label
-                  htmlFor="NameBangla"
-                  className="after:content-['_*'] after:text-red-400"
-                >
-                  ভুমিকা নাম (বাংলা)
-                </label>
-              </legend>
-              <input
-                type="text"
-                id="NameBangla"
-                className="w-full outline-none text-14 py-1"
-                placeholder="ভুমিকার নাম লিখুন"
-              />
-            </fieldset>
-            <fieldset className="flex flex-col border rounded-md px-2">
-              <legend>
-                <label
-                  htmlFor="NameBangla"
-                  className="after:content-['_*'] after:text-red-400"
-                >
-                  ভুমিকা নাম (ইংরেজি)
-                </label>
-              </legend>
-              <input
-                type="text"
-                id="NameBangla"
-                className="w-full outline-none text-14 py-1"
-                placeholder="Enter Name of The Role"
-              />
-            </fieldset>
-          </div>
-          <div className="pt-6 flex justify-end">
-            <div className="flex items-center gap-4">
-              <button
-                type="button"
-                className="btn"
-                onClick={() => {
-                  modelClose(addModal, addModelForm);
-                }}
-              >
-                Cancel
-              </button>
-              <button
-                type="submit"
-                className="bg-blue-500 text-white px-4 py-3 rounded-md"
-              >
-                Create
-              </button>
-            </div>
-          </div>
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-            <div className="border border-gray-300 rounded-md">
-              <div>
-                <h3 className="bg-gradient-to-r from-indigo-500 to-blue-500 py-3 text-center rounded-t-md">
-                  Setting 1
-                </h3>
-              </div>
-              <ul className="p-2">
-                <li className="flex items-center gap-2">
-                  <input type="checkbox" />
-                  <label htmlFor="">lorem 1</label>
-                </li>
-                <li className="flex items-center gap-2">
-                  <input type="checkbox" />
-                  <label htmlFor="">lorem 2</label>
-                </li>
-                <li className="flex items-center gap-2">
-                  <input type="checkbox" />
-                  <label htmlFor="">lorem 3</label>
-                </li>
-              </ul>
-            </div>
-            <div className="border border-gray-300 rounded-md">
-              <div>
-                <h3 className="bg-gradient-to-r from-indigo-500 to-blue-500 py-3 text-center rounded-t-md">
-                  Setting 1
-                </h3>
-              </div>
-              <ul className="p-2">
-                <li className="flex items-center gap-2">
-                  <input type="checkbox" />
-                  <label htmlFor="">lorem 1</label>
-                </li>
-                <li className="flex items-center gap-2">
-                  <input type="checkbox" />
-                  <label htmlFor="">lorem 2</label>
-                </li>
-                <li className="flex items-center gap-2">
-                  <input type="checkbox" />
-                  <label htmlFor="">lorem 3</label>
-                </li>
-              </ul>
-            </div>
-            <div className="border border-gray-300 rounded-md">
-              <div>
-                <h3 className="bg-gradient-to-r from-indigo-500 to-blue-500 py-3 text-center rounded-t-md">
-                  Setting 1
-                </h3>
-              </div>
-              <ul className="p-2">
-                <li className="flex items-center gap-2">
-                  <input type="checkbox" />
-                  <label htmlFor="">lorem 1</label>
-                </li>
-                <li className="flex items-center gap-2">
-                  <input type="checkbox" />
-                  <label htmlFor="">lorem 2</label>
-                </li>
-                <li className="flex items-center gap-2">
-                  <input type="checkbox" />
-                  <label htmlFor="">lorem 3</label>
-                </li>
-              </ul>
-            </div>
-            <div className="border border-gray-300 rounded-md">
-              <div>
-                <h3 className="bg-gradient-to-r from-indigo-500 to-blue-500 py-3 text-center rounded-t-md">
-                  Setting 1
-                </h3>
-              </div>
-              <ul className="p-2">
-                <li className="flex items-center gap-2">
-                  <input type="checkbox" />
-                  <label htmlFor="">lorem 1</label>
-                </li>
-                <li className="flex items-center gap-2">
-                  <input type="checkbox" />
-                  <label htmlFor="">lorem 2</label>
-                </li>
-                <li className="flex items-center gap-2">
-                  <input type="checkbox" />
-                  <label htmlFor="">lorem 3</label>
-                </li>
-              </ul>
-            </div>
-            <div className="border border-gray-300 rounded-md">
-              <div>
-                <h3 className="bg-gradient-to-r from-indigo-500 to-blue-500 py-3 text-center rounded-t-md">
-                  Setting 1
-                </h3>
-              </div>
-              <ul className="p-2">
-                <li className="flex items-center gap-2">
-                  <input type="checkbox" />
-                  <label htmlFor="">lorem 1</label>
-                </li>
-                <li className="flex items-center gap-2">
-                  <input type="checkbox" />
-                  <label htmlFor="">lorem 2</label>
-                </li>
-                <li className="flex items-center gap-2">
-                  <input type="checkbox" />
-                  <label htmlFor="">lorem 3</label>
-                </li>
-              </ul>
-            </div>
-          </div>
-        </form>
-      </Modal> */}
-      {/* add modal end */}
+     
 
       {/* update modal start */}
       <Modal
         modalRef={updateModal}
         modalForm={updateModalForm}
-        title="ভুমিকা সংশোধন"
+        title="Update Role"
       >
         <form className="pt-3" ref={updateModalForm}>
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-2 border-b border-gray-300 pb-5 mb-5">
@@ -596,30 +442,34 @@ const ManageRoleList = ({ allParentPermissionList }: TManageRoleProps) => {
                   htmlFor="NameBangla"
                   className="after:content-['_*'] after:text-red-400"
                 >
-                  ভুমিকা নাম (বাংলা)
+                  Role Name (Bangla)
                 </label>
               </legend>
               <input
                 type="text"
                 id="NameBangla"
-                className="w-full outline-none text-14 py-1"
-                placeholder="ভুমিকার নাম লিখুন"
+                className="w-full outline-none text-14 py-1 bg-gray-200 text-gray-500 cursor-not-allowed border border-gray-300 rounded"
+                disabled={true}
+                name="bnName"
+                placeholder="Enter Role Name in Bangla"
               />
             </fieldset>
             <fieldset className="flex flex-col border rounded-md px-2">
               <legend>
                 <label
-                  htmlFor="NameBangla"
+                  htmlFor="NameEnglish"
                   className="after:content-['_*'] after:text-red-400"
                 >
-                  ভুমিকা নাম (ইংরেজি)
+                  Role Name (English)
                 </label>
               </legend>
               <input
                 type="text"
-                id="NameBangla"
-                className="w-full outline-none text-14 py-1"
-                placeholder="Enter Name of The Role"
+                id="NameEnglish"
+                className="w-full outline-none text-14 py-1 bg-gray-200 text-gray-500 cursor-not-allowed border border-gray-300 rounded"
+                disabled={true}
+                placeholder="Enter Role Name in English"
+                name="enName"
               />
             </fieldset>
           </div>
@@ -730,6 +580,26 @@ const ManageRoleList = ({ allParentPermissionList }: TManageRoleProps) => {
               </ul>
             </div>
           </div>
+          <div className="pt-6 flex justify-end">
+              <div className="flex items-center gap-4">
+                <button
+                  type="button"
+                  className="btn"
+                  onClick={() => {
+                    setSubmitError(null);
+                    modelClose(addModal, addModelForm);
+                  }}
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  className="bg-blue-500 text-white px-4 py-3 rounded-md"
+                >
+                  Update
+                </button>
+              </div>
+            </div>
         </form>
       </Modal>
       {/* update modal end */}

@@ -5,10 +5,6 @@ import React, { useState, useEffect } from "react";
 import { useForm, Controller } from "react-hook-form";
 import { toast } from "react-toastify";
 import CustomEditor from "@/app/_components/CustomEditor/CustomEditor";
-import {
-  getSingleServiceResource,
-  updateServiceResource,
-} from "@/app/(admin)/_api";
 import { FaCheckCircle } from "react-icons/fa";
 import { CountWords, replaceSpaces, replaceUnderscore } from "@/helper";
 import { getSingleServiceResourceCodeApi, updateSingleServiceResourceCodeUpdate } from "@/app/(admin)/_api/ServiceApi";
@@ -745,4 +741,4 @@ const UpdateServiceResource = ({ id }) => {
   );
 };
 
-export default UpdateServiceResource;
+export default React.memo(UpdateServiceResource);
