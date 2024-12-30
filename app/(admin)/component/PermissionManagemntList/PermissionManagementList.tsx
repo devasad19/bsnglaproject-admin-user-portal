@@ -122,7 +122,7 @@ const PermissionManagementList = ({
       console.log(permissionData);
 
       const response = await createSinglePermission(permissionData);
-      console.log(response);
+      // console.log(response);
 
       if (response.status) {
         modelClose(permissionModal, permissionModalForm);
@@ -219,6 +219,7 @@ const PermissionManagementList = ({
 
 
   }
+// console.log({permissionsData});
 
   return (
     <>
@@ -391,6 +392,7 @@ const PermissionManagementList = ({
                 name="parent_id"
                 id=""
                 className="w-full bg-white py-2"
+                // value={parentPermissionData?.id}
               >
                 {parentPermissionData?.map((item: any, index: number) => (
                   <option key={index} value={item.id}>

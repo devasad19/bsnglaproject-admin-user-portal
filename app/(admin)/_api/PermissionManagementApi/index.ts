@@ -1,7 +1,7 @@
 "use server";
 import axiosInstance from "@/lib/AxiosInstance";
 import { revalidateTag } from "next/cache";
-import { permission } from "process";
+
 
 
 // create single Parent Permission api
@@ -29,6 +29,7 @@ export const createSinglePermission = async (data: any) => {
       },
     });
     revalidateTag("get-permissions");
+    revalidateTag("get-parentWith-permissions");
     return response.data;
   } catch (error) {
     console.log(error);

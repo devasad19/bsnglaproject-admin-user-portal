@@ -116,13 +116,13 @@ const SystemIconList = ({ systemIconData }: any) => {
     <>
       <div className="bg-white p-6">
         <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 pb-10">
-          <h3 className="text-24 font-bold">সিস্টেম আইকন তালিকা</h3>
+          <h3 className="text-24 font-bold">System Icon List</h3>
           <div className="space-x-4">
             <button
               onClick={() => modelOpen(addModal)}
               className="bg-primary text-white px-4 py-2 rounded-md"
             >
-              সিস্টেম আইকন তৈরি করুন
+              Create Icon
             </button>
           </div>
         </div>
@@ -132,10 +132,10 @@ const SystemIconList = ({ systemIconData }: any) => {
               <thead>
                 <tr className="bg-[#E1F6F9] h-12">
                   <th>#</th>
-                  <th>আইকন নাম</th>
-                  <th>আইকন ছবি</th>
-                  <th>স্ট্যাটাস</th>
-                  <th>অ্যাকশন</th>
+                  <th>Icon Name</th>
+                  <th>Icon Images</th>
+                  <th>Status</th>
+                  <th>Action</th>
                 </tr>
               </thead>
               <tbody>
@@ -170,7 +170,7 @@ const SystemIconList = ({ systemIconData }: any) => {
                                 : "bg-violet-500 text-white"
                             }`}
                           >
-                            {item.status == 1 ? "সক্রিয়" : "নিষ্ক্রিয়"}
+                            {item.status == 1 ? "active" : "inactive"}
                           </span>
                         </td>
                         <td className="flex items-center justify-center my-2">
@@ -215,7 +215,7 @@ const SystemIconList = ({ systemIconData }: any) => {
         modalRef={addModal}
         modalForm={addModelForm}
         setPreviewSrc={setIconData}
-        title=" সিস্টেম আইকন তৈরি করুন"
+        title="Create System Icon"
       >
         <form
           onSubmit={handleSubmit(handleIconSubmit)}
@@ -229,14 +229,14 @@ const SystemIconList = ({ systemIconData }: any) => {
                   htmlFor=""
                   className="after:content-['_*'] after:text-red-400"
                 >
-                  আইকন নাম
+                  Icon Name
                 </label>
               </legend>
               <input
                 type="text"
                 {...register("name", { required: "Name is Required" })}
                 className="w-full text-14 outline-none py-1"
-                placeholder="আইকন নাম লিখুন"
+                placeholder="Icon Name"
               />
             </fieldset>
             {errors.name && (
@@ -252,7 +252,7 @@ const SystemIconList = ({ systemIconData }: any) => {
                   htmlFor=""
                   className="after:content-['_*'] after:text-red-400"
                 >
-                  আইকন ছবি
+                 Icon Image
                 </label>
               </legend>
               <input
@@ -264,7 +264,7 @@ const SystemIconList = ({ systemIconData }: any) => {
                   }
                 }}
                 className="w-full text-14 outline-none py-1"
-                placeholder="আইকন ছবি লিখুন"
+                placeholder="Icon Image"
                 accept="image/*"
               />
             </fieldset>
@@ -312,7 +312,7 @@ const SystemIconList = ({ systemIconData }: any) => {
         modalRef={updateModal}
         modalForm={updateModelForm}
         setPreviewSrc={setUpdateIconData}
-        title=" সিস্টেম আইকন তৈরি করুন"
+        title=" Update System Icon"
       >
         <form
           onSubmit={handleIconUpdateSubmit}
@@ -326,7 +326,7 @@ const SystemIconList = ({ systemIconData }: any) => {
                   htmlFor=""
                   className="after:content-['_*'] after:text-red-400"
                 >
-                  আইকন নাম
+                  Icon Name
                 </label>
               </legend>
               <input
@@ -334,7 +334,7 @@ const SystemIconList = ({ systemIconData }: any) => {
                 defaultValue={updateSingleIconInfo?.name}
                 name="name"
                 className="w-full text-14 outline-none py-1"
-                placeholder="আইকন নাম লিখুন"
+                placeholder="Icon Name"
               />
             </fieldset>
           </div>
@@ -374,7 +374,7 @@ const SystemIconList = ({ systemIconData }: any) => {
                   htmlFor=""
                   className="after:content-['_*'] after:text-red-400"
                 >
-                  আইকন ছবি
+                  Icon Image
                 </label>
               </legend>
               <input
@@ -385,7 +385,7 @@ const SystemIconList = ({ systemIconData }: any) => {
                   }
                 }}
                 className="w-full text-14 outline-none py-1"
-                placeholder="আইকন ছবি লিখুন"
+                placeholder="Icon Image"
                 accept="image/*"
               />
             </fieldset>

@@ -19,6 +19,15 @@ export const getAllSliderApi = async () =>{
         return [];
     }
 }
+export const getAllActiveSliderApi = async () =>{
+    try {
+        const resSlider = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/active/sliders`)
+        return resSlider.data;
+    } catch (error) {
+        console.log(error);
+        return [];
+    }
+}
 
 export const sliderUpdateStatus = async (id:any,status:any) =>{
     try {

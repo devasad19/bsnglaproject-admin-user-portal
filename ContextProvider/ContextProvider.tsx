@@ -21,7 +21,7 @@ const ContextProvider = ({ children }: any) => {
   const [loading, setLoading] = useState<boolean>(false);
   const [user, setUser] = useState<TUser | {}>({});
 
-  /* useEffect(() => {
+ /* useEffect(() => { 
     setLoading(true);
     const token = Cookies.get("token");
     const user:string | undefined =  Cookies.get("user");

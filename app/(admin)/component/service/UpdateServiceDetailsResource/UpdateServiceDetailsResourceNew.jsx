@@ -1,5 +1,5 @@
 "use client";
-
+import React from "react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { toast } from "react-toastify";
@@ -12,18 +12,17 @@ import { FaPlus } from "react-icons/fa";
 import Validation from "./Validation";
 import { updateSingleServiceDetailsResource } from "@/app/(admin)/_api/ServiceApi";
 
-
 const UpdateServiceDetailsResourceNew = ({
   id,
   secondTab,
   setTab,
   allColors,
+  allIcons,
 }) => {
-
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
   const [formData, setFormData] = useState(secondTab);
-  console.log("infoSection :", formData?.infoSection);
+  console.log("icon :", allIcons);
   const [error, setError] = useState({
     description: {
       status: false,
@@ -940,7 +939,7 @@ const UpdateServiceDetailsResourceNew = ({
                   </legend>
                   <div>
                     <p>Background Color:</p>
-                    
+
                     <div className="flex flex-wrap gap-2 items-center px-4 py-2">
                       {allColors?.map((colorItem, AllColorIndex) => (
                         <button
@@ -948,19 +947,20 @@ const UpdateServiceDetailsResourceNew = ({
                           onClick={() => {
                             setFormData({
                               ...formData,
-                              infoSection: formData?.infoSection?.map((item, i) =>
-                                i === index
-                                  ? { ...item, bg_color: colorItem?.id }
-                                  : item
+                              infoSection: formData?.infoSection?.map(
+                                (item, i) =>
+                                  i === index
+                                    ? { ...item, bg_color: colorItem?.id }
+                                    : item
                               ),
-                            })
+                            });
                           }}
                           style={{ backgroundColor: colorItem?.color }}
                           key={index}
                           className={`py-1 text-10 px-2 rounded-md flex items-center gap-2`}
                         >
                           {colorItem?.name}
-                         
+
                           {item?.bg_color == colorItem?.id && (
                             <FaCheckCircle className="text-white" />
                           )}
@@ -1105,7 +1105,8 @@ const UpdateServiceDetailsResourceNew = ({
 
         <div className="border border-gray-300 rounded">
           <div className="bg-gray-300 flex items-center justify-between p-2">
-            <h3 className="text-primary font-semibold">Four Column section</h3>
+          {/* Four Column section */}
+            <h3 className="text-primary font-semibold">Distribution Cards items</h3>
             <button
               onClick={() =>
                 setFormData({
@@ -1156,14 +1157,14 @@ const UpdateServiceDetailsResourceNew = ({
                                   ? { ...item, item_bg: colorItem?.id }
                                   : item
                               ),
-                            })
+                            });
                           }}
                           style={{ backgroundColor: colorItem?.color }}
                           key={index}
                           className={`py-1 text-10 px-2 rounded-md flex items-center gap-2`}
                         >
                           {colorItem?.name}
-                         
+
                           {item?.item_bg == colorItem?.id && (
                             <FaCheckCircle className="text-white" />
                           )}
@@ -1175,7 +1176,7 @@ const UpdateServiceDetailsResourceNew = ({
                   <div className="flex">
                     <div>
                       <p>Icon:</p>
-                      <input
+                      {/* <input
                         type="file"
                         onChange={(e) =>
                           setFormData({
@@ -1187,10 +1188,49 @@ const UpdateServiceDetailsResourceNew = ({
                             ),
                           })
                         }
-                      />
+                      /> */}
+                      <div className="flex items-center flex-wrap gap-2 p-2">
+                              {allIcons?.map((iconItem, iconIndex) => (
+                                <div
+                                  key={iconIndex}
+                                  className="flex flex-col items-center w-[40px] border border-primary p-1 rounded-md cursor-pointer relative"
+                                  title={iconItem?.name}
+                                  onClick={() => {
+                                    setFormData({
+                                      ...formData,
+                                      fourCol: formData?.fourCol?.map((item, i) =>
+                                        i === index
+                                          ? { ...item, icon: iconItem?.id }
+                                          : item
+                                      ),
+                                    })
+                                  }}
+                                >
+                                  <Image
+                                    src={`${process.env.NEXT_PUBLIC_IMAGE_URL}${iconItem?.icon}`}
+                                    alt={iconItem?.name || "Icon"}
+                                    width={20}
+                                    height={20}
+                                    className="w-[20px] h-[20px]"
+                                  />
+                                  <span className="text-10 text-center text-primary">
+                                    {iconItem?.name?.length < 4
+                                      ? iconItem?.name
+                                      : iconItem?.name?.slice(0, 3) + ".." ||
+                                        ""}
+                                  </span>
+                                  {
+                                    item?.icon == iconItem?.id && (
+                                      <FaCheckCircle className="absolute top-0 right-0 text-primary" />
+                                    )
+                                  }
+                                </div>
+                                
+                              ))}
+                            </div>
                     </div>
 
-                    {typeof item?.icon == "string" ? (
+                    {/* {typeof item?.icon == "string" ? (
                       <div>
                         <img
                           src={process.env.NEXT_PUBLIC_IMAGE_URL + item?.icon}
@@ -1215,7 +1255,7 @@ const UpdateServiceDetailsResourceNew = ({
                           alt="Bangla"
                         />
                       </div>
-                    )}
+                    )} */}
                   </div>
 
                   <div>
@@ -1399,14 +1439,14 @@ const UpdateServiceDetailsResourceNew = ({
                                   ? { ...item, btn_bg: colorItem?.id }
                                   : item
                               ),
-                            })
+                            });
                           }}
                           style={{ backgroundColor: colorItem?.color }}
                           key={index}
                           className={`py-1 text-10 px-2 rounded-md flex items-center gap-2`}
                         >
                           {colorItem?.name}
-                         
+
                           {item?.btn_bg == colorItem?.id && (
                             <FaCheckCircle className="text-white" />
                           )}
@@ -1510,7 +1550,7 @@ const UpdateServiceDetailsResourceNew = ({
                         <div className="flex gap-2">
                           <div className="grid grid-cols-4">
                             <p>Icon:</p>
-                            <div className="col-span-3">
+                            {/* <div className="col-span-3">
                               <input
                                 type="file"
                                 className="w-full"
@@ -1529,10 +1569,53 @@ const UpdateServiceDetailsResourceNew = ({
                                   });
                                 }}
                               />
+                            </div> */}
+                            <div className="flex items-center flex-wrap gap-2 p-2">
+                              {allIcons?.map((iconItem, iconIndex) => (
+                                <div
+                                  key={iconIndex}
+                                  className="flex flex-col items-center w-[40px] border border-primary p-1 rounded-md cursor-pointer relative"
+                                  title={iconItem?.name}
+                                  onClick={() => {
+                                    setFormData({
+                                      ...formData,
+                                      distribution: formData.distribution.map(
+                                        (dist, i) =>
+                                          i === index
+                                            ? {
+                                                ...dist,
+                                                icon: iconItem?.id,
+                                              }
+                                            : dist
+                                      ),
+                                    });
+                                  }}
+                                >
+                                  <Image
+                                    src={`${process.env.NEXT_PUBLIC_IMAGE_URL}${iconItem?.icon}`}
+                                    alt={iconItem?.name || "Icon"}
+                                    width={20}
+                                    height={20}
+                                    className="w-[20px] h-[20px]"
+                                  />
+                                  <span className="text-10 text-center text-primary">
+                                    {iconItem?.name?.length < 4
+                                      ? iconItem?.name
+                                      : iconItem?.name?.slice(0, 3) + ".." ||
+                                        ""}
+                                  </span>
+                                  {
+                                    item?.icon == iconItem?.id && (
+                                      <FaCheckCircle className="absolute top-0 right-0 text-primary" />
+                                    )
+                                  }
+                                </div>
+                                
+                              ))}
                             </div>
                           </div>
 
-                          {item?.icon?.length > 0 && (
+                          {/* {item?.icon?.length > 0 && (
                             <div className="mt-5 relative w-12 h-12">
                               <Image
                                 src={
@@ -1590,7 +1673,7 @@ const UpdateServiceDetailsResourceNew = ({
                                 <FaRegTimesCircle className="w-4 h-4 text-white" />
                               </button>
                             </div>
-                          )}
+                          )} */}
                         </div>
                       </div>
                     </fieldset>
@@ -2489,4 +2572,4 @@ const UpdateServiceDetailsResourceNew = ({
   );
 };
 
-export default UpdateServiceDetailsResourceNew;
+export default React.memo(UpdateServiceDetailsResourceNew);
