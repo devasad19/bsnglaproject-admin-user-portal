@@ -41,6 +41,7 @@ export const getSettingColors = async () => {
   }
 };
 
+// get all active color
 export const getSettingActiveColors = async () => {
   try {
     const fetchOption = {
