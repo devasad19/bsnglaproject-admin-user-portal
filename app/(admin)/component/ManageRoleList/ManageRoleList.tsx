@@ -6,6 +6,7 @@ import {
   createRolePermission,
   rolePermissionNameUpdate,
   singlePermissionRoleGet,
+  singleRoleManageUpdate,
 } from "../../_api/RoleManagementApi";
 import { toast } from "react-toastify";
 import ApiLoading from "../ApiLoading/ApiLoading";
@@ -94,7 +95,7 @@ const ManageRoleList = ({
         permissions: JSON.stringify(permission),
       };
 
-      console.log(payload);
+      // console.log(payload);
 
       const response = await createRolePermission(payload);
       console.log(response);
@@ -202,12 +203,11 @@ const ManageRoleList = ({
           console.log(response.data);
           setSingleManagePermission(response.data);
           setGetAllPermission(response.data?.role?.user_permissions);
-          getAllPermission?.forEach((element:any) => {
+          getAllPermission?.forEach((element: any) => {
             setUpdatedPermission((prev: any) => [
               ...prev,
               element?.permission_id,
             ]);
-            
           });
           modelOpen(permissionManageModal);
         } else {
@@ -223,15 +223,47 @@ const ManageRoleList = ({
     }
   };
 
-  const handlePermissionManageSubmit = async (e:any)=>{
+  const handlePermissionManageSubmit = async (e: any) => {
+    setIsLoading(true);
     e.preventDefault();
-  }
-  
-  console.log({updatedPermission});
-  
 
-  
-  
+    const banglaName = e.target.bnName.value;
+    const englishName = e.target.enName.value;
+    
+    try {
+      const payload ={
+        name_bn: banglaName,
+        name_en: englishName,
+        permissions: JSON.stringify(updatedPermission),
+        role_id: singleManagePermission?.role?.id,
+        user_id:user?.id,
+        guard_name:"api"
+      }
+      console.log({payload});
+      
+      const response = await singleRoleManageUpdate(payload);
+      // console.log(response);
+
+      if (response.status === true) {
+        setIsLoading(false);
+        toast.success(response.message);
+        modelClose(permissionManageModal, permissionManageForm);
+        e.target.reset();
+        
+      } else {
+        // console.log("else block :", error);
+        setIsLoading(false);
+        toast.error(response.message);
+      }
+    } catch (error) {
+      console.log(error);
+      toast.error((error as Error).message);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  // console.log({ updatedPermission });
 
   return (
     <>
@@ -473,7 +505,11 @@ const ManageRoleList = ({
         modalForm={permissionManageForm}
         title="Update Permission"
       >
-        <form className="pt-3" onSubmit={handlePermissionManageSubmit} ref={permissionManageForm}>
+        <form
+          className="pt-3"
+          onSubmit={handlePermissionManageSubmit}
+          ref={permissionManageForm}
+        >
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-2 border-b border-gray-300 pb-5 mb-5">
             <fieldset className="flex flex-col border rounded-md px-2">
               <legend>
@@ -515,7 +551,7 @@ const ManageRoleList = ({
             </fieldset>
           </div>
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-            {singleManagePermission?.role?.user_permissions && (
+            {updatedPermission?.length>0 && (
               <>
                 {allParentPermissionList?.length > 0 ? (
                   allParentPermissionList?.map((pItem: any, index: number) => {
@@ -541,21 +577,26 @@ const ManageRoleList = ({
                                     <input
                                       type="checkbox"
                                       onChange={() => {
-                                        setPermission((prev: any[]) => [
-                                          ...prev,
-                                          cItem?.id,
-                                        ]);
+                                        if (
+                                          updatedPermission?.some(
+                                            (item: any) => item == cItem.id
+                                          )
+                                        ) {
+                                          setUpdatedPermission((prev: any) => {
+                                            return prev.filter(
+                                              (item: any) => item != cItem.id
+                                            );
+                                          });
+                                        } else {
+                                          setUpdatedPermission((prev: any) => [
+                                            ...prev,
+                                            cItem.id,
+                                          ]);
+                                        }
                                       }}
-                                      checked={getAllPermission?.some(
+                                      checked={updatedPermission?.some(
                                         (item: any) => {
-                                          console.log("Checking item:", item); // Debugging
-                                          console.log(
-                                            "Comparing with cItem.id:",
-                                            cItem.id
-                                          ); // Debugging
-                                          return (
-                                            item?.permission_id == cItem.id
-                                          );
+                                          return item == cItem.id;
                                         }
                                       )}
                                     />

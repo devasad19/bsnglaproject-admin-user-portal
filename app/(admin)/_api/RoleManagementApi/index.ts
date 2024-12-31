@@ -97,3 +97,22 @@ export const singlePermissionRoleGet =async (id: any) => {
   }
 }
 
+
+export const singleRoleManageUpdate = async (data: any) => {
+  try {
+    const response = await axiosInstance.post("/update-role-permissions", data, {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    // console.log(response);
+
+    revalidateTag("get-role-permissions");
+
+    return response.data;
+  } catch (error) {
+    return error;
+  }
+};
+
+
