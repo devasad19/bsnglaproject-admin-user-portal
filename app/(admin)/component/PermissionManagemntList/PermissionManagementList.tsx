@@ -225,19 +225,19 @@ const PermissionManagementList = ({
     <>
       <div className="bg-white p-6">
         <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 pb-10">
-          <h3 className="text-24 font-bold">অনুমতি পরিচালনা</h3>
+            <h3 className="text-24 font-bold">Permission Management</h3>
           <div className="space-x-4">
             <button
               onClick={() => modelOpen(addModal)}
               className="bg-primary text-white px-4 py-2 rounded-md"
             >
-              প্যারেন্ট অনুমতির নাম তৈরি করুন
+              Create Parent Permission
             </button>
             <button
               onClick={() => modelOpen(permissionModal)}
               className="bg-primary text-white px-4 py-2 rounded-md"
             >
-              অনুমতি তৈরি করুন
+              Create Permission
             </button>
           </div>
         </div>
@@ -246,12 +246,12 @@ const PermissionManagementList = ({
             <table className="w-full text-center">
               <thead>
                 <tr className="bg-[#E1F6F9] h-12">
-                  <th>#</th>
-                  <th>প্রদর্শনী নাম</th>
-                  <th>অনুমতি নাম</th>
-                  <th>প্প্যারেন্ট অনুমতির নাম</th>
-                  <th>স্ট্যাটাস</th>
-                  <th>অ্যাকশন</th>
+                    <th>#</th>
+                    <th>Display Name</th>
+                    <th>Permission Name</th>
+                    <th>Parent Permission Name</th>
+                    <th>Status</th>
+                    <th>Action</th>
                 </tr>
               </thead>
               <tbody>
@@ -274,7 +274,7 @@ const PermissionManagementList = ({
                                 : "bg-violet-500 text-white"
                             }`}
                           >
-                            {item.isActive ? "সক্রিয়" : "নিষ্ক্রিয়"}
+                            {item.isActive ? "Active" : "InActive"}
                           </span>
                         </td>
                         <td className="flex items-center justify-center my-2">
@@ -316,7 +316,7 @@ const PermissionManagementList = ({
       <Modal
         modalRef={addModal}
         modalForm={addModelForm}
-        title="প্যারেন্ট অনুমতির নাম তৈরি করুন"
+        title="Create Parent Permission Name"
       >
         <form
           onSubmit={handleSubmit(onParentSubmitHandle)}
@@ -324,43 +324,43 @@ const PermissionManagementList = ({
           ref={addModelForm}
         >
           <div className="pt-3 flex flex-col gap-3">
-            <fieldset className="flex flex-col border border-gray-300 rounded-md px-2">
-              <legend>
-                <label
-                  htmlFor=""
-                  className="after:content-['_*'] after:text-red-400"
-                >
-                  প্যারেন্ট নাম
-                </label>
-              </legend>
-              <input
-                type="text"
-                {...register("name", { required: "Name is Required" })}
-                className="w-full text-14 outline-none py-1"
-                placeholder="প্যারেন্ট অনুমতির প্রদর্শনী নাম লিখুন"
-              />
-            </fieldset>
-            {errors.name && (
-              <span className="text-red-500">{errors.name.message}</span>
-            )}
+        <fieldset className="flex flex-col border border-gray-300 rounded-md px-2">
+          <legend>
+            <label
+          htmlFor=""
+          className="after:content-['_*'] after:text-red-400"
+            >
+          Parent Name
+            </label>
+          </legend>
+          <input
+            type="text"
+            {...register("name", { required: "Name is Required" })}
+            className="w-full text-14 outline-none py-1"
+            placeholder="Enter Parent Permission Display Name"
+          />
+        </fieldset>
+        {errors.name && (
+          <span className="text-red-500">{errors.name.message}</span>
+        )}
           </div>
 
           <div className="flex justify-end gap-3 mt-7">
-            <button
-              type="button"
-              onClick={() => {
-                modelClose(addModal, addModelForm);
-              }}
-              className="bg-red-500 text-white px-4 py-2 rounded-md"
-            >
-              Cancel
-            </button>
-            <button
-              type="submit"
-              className="bg-blue-500 text-white px-4 py-2 rounded-md"
-            >
-              Submit
-            </button>
+        <button
+          type="button"
+          onClick={() => {
+            modelClose(addModal, addModelForm);
+          }}
+          className="bg-red-500 text-white px-4 py-2 rounded-md"
+        >
+          Cancel
+        </button>
+        <button
+          type="submit"
+          className="bg-blue-500 text-white px-4 py-2 rounded-md"
+        >
+          Submit
+        </button>
           </div>
         </form>
       </Modal>
@@ -369,7 +369,7 @@ const PermissionManagementList = ({
       <Modal
         modalRef={permissionModal}
         modalForm={permissionModalForm}
-        title="অনুমতির তৈরি করুন"
+        title="Create Permission"
         setServiceValidation={setValidationError}
       >
         <form
@@ -378,90 +378,89 @@ const PermissionManagementList = ({
           ref={permissionModalForm}
         >
           <div className="pt-3 flex flex-col gap-3">
-            <fieldset className="flex flex-col border border-gray-300 rounded-md px-2">
-              <legend>
-                <label
-                  htmlFor=""
-                  className="after:content-['_*'] after:text-red-400"
-                >
-                  প্যারেন্ট অনুমতির নাম
-                </label>
-              </legend>
-              <select
-                disabled={parentPermissionData?.length > 0 ? false : true}
-                name="parent_id"
-                id=""
-                className="w-full bg-white py-2"
-                // value={parentPermissionData?.id}
-              >
-                {parentPermissionData?.map((item: any, index: number) => (
-                  <option key={index} value={item.id}>
-                    {item.name}
-                  </option>
-                ))}
-              </select>
-            </fieldset>
-            <fieldset className="flex flex-col border border-gray-300 rounded-md px-2">
-              <legend>
-                <label
-                  htmlFor=""
-                  className="after:content-['_*'] after:text-red-400"
-                >
-                  প্রদর্শনী নাম
-                </label>
-              </legend>
-              <input
-                type="text"
-                name="display_name"
-                className="w-full text-14 outline-none py-1"
-                placeholder="অনুমতির প্রদর্শনী নাম লিখুন"
-              />
-            </fieldset>
-            {validationError.display_name && (
-              <span className="text-red-500">
-                {validationError.display_name}
-              </span>
-            )}
-            <fieldset className="flex flex-col border border-gray-300 rounded-md px-2">
-              <legend>
-                <label
-                  htmlFor=""
-                  className="after:content-['_*'] after:text-red-400"
-                >
-                  অনুমতি নাম
-                </label>
-              </legend>
-              <input
-                type="text"
-                name="name"
-                className="w-full text-14 outline-none py-1"
-                placeholder="Enter Permission Name"
-              />
-            </fieldset>
-            {validationError.name && (
-              <span className="text-red-500">{validationError.name}</span>
-            )}
+        <fieldset className="flex flex-col border border-gray-300 rounded-md px-2">
+          <legend>
+            <label
+          htmlFor=""
+          className="after:content-['_*'] after:text-red-400"
+            >
+          Parent Permission Name
+            </label>
+          </legend>
+          <select
+            disabled={parentPermissionData?.length > 0 ? false : true}
+            name="parent_id"
+            id=""
+            className="w-full bg-white py-2"
+          >
+            {parentPermissionData?.map((item: any, index: number) => (
+          <option key={index} value={item.id}>
+            {item.name}
+          </option>
+            ))}
+          </select>
+        </fieldset>
+        <fieldset className="flex flex-col border border-gray-300 rounded-md px-2">
+          <legend>
+            <label
+          htmlFor=""
+          className="after:content-['_*'] after:text-red-400"
+            >
+          Display Name
+            </label>
+          </legend>
+          <input
+            type="text"
+            name="display_name"
+            className="w-full text-14 outline-none py-1"
+            placeholder="Enter Permission Display Name"
+          />
+        </fieldset>
+        {validationError.display_name && (
+          <span className="text-red-500">
+            {validationError.display_name}
+          </span>
+        )}
+        <fieldset className="flex flex-col border border-gray-300 rounded-md px-2">
+          <legend>
+            <label
+          htmlFor=""
+          className="after:content-['_*'] after:text-red-400"
+            >
+          Permission Name
+            </label>
+          </legend>
+          <input
+            type="text"
+            name="name"
+            className="w-full text-14 outline-none py-1"
+            placeholder="Enter Permission Name"
+          />
+        </fieldset>
+        {validationError.name && (
+          <span className="text-red-500">{validationError.name}</span>
+        )}
           </div>
           <div className="flex justify-end gap-3 mt-7">
-            <button
-              type="button"
-              onClick={() => {
-                setValidationError({
-                  name: "",
-                  display_name: "",
-                });
-                modelClose(permissionModal, permissionModalForm);
-              }}
-              className="bg-red-500 text-white px-4 py-2 rounded-md"
-            >
-              Cancel
-            </button>
-            <button
-              type="submit"
-              className="bg-blue-500 text-white px-4 py-2 rounded-md"
-            >
-              Submit
-            </button>
+        <button
+          type="button"
+          onClick={() => {
+            setValidationError({
+          name: "",
+          display_name: "",
+            });
+            modelClose(permissionModal, permissionModalForm);
+          }}
+          className="bg-red-500 text-white px-4 py-2 rounded-md"
+        >
+          Cancel
+        </button>
+        <button
+          type="submit"
+          className="bg-blue-500 text-white px-4 py-2 rounded-md"
+        >
+          Submit
+        </button>
           </div>
         </form>
       </Modal>

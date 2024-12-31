@@ -1,4 +1,4 @@
-import { getAllPermissionWithParent } from "../../_api/RoleManagementApi";
+import { getAllPermissionWithParent, getAllRolePermission } from "../../_api/RoleManagementApi";
 import ManageRoleList from "../../component/ManageRoleList/ManageRoleList";
 
 const Home = async() => {
@@ -7,9 +7,14 @@ const Home = async() => {
     }).catch((error) => {
         return error;
     });
+    const allRolePermission = await getAllRolePermission().then((res) => {
+        return res?.data;
+    }).catch((error) => {
+        return error;
+    });
   return (
    <>
-   <ManageRoleList allParentPermissionList={allParentPermission}/>
+   <ManageRoleList allParentPermissionList={allParentPermission} allRolePermissionList={allRolePermission}/>
    </>
   );
 };

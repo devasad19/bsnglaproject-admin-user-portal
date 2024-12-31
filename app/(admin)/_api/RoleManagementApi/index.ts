@@ -15,7 +15,7 @@ export const createRolePermission = async (data: any) => {
         "Content-Type": "application/json",
       },
     });
-    // revalidateTag("get-permissions");
+    revalidateTag("get-role-permissions");
     return response.data;
   } catch (error) {
     console.log(error);
@@ -36,6 +36,26 @@ export const getAllPermissionWithParent = async () => {
     };
     const res = await fetch(
       `${process.env.NEXT_PUBLIC_API_URL}/permissions-with-parent`,
+      fetchOption
+    );
+    if (!res.ok) {
+      throw new Error("Failed to fetch data");
+    }
+
+    return res.json();
+  } catch (error) {
+    console.log(error);
+  }
+};
+export const getAllRolePermission = async () => {
+  try {
+    const fetchOption = {
+      next: {
+        tags: ["get-role-permissions"],
+      },
+    };
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/roles`,
       fetchOption
     );
     if (!res.ok) {

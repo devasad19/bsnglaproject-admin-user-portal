@@ -6,12 +6,17 @@ import { createRolePermission } from "../../_api/RoleManagementApi";
 import { toast } from "react-toastify";
 import ApiLoading from "../ApiLoading/ApiLoading";
 import { useHomeContext } from "@/ContextProvider/Home.Context";
+import { CiEdit } from "react-icons/ci";
 
 type TManageRoleProps = {
   allParentPermissionList: any;
+  allRolePermissionList: any[];
 };
 
-const ManageRoleList = ({ allParentPermissionList }: TManageRoleProps) => {
+const ManageRoleList = ({
+  allParentPermissionList,
+  allRolePermissionList,
+}: TManageRoleProps) => {
   const homeContext = useHomeContext();
   const user = homeContext?.user;
   const addModal = useRef<any>(null);
@@ -29,7 +34,7 @@ const ManageRoleList = ({ allParentPermissionList }: TManageRoleProps) => {
     name_bn: "",
   });
 
-  console.log({ user });
+  // console.log({ user });
 
   const handleRolePermission = async (e: any) => {
     e.preventDefault();
@@ -73,6 +78,7 @@ const ManageRoleList = ({ allParentPermissionList }: TManageRoleProps) => {
         name_bn: banglaName,
         name_en: englishName,
         user_id: user?.id,
+        guard_name: "api",
         permissions: JSON.stringify(permission),
       };
 
@@ -124,165 +130,72 @@ const ManageRoleList = ({ allParentPermissionList }: TManageRoleProps) => {
                   <th>#</th>
                   <th>Role Name (English)</th>
                   <th>Role Name(Bangla)</th>
-                  <th>Producer</th>
+                  <th>Created By</th>
                   <th>Status</th>
                   <th>Action</th>
                 </tr>
               </thead>
               <tbody>
-                <tr className="h-16 border-b border-gray-300 hover:bg-gray-100">
-                  <td>1</td>
-                  <td>Demo Role</td>
-                  <td>Demo Role bangla</td>
-                  <td>Demo producer</td>
-                  <td>
-                    <span className="bg-green-500 text-white px-2 py-1 text-14 rounded-md">
-                      active : Inactive
-                    </span>
-                  </td>
-                  <td className="flex items-center justify-center my-2">
-                    <div className="flex flex-col gap-2">
-                      <button
-                        onClick={() => modelOpen(updateModal)}
-                        className="bg-primary text-14 text-white p-2 rounded-md"
-                      >
-                        Update
-                      </button>
+                {allRolePermissionList?.length > 0 ? (
+                  allRolePermissionList.map((rItem: any, index: number) => (
+                    <tr
+                      key={index}
+                      className="h-16 border-b border-gray-300 hover:bg-gray-100"
+                    >
+                      <td>{index + 1}</td>
+                      <td>{rItem?.name || ""}</td>
+                      <td>{rItem?.name_bn ?? ""}</td>
+                      <td>{rItem?.user?.name ?? ""}</td>
+                      <td>
+                        <span
+                          className={`px-2 py-1 rounded-md ${
+                            rItem.status == 1
+                              ? "bg-green-500 text-white"
+                              : "bg-violet-500 text-white"
+                          }`}
+                        >
+                          {rItem.status == 1 ? "active" : "inactive"}
+                        </span>
+                      </td>
+                      <td className="flex items-center justify-center my-2">
+                        <div className="flex flex-col gap-2">
+                          <button
+                            onClick={() => modelOpen(updateModal)}
+                            className="bg-primary text-14 text-white p-2 rounded-md"
+                          >
+                            Manage Permission
+                          </button>
 
-                      <div className="flex gap-2">
-                        <button className="bg-gradient-to-r from-indigo-500 to-blue-500 px-4 py-2 rounded-md text-14 text-white">
-                          Edit Permission
-                        </button>
-                        {/* <Modal
-                        id={"2"}
-                        trigger={"অনুমতি সংশোধন"}
-                        title={"অনুমতি প্রদান পরিচালনা করুন"}
-                        subFunc={UpdateUser}
-                        subFuncTitle={"Update"}
-                      >
-                        <div className="pt-3">
-                          <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-                            <div className="border border-gray-300 rounded-md">
-                              <div>
-                                <h3 className="bg-gradient-to-r from-indigo-500 to-blue-500 py-3 text-center rounded-t-md">
-                                  Setting 1
-                                </h3>
-                              </div>
-                              <ul className="p-2">
-                                <li className="flex items-center gap-2">
-                                  <input type="checkbox" />
-                                  <label htmlFor="">lorem 1</label>
-                                </li>
-                                <li className="flex items-center gap-2">
-                                  <input type="checkbox" />
-                                  <label htmlFor="">lorem 2</label>
-                                </li>
-                                <li className="flex items-center gap-2">
-                                  <input type="checkbox" />
-                                  <label htmlFor="">lorem 3</label>
-                                </li>
-                              </ul>
-                            </div>
-                            <div className="border border-gray-300 rounded-md">
-                              <div>
-                                <h3 className="bg-gradient-to-r from-indigo-500 to-blue-500 py-3 text-center rounded-t-md">
-                                  Setting 1
-                                </h3>
-                              </div>
-                              <ul className="p-2">
-                                <li className="flex items-center gap-2">
-                                  <input type="checkbox" />
-                                  <label htmlFor="">lorem 1</label>
-                                </li>
-                                <li className="flex items-center gap-2">
-                                  <input type="checkbox" />
-                                  <label htmlFor="">lorem 2</label>
-                                </li>
-                                <li className="flex items-center gap-2">
-                                  <input type="checkbox" />
-                                  <label htmlFor="">lorem 3</label>
-                                </li>
-                              </ul>
-                            </div>
-                            <div className="border border-gray-300 rounded-md">
-                              <div>
-                                <h3 className="bg-gradient-to-r from-indigo-500 to-blue-500 py-3 text-center rounded-t-md">
-                                  Setting 1
-                                </h3>
-                              </div>
-                              <ul className="p-2">
-                                <li className="flex items-center gap-2">
-                                  <input type="checkbox" />
-                                  <label htmlFor="">lorem 1</label>
-                                </li>
-                                <li className="flex items-center gap-2">
-                                  <input type="checkbox" />
-                                  <label htmlFor="">lorem 2</label>
-                                </li>
-                                <li className="flex items-center gap-2">
-                                  <input type="checkbox" />
-                                  <label htmlFor="">lorem 3</label>
-                                </li>
-                              </ul>
-                            </div>
-                            <div className="border border-gray-300 rounded-md">
-                              <div>
-                                <h3 className="bg-gradient-to-r from-indigo-500 to-blue-500 py-3 text-center rounded-t-md">
-                                  Setting 1
-                                </h3>
-                              </div>
-                              <ul className="p-2">
-                                <li className="flex items-center gap-2">
-                                  <input type="checkbox" />
-                                  <label htmlFor="">lorem 1</label>
-                                </li>
-                                <li className="flex items-center gap-2">
-                                  <input type="checkbox" />
-                                  <label htmlFor="">lorem 2</label>
-                                </li>
-                                <li className="flex items-center gap-2">
-                                  <input type="checkbox" />
-                                  <label htmlFor="">lorem 3</label>
-                                </li>
-                              </ul>
-                            </div>
-                            <div className="border border-gray-300 rounded-md">
-                              <div>
-                                <h3 className="bg-gradient-to-r from-indigo-500 to-blue-500 py-3 text-center rounded-t-md">
-                                  Setting 1
-                                </h3>
-                              </div>
-                              <ul className="p-2">
-                                <li className="flex items-center gap-2">
-                                  <input type="checkbox" />
-                                  <label htmlFor="">lorem 1</label>
-                                </li>
-                                <li className="flex items-center gap-2">
-                                  <input type="checkbox" />
-                                  <label htmlFor="">lorem 2</label>
-                                </li>
-                                <li className="flex items-center gap-2">
-                                  <input type="checkbox" />
-                                  <label htmlFor="">lorem 3</label>
-                                </li>
-                              </ul>
+                          <div className="flex items-center justify-center">
+                            <div className="flex items-center gap-2">
+                              <button
+                                onClick={() => modelOpen(updateModal)}
+                                className="bg-gradient-to-r from-indigo-500 to-blue-500  p-1 rounded-md text-14 text-white"
+                              >
+                                <CiEdit className="w-4 h-4" />
+                              </button>
+
+                              <button
+                                // onClick={() => handleDelete(item?.id)}
+                                className="p-1  bg-red-500 text-white active:scale-90 transition-all duration-400 rounded-md"
+                              >
+                                <svg
+                                  className="w-4 h-4 fill-current"
+                                  xmlns="http://www.w3.org/2000/svg"
+                                  viewBox="0 0 448 512"
+                                >
+                                  <path d="M135.2 17.7C140.6 6.8 151.7 0 163.8 0H284.2c12.1 0 23.2 6.8 28.6 17.7L320 32h96c17.7 0 32 14.3 32 32s-14.3 32-32 32H32C14.3 96 0 81.7 0 64S14.3 32 32 32h96l7.2-14.3zM32 128H416V448c0 35.3-28.7 64-64 64H96c-35.3 0-64-28.7-64-64V128zm96 64c-8.8 0-16 7.2-16 16V432c0 8.8 7.2 16 16 16s16-7.2 16-16V208c0-8.8-7.2-16-16-16zm96 0c-8.8 0-16 7.2-16 16V432c0 8.8 7.2 16 16 16s16-7.2 16-16V208c0-8.8-7.2-16-16-16zm96 0c-8.8 0-16 7.2-16 16V432c0 8.8 7.2 16 16 16s16-7.2 16-16V208c0-8.8-7.2-16-16-16z" />
+                                </svg>
+                              </button>
                             </div>
                           </div>
                         </div>
-                      </Modal> */}
-
-                        <button
-                          onClick={() => {
-                            confirm("Are you sure?");
-                          }}
-                          className="bg-red-500 text-white px-2 py-1 text-14 rounded-md"
-                        >
-                          Delete
-                        </button>
-                      </div>
-                    </div>
-                  </td>
-                </tr>
+                      </td>
+                    </tr>
+                  ))
+                ) : (
+                  <></>
+                )}
               </tbody>
             </table>
           </div>
@@ -425,8 +338,6 @@ const ManageRoleList = ({ allParentPermissionList }: TManageRoleProps) => {
           {isLoading && <ApiLoading />}
         </>
       </Modal>
-
-     
 
       {/* update modal start */}
       <Modal
@@ -581,25 +492,25 @@ const ManageRoleList = ({ allParentPermissionList }: TManageRoleProps) => {
             </div>
           </div>
           <div className="pt-6 flex justify-end">
-              <div className="flex items-center gap-4">
-                <button
-                  type="button"
-                  className="btn"
-                  onClick={() => {
-                    setSubmitError(null);
-                    modelClose(addModal, addModelForm);
-                  }}
-                >
-                  Cancel
-                </button>
-                <button
-                  type="submit"
-                  className="bg-blue-500 text-white px-4 py-3 rounded-md"
-                >
-                  Update
-                </button>
-              </div>
+            <div className="flex items-center gap-4">
+              <button
+                type="button"
+                className="btn"
+                onClick={() => {
+                  setSubmitError(null);
+                  modelClose(addModal, addModelForm);
+                }}
+              >
+                Cancel
+              </button>
+              <button
+                type="submit"
+                className="bg-blue-500 text-white px-4 py-3 rounded-md"
+              >
+                Update
+              </button>
             </div>
+          </div>
         </form>
       </Modal>
       {/* update modal end */}
