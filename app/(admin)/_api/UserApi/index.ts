@@ -12,7 +12,7 @@ export const getUserDetails = async (id: any) => {
       // revalidateTag("get-permissions");
       return response.data;
     } catch (error) {
-      console.log(error);
+      // console.log(error);
       return {
         status:false,
         error:error

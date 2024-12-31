@@ -567,7 +567,7 @@ const ManageUserTypeList = ({ userType }: any) => {
                   </td>
                   <td className="flex items-center justify-center py-3 border-l">
                     <div>
-                      {featureNames.length > 0 ? (
+                      {featureNames?.length > 0 ? (
                         featureNames?.map(
                           (featureName: TFeatureName, index: number) => (
                             <div

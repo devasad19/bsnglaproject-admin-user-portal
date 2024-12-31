@@ -5,8 +5,8 @@ export const AddSLiderApi = async (data:any) =>{
         const resSlider = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/slider/store`,data)
         return resSlider.data;
     } catch (error) {
-        console.log(error);
-        return [];
+        // console.log(error);
+        return error;
     }
 }
 
@@ -15,8 +15,8 @@ export const getAllSliderApi = async () =>{
         const resSlider = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/sliders`)
         return resSlider.data;
     } catch (error) {
-        console.log(error);
-        return [];
+        // console.log(error);
+        return error;
     }
 }
 export const getAllActiveSliderApi = async () =>{
@@ -24,8 +24,8 @@ export const getAllActiveSliderApi = async () =>{
         const resSlider = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/active/sliders`)
         return resSlider.data;
     } catch (error) {
-        console.log(error);
-        return [];
+        // console.log(error);
+        return error;
     }
 }
 
@@ -34,7 +34,7 @@ export const sliderUpdateStatus = async (id:any,status:any) =>{
         const resSlider = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/slider/on-off-update/${id}`,{status:status})
         return resSlider.data;
     } catch (error) {
-        console.log(error);
-        return [];
+        // console.log(error);
+        return error;
     }
 }

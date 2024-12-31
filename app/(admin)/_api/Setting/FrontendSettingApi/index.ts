@@ -10,7 +10,7 @@ export const createLogo = async (data: any) => {
     revalidateTag("get-logo");
     return response.data;
   } catch (error) {
-    console.error("API Error:", error); // Log detailed error
+    // console.error("API Error:", error); // Log detailed error
     return { status: false, error }
   }
 };
@@ -20,7 +20,7 @@ export const getLogo = async () => {
   try {
     const fetchOption = {
         next: {
-          tags: ["-logetgo"],
+          tags: ["get-logo"],
         },
       };
     const res = await fetch(

@@ -10,7 +10,7 @@ export const createIcon = async (data: any) => {
     revalidateTag("get-setting-icon");
     return response.data;
   } catch (error) {
-    console.error("API Error:", error); // Log detailed error
+    // console.error("API Error:", error); // Log detailed error
     return { status: false, error }
   }
 };

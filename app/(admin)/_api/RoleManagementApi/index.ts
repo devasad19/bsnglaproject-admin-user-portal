@@ -44,9 +44,10 @@ export const getAllPermissionWithParent = async () => {
 
     return res.json();
   } catch (error) {
-    console.log(error);
+    return error;
   }
 };
+
 export const getAllRolePermission = async () => {
   try {
     const fetchOption = {
@@ -64,8 +65,35 @@ export const getAllRolePermission = async () => {
 
     return res.json();
   } catch (error) {
-    console.log(error);
+    return error;
   }
 };
 
+
+export const rolePermissionNameUpdate = async (data: any) => {
+  try {
+    
+    const response = await axiosInstance.post("/role/update", data, {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    // console.log(response);
+    
+    revalidateTag("get-role-permissions");
+
+    return response.data;
+  } catch (error) {
+    return error;
+  }
+};
+
+export const singlePermissionRoleGet =async (id: any) => {
+  try {
+    const response = await axiosInstance.get(`/edit/permissions-by-role/${id}`);
+    return response?.data;
+  } catch (error) {
+    return error;
+  }
+}
 
