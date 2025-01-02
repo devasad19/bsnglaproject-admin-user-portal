@@ -5,10 +5,6 @@ import React, { useState, useEffect } from "react";
 import { useForm, Controller } from "react-hook-form";
 import { toast } from "react-toastify";
 import CustomEditor from "@/app/_components/CustomEditor/CustomEditor";
-import {
-  getSingleServiceResource,
-  updateServiceResource,
-} from "@/app/(admin)/_api";
 import { FaCheckCircle } from "react-icons/fa";
 import { CountWords, replaceSpaces, replaceUnderscore } from "@/helper";
 import { getSingleServiceResourceCodeApi, updateSingleServiceResourceCodeUpdate } from "@/app/(admin)/_api/ServiceApi";
@@ -38,85 +34,7 @@ const UpdateServiceResource = ({ id }) => {
     setError,
   } = useForm();
 
-  // const onSubmitServiceResource = async (data) => {
-  //   setIsLoading(true);
-  //   let newType = [];
-  //   type?.forEach((item) => {
-  //     const newReplaceSpaces = replaceSpaces(item);
-  //     newType.push(newReplaceSpaces);
-  //   });
-  //   // console.log({ newType });
-  //   setCustomError(null);
-
-  //   if (type.length < 1) {
-  //     setIsLoading(false);
-  //     setCustomError("Please select at least one type");
-  //     return;
-  //   }
-
-  //   let dataJson = JSON.stringify(newType);
-  //   // console.log(dataJson);
-
-  //   const {
-  //     component,
-  //     description,
-  //     distribution,
-  //     logo,
-  //     name,
-  //     production_status,
-  //     release_date,
-  //     sub_title,
-  //     // type,
-  //     visit_link,
-  //     visit_type,
-  //     resource_file,
-  //     status,
-  //     description_title,
-  //   } = data;
-
-  //   // console.log('description count: ',errors);
-
-  //   const formData = new FormData();
-  //   formData.append("name", name);
-  //   formData.append("description", description);
-  //   // formData.append("status", status);
-  //   formData.append("component", component);
-  //   formData.append("distribution", distribution);
-  //   formData.append("logo", typeof logo[0] == "string" ? "" : logo[0]);
-  //   formData.append("paid_status", JSON.stringify(paidStatus));
-  //   formData.append("production_status", production_status);
-  //   formData.append("release_date", release_date);
-  //   formData.append("type", dataJson);
-  //   formData.append("sub_title", sub_title);
-  //   formData.append("visit_link", visit_link || "");
-  //   formData.append("visit_type", visit_type);
-  //   if (resource_file) {
-  //     formData.append(
-  //       "resource_file",
-  //       typeof resource_file == "string" ? "" : resource_file[0]
-  //     );
-  //   }
-  //   formData.append("description_title", description_title);
-
-  //   console.log("form data: ", formData);
-
-  //   const response = await updateServiceResource(formData, id)
-  //     .then((res) => {
-  //       if (res?.status == true) {
-  //         toast.success("Service Updated Successfully");
-  //         router.push("/admin/services");
-  //       } else {
-  //         toast.error("Service Update Failed");
-  //       }
-  //     })
-  //     .catch((err) => {
-  //       console.log(err);
-  //     })
-  //     .finally(() => {
-  //       setIsLoading(false);
-  //     });
-  // };
-
+  
   const onSubmitServiceResource = async (data) => {
     setIsLoading(true);
     let newType = [];
@@ -823,4 +741,4 @@ const UpdateServiceResource = ({ id }) => {
   );
 };
 
-export default UpdateServiceResource;
+export default React.memo(UpdateServiceResource);

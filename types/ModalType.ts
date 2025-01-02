@@ -11,4 +11,5 @@ export type ModalType = {
     setServiceValidation?: any | null
     modalRef: React.RefObject<HTMLDialogElement>
     modalForm: React.RefObject<HTMLFormElement>
+    size?: string
 }

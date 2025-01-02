@@ -87,12 +87,28 @@ const Sidebar = () => {
   }, []);
 
   const HandleLogout = () => {
-    document.cookie =
-      "token=; path=/; domain=localhost; expires=Thu, 01 Jan 1970 00:00:00 UTC;";
-    document.cookie =
-      "user=; path=/; domain=localhost; expires=Thu, 01 Jan 1970 00:00:00 UTC;";
-    // window.location.href='http://localhost:3000/signin';
-    window.location.href = "https://service.bangla.gov.bd/signin";
+
+    const isLocalhost = window.location.hostname === "localhost";
+    if (isLocalhost) {
+      document.cookie =
+        "token=; path = /; domain=localhost; expires = Thu, 01 Jan 1970 00:00:00 UTC;";
+      document.cookie =
+        "user=; path = /; domain=localhost; expires = Thu, 01 Jan 1970 00:00:00 UTC;";
+        window.location.href = "http://localhost:3000/signin";
+    } else {
+      document.cookie =
+        "token=; path = /; domain=.bangla.gov.bd; expires = Thu, 01 Jan 1970 00:00:00 UTC;";
+      document.cookie =
+        "user=; path = /; domain=.bangla.gov.bd; expires = Thu, 01 Jan 1970 00:00:00 UTC;";
+        window.location.href = "https://service.bangla.gov.bd/signin";
+    }
+
+    // document.cookie =
+    //   "token=; path=/; domain=localhost; expires=Thu, 01 Jan 1970 00:00:00 UTC;";
+    // document.cookie =
+    //   "user=; path=/; domain=localhost; expires=Thu, 01 Jan 1970 00:00:00 UTC;";
+    // // window.location.href='http://localhost:3000/signin';
+    // window.location.href = "https://service.bangla.gov.bd/signin";
   };
 
   return (
@@ -249,7 +265,7 @@ const Sidebar = () => {
                 className={`${
                   isOpen && "hover:bg-primary"
                 }  group flex items-center justify-between   ${
-                   (pathname.includes("/admin/manage-citizen") || pathname.includes("/admin/manage-user-type"))
+                   (pathname.includes("/admin/manage-citizen") || pathname.includes("/admin/manage-user-type") || pathname.includes("/admin/citizen-info"))
                     ? "bg-primary text-white"
                     : "text-primary bg-white"
                 } cursor-pointer ${
@@ -257,21 +273,11 @@ const Sidebar = () => {
                     ? "border-b-2 border-primary"
                     : ""
                 }`}
-
-                // className={`${
-                //   isOpen && "hover:bg-primary"
-                // }  group flex items-center justify-between   ${
-                //   (pathname.startsWith("/admin/permission-management") ||
-                //     pathname.startsWith("/admin/manage-role")) &&
-                //   "bg-primary"
-                // } cursor-pointer ${
-                //   isToggleOpen.aclManagement ? "border-b-2 border-primary" : ""
-                // }`}
               >
                 <div className="flex items-center gap-2">
                   <span
                     className={`${
-                      isOpen && pathname.includes("/admin/manage-citizen")
+                      isOpen && (pathname.includes("/admin/manage-citizen") || pathname.includes("/admin/citizen-info"))
                         ? "text-white"
                         : "text-primary"
                     }`}
@@ -279,7 +285,7 @@ const Sidebar = () => {
                     <FaUsersCog
                       size={20}
                       className={`group-hover:text-white ${
-                         (pathname.includes("/admin/manage-citizen") || pathname.includes("/admin/manage-user-type"))
+                         (pathname.includes("/admin/manage-citizen") || pathname.includes("/admin/manage-user-type") || pathname.includes("/admin/citizen-info"))
                           ? "text-white"
                           : "text-primary"
                       }`}
@@ -291,7 +297,8 @@ const Sidebar = () => {
                       isOpen ? "block" : "hidden"
                     } ${
                       pathname.startsWith("/admin/manage-citizen") ||
-                      pathname.includes("/admin/manage-user-type")
+                      pathname.includes("/admin/manage-user-type") ||
+                      pathname.includes("/admin/citizen-info")
                         ? "text-white"
                         : "text-primary"
                     }`}
@@ -308,7 +315,9 @@ const Sidebar = () => {
                   <svg
                     className={`w-3 h-3 fill-current text-primary group-hover:text-white transition-colors duration-300 ${
                       (pathname.startsWith("/admin/manage-citizen") ||
-                        pathname.includes("/admin/manage-user-type")) &&
+                        pathname.includes("/admin/manage-user-type") || 
+                        pathname.includes("/admin/citizen-info")
+                      ) &&
                       "text-white"
                     }`}
                     xmlns="http://www.w3.org/2000/svg"
@@ -327,7 +336,8 @@ const Sidebar = () => {
                       }}
                       shallow
                       className={`text-14 hover:bg-green-500 px-2 py-1 rounded hover:text-white ${
-                        pathname.includes("/admin/manage-citizen")
+                        (pathname.includes("/admin/manage-citizen") ||
+                        pathname.includes("/admin/citizen-info"))
                           ? "bg-green-500 text-white font-semibold"
                           : "text-black"
                       }`}
@@ -572,6 +582,19 @@ const Sidebar = () => {
                       }`}
                     >
                         System Icon Management
+                    </Link>
+                    <Link
+                      href={{
+                        pathname: "/admin/setting/system-colors",
+                      }}
+                      shallow
+                      className={`text-14 hover:bg-green-500 px-2 py-1 rounded hover:text-white ${
+                        pathname.includes("/admin/setting/system-colors")
+                          ? "bg-green-500 text-white font-semibold"
+                          : "text-black"
+                      }`}
+                    >
+                        System Colors Management
                     </Link>
                   </div>
                 </NewAccordion>

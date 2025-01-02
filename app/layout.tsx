@@ -6,6 +6,8 @@ import "react-toastify/dist/ReactToastify.css";
 import { type ChildrenType } from "@/types/ChildrenType";
 import '@smastrom/react-rating/style.css'
 import  ContextProvider  from "../ContextProvider/ContextProvider";
+import HomeContextProvider from "@/ContextProvider/Home.Context";
+import NextTopLoader from "nextjs-toploader";
 const inter = Inter({ subsets: ["latin"] });
 export const metadata = {
   title: "বাংলা",
@@ -17,7 +19,9 @@ export const metadata = {
 const RootLayout = ({ children }: ChildrenType): JSX.Element => (
   <html lang="en">
     <body className={inter.className}>
+      <HomeContextProvider>
       <ContextProvider>
+      <NextTopLoader showSpinner={false} color="#006A4E" />
       <ToastContainer
         position="top-right"
         autoClose={5000}
@@ -33,6 +37,7 @@ const RootLayout = ({ children }: ChildrenType): JSX.Element => (
       />
       {children}
       </ContextProvider>
+      </HomeContextProvider>
     </body>
   </html>
 );

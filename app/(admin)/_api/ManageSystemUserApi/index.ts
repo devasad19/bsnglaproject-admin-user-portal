@@ -34,7 +34,9 @@ export const getAllSystemUser = async () => {
       throw new Error("Failed to fetch data");
     }
     return res.json();
-  } catch (error) {}
+  } catch (error) {
+    return error;
+  }
 };
 
 
@@ -52,7 +54,7 @@ export const createUserApi = async (userData:any) => {
     revalidateTag("get-all-system-user");
     return user.data;
   } catch (error) {
-    console.log(error);
+    // console.log(error);
     return error;
   }
 };

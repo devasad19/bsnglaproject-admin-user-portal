@@ -1,7 +1,7 @@
 "use server";
 import axiosInstance from "@/lib/AxiosInstance";
 import { revalidateTag } from "next/cache";
-import { permission } from "process";
+
 
 
 // create single Parent Permission api
@@ -29,9 +29,10 @@ export const createSinglePermission = async (data: any) => {
       },
     });
     revalidateTag("get-permissions");
+    revalidateTag("get-parentWith-permissions");
     return response.data;
   } catch (error) {
-    console.log(error);
+    // console.log(error);
 
     throw new Error("Failed to Create Permission data");
   }
@@ -54,7 +55,9 @@ export const getAllParentPermission = async () => {
     }
 
     return res.json();
-  } catch (error) {}
+  } catch (error) {
+    return error;
+  }
 };
 
 // get all permissions api
@@ -74,7 +77,9 @@ export const getAllPermission = async () => {
     }
 
     return res.json();
-  } catch (error) {}
+  } catch (error) {
+    return error;
+  }
 };
 
 // get single user type

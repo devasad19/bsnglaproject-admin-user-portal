@@ -170,7 +170,7 @@ const CitizenInfoData = ({ id }: { id: string }) => {
 
               {user?.citizen_type?.slug === "govt_user" && (
                 <>
-                  (
+                  
                   <div className="grid grid-cols-1 lg:grid-cols-2 gap-2">
                     <div className="flex flex-col  gap-2">
                       <p className="text-gray-500 text-14 after:content-['_*'] after:text-red-500">
@@ -217,13 +217,13 @@ const CitizenInfoData = ({ id }: { id: string }) => {
                       />
                     </div>
                   </div>
-                  )
+                  
                 </>
               )}
 
               {user?.citizen_type?.slug === "researcher" && (
                 <>
-                  (
+                  
                   <div className="grid grid-cols-1 lg:grid-cols-2 gap-2">
                     <div className="flex flex-col  gap-2">
                       <p className="text-gray-500 text-14 after:content-['_*'] after:text-red-500">
@@ -268,7 +268,7 @@ const CitizenInfoData = ({ id }: { id: string }) => {
                       />
                     </div>
                   </div>
-                  )
+                  
                 </>
               )}
             </div>
