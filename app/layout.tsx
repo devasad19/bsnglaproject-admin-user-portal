@@ -7,6 +7,7 @@ import { type ChildrenType } from "@/types/ChildrenType";
 import '@smastrom/react-rating/style.css'
 import  ContextProvider  from "../ContextProvider/ContextProvider";
 import HomeContextProvider from "@/ContextProvider/Home.Context";
+import NextTopLoader from "nextjs-toploader";
 const inter = Inter({ subsets: ["latin"] });
 export const metadata = {
   title: "বাংলা",
@@ -20,6 +21,7 @@ const RootLayout = ({ children }: ChildrenType): JSX.Element => (
     <body className={inter.className}>
       <HomeContextProvider>
       <ContextProvider>
+      <NextTopLoader showSpinner={false} color="#006A4E" />
       <ToastContainer
         position="top-right"
         autoClose={5000}
