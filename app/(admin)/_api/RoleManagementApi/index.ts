@@ -116,3 +116,17 @@ export const singleRoleManageUpdate = async (data: any) => {
 };
 
 
+export const deleteRolePermission = async (id: number) => {
+  try {
+    const response = await axiosInstance.delete(`/roles/${id}`, {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    revalidateTag("get-role-permissions");
+    return response.data;
+  } catch (error) {
+    return error;
+  }
+}
+

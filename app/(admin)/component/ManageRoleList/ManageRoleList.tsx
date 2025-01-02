@@ -1,9 +1,10 @@
 "use client";
 import Modal from "@/app/_components/Modal/Modal";
 import { modelClose, modelOpen } from "@/helper";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   createRolePermission,
+  deleteRolePermission,
   rolePermissionNameUpdate,
   singlePermissionRoleGet,
   singleRoleManageUpdate,
@@ -12,6 +13,7 @@ import { toast } from "react-toastify";
 import ApiLoading from "../ApiLoading/ApiLoading";
 import { useHomeContext } from "@/ContextProvider/Home.Context";
 import { CiEdit } from "react-icons/ci";
+import Swal from "sweetalert2";
 
 type TManageRoleProps = {
   allParentPermissionList: any;
@@ -31,6 +33,7 @@ const ManageRoleList = ({
   const updateModalForm = useRef<any>(null);
   const permissionManageForm = useRef<any>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const[loading,setLoading] = useState<boolean>(false);
   const [permission, setPermission] = useState<any>([]);
   const [singleEdit, setSingleEdit] = useState<any>(null);
   const [singleManagePermission, setSingleManagePermission] =
@@ -48,6 +51,17 @@ const ManageRoleList = ({
   });
 
   // console.log({ user });
+
+  useEffect(() => {
+    getAllPermission?.forEach((element: any) => {
+      setUpdatedPermission((prev: any) => [
+        ...prev,
+        element?.permission_id,
+      ]);
+    });
+  },[getAllPermission])
+
+
 
   const handleRolePermission = async (e: any) => {
     e.preventDefault();
@@ -178,16 +192,19 @@ const ManageRoleList = ({
         status,
         id: singleEdit?.id,
       };
-      console.log({ payload });
+      // console.log({ payload });
 
       const res = await rolePermissionNameUpdate(payload);
       if (res?.status) {
+        setIsLoading(false);  
         modelClose(updateModal, updateModalForm);
         toast.success(res?.message);
       } else {
+        setIsLoading(false);
         toast.error(res?.message);
       }
     } catch (error) {
+      setIsLoading(false);
       console.log(error);
       toast.error((error as Error).message);
     }
@@ -195,30 +212,27 @@ const ManageRoleList = ({
 
   const handleManagePermissionEdit = async (id: string) => {
     if (id) {
-      setIsLoading(true);
+      setLoading(true);
       try {
         const response = await singlePermissionRoleGet(id);
         if (response.status) {
-          setIsLoading(false);
+          setLoading(false);
           console.log(response.data);
+          setGetAllPermission(response?.data?.role?.user_permissions);
           setSingleManagePermission(response.data);
-          setGetAllPermission(response.data?.role?.user_permissions);
-          getAllPermission?.forEach((element: any) => {
-            setUpdatedPermission((prev: any) => [
-              ...prev,
-              element?.permission_id,
-            ]);
-          });
+          
+          
           modelOpen(permissionManageModal);
         } else {
-          setIsLoading(false);
+          setLoading(false);
           toast.error(response.message);
         }
       } catch (error) {
+        setLoading(false);
         console.log(error);
         toast.error((error as Error).message);
       } finally {
-        setIsLoading(false);
+        setLoading(false);
       }
     }
   };
@@ -256,6 +270,7 @@ const ManageRoleList = ({
         toast.error(response.message);
       }
     } catch (error) {
+      setIsLoading(false);
       console.log(error);
       toast.error((error as Error).message);
     } finally {
@@ -263,7 +278,42 @@ const ManageRoleList = ({
     }
   };
 
-  // console.log({ updatedPermission });
+
+  const handleDelete = (id:any) => {
+    if (id) {
+      Swal.fire({
+        title: "Are you sure?",
+        text: "You won't be able to revert this!",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Yes, delete it!",
+      }).then((result) => {
+        if (result.isConfirmed) {
+          const rolePermissionDel = deleteRolePermission(id)
+            .then((data) => {
+              // console.log(data);
+              
+              if (data.status) {
+                Swal.fire("Deleted!", data.message, "success");
+              } else {
+                Swal.fire("Error!", data.message, "error");
+              }
+            })
+            .catch((err) => {
+              console.log(err);
+              Swal.fire("Error!", err.message, "error");
+            });
+        }
+      });
+    }else{
+      Swal.fire("Error!", "Something went wrong.", "error");
+    }
+  };
+
+  // console.log({isLoading});
+  
 
   return (
     <>
@@ -290,7 +340,7 @@ const ManageRoleList = ({
                   <th>Action</th>
                 </tr>
               </thead>
-              {isLoading && <ApiLoading />}
+              {loading && <ApiLoading />}
               <tbody>
                 {allRolePermissionList?.length > 0 ? (
                   allRolePermissionList.map((rItem: any, index: number) => (
@@ -336,7 +386,7 @@ const ManageRoleList = ({
                               </button>
 
                               <button
-                                // onClick={() => handleDelete(item?.id)}
+                                onClick={() => handleDelete(rItem?.id)}
                                 className="p-1  bg-red-500 text-white active:scale-90 transition-all duration-400 rounded-md"
                               >
                                 <svg
@@ -551,8 +601,7 @@ const ManageRoleList = ({
             </fieldset>
           </div>
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-            {updatedPermission?.length>0 && (
-              <>
+          <>
                 {allParentPermissionList?.length > 0 ? (
                   allParentPermissionList?.map((pItem: any, index: number) => {
                     return (
@@ -618,7 +667,6 @@ const ManageRoleList = ({
                   <></>
                 )}
               </>
-            )}
           </div>
           <div className="pt-6 flex justify-end">
             <div className="flex items-center gap-4">
