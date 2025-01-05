@@ -109,8 +109,8 @@ const Home = (): JSX.Element => {
             </thead>
             <tbody className="text-center">
               {isLoading && <TableSkeleton col={8} row={10}></TableSkeleton>}
-              {citizen.length > 0 ? (
-                citizen.map((item: any, index: any) => (
+              {citizen?.length > 0 ? (
+                citizen?.map((item: any, index: any) => (
                   <tr key={index} className="h-16 border-b border-gray-300">
                     <td className="px-3">
                       <span className="border border-gray-300 px-2 py-1 rounded-md">
