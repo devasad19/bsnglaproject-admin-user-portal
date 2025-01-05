@@ -46,12 +46,18 @@ const ManageUserTypeList = ({ userType }: any) => {
     fetchFeatureName();
   }, []);
 
+  // console.log({featureNames});
+  // console.log({userType});
+  
+  // console.log({selectFeatureName});
+  
+
   const handleCheckboxChange = (value: string) => {
     setSelected(selected === value ? "" : value);
   };
 
   const handleFeatureName = (id: number) => {
-    if (selectFeatureName.includes(id)) {
+    if (selectFeatureName?.includes(id)) {
       const index = selectFeatureName.indexOf(id);
       selectFeatureName.splice(index, 1);
       return setSelectFeatureName([...selectFeatureName]);
@@ -78,12 +84,14 @@ const ManageUserTypeList = ({ userType }: any) => {
     if(id){
       const singlePermission = await getUserType(id).catch((err) => console.log(err));
       setTypeId(id);
+      // console.log({singlePermission});
+      
     setSelected(singlePermission?.data?.charge);
     setValue("discount", singlePermission?.data?.discount);
     setValue("maxFile", singlePermission?.data?.max_file_limit);
     setValue("maxWord", singlePermission?.data?.max_word_limit);
 
-    setSelectFeatureName(singlePermission?.data?.free_features && JSON?.parse(singlePermission?.data?.free_features));
+    setSelectFeatureName(singlePermission?.data?.free_features ? JSON?.parse(singlePermission?.data?.free_features) : []);
 
     modelOpen(permissionModal, permissionModalForm);
     }
