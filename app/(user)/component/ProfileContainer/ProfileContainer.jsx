@@ -4,11 +4,14 @@ import { useState } from "react";
 import Image from "next/image";
 import { relative_image_path } from "@/helper";
 import { toast } from "react-toastify";
-import { updateCitizenData } from "../../_api";
+
 import { FaCamera, FaRegEdit } from "react-icons/fa";
+import { updateCitizenData } from "../../_api/user";
+import UserApiLoading from "../UserAPiLoading/UserApiLoading";
 
 const ProfileContainer = ({ citizen, userTypes, grade }) => {
   const [edit, setEdit] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [formInputs, setFormInputs] = useState({
     username: citizen?.name,
     email: citizen?.email,
@@ -17,19 +20,19 @@ const ProfileContainer = ({ citizen, userTypes, grade }) => {
     type: userTypes?.find(
       (item) => item?.id == citizen?.citizen_info?.citizen_type_id
     )?.slug,
-    teamSize: citizen?.citizen_info?.team_size,
-    companyUrl: citizen?.citizen_info?.company_url,
+    teamSize: citizen?.citizen_info?.team_size ?? "",
+    companyUrl: citizen?.citizen_info?.company_url ?? "",
     govt: {
-      name_of_ministry: citizen?.citizen_info?.ministry_name,
-      department_of_ministry: citizen?.citizen_info?.ministry_department,
-      job_position: citizen?.citizen_info?.job_position,
-      grade: citizen?.citizen_info?.grade,
+      name_of_ministry: citizen?.citizen_info?.ministry_name ?? "",
+      department_of_ministry: citizen?.citizen_info?.ministry_department ?? "",
+      job_position: citizen?.citizen_info?.job_position ?? "",
+      grade: citizen?.citizen_info?.grade ?? "",
     },
     researcher: {
-      name_of_ministry: citizen?.citizen_info?.ministry_name,
-      research_topic: citizen?.citizen_info?.research_topic,
-      research_title: citizen?.citizen_info?.research_title,
-      research_code: citizen?.citizen_info?.research_code,
+      name_of_ministry: citizen?.citizen_info?.ministry_name ?? "",
+      research_topic: citizen?.citizen_info?.research_topic ?? "",
+      research_title: citizen?.citizen_info?.research_title ?? "",
+      research_code: citizen?.citizen_info?.research_code ?? "",
     },
   });
 
@@ -40,53 +43,56 @@ const ProfileContainer = ({ citizen, userTypes, grade }) => {
   );
 
   const HandleUpdate = async () => {
+    setLoading(true);
     const form = new FormData();
-    form.append("id", citizen?.id);
-    form.append("name", formInputs.username);
-    form.append("email", formInputs.email);
-    form.append("phone", formInputs.phone);
-    form.append("photo", formInputs.photo);
-    form.append("citizen_type_id", userType?.id);
-    form.append("team_size", formInputs.teamSize);
-    form.append("company_url", formInputs.companyUrl);
-    form.append("ministry_name", formInputs?.govt?.name_of_ministry);
+    form.append("id", citizen?.id ?? "");
+    form.append("name", formInputs.username ?? "");
+    form.append("email", formInputs.email ?? "");
+    form.append("phone", formInputs.phone ?? "");
+    form.append("photo", formInputs.photo ?? "");
+    form.append("citizen_type_id", userType?.id ?? "");
+    form.append("team_size", formInputs.teamSize ?? "");
+    form.append("company_url", formInputs.companyUrl ?? "");
+    form.append("ministry_name", formInputs?.govt?.name_of_ministry ?? "");
     form.append(
       "ministry_department",
-      formInputs?.govt?.department_of_ministry
+      formInputs?.govt?.department_of_ministry ?? ""
     );
-    form.append("job_position", formInputs?.govt?.job_position);
-    form.append("grade", formInputs?.govt?.grade);
-    form.append("research_topic", formInputs?.researcher?.research_topic);
-    form.append("research_title", formInputs?.researcher?.research_title);
-    form.append("research_code", formInputs?.researcher?.research_code);
+    form.append("job_position", formInputs?.govt?.job_position ?? "");
+    form.append("grade", formInputs?.govt?.grade ?? "");
+    form.append("research_topic", formInputs?.researcher?.research_topic ?? "");
+    form.append("research_title", formInputs?.researcher?.research_title ?? "");
+    form.append("research_code", formInputs?.researcher?.research_code ?? "");
 
-    const response = await updateCitizenData(form)
-      .then((res) => res)
-      .catch((err) => console.log(err));
+    try {
+      const response = await updateCitizenData(form);
+      setEdit(false);
+      if (response.status == true) {
+        setLoading(false);
+        // console.log("user profile update response: ", response);
+        toast.success(response.message);
+        const user = {
+          id: response.data.id,
+          name: response.data.name,
+          role: response.data.role,
+          email: response.data.email,
+          phone: response.data.phone,
+          status: response.data.status,
+          photo: response.data.photo ?? null,
+          type: response.data.type,
+        };
 
-    setEdit(false);
+        const userinfo = JSON.stringify(user);
+        document.cookie = `user=${userinfo};path=/;max-age=31536000;SameSite=Strict;Secure;`;
 
-    if (response.status == true) {
-      console.log("user profile update response: ", response);
-      toast.success(response.message);
-
-      const user = {
-        id: response.data.id,
-        name: response.data.name,
-        role: response.data.role,
-        email: response.data.email,
-        phone: response.data.phone,
-        status: response.data.status,
-        photo: response.data.photo ?? null,
-        type: response.data.type,
-      };
-
-      const userinfo = JSON.stringify(user);
-      document.cookie = `user=${userinfo};path=/;max-age=31536000;SameSite=Strict;Secure;`;
-
-      window.location.reload();
-    } else {
-      toast.error(response.message);
+        // window.location.reload();
+      } else {
+        setLoading(false);
+        toast.error(response.message);
+      }
+    } catch (error) {
+      setLoading(false);
+      toast.error(error.message);
     }
   };
 
@@ -95,6 +101,8 @@ const ProfileContainer = ({ citizen, userTypes, grade }) => {
     setUserType(userType);
     setFormInputs((prev) => ({ ...prev, type: userType?.slug }));
   };
+
+  // console.log({citizen});
 
   return (
     <>
@@ -545,6 +553,8 @@ const ProfileContainer = ({ citizen, userTypes, grade }) => {
               </button>
             </div>
           )}
+
+          {loading && <UserApiLoading />}
         </div>
       </section>
 
