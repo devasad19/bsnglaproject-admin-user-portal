@@ -24,16 +24,16 @@ export const middleware = (request: NextRequest)=>{
     if ((!token || !userInfo) && (pathname.startsWith('/admin') || pathname.startsWith('/user'))) {
         return NextResponse.redirect(redirectUrl);
     }
-    if ((!token && userInfo?.type) && (pathname.startsWith('/admin') || pathname.startsWith('/user'))) {
+    if ((!token && userInfo?.type == 'system_user') && (pathname.startsWith('/admin') || pathname.startsWith('/user'))) {
         return NextResponse.redirect(redirectUrl);
     }
-    if((!token && userInfo?.type == 'user') && pathname.startsWith('/admin')){
+    if((!token && userInfo?.type == 'citizen') && pathname.startsWith('/admin')){
         return NextResponse.redirect(redirectUrl);
     }
-    if((token && userInfo?.type == 'admin') && pathname.startsWith('/user')){
+    if((token && userInfo?.type == 'system_user') && pathname.startsWith('/user')){
         return NextResponse.redirect(redirectUrl);
     }
-    if((token && userInfo?.type == 'user') && pathname.startsWith('/admin')){
+    if((token && userInfo?.type == 'citizen') && pathname.startsWith('/admin')){
       return NextResponse.redirect(redirectUrl);
   }
     return NextResponse.next();

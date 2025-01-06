@@ -75,8 +75,8 @@ const Home = () => {
                         <div className="flex items-center gap-2 text-14">
                           <Image
                             src={
-                              item?.logo.length > 0
-                                ? process.env.NEXT_PUBLIC_IMAGE_URL + item?.logo
+                              item?.service?.logo?.length > 0
+                                ? process.env.NEXT_PUBLIC_IMAGE_URL + item?.service?.logo
                                 : relative_image_path("dummy_image1.jpg")
                             }
                             className="w-[5em] h-[5em]"
@@ -93,8 +93,8 @@ const Home = () => {
                         <p
                           dangerouslySetInnerHTML={{
                             __html:
-                              item?.description?.length > 25
-                                ? item?.description?.substring(0, 25) + "..."
+                              item?.service?.description?.length > 25
+                                ? item?.service?.description?.substring(0, 25) + "..."
                                 : item?.service?.description,
                           }}
                         />
@@ -103,13 +103,11 @@ const Home = () => {
                       <td
                         className={`text-center ${
                           item?.status === "1" && "text-green-500"
-                        } ${item?.status === "2" && "text-red-500"} ${
-                          item?.status === "3" && "text-gray-500"
-                        }`}
+                        } ${item?.status === "0" && "text-red-500"}`}
                       >
                         {item?.status === "1" && "Active"}
-                        {item?.status === "2" && "Inactive"}
-                        {item?.status === "3" && "Archeive"}
+                        {item?.status === "0" && "expired"}
+                        
                       </td>
                       <td className="text-center">
                         {new Date(item?.created_at).toLocaleDateString(
@@ -163,7 +161,7 @@ const Home = () => {
                     </tr>
                   );
                 })
-              : !isLoading && (
+              :  (
                   <tr>
                     <td colSpan="6" className="text-center">
                       No services found
