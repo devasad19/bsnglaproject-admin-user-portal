@@ -63,6 +63,10 @@ const ServiceResourceNew = () => {
       description_title,
     } = data;
 
+    // console.log({visit_link});
+    // return;
+    
+
     let paid_status = {
       free: data.free ? 1 : 0,
       pro: data.pro ? 1 : 0,
@@ -88,7 +92,7 @@ const ServiceResourceNew = () => {
       formData.append("type", JSON.stringify(newType));
 
       const response: any = await createService(formData);
-      // console.log(response);
+      console.log(response);
       if (response.status) {
         setIsLoading(false);
         reset();

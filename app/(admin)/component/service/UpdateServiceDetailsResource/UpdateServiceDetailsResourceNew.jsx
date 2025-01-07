@@ -5,7 +5,7 @@ import { useState } from "react";
 import { toast } from "react-toastify";
 import Image from "next/image";
 import { FaCheckCircle, FaRegTimesCircle } from "react-icons/fa";
-import { relative_image_path } from "@/helper";
+import { CountWords, relative_image_path } from "@/helper";
 import CustomEditor from "@/app/_components/CustomEditor/CustomEditor";
 import { FaMinus } from "react-icons/fa";
 import { FaPlus } from "react-icons/fa";
@@ -257,7 +257,10 @@ const UpdateServiceDetailsResourceNew = ({
   };
   // console.log({ formData });
 
-  console.log({ error });
+  // console.log({ error });
+
+  const descriptionLength = CountWords(formData?.description)
+  console.log({descriptionLength});
 
   return (
     <>
@@ -976,7 +979,7 @@ const UpdateServiceDetailsResourceNew = ({
                   </div>
 
                   <div>
-                    <p>Left Side Description:</p>
+                    <p>Right Side Description:</p>
                     <CustomEditor
                       onChange={(e, editor) =>
                         setFormData({
@@ -1002,7 +1005,7 @@ const UpdateServiceDetailsResourceNew = ({
                     )}
                   </div>
                   <div>
-                    <p>Right Side Description:</p>
+                    <p>Left Side Description:</p>
                     <CustomEditor
                       onChange={(e, editor) =>
                         setFormData({
