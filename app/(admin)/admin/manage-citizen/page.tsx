@@ -10,7 +10,7 @@ const Button = dynamic(() => import("@/app/_components/Button/Button"), {
 import { getCitizenList, updateCitizenTypes } from "../../_api";
 import { FaRegEdit } from "react-icons/fa";
 import { FaTrashAlt } from "react-icons/fa";
-import { getUserTypest } from "../../_api/MangeUserTypeApi";
+import { getUserTypesActives, getUserTypest } from "../../_api/MangeUserTypeApi";
 import Modal from "@/app/_components/Modal/Modal";
 import { toast } from "react-toastify";
 import Link from "next/link";
@@ -23,12 +23,15 @@ const Home = (): JSX.Element => {
   const userTypeModal = useRef<any>(null);
   const [userEditId, setUserEditId] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
-  const [updateUser, setUpdateUser] = useState<any>(null);
+  const [updateUser, setUpdateUser] = useState<any>({
+    citizen_type_id: "",
+    status: "",
+  });
   const [isFetch, setIsFetch] = useState(false);
 
   const fetchCitizenTypes = async () => {
     try {
-      const response = await getUserTypest();
+      const response = await getUserTypesActives();
       setCitizenTypes(response?.data);
     } catch (error) {
       console.log(error);
@@ -57,8 +60,11 @@ const Home = (): JSX.Element => {
     if (id) {
       setUserEditId(id);
       modelOpen(userTypeModal);
-      const users = citizen.find((item: any) => item?.id === id);
-      setUpdateUser(users);
+      const users:any = citizen.find((item: any) => item?.id === id);
+      setUpdateUser({
+        citizen_type_id: users?.citizen_type_id,
+        status: users?.status,
+      });
     }
   };
 
@@ -90,6 +96,10 @@ const Home = (): JSX.Element => {
     }
   };
 
+  // console.log({updateUser});
+  // console.log({citizenTypes});
+  
+
   return (
     <>
       <section className="bg-white rounded-lg p-4 shadow-lg">
@@ -109,8 +119,8 @@ const Home = (): JSX.Element => {
             </thead>
             <tbody className="text-center">
               {isLoading && <TableSkeleton col={8} row={10}></TableSkeleton>}
-              {citizen.length > 0 ? (
-                citizen.map((item: any, index: any) => (
+              {citizen?.length > 0 ? (
+                citizen?.map((item: any, index: any) => (
                   <tr key={index} className="h-16 border-b border-gray-300">
                     <td className="px-3">
                       <span className="border border-gray-300 px-2 py-1 rounded-md">
@@ -157,9 +167,9 @@ const Home = (): JSX.Element => {
                           <FaRegEdit />
                         </button>
 
-                        <button className="ml-2 bg-red-500 text-white rounded p-2">
+                        {/* <button className="ml-2 bg-red-500 text-white rounded p-2">
                           <FaTrashAlt />
-                        </button>
+                        </button> */}
                       </div>
 
                       {item?.citizen_info && (
@@ -195,6 +205,7 @@ const Home = (): JSX.Element => {
       <Modal
         modalRef={userTypeModal}
         modalForm={userTypesUpdateForm}
+        setServiceValidation={setUpdateUser}
         title="প্যারেন্ট অনুমতির নাম তৈরি করুন"
       >
         <form
@@ -214,17 +225,25 @@ const Home = (): JSX.Element => {
               </legend>
               <select
                 name="user_type"
-                id=""
+                value={updateUser?.citizen_type_id}
+                onChange={(e) => {
+                  setUpdateUser({
+                    ...updateUser,
+                    citizen_type_id: e.target.value,
+                  });
+                }}
                 className="w-full bg-white py-2"
                 disabled={isLoading ? true : false}
               >
                 {citizenTypes?.map((item: any, index: any) => {
+                  console.log({item});
+                  
                   return (
                     <option
                       key={index}
                       value={item?.id}
                       selected={
-                        updateUser?.citizen_type_id === item?.id ? true : false
+                        updateUser?.citizen_type_id == item?.id
                       }
                     >
                       {item?.name_en}
@@ -243,8 +262,8 @@ const Home = (): JSX.Element => {
                 </label>
               </legend>
               <select name="status" id="" className="w-full bg-white py-2">
-                <option value={1}>Active</option>
-                <option value={0}>Directive</option>
+                <option value={1} selected={updateUser?.status == 1}>Active</option>
+                <option value={0} selected={updateUser?.status == 0}>Inactive</option>
               </select>
             </fieldset>
           </div>
@@ -253,6 +272,7 @@ const Home = (): JSX.Element => {
               type="button"
               onClick={() => {
                 modelClose(userTypeModal, userTypesUpdateForm);
+                setUpdateUser(null);
               }}
               className="bg-red-500 text-white px-4 py-2 rounded-md"
             >

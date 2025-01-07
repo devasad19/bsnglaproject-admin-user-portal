@@ -1,20 +1,7 @@
 "use server";
 import axiosInstance from "@/lib/AxiosInstance";
 import { revalidateTag } from "next/cache";
-// create user Type api
-// export const manageUserTypeCreate = async (data: any) => {
-//   try {
-//     const response = await axiosInstance.post("/store/user-type", data, {
-//       headers: {
-//         "Content-Type": "application/json",
-//       },
-//     });
-//     revalidateTag("get-user-types");
-//     return response.data;
-//   } catch (error) {
-//     return error;
-//   }
-// };
+
 
 
 
@@ -39,11 +26,40 @@ export const getAllSystemUser = async () => {
   }
 };
 
+export const updateUser = async (data: any) => {
+  try {
+    
+    const response = await axiosInstance.post("/user-data/update", data);
+    // console.log(response);
+    
+    revalidateTag("get-all-system-user");
+
+    return response?.data;
+  } catch (error) {
+    return error;
+  }
+};
+
+
+// delete  user  api
+export const deleteUser = async (id: number) => {
+  try {
+    const response = await axiosInstance.delete(`/user/delete/${id}`, {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    revalidateTag("get-all-system-user");
+    return response?.data;
+  } catch (error) {
+    return error;
+  }
+}
 
 export const createUserApi = async (userData:any) => {
   try {
     const user = await axiosInstance.post(
-      `${process.env.NEXT_PUBLIC_API_URL}/user/create`,
+      `/user/create`,
       userData,
       {
         headers: {
@@ -52,7 +68,7 @@ export const createUserApi = async (userData:any) => {
       }
     );
     revalidateTag("get-all-system-user");
-    return user.data;
+    return user?.data;
   } catch (error) {
     // console.log(error);
     return error;
@@ -67,7 +83,7 @@ export const getUserType = async (id:number) => {
         "Content-Type": "application/json",
       },
     });
-    return response.data;
+    return response?.data;
   } catch (error) {
     return error;
   }
@@ -86,8 +102,9 @@ export const manageUserTypeUpdate = async (data: any) => {
     // console.log(response);
     
     revalidateTag("get-user-types");
+    revalidateTag("get-user-types-actives");
 
-    return response.data;
+    return response?.data;
   } catch (error) {
     return error;
   }
@@ -102,7 +119,8 @@ export const deleteUserType = async (id: number) => {
       },
     });
     revalidateTag("get-user-types");
-    return response.data;
+    revalidateTag("get-user-types-actives");
+    return response?.data;
   } catch (error) {
     return error;
   }

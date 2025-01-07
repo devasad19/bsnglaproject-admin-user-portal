@@ -1,13 +1,17 @@
-'use client';
+"use client";
 
 import { useState, useEffect } from "react";
 import Image from "next/image";
 import { relative_image_path } from "@/helper";
-import { changePassword } from "../../../_api";
 import { toast } from "react-toastify";
+import { changePassword } from "@/app/(user)/_api/user";
+import UserApiLoading from "@/app/(user)/component/UserAPiLoading/UserApiLoading";
 
 const Home = () => {
+  const [showPassOld, setShowPassOld] = useState(false);
+  const [showPassNew, setShowPassNew] = useState(false);
   const [showPass, setShowPass] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [formInputs, setFormInputs] = useState({
     oldPassword: "",
     password: "",
@@ -16,14 +20,16 @@ const Home = () => {
   const [user, setUser] = useState(null);
 
   useEffect(() => {
-    const userCookie = document.cookie.split(';').find(c => c.trim().startsWith('user='));
+    const userCookie = document.cookie
+      .split(";")
+      .find((c) => c.trim().startsWith("user="));
     if (userCookie != undefined) {
-      setUser(JSON.parse(decodeURIComponent(userCookie.split('=')[1])));
+      setUser(JSON.parse(decodeURIComponent(userCookie.split("=")[1])));
     }
   }, []);
 
-
   const HandleSubmit = async (e) => {
+    setLoading(true);
     e.preventDefault();
 
     const form = new FormData();
@@ -32,23 +38,29 @@ const Home = () => {
     form.append("confirmed_password", formInputs?.confirmPassword);
     form.append("id", user?.id);
 
-
     // console.log(form);
 
-
-    const response = await changePassword(form).then((res) => res).catch((err) => console.log(err));
-
-    if(response?.status == true) {
-      toast.success(response?.message);
-    }else {
-      toast.error(response?.message);
+    try {
+      const response = await changePassword(form);
+      if (response?.status == true) {
+        setLoading(false);
+        setFormInputs({
+          oldPassword: "",
+          password: "",
+          confirmPassword: "",
+        });
+        toast.success(response?.message);
+      } else {
+        setLoading(false);
+        toast.error(response?.message);
+      }
+    } catch (error) {
+      setLoading(false);
+      toast.error(error?.message);
+    } finally {
+      setLoading(false);
     }
-
-    console.log(response);
-    // console.log(response);
   };
-
-
 
   return (
     <section>
@@ -56,7 +68,10 @@ const Home = () => {
         Change Password
       </h3>
       <div className="w-full flex justify-center items-center">
-        <form onSubmit={HandleSubmit} className="bg-white w-10/12 max-w-[40rem] min-h-[25rem] rounded-md flex flex-col items-center justify-center shadow-lg">
+        <form
+          onSubmit={HandleSubmit}
+          className="bg-white w-10/12 max-w-[40rem] min-h-[25rem] rounded-md flex flex-col items-center justify-center shadow-lg"
+        >
           <div className="flex flex-col items-center gap-3 pb-6 w-[70%]">
             <Image
               src={relative_image_path("user_password_change.jpg")}
@@ -70,22 +85,27 @@ const Home = () => {
                 <input
                   value={formInputs?.oldPassword}
                   onChange={(e) =>
-                    setFormInputs({ ...formInputs, oldPassword: e.target.value })
+                    setFormInputs({
+                      ...formInputs,
+                      oldPassword: e.target.value,
+                    })
                   }
-                  type={showPass ? "text" : "password"}
+                  type={showPassOld ? "text" : "password"}
                   name="password"
                   id="password"
                   className={`outline-none rounded-md w-full text-13 lg:text-15 placeholder:text-[#979C9E] ${
-                    !showPass && "text-primary"
+                    !showPassOld && "text-primary"
                   }`}
                   placeholder="বর্তমান পাসওয়ার্ড"
+                  required
                 />
                 <button
+                  type="button"
                   onClick={() => {
-                    setShowPass(!showPass);
+                    setShowPassOld(!showPassOld);
                   }}
                 >
-                  {!showPass ? (
+                  {!showPassOld ? (
                     <svg
                       className="w-4 h-4 lg:w-5 lg:h-5 fill-[#7ECBA1]"
                       xmlns="http://www.w3.org/2000/svg"
@@ -115,20 +135,22 @@ const Home = () => {
                   onChange={(e) =>
                     setFormInputs({ ...formInputs, password: e.target.value })
                   }
-                  type={showPass ? "text" : "password"}
+                  type={showPassNew ? "text" : "password"}
                   name="password"
                   id="password"
                   className={`outline-none rounded-md w-full text-13 lg:text-15 placeholder:text-[#979C9E] ${
-                    !showPass && "text-primary"
+                    !showPassNew && "text-primary"
                   }`}
                   placeholder="নতুন পাসওয়ার্ড"
+                  required
                 />
                 <button
+                  type="button"
                   onClick={() => {
-                    setShowPass(!showPass);
+                    setShowPassNew(!showPassNew);
                   }}
                 >
-                  {!showPass ? (
+                  {!showPassNew ? (
                     <svg
                       className="w-4 h-4 lg:w-5 lg:h-5 fill-[#7ECBA1]"
                       xmlns="http://www.w3.org/2000/svg"
@@ -168,8 +190,10 @@ const Home = () => {
                     !showPass && "text-primary"
                   }`}
                   placeholder="নতুন পাসওয়ার্ড নিশ্চিত করুন "
+                  required
                 />
                 <button
+                  type="button"
                   onClick={() => {
                     setShowPass(!showPass);
                   }}
@@ -206,6 +230,9 @@ const Home = () => {
             সংশোধন পাসওয়ার্ড
           </button>
         </form>
+        {
+          loading && <UserApiLoading/>
+        }
       </div>
     </section>
   );

@@ -1,8 +1,9 @@
 export const revalidate = 3600;
 import { cookies } from "next/headers";
 import ProfileContainer from "@/app/(user)/component/ProfileContainer/ProfileContainer";
-import { getCitizenData } from "@/app/(user)/_api";
+
 import { getUserTypest } from "@/app/(admin)/_api/MangeUserTypeApi";
+import { getCitizenData } from "@/app/(user)/_api/user";
 
 const Home = async () => {
   let user;

@@ -1,15 +1,17 @@
 export const revalidate = 3600;
 
-import { getUserFeedBacks } from "../../_api";
+import { getAdminAllFeedBacks, getUserFeedBacks } from "../../_api";
 import { dateName } from "@/helper";
 
 const Home = async () => {
   let data = [];
-  const response = await getUserFeedBacks().then((res) => {
+  const response = await getAdminAllFeedBacks().then((res) => {
     return res;
   }).catch((err) => {
     console.log(err);
   });
+  // console.log({response});
+  
 
   if (response?.data) {
     data = response?.data;

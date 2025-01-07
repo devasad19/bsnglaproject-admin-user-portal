@@ -30,7 +30,7 @@ const CitizenInfoData = ({ id }: { id: string }) => {
     fetchCitizenTypes();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id,isFetch]);
-  console.log({ user });
+  // console.log({ user });
 
  const handleApprove = async () => {
     if(user){
@@ -138,8 +138,6 @@ const CitizenInfoData = ({ id }: { id: string }) => {
                       </button>
                     </div>
                   </div>
-
-                  <p>type</p>
                 </div>
               </div>
 

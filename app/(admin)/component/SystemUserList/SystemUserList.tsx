@@ -2,14 +2,33 @@
 import { modelClose, modelOpen, relative_image_path } from "@/helper";
 import Image from "next/image";
 import Modal from "@/app/_components/Modal/Modal";
-import {  useRef } from "react";
+import { useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
-import { createUserApi } from "../../_api/ManageSystemUserApi";
+import {
+  createUserApi,
+  deleteUser,
+  updateUser,
+} from "../../_api/ManageSystemUserApi";
+import Swal from "sweetalert2";
+import ApiLoading from "../ApiLoading/ApiLoading";
 
-const SystemUserList = ({ users }: any) => {
+const SystemUserList = ({ users, rolesList }: any) => {
   const addUserModal = useRef(null);
   const addUserForm = useRef(null);
+  const updateUserModal = useRef(null);
+  const updateUserForm = useRef(null);
+  const[loading, setLoading] = useState(false);
+  const [formValue, setFormValue] = useState<any>({
+    name: "",
+    email: "",
+    phone: "",
+    role: "",
+    status: "",
+    id: "",
+  });
+  // console.log({ rolesList });
+
   const {
     register,
     handleSubmit,
@@ -24,24 +43,105 @@ const SystemUserList = ({ users }: any) => {
         name,
         email,
         phone,
-        role,
+        role_id: role,
+        status: 1,
         password,
         password_confirmation: c_password,
       };
       const resUser = await createUserApi(submitValue);
-      console.log({ resUser });
+      // console.log({ resUser });
 
       if (resUser.status) {
         toast.success(resUser.message, { autoClose: 2000 });
         reset();
         modelClose(addUserModal, addUserForm);
       } else {
-        toast.error(resUser.data.email, { autoClose: 2000 });
+        toast.error(resUser.message, { autoClose: 2000 });
       }
-    } catch (err) {
-      toast.error("Something went wrong", { autoClose: 2000 });
+    } catch (err: any) {
+      toast.error(err.message, { autoClose: 2000 });
     }
   };
+
+  const handleDelete = (id: any) => {
+    if (id) {
+      Swal.fire({
+        title: "Are you sure?",
+        text: "You won't be able to revert this!",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Yes, delete it!",
+      }).then((result) => {
+        if (result.isConfirmed) {
+          const serviceDeleteData = deleteUser(id)
+            .then((data: any) => {
+              if (data) {
+                // setRefetch(!refetch);
+                Swal.fire("Deleted!", "Your file has been deleted.", "success");
+                // window.location.reload();
+              } else {
+                Swal.fire("Error!", "Something went wrong.", "error");
+              }
+            })
+            .catch((err: any) => {
+              console.log(err);
+            });
+        }
+      });
+    }
+  };
+
+  const handleEdit = (id: any) => {
+    if (id) {
+      const finedUser = users.find((item: any) => item.id == id);
+      console.log({ finedUser });
+      setFormValue({
+        name: finedUser?.name,
+        email: finedUser?.email,
+        phone: finedUser?.phone,
+        role: finedUser?.role_id,
+        status: finedUser?.status,
+        id: finedUser?.id,
+      });
+      modelOpen(updateUserModal);
+    }
+  };
+
+  const handleEditSubmit = async (e: any) => {
+    setLoading(true);
+    e.preventDefault();
+    const formData = new FormData();
+    formData.append("name", formValue.name);
+    formData.append("email", formValue.email);
+    formData.append("phone", formValue.phone);
+    formData.append("role_id", formValue.role);
+    formData.append("status", formValue.status);
+    formData.append("id", formValue.id);
+
+    try {
+      const response = await updateUser(formData);
+      console.log({ response });
+      if (response.status) {
+        setLoading(false);
+        toast.success(response.message, { autoClose: 2000 });
+        modelClose(updateUserModal, updateUserForm);
+      } else {
+        setLoading(false);
+        toast.error(response.message, { autoClose: 2000 });
+      }
+    } catch (error: any) {
+      setLoading(false);
+      toast.error(error.message, { autoClose: 2000 });
+    } finally {
+      setLoading(false);
+      // modelClose(updateUserModal, updateUserForm);
+    }
+  };
+
+  // console.log({formValue});
+
   return (
     <>
       <section>
@@ -56,7 +156,7 @@ const SystemUserList = ({ users }: any) => {
                 </button> */}
             </div>
             <div className="flex flex-col items-center lg:flex-row gap-4">
-              <form className="bg-white rounded-md shadow-md text-[#515151] flex items-center gap-2 px-2 py-1 lg:py-0">
+              {/* <form className="bg-white rounded-md shadow-md text-[#515151] flex items-center gap-2 px-2 py-1 lg:py-0">
                 <label htmlFor="userSearch">
                   <svg
                     className="w-4 h-4 fill-current"
@@ -72,7 +172,7 @@ const SystemUserList = ({ users }: any) => {
                   placeholder="Search for your keyword"
                   className="outline-none"
                 />
-              </form>
+              </form> */}
               <div>
                 <button
                   onClick={() => modelOpen(addUserModal)}
@@ -121,11 +221,14 @@ const SystemUserList = ({ users }: any) => {
                         </div>
                       </td>
                       <td>{item?.phone}</td>
-                      <td className="text-[#348739] font-medium text-13">
+                      <td className={`font-medium text-13 ${item?.status == 0 ? "text-red-500" : "text-green-500"}`}>
                         {item?.status == 1 ? "Active" : "Inactive"}
                       </td>
                       <td>
-                        <button className="p-1 active:scale-90 transition-all duration-400 rounded-md border border-gray-300">
+                        <button
+                          onClick={() => handleEdit(item?.id)}
+                          className="p-1 active:scale-90 transition-all duration-400 rounded-md border border-gray-300"
+                        >
                           <svg
                             className="w-5 h-5 fill-[#A4A4A4]"
                             xmlns="http://www.w3.org/2000/svg"
@@ -134,7 +237,12 @@ const SystemUserList = ({ users }: any) => {
                             <path d="M441 58.9L453.1 71c9.4 9.4 9.4 24.6 0 33.9L424 134.1 377.9 88 407 58.9c9.4-9.4 24.6-9.4 33.9 0zM209.8 256.2L344 121.9 390.1 168 255.8 302.2c-2.9 2.9-6.5 5-10.4 6.1l-58.5 16.7 16.7-58.5c1.1-3.9 3.2-7.5 6.1-10.4zM373.1 25L175.8 222.2c-8.7 8.7-15 19.4-18.3 31.1l-28.6 100c-2.4 8.4-.1 17.4 6.1 23.6s15.2 8.5 23.6 6.1l100-28.6c11.8-3.4 22.5-9.7 31.1-18.3L487 138.9c28.1-28.1 28.1-73.7 0-101.8L474.9 25C446.8-3.1 401.2-3.1 373.1 25zM88 64C39.4 64 0 103.4 0 152V424c0 48.6 39.4 88 88 88H360c48.6 0 88-39.4 88-88V312c0-13.3-10.7-24-24-24s-24 10.7-24 24V424c0 22.1-17.9 40-40 40H88c-22.1 0-40-17.9-40-40V152c0-22.1 17.9-40 40-40H200c13.3 0 24-10.7 24-24s-10.7-24-24-24H88z" />
                           </svg>
                         </button>
-                        <button className="p-1 active:scale-90 transition-all duration-400 rounded-md border border-gray-300 ml-2">
+                        <button
+                          onClick={() => {
+                            handleDelete(item.id);
+                          }}
+                          className="p-1 active:scale-90 transition-all duration-400 rounded-md border border-gray-300 ml-2"
+                        >
                           <svg
                             className="w-5 h-5 fill-[#A4A4A4]"
                             xmlns="http://www.w3.org/2000/svg"
@@ -259,9 +367,16 @@ const SystemUserList = ({ users }: any) => {
               <select
                 {...register("role", { required: true })}
                 className="bg-white py-1"
+                disabled={rolesList.length < 1}
               >
-                <option value="user">User</option>
-                <option value="admin">Admin</option>
+                <option value="" className="text-gray-400">
+                  --Select Role--
+                </option>
+                {rolesList?.map((item: any, index: any) => (
+                  <option key={index} value={item.id}>
+                    {item.name}
+                  </option>
+                ))}
               </select>
             </fieldset>
             {errors.role && (
@@ -327,6 +442,161 @@ const SystemUserList = ({ users }: any) => {
               </button>
             </div>
           </div>
+        </form>
+      </Modal>
+
+      {/* update model here */}
+
+      <Modal
+        modalForm={updateUserForm}
+        modalRef={updateUserModal}
+        title={"Update User"}
+      >
+        <form
+          onSubmit={handleEditSubmit}
+          className="pt-3 space-y-3"
+          ref={updateUserModal}
+        >
+          <div>
+            <fieldset className="flex flex-col border rounded-md px-2">
+              <legend>
+                <label htmlFor="name">Name</label>
+              </legend>
+              <input
+                type="text"
+                value={formValue.name}
+                onChange={(e) =>
+                  setFormValue({ ...formValue, name: e.target.value })
+                }
+                className="w-full outline-none"
+                placeholder="User Name"
+              />
+            </fieldset>
+            {/* {errors.name && (
+              <span className="text-red-500 text-12 px-2 pt-1">
+                This field is required
+              </span>
+            )} */}
+          </div>
+          <div>
+            <fieldset className="flex flex-col border rounded-md px-2">
+              <legend>
+                <label htmlFor="email">Email</label>
+              </legend>
+              <input
+                type="email"
+                value={formValue.email}
+                onChange={(e) =>
+                  setFormValue({ ...formValue, email: e.target.value })
+                }
+                className="w-full outline-none"
+                placeholder="example@example.com"
+              />
+            </fieldset>
+            {/* {errors.email && (
+              <span className="text-red-500 text-12 px-4 pt-1">
+                This field is required
+              </span>
+            )} */}
+          </div>
+          <div>
+            <fieldset className="flex flex-col border rounded-md px-2">
+              <legend>
+                <label htmlFor="name">Phone</label>
+              </legend>
+              <input
+                type="phone"
+                value={formValue.phone}
+                onChange={(e) =>
+                  setFormValue({ ...formValue, phone: e.target.value })
+                }
+                className="w-full outline-none"
+                placeholder="+8801..."
+              />
+            </fieldset>
+            {/* {errors.phone && (
+              <span className="text-red-500 text-12 px-4 pt-1">
+                This field is required
+              </span>
+            )} */}
+          </div>
+          <div>
+            <fieldset className="flex flex-col border rounded-md px-2">
+              <legend>
+                <label htmlFor="name">Role</label>
+              </legend>
+              <select
+                value={formValue.role}
+                onChange={(e) =>
+                  setFormValue({ ...formValue, role: e.target.value })
+                }
+                className="bg-white py-1"
+                disabled={rolesList.length < 1}
+              >
+                <option value="" className="text-gray-400">
+                  --Select Role--
+                </option>
+                {rolesList?.map((item: any, index: any) => (
+                  <option
+                    key={index}
+                    value={item.id}
+                    selected={item.id == formValue.role}
+                  >
+                    {item.name}
+                  </option>
+                ))}
+              </select>
+            </fieldset>
+          </div>
+          <div>
+            <fieldset className="flex flex-col border rounded-md px-2">
+              <legend>
+                <label htmlFor="name">Status</label>
+              </legend>
+              <select
+                value={formValue.status}
+                onChange={(e) =>
+                  setFormValue({ ...formValue, status: e.target.value })
+                }
+                className="bg-white py-1"
+              >
+                <option value="1" selected={formValue.status == 1}>
+                  Active
+                </option>
+                <option value="0" selected={formValue.status == 0}>
+                  InActive
+                </option>
+              </select>
+            </fieldset>
+            {/* {errors.role && (
+              <span className="text-red-500 text-12 px-4 pt-1">
+                This field is required
+              </span>
+            )} */}
+          </div>
+
+          <div className="pt-6 flex justify-end">
+            <div className="flex items-center gap-4">
+              <button
+                type="button"
+                className="btn"
+                onClick={() => {
+                  modelClose(updateUserModal, updateUserForm);
+                }}
+              >
+                Cancel
+              </button>
+              <button
+                type="submit"
+                className="bg-blue-500 text-white px-4 py-3 rounded-md"
+              >
+                Create
+              </button>
+            </div>
+          </div>
+          {
+            loading && <ApiLoading/>
+          }
         </form>
       </Modal>
     </>

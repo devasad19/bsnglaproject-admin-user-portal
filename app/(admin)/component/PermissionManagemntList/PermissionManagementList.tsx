@@ -8,6 +8,8 @@ import {
   createParentPermission,
   createSinglePermission,
   deletePermission,
+  permissionWithParentDelete,
+  updatePermission,
 } from "../../_api/PermissionManagementApi";
 import { toast } from "react-toastify";
 
@@ -39,9 +41,15 @@ const PermissionManagementList = ({
   const permissionUpdateModalForm = useRef<any>(null);
   const addModelForm = useRef<any>(null);
   const permissionModalForm = useRef<any>(null);
-  
-  
-  const [updateSinglePermission, setUpdateSinglePermission] = useState<Partial<Permission>>({});
+
+  const [updateSinglePermission, setUpdateSinglePermission] = useState<
+   any
+  >({
+    id: 0,
+    name: "",
+    display_name: "",
+    permission_parent_id: "",
+  });
 
   const [validationError, setValidationError] = useState({
     name: "",
@@ -73,10 +81,12 @@ const PermissionManagementList = ({
       if (response.status) {
         modelClose(addModal, addModelForm);
         reset();
-        toast.success("Permission Created Successfully");
+        toast.success(response?.message);
+      }else{
+        toast.error(response?.message);
       }
-    } catch (error) {
-      toast.error("Failed to Create Permission");
+    } catch (error:any) {
+      toast.error(error?.message);
     }
   };
 
@@ -139,93 +149,118 @@ const PermissionManagementList = ({
     }
   };
 
-  const handlePermissionEdit = (id:string) =>{
-    if(id){
-      if(permissionsData.length>0){
-
-        const updatedData = permissionsData.find((item: { id: any }) => item.id == id);
-       setUpdateSinglePermission(updatedData);
-       modelOpen(permissionModalUpdate,permissionUpdateModalForm);
-      }else{
+  const handlePermissionEdit = (id: string) => {
+    if (id) {
+      if (permissionsData.length > 0) {
+        const updatedData = permissionsData.find(
+          (item: { id: any }) => item.id == id
+        );
+        setUpdateSinglePermission({
+          id: updatedData.id,
+          name: updatedData.name,
+          display_name: updatedData.display_name,
+          permission_parent_id: updatedData.permission_parent_id
+        });
+        modelOpen(permissionModalUpdate, permissionUpdateModalForm);
+      } else {
         toast.error("Data Not Found");
       }
     }
-  }
+  };
 
   // delete single permission handler
 
-  const handleDeletePermission = async (id:any)=>{
-    if(id){
+  const handleDeletePermission = async (id: any) => {
+    if (id) {
       Swal.fire({
-              title: "Are you sure?",
-              text: "You won't be able to revert this!",
-              icon: "warning",
-              showCancelButton: true,
-              confirmButtonColor: "#3085d6",
-              cancelButtonColor: "#d33",
-              confirmButtonText: "Yes, delete it!",
-            }).then((result) => {
-              if (result.isConfirmed) {
-                const dataRes = deletePermission(id)
-                  .then((data) => {
-                    if (data) {
-                      Swal.fire("Deleted!", "Your file has been deleted.", "success");
-                    } else {
-                      Swal.fire("Error!", "Something went wrong.", "error");
-                    }
-                  })
-                  .catch((err) => {
-                    console.log(err);
-                  });
-                  console.log(dataRes);
-                  
+        title: "Are you sure?",
+        text: "You won't be able to revert this!",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Yes, delete it!",
+      }).then((result) => {
+        if (result.isConfirmed) {
+          const dataRes = permissionWithParentDelete(id)
+            .then((data) => {
+              if (data) {
+                Swal.fire("Deleted!", "Your file has been deleted.", "success");
+              } else {
+                Swal.fire("Error!", "Something went wrong.", "error");
               }
+            })
+            .catch((err) => {
+              console.log(err);
             });
+          console.log(dataRes);
+        }
+      });
     }
-  }
+  };
 
-
-  // handle permission update 
-  const handlePermissionSubmitUpdate = async (e:any) =>{
+  // handle permission update
+  const handlePermissionSubmitUpdate = async (e: any) => {
     e.preventDefault();
 
     const name = e.target.up_name.value;
     const display_name = e.target.up_display_name.value;
     const parent_id = e.target.up_parent_id.value;
 
-    if(name == "" || display_name == ""){
+    if (name == "" || display_name == "") {
       setUpdateValidationError({
         Up_name: "Name is Required",
-        Up_display_name: "Display Name is Required"
+        Up_display_name: "Display Name is Required",
       });
       return;
     }
 
-    if(name == ""){
+    if (name == "") {
       setUpdateValidationError({
         Up_name: "Name is Required",
-        Up_display_name: ""
+        Up_display_name: "",
       });
       return;
     }
 
-    if(display_name == ""){
+    if (display_name == "") {
       setUpdateValidationError({
         Up_name: "",
-        Up_display_name: "Display Name is Required"
+        Up_display_name: "Display Name is Required",
       });
       return;
     }
+    console.log({ name, display_name, parent_id, id: updateSinglePermission?.id });
 
+    
+    try {
+      const updateData = {
+        name,
+        display_name,
+        permission_parent_id: parent_id,
+        id: updateSinglePermission?.id,
+        status:1
+      }
+      
+      const response = await updatePermission(updateData);
+      if (response.status) {
+        modelClose(permissionModalUpdate, permissionUpdateModalForm);
+        toast.success(response?.message);
+      }else{
+        toast.error(response?.message);
+      }
+    } catch (error:any) {
+      toast.error(error?.message);
+    }
 
-  }
-// console.log({permissionsData});
+  };
+  console.log({ updateSinglePermission });
 
   return (
     <>
       <div className="bg-white p-6">
         <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 pb-10">
-            <h3 className="text-24 font-bold">Permission Management</h3>
+          <h3 className="text-24 font-bold">Permission Management</h3>
           <div className="space-x-4">
             <button
               onClick={() => modelOpen(addModal)}
@@ -246,12 +281,12 @@ const PermissionManagementList = ({
             <table className="w-full text-center">
               <thead>
                 <tr className="bg-[#E1F6F9] h-12">
-                    <th>#</th>
-                    <th>Display Name</th>
-                    <th>Permission Name</th>
-                    <th>Parent Permission Name</th>
-                    <th>Status</th>
-                    <th>Action</th>
+                  <th>#</th>
+                  <th>Display Name</th>
+                  <th>Permission Name</th>
+                  <th>Parent Permission Name</th>
+                  <th>Status</th>
+                  <th>Action</th>
                 </tr>
               </thead>
               <tbody>
@@ -279,11 +314,14 @@ const PermissionManagementList = ({
                         </td>
                         <td className="flex items-center justify-center my-2">
                           <div className="flex flex-row gap-2">
-                            <button onClick={() => handlePermissionEdit(item?.id)} className="px-2 py-1 bg-blue-500 text-white active:scale-90 transition-all duration-400 rounded-md">
+                            <button
+                              onClick={() => handlePermissionEdit(item?.id)}
+                              className="px-2 py-1 bg-blue-500 text-white active:scale-90 transition-all duration-400 rounded-md"
+                            >
                               <CiEdit />
                             </button>
                             <button
-                              onClick={()=>handleDeletePermission(item?.id)}
+                              onClick={() => handleDeletePermission(item?.id)}
                               className="bg-red-500 text-white px-2 py-1 rounded-md"
                             >
                               <svg
@@ -324,43 +362,43 @@ const PermissionManagementList = ({
           ref={addModelForm}
         >
           <div className="pt-3 flex flex-col gap-3">
-        <fieldset className="flex flex-col border border-gray-300 rounded-md px-2">
-          <legend>
-            <label
-          htmlFor=""
-          className="after:content-['_*'] after:text-red-400"
-            >
-          Parent Name
-            </label>
-          </legend>
-          <input
-            type="text"
-            {...register("name", { required: "Name is Required" })}
-            className="w-full text-14 outline-none py-1"
-            placeholder="Enter Parent Permission Display Name"
-          />
-        </fieldset>
-        {errors.name && (
-          <span className="text-red-500">{errors.name.message}</span>
-        )}
+            <fieldset className="flex flex-col border border-gray-300 rounded-md px-2">
+              <legend>
+                <label
+                  htmlFor=""
+                  className="after:content-['_*'] after:text-red-400"
+                >
+                  Parent Name
+                </label>
+              </legend>
+              <input
+                type="text"
+                {...register("name", { required: "Name is Required" })}
+                className="w-full text-14 outline-none py-1"
+                placeholder="Enter Parent Permission Display Name"
+              />
+            </fieldset>
+            {errors.name && (
+              <span className="text-red-500">{errors.name.message}</span>
+            )}
           </div>
 
           <div className="flex justify-end gap-3 mt-7">
-        <button
-          type="button"
-          onClick={() => {
-            modelClose(addModal, addModelForm);
-          }}
-          className="bg-red-500 text-white px-4 py-2 rounded-md"
-        >
-          Cancel
-        </button>
-        <button
-          type="submit"
-          className="bg-blue-500 text-white px-4 py-2 rounded-md"
-        >
-          Submit
-        </button>
+            <button
+              type="button"
+              onClick={() => {
+                modelClose(addModal, addModelForm);
+              }}
+              className="bg-red-500 text-white px-4 py-2 rounded-md"
+            >
+              Cancel
+            </button>
+            <button
+              type="submit"
+              className="bg-blue-500 text-white px-4 py-2 rounded-md"
+            >
+              Submit
+            </button>
           </div>
         </form>
       </Modal>
@@ -378,89 +416,89 @@ const PermissionManagementList = ({
           ref={permissionModalForm}
         >
           <div className="pt-3 flex flex-col gap-3">
-        <fieldset className="flex flex-col border border-gray-300 rounded-md px-2">
-          <legend>
-            <label
-          htmlFor=""
-          className="after:content-['_*'] after:text-red-400"
-            >
-          Parent Permission Name
-            </label>
-          </legend>
-          <select
-            disabled={parentPermissionData?.length > 0 ? false : true}
-            name="parent_id"
-            id=""
-            className="w-full bg-white py-2"
-          >
-            {parentPermissionData?.map((item: any, index: number) => (
-          <option key={index} value={item.id}>
-            {item.name}
-          </option>
-            ))}
-          </select>
-        </fieldset>
-        <fieldset className="flex flex-col border border-gray-300 rounded-md px-2">
-          <legend>
-            <label
-          htmlFor=""
-          className="after:content-['_*'] after:text-red-400"
-            >
-          Display Name
-            </label>
-          </legend>
-          <input
-            type="text"
-            name="display_name"
-            className="w-full text-14 outline-none py-1"
-            placeholder="Enter Permission Display Name"
-          />
-        </fieldset>
-        {validationError.display_name && (
-          <span className="text-red-500">
-            {validationError.display_name}
-          </span>
-        )}
-        <fieldset className="flex flex-col border border-gray-300 rounded-md px-2">
-          <legend>
-            <label
-          htmlFor=""
-          className="after:content-['_*'] after:text-red-400"
-            >
-          Permission Name
-            </label>
-          </legend>
-          <input
-            type="text"
-            name="name"
-            className="w-full text-14 outline-none py-1"
-            placeholder="Enter Permission Name"
-          />
-        </fieldset>
-        {validationError.name && (
-          <span className="text-red-500">{validationError.name}</span>
-        )}
+            <fieldset className="flex flex-col border border-gray-300 rounded-md px-2">
+              <legend>
+                <label
+                  htmlFor=""
+                  className="after:content-['_*'] after:text-red-400"
+                >
+                  Parent Permission Name
+                </label>
+              </legend>
+              <select
+                disabled={parentPermissionData?.length > 0 ? false : true}
+                name="parent_id"
+                id=""
+                className="w-full bg-white py-2"
+              >
+                {parentPermissionData?.map((item: any, index: number) => (
+                  <option key={index} value={item.id}>
+                    {item.name}
+                  </option>
+                ))}
+              </select>
+            </fieldset>
+            <fieldset className="flex flex-col border border-gray-300 rounded-md px-2">
+              <legend>
+                <label
+                  htmlFor=""
+                  className="after:content-['_*'] after:text-red-400"
+                >
+                  Display Name
+                </label>
+              </legend>
+              <input
+                type="text"
+                name="display_name"
+                className="w-full text-14 outline-none py-1"
+                placeholder="Enter Permission Display Name"
+              />
+            </fieldset>
+            {validationError.display_name && (
+              <span className="text-red-500">
+                {validationError.display_name}
+              </span>
+            )}
+            <fieldset className="flex flex-col border border-gray-300 rounded-md px-2">
+              <legend>
+                <label
+                  htmlFor=""
+                  className="after:content-['_*'] after:text-red-400"
+                >
+                  Permission Name
+                </label>
+              </legend>
+              <input
+                type="text"
+                name="name"
+                className="w-full text-14 outline-none py-1"
+                placeholder="Enter Permission Name"
+              />
+            </fieldset>
+            {validationError.name && (
+              <span className="text-red-500">{validationError.name}</span>
+            )}
           </div>
           <div className="flex justify-end gap-3 mt-7">
-        <button
-          type="button"
-          onClick={() => {
-            setValidationError({
-          name: "",
-          display_name: "",
-            });
-            modelClose(permissionModal, permissionModalForm);
-          }}
-          className="bg-red-500 text-white px-4 py-2 rounded-md"
-        >
-          Cancel
-        </button>
-        <button
-          type="submit"
-          className="bg-blue-500 text-white px-4 py-2 rounded-md"
-        >
-          Submit
-        </button>
+            <button
+              type="button"
+              onClick={() => {
+                setValidationError({
+                  name: "",
+                  display_name: "",
+                });
+                modelClose(permissionModal, permissionModalForm);
+              }}
+              className="bg-red-500 text-white px-4 py-2 rounded-md"
+            >
+              Cancel
+            </button>
+            <button
+              type="submit"
+              className="bg-blue-500 text-white px-4 py-2 rounded-md"
+            >
+              Submit
+            </button>
           </div>
         </form>
       </Modal>
@@ -470,7 +508,7 @@ const PermissionManagementList = ({
       <Modal
         modalRef={permissionModalUpdate}
         modalForm={permissionUpdateModalForm}
-        title="অনুমতির আপডেট করুন"
+        title="Permission Update"
         setServiceValidation={setValidationError}
       >
         <form
@@ -485,17 +523,32 @@ const PermissionManagementList = ({
                   htmlFor=""
                   className="after:content-['_*'] after:text-red-400"
                 >
-                  প্যারেন্ট অনুমতির নাম
+                  Parent Name
                 </label>
               </legend>
               <select
                 disabled={parentPermissionData?.length > 0 ? false : true}
                 name="up_parent_id"
                 id=""
+                value={updateSinglePermission?.permission_parent_id}
+                onChange={(e) =>
+                  setUpdateSinglePermission({
+                    ...updateSinglePermission,
+                    permission_parent_id: e.target.value,
+                  })
+                }
                 className="w-full bg-white py-2"
               >
                 {parentPermissionData?.map((item: any, index: number) => (
-                  <option key={index} value={item.id} selected={item.id == updateSinglePermission?.permission_parent_id ? true : false}>
+                  <option
+                    key={index}
+                    value={item.id}
+                    selected={
+                      item.id == updateSinglePermission?.permission_parent_id
+                        ? true
+                        : false
+                    }
+                  >
                     {item.name}
                   </option>
                 ))}
@@ -507,12 +560,18 @@ const PermissionManagementList = ({
                   htmlFor=""
                   className="after:content-['_*'] after:text-red-400"
                 >
-                  প্রদর্শনী নাম
+                  Display Name
                 </label>
               </legend>
               <input
                 type="text"
-                defaultValue={updateSinglePermission?.display_name}
+                value={updateSinglePermission?.display_name}
+                onChange={(e) =>
+                  setUpdateSinglePermission({
+                    ...updateSinglePermission,
+                    display_name: e.target.value,
+                  })
+                }
                 name="up_display_name"
                 className="w-full text-14 outline-none py-1"
                 placeholder="অনুমতির প্রদর্শনী নাম লিখুন"
@@ -529,30 +588,44 @@ const PermissionManagementList = ({
                   htmlFor=""
                   className="after:content-['_*'] after:text-red-400"
                 >
-                  অনুমতি নাম
+                  Permission Name
                 </label>
               </legend>
               <input
                 type="text"
-                defaultValue={updateSinglePermission?.name}
+                value={updateSinglePermission?.name}
+                onChange={(e) =>
+                  setUpdateSinglePermission({
+                    ...updateSinglePermission,
+                    name: e.target.value,
+                  })
+                }
                 name="up_name"
                 className="w-full text-14 outline-none py-1"
                 placeholder="Enter Permission Name"
               />
             </fieldset>
             {updateValidationError.Up_name && (
-              <span className="text-red-500">{updateValidationError.Up_name}</span>
+              <span className="text-red-500">
+                {updateValidationError.Up_name}
+              </span>
             )}
           </div>
           <div className="flex justify-end gap-3 mt-7">
             <button
               type="button"
               onClick={() => {
+                setUpdateSinglePermission({
+                  id: 0,
+                  name: "",
+                  display_name: "",
+                  permission_parent_id: "",
+                })
                 setValidationError({
                   name: "",
                   display_name: "",
                 });
-                modelClose(permissionModal, permissionModalForm);
+                modelClose(permissionModalUpdate, permissionUpdateModalForm);
               }}
               className="bg-red-500 text-white px-4 py-2 rounded-md"
             >

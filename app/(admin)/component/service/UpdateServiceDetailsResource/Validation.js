@@ -1,3 +1,5 @@
+import { CountWords } from "@/helper";
+
 const Validation = async (formData, setError) => {
   let hasError = false;
 
@@ -9,8 +11,8 @@ const Validation = async (formData, setError) => {
   };
 
   if (
-    formData?.description?.length < 10 ||
-    formData?.description?.length > 100
+    CountWords(formData?.description) < 10 ||
+    CountWords(formData?.description) > 100
   ) {
     setError((prev) => ({
       ...prev,
@@ -344,31 +346,31 @@ const Validation = async (formData, setError) => {
     }));
   }
 
-//   if (formData?.user_doc?.video?.link?.length < 3) {
-//     setError((prev) => ({
-//       ...prev,
-//       user_doc: {
-//         ...prev.user_doc,
-//         video: {
-//           status: true,
-//           message:
-//             "User document video link has to be at least 3 characters long.",
-//         },
-//       },
-//     }));
-//     hasError = true;
-//   } else {
-//     setError((prev) => ({
-//       ...prev,
-//       user_doc: {
-//         ...prev.user_doc,
-//         video: {
-//           status: false,
-//           message: "",
-//         },
-//       },
-//     }));
-//   }
+  //   if (formData?.user_doc?.video?.link?.length < 3) {
+  //     setError((prev) => ({
+  //       ...prev,
+  //       user_doc: {
+  //         ...prev.user_doc,
+  //         video: {
+  //           status: true,
+  //           message:
+  //             "User document video link has to be at least 3 characters long.",
+  //         },
+  //       },
+  //     }));
+  //     hasError = true;
+  //   } else {
+  //     setError((prev) => ({
+  //       ...prev,
+  //       user_doc: {
+  //         ...prev.user_doc,
+  //         video: {
+  //           status: false,
+  //           message: "",
+  //         },
+  //       },
+  //     }));
+  //   }
 
   if (
     formData?.user_doc?.video?.thumbnail &&
@@ -398,31 +400,31 @@ const Validation = async (formData, setError) => {
     }));
   }
 
-//   if (formData?.user_doc?.video?.title?.length < 3) {
-//     setError((prev) => ({
-//       ...prev,
-//       user_doc: {
-//         ...prev.user_doc,
-//         video: {
-//           status: true,
-//           message:
-//             "User document video title has to be at least 3 characters long.",
-//         },
-//       },
-//     }));
-//     hasError = true;
-//   } else {
-//     setError((prev) => ({
-//       ...prev,
-//       user_doc: {
-//         ...prev.user_doc,
-//         video: {
-//           status: false,
-//           message: "",
-//         },
-//       },
-//     }));
-//   }
+  //   if (formData?.user_doc?.video?.title?.length < 3) {
+  //     setError((prev) => ({
+  //       ...prev,
+  //       user_doc: {
+  //         ...prev.user_doc,
+  //         video: {
+  //           status: true,
+  //           message:
+  //             "User document video title has to be at least 3 characters long.",
+  //         },
+  //       },
+  //     }));
+  //     hasError = true;
+  //   } else {
+  //     setError((prev) => ({
+  //       ...prev,
+  //       user_doc: {
+  //         ...prev.user_doc,
+  //         video: {
+  //           status: false,
+  //           message: "",
+  //         },
+  //       },
+  //     }));
+  //   }
 
   if (
     formData?.distribution?.length < 1 ||
