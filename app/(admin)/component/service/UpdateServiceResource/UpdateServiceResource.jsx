@@ -117,7 +117,7 @@ const UpdateServiceResource = ({ id }) => {
   useEffect(() => {
     getSingleServiceResourceCodeApi(id)
       .then((res) => {
-        // console.log();
+        console.log(res?.data);
         setShowItem(res?.data?.visit_type);
         setServiceResource(res?.data);
         setValue("name", res?.data?.name);
@@ -166,7 +166,7 @@ const UpdateServiceResource = ({ id }) => {
     }
   };
 
-  // console.log({serviceResource});
+  console.log({showItem});
 
   return (
     <>
@@ -591,7 +591,7 @@ const UpdateServiceResource = ({ id }) => {
                   {...register("visit_link", {
                     required: "Visit Link is required",
                   })}
-                  defaultValue={serviceResource?.visit_link}
+                 
                   className="w-full outline-none p-2"
                   placeholder="Enter Link"
                 />

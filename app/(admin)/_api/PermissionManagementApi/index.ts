@@ -2,8 +2,6 @@
 import axiosInstance from "@/lib/AxiosInstance";
 import { revalidateTag } from "next/cache";
 
-
-
 // create single Parent Permission api
 export const createParentPermission = async (data: any) => {
   try {
@@ -78,6 +76,37 @@ export const getAllPermission = async () => {
 
     return res.json();
   } catch (error) {
+    return error;
+  }
+};
+
+export const updatePermission = async (data: any) => {
+  try {
+    const response = await axiosInstance.post("/update/permission", data, {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    revalidateTag("get-permissions");
+    revalidateTag("get-parentWith-permissions");
+    return response.data;
+  } catch (error) {
+    return error;
+  }
+};
+
+export const permissionWithParentDelete = async (id: number) => {
+  try {
+    const response = await axiosInstance.delete(`/permission/delete/${id}`, {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    revalidateTag("get-permissions");
+    revalidateTag("get-parentWith-permissions");
+    return response.data;
+  } catch (error) {
+    console.log(error);
     return error;
   }
 };

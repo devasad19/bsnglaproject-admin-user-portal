@@ -61,19 +61,6 @@ const Home = ({ params }) => {
   const handleInputChange = (e) => {
     const { name, value, type, checked } = e.target;
     let newValue = type === "checkbox" ? checked : value;
-
-    // if (name.includes("limit")) {
-    //   const index = parseInt(name.split("[")[1].split("]")[0], 10);
-    //   const updatedLimits = [...formData.limits];
-    //   updatedLimits[index] = newValue;
-    //   newValue = updatedLimits;
-    // } else if (name.includes("validaty")) {
-    //   const index = parseInt(name.split("[")[1].split("]")[0], 10);
-    //   const updatedValidities = [...formData.validities];
-    //   updatedValidities[index] = newValue;
-    //   newValue = updatedValidities;
-    // }
-
     setFormData((prevData) => ({
       ...prevData,
       [name]: newValue,
@@ -87,8 +74,6 @@ const Home = ({ params }) => {
     }));
   };
 
-  
-
   useEffect(() => {
     setIsLoading(true);
     const featureByService = async () => {
@@ -101,6 +86,7 @@ const Home = ({ params }) => {
     featureByService().then(
       (data) => (setIsLoading(false), setFeatures(data?.data))
     );
+    setIsLoading(false);
   }, [params?.id, refesh]);
 
   useEffect(() => {
@@ -208,7 +194,6 @@ const Home = ({ params }) => {
     });
   };
 
-
   const handleUpdateFeature = async (e) => {
     e.preventDefault();
     let f_name = e.target.feature_name.value;
@@ -247,7 +232,6 @@ const Home = ({ params }) => {
       uploadData
     );
 
-
     if (featureUpdateData?.status === true) {
       setRefesh(!refesh);
       toast.success("Feature Updated Successfully");
@@ -257,58 +241,38 @@ const Home = ({ params }) => {
     }
   };
 
+  // console.log({service});
+
   return (
     <>
       <section>
-        <div className="flex items-start gap-12">
-          {isLoading ? (
-            <div className="flex flex-col lg:flex-row lg:items-center gap-2">
-              <Skeleton
-                circle={true}
-                height={64}
-                width={64}
-                className="h-16 w-16 lg:h-[5em] lg:w-[5em]" // Responsive sizes using Tailwind units
-              />
-              <div className="lg:pl-2 flex-1">
-                <div className="w-full lg:w-[70%]">
-                  {" "}
-                  {/* Full width on small screens, 70% on large screens */}
-                  <Skeleton height={8} width="100%" className="mb-2" />{" "}
-                  {/* Adjust widths using percentages */}
-                  <Skeleton height={8} width="85%" className="mb-2" />{" "}
-                  {/* Widths adapt based on container */}
-                  <Skeleton height={8} width="90%" className="mb-1" />
-                  <Skeleton height={8} width="75%" />
-                </div>
-              </div>
+        <div className="flex items-center gap-12">
+          <div className="flex flex-col lg:flex-row lg:items-center gap-1 lg:gap-2">
+            <Image
+              src={`${process.env.NEXT_PUBLIC_IMAGE_URL}${service?.logo || ""}`}
+              className="w-16 h-16 lg:h-[5em] lg:w-[5em] pb-2"
+              width={1000}
+              height={1000}
+              alt="Bangla"
+            />
+            <div className="lg:pl-2">
+              <h1 className="text-18 font-mono font-bold text-[#151D48]">
+                {service?.name}
+              </h1>
+              <p className="pb-5 text-14 text-justify"  dangerouslySetInnerHTML={{ __html: service?.description }}>
+                
+              </p>
             </div>
-          ) : (
-            <div className="flex flex-col lg:flex-row lg:items-center gap-1 lg:gap-2">
-              <Image
-                src={`${process.env.NEXT_PUBLIC_IMAGE_URL}${
-                  service?.img || ""
-                }`}
-                className="w-16 h-16 lg:h-[5em] lg:w-[5em] pb-2"
-                width={1000}
-                height={1000}
-                alt="Bangla"
-              />
-              <div className="lg:pl-2">
-                <h1 className="text-18 font-mono font-bold text-[#151D48]">
-                  {service?.name}
-                </h1>
-                <p className="pb-5 text-14 text-justify">{service?.des}</p>
-              </div>
-            </div>
-          )}
-          <button
+          </div>
+
+          {/* <button
             onClick={() => setServiceStatus(!serviceStatus)}
             className={`px-2 py-1 lg:px-4 lg:py-2 text-white active:scale-90 transition-all duration-400 rounded-md ${
               serviceStatus ? "bg-green-500" : "bg-gray-500"
             }`}
           >
             {serviceStatus ? "Active" : "Inactive"}
-          </button>
+          </button> */}
         </div>
         <div className="pb-5">
           <div className="flex flex-col lg:flex-row lg:items-center justify-end pb-5">
@@ -351,8 +315,8 @@ const Home = ({ params }) => {
                         </td>
                       </tr>
                     )}
-                    {features.length > 0 ? (
-                      features.map((feature, featureIndex) => {
+                    {features?.length > 0 ? (
+                      features?.map((feature, featureIndex) => {
                         // Parse plans data
                         const plans = JSON.parse(feature?.plans || "[]");
                         const limits = plans.map((plan) => plan.limit);

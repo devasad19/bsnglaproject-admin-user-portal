@@ -27,6 +27,9 @@ const Home = (): JSX.Element => {
     };
     loadPayments();
   }, [page, limit]);
+
+  console.log({payments});
+  
  
   return (
     <section>
