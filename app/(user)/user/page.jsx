@@ -22,10 +22,10 @@ const Home = async () => {
   return (
     <div class="flex flex-col flex-grow">
      
-    <header class="bg-white shadow p-4 flex justify-between items-center">
+    <header class="bg-white shadow p-6 flex justify-between items-center">
       <h1 class="text-xl font-bold">Welcome {user ? user?.name : ""}</h1>
       <div class="flex items-center space-x-4">
-        <input
+        {/* <input
           type="text"
           placeholder="Search..."
           class="border border-gray-300 rounded-lg px-4 py-2 focus:ring focus:ring-primary"
@@ -35,7 +35,7 @@ const Home = async () => {
             🔔
           </button>
           <span class="absolute top-0 right-0 bg-danger text-white text-xs rounded-full px-1">5</span>
-        </div>
+        </div> */}
       </div>
     </header>
 
