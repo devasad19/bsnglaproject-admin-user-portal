@@ -113,7 +113,7 @@ const Home = ({ params: { id } }) => {
         />
         <div>
           <h3 className="text-20 font-medium"> {service?.name || ""}</h3>
-          <p>{service?.description || ""}</p>
+          <p dangerouslySetInnerHTML={{ __html: service?.description }}></p>
         </div>
       </div>
       <div className="max-[768px]:w-[165vw] lg:w-auto flex justify-center items-center overflow-x-auto">
