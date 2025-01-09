@@ -10,7 +10,10 @@ const Button = dynamic(() => import("@/app/_components/Button/Button"), {
 import { getCitizenList, updateCitizenTypes } from "../../_api";
 import { FaRegEdit } from "react-icons/fa";
 import { FaTrashAlt } from "react-icons/fa";
-import { getUserTypesActives, getUserTypest } from "../../_api/MangeUserTypeApi";
+import {
+  getUserTypesActives,
+  getUserTypest,
+} from "../../_api/MangeUserTypeApi";
 import Modal from "@/app/_components/Modal/Modal";
 import { toast } from "react-toastify";
 import Link from "next/link";
@@ -60,7 +63,7 @@ const Home = (): JSX.Element => {
     if (id) {
       setUserEditId(id);
       modelOpen(userTypeModal);
-      const users:any = citizen.find((item: any) => item?.id === id);
+      const users: any = citizen.find((item: any) => item?.id === id);
       setUpdateUser({
         citizen_type_id: users?.citizen_type_id,
         status: users?.status,
@@ -96,9 +99,8 @@ const Home = (): JSX.Element => {
     }
   };
 
-  // console.log({updateUser});
+  console.log({ citizen });
   // console.log({citizenTypes});
-  
 
   return (
     <>
@@ -130,13 +132,25 @@ const Home = (): JSX.Element => {
                     <td>
                       <div className="flex items-center justify-center">
                         <div className="flex flex-col text-left">
-                          <img
-                            className="rounded-full"
-                            width="50"
-                            height="50"
-                            src={relative_image_path("demo_profile.png")}
-                            alt=""
-                          />
+                          {item?.photo ? (
+                            <Image
+                              className="rounded-full w-[50px] h-[50px]"
+                              width={50}
+                              height={50}
+                              src={
+                                process.env.NEXT_PUBLIC_IMAGE_URL + item?.photo
+                              }
+                              alt="user"
+                            />
+                          ) : (
+                            <Image
+                              className="rounded-full w-[50px] h-[50px]"
+                              width={50}
+                              height={50}
+                              src={relative_image_path("demo_profile.png")}
+                              alt="user"
+                            />
+                          )}
                         </div>
                       </div>
                     </td>
@@ -153,11 +167,31 @@ const Home = (): JSX.Element => {
                     <td>{item?.phone}</td>
                     <td>{item?.citizen_type?.name_en ?? ""}</td>
                     <td className="font-medium text-13">
-                      {item?.citizen_info?.status === 0
+                      <span
+                        className={`px-2 py-1 rounded-md ${
+                          item?.citizen_info?.status === 0
+                            ? "bg-yellow-500 text-white"
+                            : "bg-green-500 text-white"
+                        }`}
+                      >
+                        {item?.citizen_info?.status === 0
+                          ? "Pending"
+                          : "Approved"}
+                      </span>
+                      {/* {item?.citizen_info?.status === 0
                         ? "Pending"
-                        : "Approved"}
+                        : "Approved"} */}
                     </td>
-                    <td>{item?.status === 1 ? "Active" : "Inactive"}</td>
+                    <td>
+                      <span
+                        className={`${
+                          item?.status == 0 ? "text-red-500" : "text-primary"
+                        }`}
+                      >
+                        
+                        {item?.status == 1 ? "Active" : "Inactive"}
+                      </span>
+                    </td>
                     <td className="px-2">
                       <div className="flex justify-center items-center">
                         <button
@@ -236,15 +270,13 @@ const Home = (): JSX.Element => {
                 disabled={isLoading ? true : false}
               >
                 {citizenTypes?.map((item: any, index: any) => {
-                  console.log({item});
-                  
+                  console.log({ item });
+
                   return (
                     <option
                       key={index}
                       value={item?.id}
-                      selected={
-                        updateUser?.citizen_type_id == item?.id
-                      }
+                      selected={updateUser?.citizen_type_id == item?.id}
                     >
                       {item?.name_en}
                     </option>
@@ -262,8 +294,12 @@ const Home = (): JSX.Element => {
                 </label>
               </legend>
               <select name="status" id="" className="w-full bg-white py-2">
-                <option value={1} selected={updateUser?.status == 1}>Active</option>
-                <option value={0} selected={updateUser?.status == 0}>Inactive</option>
+                <option value={1} selected={updateUser?.status == 1}>
+                  Active
+                </option>
+                <option value={0} selected={updateUser?.status == 0}>
+                  Inactive
+                </option>
               </select>
             </fieldset>
           </div>
