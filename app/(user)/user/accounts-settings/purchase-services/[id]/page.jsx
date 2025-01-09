@@ -21,13 +21,15 @@ const Home = ({ params: { id } }) => {
   useEffect(() => {
     getServicePurchaseHistory(user?.id)
       .then((response) => {
+        console.log('payment history response: ', response?.data);
+        
         setData(response?.data);
         setLoading(false);
       })
       .catch((error) => console.log(error));
-  }, [user]);
+  }, [user,id]);
 
-  console.log('payment history response: ', data, id);
+  // console.log('payment history response: ', data, id);
 
 
   return (
@@ -88,7 +90,7 @@ const Home = ({ params: { id } }) => {
                         <tr key={index} className="h-12">
                           <td>
                             {
-                              item?.feature?.name
+                              item?.service?.name
                             }
                           </td>
                           <td>
