@@ -281,3 +281,22 @@ export const replaceSpaces = (str) => {
 export const replaceUnderscore = (str) => {
   return str.replaceAll("_", " ");
 }
+
+
+export const formatDate = (dateString) => {
+  const date = new Date(dateString);
+
+  const day = String(date.getDate()).padStart(2, '0'); // 01, 02, ...
+  const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+  const month = monthNames[date.getMonth()]; // Jan, Feb, ...
+  const year = date.getFullYear(); // 2025
+
+  const hours = date.getHours();
+  const minutes = String(date.getMinutes()).padStart(2, '0'); // 00, 01, ...
+  const seconds = String(date.getSeconds()).padStart(2, '0'); // 00, 01, ...
+  const ampm = hours >= 12 ? "PM" : "AM";
+
+  const formattedHours = hours % 12 || 12; // Convert 24-hour to 12-hour format
+
+  return `${day}-${month}-${year}, ${formattedHours}:${minutes}:${seconds} ${ampm}`;
+};

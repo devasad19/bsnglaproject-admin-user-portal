@@ -27,6 +27,7 @@ const ManageUserTypeList = ({ userType }: any) => {
   const updateModelForm = useRef<any>(null);
   const permissionModal = useRef<any>(null);
   const permissionModalForm = useRef<any>(null);
+  
   const [error, setError] = useState<any>({
     bnName: "",
     enName: "",
@@ -35,6 +36,13 @@ const ManageUserTypeList = ({ userType }: any) => {
   const [selectFeatureName, setSelectFeatureName] = useState<number[]>([]);
   const [featureNames, setFeatureName] = useState<TFeatureName[]>([]);
   const [typeId, setTypeId] = useState(0);
+  const [userTypeSingle, setUserTypeSingle] = useState<any>({
+    id: 0,
+    name_bn: "",
+    name_en: "",
+    status: "",
+  });
+  const [permissionName, setPermissionName] = useState<any>(null);
 
   const fetchFeatureName = async () => {
     const featureNameData = await allFeaturesName();
@@ -75,9 +83,15 @@ const ManageUserTypeList = ({ userType }: any) => {
   const handleEdit = async (id: number) => {
     if (id) {
       try {
-        const singleUserType = await getUserType(id);
-        if (singleUserType?.status) {
-          setSingleUserTypeInfo(singleUserType?.data);
+        const findUser = userType.find((item: any) => item.id == id);
+        if (findUser) {
+          setUserTypeSingle({
+            id: findUser?.id,
+            name_bn: findUser.name_bn,
+            name_en: findUser?.name_en,
+            status: findUser?.status,
+          })
+          // setSingleUserTypeInfo(singleUserType?.data);
           modelOpen(updateModal, updateModelForm);
         } else {
           toast.error("Failed to get user type");
@@ -94,7 +108,8 @@ const ManageUserTypeList = ({ userType }: any) => {
         console.log(err)
       );
       setTypeId(id);
-      // console.log({singlePermission});
+      console.log({singlePermission});
+      setPermissionName(singlePermission?.data.name_en);
 
       setSelected(singlePermission?.data?.charge);
       setValue("discount", singlePermission?.data?.discount);
@@ -113,9 +128,9 @@ const ManageUserTypeList = ({ userType }: any) => {
 
   const handleUpdateUserType = async (e: any) => {
     e.preventDefault();
-    const name_bn = e.target.bnName.value;
-    const name_en = e.target.enName.value;
-    const status = e.target.status.value;
+    const name_bn = userTypeSingle?.name_bn;
+    const name_en = userTypeSingle?.name_en;
+    const status = userTypeSingle?.status;
     if (name_bn === "" || name_en === "") {
       setError({
         bnName: "Name is required",
@@ -142,7 +157,7 @@ const ManageUserTypeList = ({ userType }: any) => {
 
     try {
       const data = {
-        id: singleUserTypeInfo?.id,
+        id: userTypeSingle?.id,
         name_bn,
         name_en,
         status,
@@ -225,6 +240,7 @@ const ManageUserTypeList = ({ userType }: any) => {
       Swal.fire("Error!", "Something went wrong.", "error");
     }
   };
+  
 
   return (
     <>
@@ -283,7 +299,7 @@ const ManageUserTypeList = ({ userType }: any) => {
                     </td>
                     <td className="text-center border-r border-gray-200">1</td>
                     <td className="text-center border-r border-gray-200">
-                      {item?.status === "1" ? (
+                      {item?.status == "1" ? (
                         <span className="bg-green-500 text-white px-2 py-1 rounded-md">
                           Active
                         </span>
@@ -355,7 +371,7 @@ const ManageUserTypeList = ({ userType }: any) => {
       <Modal
         modalRef={updateModal}
         modalForm={updateModelForm}
-        title="প্যারেন্ট অনুমতির নাম আপডেট করুন"
+        title="Update Parent Name"
       >
         <form
           onSubmit={handleUpdateUserType}
@@ -375,7 +391,14 @@ const ManageUserTypeList = ({ userType }: any) => {
               <input
                 name="bnName"
                 type="text"
-                defaultValue={singleUserTypeInfo?.name_bn}
+                // defaultValue={singleUserTypeInfo?.name_bn}
+                value={userTypeSingle?.name_bn}
+                onChange={(e) => {
+                  setUserTypeSingle({
+                    ...userTypeSingle,
+                    name_bn: e.target.value,
+                  });
+                }}
                 placeholder="Name (Bangle)"
                 className="outline-none p-1 mb-2"
               />
@@ -396,7 +419,14 @@ const ManageUserTypeList = ({ userType }: any) => {
                 </label>
               </legend>
               <input
-                defaultValue={singleUserTypeInfo?.name_en}
+                // defaultValue={singleUserTypeInfo?.name_en}
+                value={userTypeSingle?.name_en}
+                onChange={(e) => {
+                  setUserTypeSingle({
+                    ...userTypeSingle,
+                    name_en: e.target.value,
+                  });
+                }}
                 name="enName"
                 id="enName"
                 type="text"
@@ -422,12 +452,19 @@ const ManageUserTypeList = ({ userType }: any) => {
                 name="status"
                 id="status"
                 className="outline-none p-1 mb-2"
+                value={userTypeSingle?.status}
+                onChange={(e) => {
+                  setUserTypeSingle({
+                    ...userTypeSingle,
+                    status: e.target.value,
+                  });
+                }}
               >
-                <option value="1" selected={singleUserTypeInfo?.status == 1}>
+                <option value="1" selected={userTypeSingle?.status == 1}>
                   Active
                 </option>
-                <option value="0" selected={singleUserTypeInfo?.status == 0}>
-                  Directive
+                <option value="0" selected={userTypeSingle?.status == 0}>
+                  Inactive
                 </option>
               </select>
             </fieldset>
@@ -457,8 +494,12 @@ const ManageUserTypeList = ({ userType }: any) => {
       <Modal
         modalRef={permissionModal}
         modalForm={permissionModalForm}
-        title="Manage Citizen Type Permissions"
+        title={`Citizen Type Permission Manage`}
       >
+        <div>
+          <h2 className="text-16 font-bold py-3">Citizen Type : {permissionName}</h2>
+        
+
         <form onSubmit={handleSubmit(HandleCitizenPermission)}>
           <div>
             <table className="border w-full">
@@ -642,6 +683,7 @@ const ManageUserTypeList = ({ userType }: any) => {
             </button>
           </div>
         </form>
+        </div>
       </Modal>
     </>
   );

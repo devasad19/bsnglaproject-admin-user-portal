@@ -978,6 +978,33 @@ const UpdateServiceDetailsResourceNew = ({
                     )}
                   </div>
 
+                 
+                  <div className="py-2">
+                    <p>Left Side Description:</p>
+                    <CustomEditor
+                      onChange={(e, editor) =>
+                        setFormData({
+                          ...formData,
+                          infoSection: formData?.infoSection?.map((item, i) =>
+                            i === index
+                              ? { ...item, left_description: editor.getData() }
+                              : item
+                          ),
+                        })
+                      }
+                      data={
+                        item?.left_description == "null"
+                          ? ""
+                          : item?.left_description
+                      }
+                    />
+
+                    {error?.infoSection?.right_description?.status && (
+                      <p className="text-red-500 text-12 px-2 pt-1">
+                        {error?.infoSection?.right_description?.message}
+                      </p>
+                    )}
+                  </div>
                   <div>
                     <p>Right Side Description:</p>
                     <CustomEditor
@@ -1004,33 +1031,6 @@ const UpdateServiceDetailsResourceNew = ({
                       </p>
                     )}
                   </div>
-                  <div>
-                    <p>Left Side Description:</p>
-                    <CustomEditor
-                      onChange={(e, editor) =>
-                        setFormData({
-                          ...formData,
-                          infoSection: formData?.infoSection?.map((item, i) =>
-                            i === index
-                              ? { ...item, left_description: editor.getData() }
-                              : item
-                          ),
-                        })
-                      }
-                      data={
-                        item?.left_description == "null"
-                          ? ""
-                          : item?.left_description
-                      }
-                    />
-
-                    {error?.infoSection?.right_description?.status && (
-                      <p className="text-red-500 text-12 px-2 pt-1">
-                        {error?.infoSection?.right_description?.message}
-                      </p>
-                    )}
-                  </div>
-
                   <div className="flex gap-2">
                     <div>
                       <p>Right Side Image:</p>

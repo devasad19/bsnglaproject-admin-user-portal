@@ -70,9 +70,7 @@ const Home = ({ params }) => {
 
   return (
     <>
-      {/* {loading ? (
-        <PaymentHisSkeleton />
-      ) : ( */}
+      
       <section>
         {data && plan ? (
           <div className="w-full">

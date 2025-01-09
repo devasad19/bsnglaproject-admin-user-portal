@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { getUserFeedBacks } from "../../_api/comments";
 import TableSkeleton from "@/app/_components/TableSkeleton/TableSkeleton";
+import { formatDate } from "@/helper";
 
 const Home = () => {
   const [data, setData] = useState();
@@ -90,7 +91,7 @@ const Home = () => {
                       </div>
                     </td>
                     <td className="pl-2 border border-gray-500">
-                      {item?.created_at}
+                      {formatDate(item?.created_at)}
                     </td>
                   </tr>
                 ))

@@ -27,7 +27,7 @@ const SystemUserList = ({ users, rolesList }: any) => {
     status: "",
     id: "",
   });
-  // console.log({ rolesList });
+  console.log({ users });
 
   const {
     register,
@@ -44,10 +44,12 @@ const SystemUserList = ({ users, rolesList }: any) => {
         email,
         phone,
         role_id: role,
-        status: 1,
+        // status: 1,
         password,
         password_confirmation: c_password,
       };
+      // console.log({ submitValue });
+      
       const resUser = await createUserApi(submitValue);
       // console.log({ resUser });
 
@@ -190,6 +192,7 @@ const SystemUserList = ({ users, rolesList }: any) => {
                   <th>SL</th>
                   <th>User Name</th>
                   <th>Phone</th>
+                  <th>Designation</th>
                   <th>Status</th>
                   <th>Action</th>
                 </tr>
@@ -221,6 +224,7 @@ const SystemUserList = ({ users, rolesList }: any) => {
                         </div>
                       </td>
                       <td>{item?.phone}</td>
+                      <td>{item?.role?.name || ""}</td>
                       <td className={`font-medium text-13 ${item?.status == 0 ? "text-red-500" : "text-green-500"}`}>
                         {item?.status == 1 ? "Active" : "Inactive"}
                       </td>

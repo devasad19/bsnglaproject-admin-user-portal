@@ -1,31 +1,34 @@
-
 export const revalidate = 3600;
 
 import dynamic from "next/dynamic";
 import { cookies } from "next/headers";
-const BarChart = dynamic(() => import("@/app/_components/Chart/BarChart/BarChart"));
-const LineChart = dynamic(() => import("@/app/_components/Chart/LineChart/LineChart"));
+const BarChart = dynamic(() =>
+  import("@/app/_components/Chart/BarChart/BarChart")
+);
+const LineChart = dynamic(() =>
+  import("@/app/_components/Chart/LineChart/LineChart")
+);
 import { getDashboardStats } from "../_api";
 import Link from "next/link";
-
 
 const Home = async () => {
   let user;
   const userinfo = cookies().get("user");
   if (!userinfo) {
-    typeof window != undefined ? window.location.href = "/" : " ";
+    typeof window != undefined ? (window.location.href = "/") : " ";
   } else {
-    user = typeof userinfo != undefined ? JSON.parse(userinfo?.value) : '';
+    user = typeof userinfo != undefined ? JSON.parse(userinfo?.value) : "";
   }
-  const stats = await getDashboardStats(user?.id).then((res) => res?.data).catch((err) => console.log(err));
+  const stats = await getDashboardStats(user?.id)
+    .then((res) => res?.data)
+    .catch((err) => console.log(err));
 
   return (
     <div class="flex flex-col flex-grow">
-     
-    <header class="bg-white shadow p-4 flex justify-between items-center">
-      <h1 class="text-xl font-bold">Welcome {user ? user?.name : ""}</h1>
-      <div class="flex items-center space-x-4">
-        <input
+      <header class="bg-white shadow p-6 flex justify-between items-center">
+        <h1 class="text-xl font-bold">Welcome {user ? user?.name : ""}</h1>
+        <div class="flex items-center space-x-4">
+          {/* <input
           type="text"
           placeholder="Search..."
           class="border border-gray-300 rounded-lg px-4 py-2 focus:ring focus:ring-primary"
@@ -35,58 +38,61 @@ const Home = async () => {
             🔔
           </button>
           <span class="absolute top-0 right-0 bg-danger text-white text-xs rounded-full px-1">5</span>
+        </div> */}
         </div>
-      </div>
-    </header>
+      </header>
 
-     
-    <main class="p-6 space-y-6">
-     
-      <section class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-      <Link href={{
-          pathname: "/user/accounts-settings/purchase-services"
-              }} >
-        <div class="bg-white rounded-lg shadow-lg p-6 flex items-center space-x-6">
-          <div class="p-4 bg-primary text-white rounded-full">
-            📊
-          </div>
-          <div>
-            <h3 class="text-lg font-semibold">Active Services</h3>
-            <p class="text-2xl font-bold text-gray-700">{stats?.activeServices}</p>
-          </div>
-        </div>
-        </Link>
-
-        <Link href={{
-          pathname: "/user/accounts-settings/payment-history"
-              }} > 
-        <div class="bg-white rounded-lg shadow-lg p-6 flex items-center space-x-6">
-          <div class="p-4 bg-secondary text-white rounded-full">
-            💰
-          </div>
-          <div>
-            <h3 class="text-lg font-semibold">Total Payments</h3>
-            <p class="text-2xl font-bold text-gray-700">{stats?.totalPayments}</p>
-          </div>
-        </div>
-        </Link>
-
-        <Link href={{
-          pathname: "/user/comment"
-              }} >
-          <div class="bg-white rounded-lg shadow-lg p-6 flex items-center space-x-6">
-            <div class="p-4 bg-accent text-white rounded-full">
-            👥
+      <main class="p-6 space-y-6">
+        <section class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <Link
+            href={{
+              pathname: "/user/accounts-settings/purchase-services",
+            }}
+          >
+            <div class="bg-white rounded-lg shadow-lg p-6 flex items-center space-x-6">
+              <div class="p-4 bg-primary text-white rounded-full">📊</div>
+              <div>
+                <h3 class="text-lg font-semibold">Active Services</h3>
+                <p class="text-2xl font-bold text-gray-700">
+                  {stats?.activeServices}
+                </p>
+              </div>
             </div>
-            <div>
-              <h3 class="text-lg font-semibold">My Feedbacks</h3>
-              <p class="text-2xl font-bold text-gray-700">{stats?.feedbacks}</p>
-            </div>
-          </div>
-        </Link>
+          </Link>
 
-       
-        {/* <div class="bg-white rounded-lg shadow-lg p-6 flex items-center space-x-6">
+          <Link
+            href={{
+              pathname: "/user/accounts-settings/payment-history",
+            }}
+          >
+            <div class="bg-white rounded-lg shadow-lg p-6 flex items-center space-x-6">
+              <div class="p-4 bg-secondary text-white rounded-full">💰</div>
+              <div>
+                <h3 class="text-lg font-semibold">Total Payments</h3>
+                <p class="text-2xl font-bold text-gray-700">
+                  {stats?.totalPayments}
+                </p>
+              </div>
+            </div>
+          </Link>
+
+          <Link
+            href={{
+              pathname: "/user/comment",
+            }}
+          >
+            <div class="bg-white rounded-lg shadow-lg p-6 flex items-center space-x-6">
+              <div class="p-4 bg-accent text-white rounded-full">👥</div>
+              <div>
+                <h3 class="text-lg font-semibold">My Feedbacks</h3>
+                <p class="text-2xl font-bold text-gray-700">
+                  {stats?.feedbacks}
+                </p>
+              </div>
+            </div>
+          </Link>
+
+          {/* <div class="bg-white rounded-lg shadow-lg p-6 flex items-center space-x-6">
           <div class="p-4 bg-danger text-white rounded-full">
             ⚠️
           </div>
@@ -95,25 +101,20 @@ const Home = async () => {
             <p class="text-2xl font-bold text-gray-700">12</p>
           </div>
         </div> */}
-      </section>
+        </section>
 
-      
-      <section class="bg-white shadow-lg rounded-lg p-6">
-        <h2 class="text-xl font-bold mb-4">Analytics Overview</h2>
-        <div class="h-64 bg-gray-200 rounded-lg flex items-center justify-center text-gray-600">
-          <p>Graph/Chart Placeholder</p>
-        </div>
-      </section>
-    </main>
-  </div>
+        <section class="bg-white shadow-lg rounded-lg p-6">
+          <h2 class="text-xl font-bold mb-4">Analytics Overview</h2>
+          <div class="h-64 bg-gray-200 rounded-lg flex items-center justify-center text-gray-600">
+            <p>Graph/Chart Placeholder</p>
+          </div>
+        </section>
+      </main>
+    </div>
   );
 };
 
 export default Home;
-
-
-
-
 
 // export const revalidate = 3600;
 
@@ -123,7 +124,6 @@ export default Home;
 // const LineChart = dynamic(() => import("@/app/_components/Chart/LineChart/LineChart"));
 // import { getDashboardStats } from "../_api";
 // import Link from "next/link";
-
 
 // const Home = async () => {
 //   let user;

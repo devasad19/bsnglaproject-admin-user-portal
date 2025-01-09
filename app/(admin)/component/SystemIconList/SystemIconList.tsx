@@ -149,6 +149,7 @@ const SystemIconList = ({ systemIconData }: any) => {
                         <td>{index + 1}</td>
                         <td>{item?.name || ""}</td>
                         <td>
+                          <div className="flex items-center justify-center">
                           {item?.icon && (
                             <Image
                               className="w-[50px] h-[50px] object-cover"
@@ -161,6 +162,7 @@ const SystemIconList = ({ systemIconData }: any) => {
                               alt="icon"
                             />
                           )}
+                          </div>
                         </td>
                         <td>
                           <span

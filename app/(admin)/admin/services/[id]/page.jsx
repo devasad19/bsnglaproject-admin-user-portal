@@ -241,7 +241,7 @@ const Home = ({ params }) => {
     }
   };
 
-  // console.log({service});
+  console.log({service});
 
   return (
     <>

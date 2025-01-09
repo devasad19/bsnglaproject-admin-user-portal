@@ -1,7 +1,7 @@
 export const revalidate = 3600;
 
 import { getAdminAllFeedBacks, getUserFeedBacks } from "../../_api";
-import { dateName } from "@/helper";
+import { dateName, formatDate } from "@/helper";
 
 const Home = async () => {
   let data = [];
@@ -28,7 +28,7 @@ const Home = async () => {
           <div className="w-full overflow-x-auto">
             <table className="w-full text-left ">
               <thead className="h-16 ">
-                <tr>
+                <tr className="border-b border-gray-500 h-12">
                   <th className="pl-2 w-10">SL</th>
                   <th className="pl-2 w-40">Service Name</th>
                   <th className="pl-2 w-52">User Name</th>
@@ -82,7 +82,7 @@ const Home = async () => {
                       </td>
                       <td className="pl-2 border border-gray-500">
                         {
-                          item?.created_at?.slice(0, 10)
+                          formatDate(item?.created_at)
                         }
                       </td>
                     </tr>
