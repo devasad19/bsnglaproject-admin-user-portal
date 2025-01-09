@@ -13,7 +13,7 @@ type TContextType = {
   user: TUser | {};
 };
 
-export const MyContext = createContext<TContextType | undefined>(undefined);
+export const MyContext = createContext<TContextType | null>(null);
 
 const ContextProvider = ({ children }: any) => {
   const [featureSelectedInfoAll, setFeatureSelectedInfoAll] = useState<any>([]);

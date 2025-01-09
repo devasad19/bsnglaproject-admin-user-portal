@@ -8,7 +8,7 @@ interface HomeContextType {
   login: () => void;
 }
 
-const HomeContext = createContext<HomeContextType | undefined>(undefined);
+const HomeContext = createContext<HomeContextType | null>(null);
 
 export default function HomeContextProvider({ children }: any) {
   /***********************************/

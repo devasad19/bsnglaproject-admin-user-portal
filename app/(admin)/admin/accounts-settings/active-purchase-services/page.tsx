@@ -63,13 +63,7 @@ const PurchaaseSoldServicePage = () => {
                     </span>
                   </td>
                   <td className="px-2">
-                    <Link
-                      href={{
-                        pathname: `/admin/services/${item?.id}`,
-                      }}
-                      className="flex items-center gap-2 text-14"
-                      shallow
-                    >
+                    <div className="flex items-center gap-2 text-14">
                       <span className="flex items-center gap-3">
                         <Image
                           className="w-10 h-10 rounded-md"
@@ -85,7 +79,7 @@ const PurchaaseSoldServicePage = () => {
                           : item?.name.substring(0, 15) + "..."} */}
                         {item?.service?.name || " "}
                       </span>
-                    </Link>
+                    </div>
                   </td>
                   <td className="text-center">
                     <div

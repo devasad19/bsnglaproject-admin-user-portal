@@ -19,7 +19,7 @@ const ProfileContainer = ({ citizen, userTypes, grade }) => {
     photo: citizen?.photo,
     type: userTypes?.find(
       (item) => item?.id == citizen?.citizen_info?.citizen_type_id
-    )?.slug,
+    )?.name_en,
     teamSize: citizen?.citizen_info?.team_size ?? "",
     companyUrl: citizen?.citizen_info?.company_url ?? "",
     govt: {
@@ -41,6 +41,8 @@ const ProfileContainer = ({ citizen, userTypes, grade }) => {
       (item) => item?.id == citizen?.citizen_info?.citizen_type_id
     )
   );
+  // console.log({userTypes});
+  
 
   const HandleUpdate = async () => {
     setLoading(true);
@@ -274,7 +276,7 @@ const ProfileContainer = ({ citizen, userTypes, grade }) => {
                       })}
                     </select>
                   ) : (
-                    <p>{formInputs?.type}</p>
+                    formInputs?.type ? formInputs?.type : "N/A"
                   )}
                 </div>
               </div>

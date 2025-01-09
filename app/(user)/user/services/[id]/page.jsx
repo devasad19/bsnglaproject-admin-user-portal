@@ -99,7 +99,45 @@ const Home = ({ params: { id } }) => {
     setTotalPrice(initialTotalPrice || 0);
   }, [features]);
 
-  console.log('service: ', service );
+  const handlePayment = (id)=>{
+    // if (!user) {
+    //   toast.warn("Please login first");
+    //   setIsLoading(false);
+    //   return;
+    // }
+
+    // const { name, email, phone, address, division, zila, thana, companyUrl } =
+    //   data;
+
+    let plans = [];
+
+    if (featureSelectedInfoAll.length > 0) {
+      plans = featureSelectedInfoAll.map((item) => ({
+        id: item?.selectIndexFeatureData?.id,
+        name: item?.selectIndexFeatureData?.name,
+        data: item?.planName,
+        price: item?.price,
+        unit: item?.selectIndexFeatureData?.unit,
+      }));
+    }
+    const orderInfo = {
+      user_id: user?.id,
+      service_id: id,
+      plans,
+      total: featureTotalPrice,
+      offer: "",
+      discount: 0,
+      status: 1,
+    };
+  }
+
+  // console.log({activePlans,selectedPrices,selectedFeatureInfo});
+  
+  
+
+  // console.log("service: ", service);
+  // console.log("features: ", features);
+  // console.log("orderData: ", orderData);
 
   return (
     <section>
@@ -142,38 +180,39 @@ const Home = ({ params: { id } }) => {
                           </div>
                         </td>
 
-                        {plans.length > 0
-                          ? plans?.map((pItem, planIndex) => {
-                              let isSelected =
-                                activePlans[fIndex] === planIndex;
-                              return (
-                                <td
-                                  key={planIndex}
-                                  className="border border-gray-200 w-12 h-28"
-                                >
-                                  <div className="text-center flex items-center justify-center">
-                                    <h1
-                                      onClick={() =>
-                                        handlePlanClick(
-                                          fIndex,
-                                          pItem?.validaty || 0,
-                                          planIndex,
-                                          pItem?.limit || 0
-                                        )
-                                      }
-                                      className={`text-16 font-semibold w-20 h-20 border ${
-                                        isSelected
-                                          ? "border-primary"
-                                          : "border-gray-200"
-                                      } rounded-full flex items-center justify-center cursor-pointer`}
-                                    >
-                                      {pItem?.limit + " " + fItem?.unit}
-                                    </h1>
-                                  </div>
-                                </td>
-                              );
-                            })
-                          : (<span className="text-center">No Data</span>)}
+                        {plans.length > 0 ? (
+                          plans?.map((pItem, planIndex) => {
+                            let isSelected = activePlans[fIndex] === planIndex;
+                            return (
+                              <td
+                                key={planIndex}
+                                className="border border-gray-200 w-12 h-28"
+                              >
+                                <div className="text-center flex items-center justify-center">
+                                  <h1
+                                    onClick={() =>
+                                      handlePlanClick(
+                                        fIndex,
+                                        pItem?.validaty || 0,
+                                        planIndex,
+                                        pItem?.limit || 0
+                                      )
+                                    }
+                                    className={`text-16 font-semibold w-20 h-20 border ${
+                                      isSelected
+                                        ? "border-primary"
+                                        : "border-gray-200"
+                                    } rounded-full flex items-center justify-center cursor-pointer`}
+                                  >
+                                    {pItem?.limit + " " + fItem?.unit}
+                                  </h1>
+                                </div>
+                              </td>
+                            );
+                          })
+                        ) : (
+                          <span className="text-center">No Data</span>
+                        )}
 
                         {Array.from({
                           length: maxPlanLength - plans.length,
@@ -211,7 +250,7 @@ const Home = ({ params: { id } }) => {
                 <div className="w-[40%] flex items-center justify-center">
                   <h1 className="text-16 font-semibold">
                     {updatedTotalAmount}{" "}
-                    <button className="mt-1 bg-primary text-white rounded px-2 py-1">
+                    <button onClick={()=>handlePayment(id)} className="mt-1 bg-primary text-white rounded px-2 py-1">
                       Update
                     </button>
                   </h1>
