@@ -41,6 +41,7 @@ const SystemIconList = ({ systemIconData }: any) => {
       if (response?.status) {
         toast.success("Icon Created Successfully");
         modelClose(addModal, addModelForm);
+        setIconData(null);
         reset();
       } else {
         toast.error("Icon Created Failed");
@@ -419,7 +420,7 @@ const SystemIconList = ({ systemIconData }: any) => {
             )
           )}
 
-          {iconData && (
+          {/* {iconData && (
             <div className="pt-3 flex flex-col gap-3">
               <Image
                 className="w-[50px] h-[50px]"
@@ -429,7 +430,7 @@ const SystemIconList = ({ systemIconData }: any) => {
                 alt="icon"
               />
             </div>
-          )}
+          )} */}
 
           <div className="flex justify-end gap-3 mt-7">
             <button
