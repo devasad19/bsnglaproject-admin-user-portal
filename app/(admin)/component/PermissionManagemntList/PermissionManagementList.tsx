@@ -309,7 +309,7 @@ const PermissionManagementList = ({
                                 : "bg-violet-500 text-white"
                             }`}
                           >
-                            {item.isActive ? "Active" : "InActive"}
+                            {item.isActive ? "Active" : "Inactive"}
                           </span>
                         </td>
                         <td className="flex items-center justify-center my-2">

@@ -22,13 +22,18 @@ const Home = () => {
   useEffect(() => {
     getUserFeedBacks(user?.id)
       .then((res) => {
+        console.log(res);
+        
         setData(res?.data);
         setLoading(false);
       })
       .catch((error) => {
+        setLoading(false);
         console.log(error);
       });
   }, [user]);
+  console.log({user});
+  
 
   return (
     <>
@@ -95,7 +100,7 @@ const Home = () => {
                     </td>
                   </tr>
                 ))
-              ) : loading == false ? (
+              ) : (loading == false && !data) ? (
                 <tr>
                   <td colSpan="5" className="text-center">
                     No Data Found

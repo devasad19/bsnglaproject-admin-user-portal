@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Image from "next/image";
 import { relative_image_path } from "@/helper";
 import { toast } from "react-toastify";
@@ -10,6 +10,8 @@ import { updateCitizenData } from "../../_api/user";
 import UserApiLoading from "../UserAPiLoading/UserApiLoading";
 
 const ProfileContainer = ({ citizen, userTypes, grade }) => {
+  console.log({citizen});
+  
   const [edit, setEdit] = useState(false);
   const [loading, setLoading] = useState(false);
   const [formInputs, setFormInputs] = useState({
@@ -35,15 +37,37 @@ const ProfileContainer = ({ citizen, userTypes, grade }) => {
       research_code: citizen?.citizen_info?.research_code ?? "",
     },
   });
+  useEffect(()=>{
+    setFormInputs({
+      username: citizen?.name,
+      email: citizen?.email,
+      phone: citizen?.phone,
+      photo: citizen?.photo,
+      type: userTypes?.find(
+        (item) => item?.id == citizen?.citizen_info?.citizen_type_id
+      )?.name_en,
+      teamSize: citizen?.citizen_info?.team_size ?? "",
+      companyUrl: citizen?.citizen_info?.company_url ?? "",
+      govt: {
+        name_of_ministry: citizen?.citizen_info?.ministry_name ?? "",
+        department_of_ministry: citizen?.citizen_info?.ministry_department ?? "",
+        job_position: citizen?.citizen_info?.job_position ?? "",
+        grade: citizen?.citizen_info?.grade ?? "",
+      },
+      researcher: {
+        name_of_ministry: citizen?.citizen_info?.ministry_name ?? "",
+        research_topic: citizen?.citizen_info?.research_topic ?? "",
+        research_title: citizen?.citizen_info?.research_title ?? "",
+        research_code: citizen?.citizen_info?.research_code ?? "",
+      },
+    })
+  },[citizen, userTypes])
 
   const [userType, setUserType] = useState(
     userTypes?.find(
       (item) => item?.id == citizen?.citizen_info?.citizen_type_id
     )
   );
-  // console.log({userTypes});
-  
-
   const HandleUpdate = async () => {
     setLoading(true);
     const form = new FormData();
@@ -103,8 +127,6 @@ const ProfileContainer = ({ citizen, userTypes, grade }) => {
     setUserType(userType);
     setFormInputs((prev) => ({ ...prev, type: userType?.slug }));
   };
-
-  // console.log({citizen});
 
   return (
     <>

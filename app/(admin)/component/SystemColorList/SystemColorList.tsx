@@ -12,7 +12,11 @@ import Swal from "sweetalert2";
 import Image from "next/image";
 import { CiEdit } from "react-icons/ci";
 import Modal from "@/app/_components/Modal/Modal";
-import { createColor, deleteColor, settingColorUpdate } from "../../_api/Setting/ColorApi";
+import {
+  createColor,
+  deleteColor,
+  settingColorUpdate,
+} from "../../_api/Setting/ColorApi";
 
 const SystemColorList = ({ systemColorData }: any) => {
   const addModal = useRef<any>(null);
@@ -93,17 +97,17 @@ const SystemColorList = ({ systemColorData }: any) => {
     const name = e.target.name.value;
     const status = e.target.status.value;
     const color = e.target.color.value;
-    
+
     try {
-      const updateData ={
+      const updateData = {
         id: updateSingleColorInfo?.id,
         name,
         status,
-        color
-      }
+        color,
+      };
       // console.log({updateData});
       // return;
-      
+
       const response = await settingColorUpdate(updateData);
       if (response?.status) {
         toast.success("Color Updated Successfully");
@@ -153,7 +157,18 @@ const SystemColorList = ({ systemColorData }: any) => {
                       >
                         <td>{index + 1}</td>
                         <td>{item?.name || ""}</td>
-                        <td>{item?.color || ""}</td>
+                        <td>
+                          <div className="flex items-center gap-2">
+                            <span>{item?.color || ""}</span>
+                            {item?.color && (
+                              <span
+                                className={`rounded-full h-6 w-6`}
+                                style={{ backgroundColor: item.color }}
+                              ></span>
+                            )}
+                          </div>
+                        </td>
+
                         <td>
                           <span
                             className={`px-2 py-1 rounded-md ${

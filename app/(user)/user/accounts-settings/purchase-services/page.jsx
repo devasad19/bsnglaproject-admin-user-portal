@@ -80,7 +80,6 @@ const Home = () => {
             </tr>
           </thead>
           <tbody className="[&>tr]:border-b [&>tr]:border-[#151D48] [&>tr]:text-left [&>tr]:h-auto text-12 lg:text-16">
-            {isLoading && <TableSkeleton col={8} row={10}></TableSkeleton>}
             {services?.length > 0 && !isLoading ? (
               services?.map((item, index) => {
                 return (
@@ -177,12 +176,14 @@ const Home = () => {
                   </tr>
                 );
               })
-            ) : (
+            ) : (isLoading == false && !services) ? (
               <tr>
                 <td colSpan="6" className="text-center">
                   No services found
                 </td>
               </tr>
+            ) : (
+              <TableSkeleton col={8} row={10}></TableSkeleton>
             )}
           </tbody>
         </table>

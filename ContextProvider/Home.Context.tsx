@@ -13,14 +13,13 @@ const HomeContext = createContext<HomeContextType | null>(null);
 export default function HomeContextProvider({ children }: any) {
   /***********************************/
   /* use this pattern  */
-const loginUser = useLoginUser();
-
+  const loginUser = useLoginUser();
 
   return (
     <HomeContext.Provider
       value={
         {
-        ...loginUser,
+          ...loginUser,
         } as any
       }
     >
@@ -32,7 +31,9 @@ const loginUser = useLoginUser();
 export function useHomeContext() {
   const context = useContext(HomeContext);
   if (context === undefined) {
-    throw new Error("useHomeContext must be used within a Bangla backend ContextProvider");
+    throw new Error(
+      "useHomeContext must be used within a Bangla backend ContextProvider"
+    );
   }
 
   return useContext(HomeContext);

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import Image from "next/image";
 import { relative_image_path } from "@/helper";
 import Link from "next/link";
@@ -15,11 +15,15 @@ import { BsPcDisplay } from "react-icons/bs";
 import { FaChalkboardUser } from "react-icons/fa6";
 import { GrDocumentUser } from "react-icons/gr";
 import { FaComputer } from "react-icons/fa6";
+import { useHomeContext } from "@/ContextProvider/Home.Context";
 
 const Sidebar = () => {
   const pathname = usePathname();
-  const [user, setUser] = useState(null);
+  // const [user, setUser] = useState(null);
   const [isOpen, setIsOpen] = useState(true);
+  const {user}= useHomeContext();
+  console.log({user});
+  
 
   const [isToggleOpen, setIsToggleOpen] = useState({
     userManagement: false,
@@ -77,14 +81,14 @@ const Sidebar = () => {
     });
   };
 
-  useEffect(() => {
-    const userCookie = document.cookie
-      .split(";")
-      .find((c) => c.trim().startsWith("user="));
-    if (userCookie != undefined) {
-      setUser(JSON.parse(decodeURIComponent(userCookie.split("=")[1])));
-    }
-  }, []);
+  // useEffect(() => {
+  //   const userCookie = document.cookie
+  //     .split(";")
+  //     .find((c) => c.trim().startsWith("user="));
+  //   if (userCookie != undefined) {
+  //     setUser(JSON.parse(decodeURIComponent(userCookie.split("=")[1])));
+  //   }
+  // }, []);
 
   const HandleLogout = () => {
 

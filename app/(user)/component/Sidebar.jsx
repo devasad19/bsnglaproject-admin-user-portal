@@ -6,18 +6,20 @@ import Link from "next/link";
 import Accordion from "@/app/_components/Accordion/Accordion";
 import { usePathname } from "next/navigation";
 import { MyContext } from "@/ContextProvider/ContextProvider";
+import { useHomeContext } from "@/ContextProvider/Home.Context";
 const Sidebar = () => {
   const pathname = usePathname();
-  const [user, setUser] = useState(null);
+  // const [user, setUser] = useState(null);
   const [isOpen, setIsOpen] = useState(true);
+  const {user}= useHomeContext();
 
 
-  useEffect(() => {
-    const userCookie = document.cookie.split(';').find(c => c.trim().startsWith('user='));
-    if (userCookie != undefined) {
-      setUser(JSON.parse(decodeURIComponent(userCookie.split('=')[1])));
-    }
-  }, []);
+  // useEffect(() => {
+  //   const userCookie = document.cookie.split(';').find(c => c.trim().startsWith('user='));
+  //   if (userCookie != undefined) {
+  //     setUser(JSON.parse(decodeURIComponent(userCookie.split('=')[1])));
+  //   }
+  // }, []);
 
 
   const HandleLogout = () => {
