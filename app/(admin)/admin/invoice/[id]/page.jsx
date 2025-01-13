@@ -8,6 +8,8 @@ import { jsPDF } from "jspdf";
 import { getInvoiceDetails } from "@/app/(user)/_api/accountService";
 import PaymentHisSkeleton from "@/app/(user)/component/PaymentHistorySkeleton/PaymentHisSkeleton";
 import html2canvas from "html2canvas";
+import { convertNumberToWords } from "@/utilis/ConvertNumbertoword";
+
 
 const Home = ({ params: { id } }) => {
   const [data, setData] = useState();
@@ -222,7 +224,7 @@ const Home = ({ params: { id } }) => {
                     </tbody> */}
                       </table>
                       <div className="border-b border-gray-500 h-10 flex items-center">
-                        <p>Taka in Words: </p>
+                        <p>Taka in Words:{convertNumberToWords(data?.total)} </p>
                       </div>
                     </div>
                     <div className="flex justify-between">

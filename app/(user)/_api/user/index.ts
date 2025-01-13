@@ -22,9 +22,22 @@ export const getCitizenData = async (id: any) => {
   }
 };
 
-export const updateCitizenData = async (payload: any) => {
+
+
+export const updateCitizenProfile = async (payload: any) => {
   try {
     const response = await axiosInstance.post(`/citizen/update`, payload);
+    revalidateTag("get-user");
+    return response?.data;
+  } catch (error) {
+    console.log(error);
+    return error;
+  }
+};
+
+export const updateCitizenTypeInfo = async (payload: any) => {
+  try {
+    const response = await axiosInstance.post(`/citizen-type/update`, payload);
 
     revalidateTag("get-user");
     return response?.data;

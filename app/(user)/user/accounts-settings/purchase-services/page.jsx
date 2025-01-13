@@ -7,33 +7,30 @@ import { relative_image_path } from "@/helper";
 import TableSkeleton from "@/app/_components/TableSkeleton/TableSkeleton";
 import { useRouter } from "next/navigation";
 import { getBoughtServices } from "@/app/(user)/_api/accountService";
+import { useHomeContext } from "@/ContextProvider/Home.Context";
 
 const Home = () => {
   const router = useRouter();
   const [services, setServices] = useState([]);
-  const [user, setUser] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [activeDropdown, setActiveDropdown] = useState(null);
   const dropdownRefs = useRef([]);
+  const { user } = useHomeContext();
 
   useEffect(() => {
-    const userCookie = document.cookie
-      .split(";")
-      .find((c) => c.trim().startsWith("user="));
-    if (userCookie != undefined) {
-      setUser(JSON.parse(decodeURIComponent(userCookie.split("=")[1])));
+    if (user?.id) {
+      setIsLoading(true);
+      getBoughtServices(user?.id)
+        .then((response) => {
+          setServices(response?.data);
+          setIsLoading(false);
+        })
+        .catch((error) => {
+          setIsLoading(false);
+          console.error("Error fetching data:", error);
+        });
     }
-  }, []);
-
-  useEffect(() => {
-    setIsLoading(true);
-    getBoughtServices(user?.id)
-      .then((data) => {
-        setServices(data?.data);
-        setIsLoading(false);
-      })
-      .catch((err) => console.log(err));
-  }, [user]);
+  }, [user?.id]);
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -176,7 +173,7 @@ const Home = () => {
                   </tr>
                 );
               })
-            ) : (isLoading == false && !services) ? (
+            ) : isLoading == false && !services ? (
               <tr>
                 <td colSpan="6" className="text-center">
                   No services found

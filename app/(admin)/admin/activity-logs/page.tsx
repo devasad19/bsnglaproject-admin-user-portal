@@ -1,6 +1,6 @@
 "use client";
 import { getAllActivityLogsApi } from "@/app/(portal)/_api";
-// import Pagination from "@/app/_components/Pagination/Pagination";
+
 import TableSkeleton from "@/app/_components/TableSkeleton/TableSkeleton";
 import { TActivityLog } from "@/types/ActivityLog";
 import { PaginationTotalPage } from "@/utilis/PageNumberArr";

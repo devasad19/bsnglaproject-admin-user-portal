@@ -4,32 +4,26 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { getUserOrders } from "@/app/(user)/_api/accountService";
 import TableSkeleton from "@/app/_components/TableSkeleton/TableSkeleton";
+import { useHomeContext } from "@/ContextProvider/Home.Context";
 
 const Home = () => {
   const [orders, setOrders] = useState();
-  const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(false);
-
-  useEffect(() => {
-    const userCookie = document.cookie
-      .split(";")
-      .find((c) => c.trim().startsWith("user="));
-    if (userCookie != undefined) {
-      setUser(JSON.parse(decodeURIComponent(userCookie.split("=")[1])));
-    }
-  }, []);
+  const { user } = useHomeContext();
 
   useEffect(() => {
     setLoading(true);
-    getUserOrders(user?.id)
-      .then((response) => {
-        setOrders(response?.data);
-        setLoading(false);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  }, [user]);
+    if (user?.id) {
+      getUserOrders(user?.id)
+        .then((response) => {
+          setOrders(response?.data);
+          setLoading(false);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    }
+  }, [user?.id]);
 
   return (
     <section>

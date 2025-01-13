@@ -9,11 +9,9 @@ import { usePathname } from "next/navigation";
 import { NewAccordion } from "@/app/_components/NewAccordion/NewAccordion";
 import { GrUserSettings } from "react-icons/gr";
 import { FaUsersCog } from "react-icons/fa";
-import { BsPcDisplayHorizontal } from "react-icons/bs";
+
 import { VscFeedback } from "react-icons/vsc";
-import { BsPcDisplay } from "react-icons/bs";
-import { FaChalkboardUser } from "react-icons/fa6";
-import { GrDocumentUser } from "react-icons/gr";
+import { RiAdminLine } from "react-icons/ri";
 import { FaComputer } from "react-icons/fa6";
 import { useHomeContext } from "@/ContextProvider/Home.Context";
 
@@ -387,7 +385,8 @@ const Sidebar = () => {
                         : "text-primary"
                     }
                   >
-                    <FaUsersCog
+                   
+                    <RiAdminLine
                       size={20}
                       className={`group-hover:text-white ${
                         pathname.startsWith("/admin/permission-management") ||

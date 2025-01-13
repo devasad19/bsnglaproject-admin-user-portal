@@ -6,22 +6,22 @@ import { relative_image_path } from "@/helper";
 import { toast } from "react-toastify";
 
 import { FaCamera, FaRegEdit } from "react-icons/fa";
-import { updateCitizenData } from "../../_api/user";
+import { updateCitizenData, updateCitizenProfile, updateCitizenTypeInfo } from "../../_api/user";
 import UserApiLoading from "../UserAPiLoading/UserApiLoading";
 
 const ProfileContainer = ({ citizen, userTypes, grade }) => {
-  console.log({citizen});
-  
+  // console.log({citizen});
+
   const [edit, setEdit] = useState(false);
   const [loading, setLoading] = useState(false);
+
   const [formInputs, setFormInputs] = useState({
     username: citizen?.name,
     email: citizen?.email,
     phone: citizen?.phone,
     photo: citizen?.photo,
-    type: userTypes?.find(
-      (item) => item?.id == citizen?.citizen_info?.citizen_type_id
-    )?.name_en,
+    type: userTypes?.find((item) => item?.id == citizen?.citizen_type?.id)
+      ?.name_en,
     teamSize: citizen?.citizen_info?.team_size ?? "",
     companyUrl: citizen?.citizen_info?.company_url ?? "",
     govt: {
@@ -36,21 +36,22 @@ const ProfileContainer = ({ citizen, userTypes, grade }) => {
       research_title: citizen?.citizen_info?.research_title ?? "",
       research_code: citizen?.citizen_info?.research_code ?? "",
     },
+    citizen_info_id:citizen?.citizen_info?.id
   });
-  useEffect(()=>{
+  useEffect(() => {
     setFormInputs({
       username: citizen?.name,
       email: citizen?.email,
       phone: citizen?.phone,
       photo: citizen?.photo,
-      type: userTypes?.find(
-        (item) => item?.id == citizen?.citizen_info?.citizen_type_id
-      )?.name_en,
+      type: userTypes?.find((item) => item?.id == citizen?.citizen_type?.id)
+        ?.name_en,
       teamSize: citizen?.citizen_info?.team_size ?? "",
       companyUrl: citizen?.citizen_info?.company_url ?? "",
       govt: {
         name_of_ministry: citizen?.citizen_info?.ministry_name ?? "",
-        department_of_ministry: citizen?.citizen_info?.ministry_department ?? "",
+        department_of_ministry:
+          citizen?.citizen_info?.ministry_department ?? "",
         job_position: citizen?.citizen_info?.job_position ?? "",
         grade: citizen?.citizen_info?.grade ?? "",
       },
@@ -60,22 +61,17 @@ const ProfileContainer = ({ citizen, userTypes, grade }) => {
         research_title: citizen?.citizen_info?.research_title ?? "",
         research_code: citizen?.citizen_info?.research_code ?? "",
       },
-    })
-  },[citizen, userTypes])
+      citizen_info_id:citizen?.citizen_info?.id
+    });
+  }, [citizen, userTypes]);
 
   const [userType, setUserType] = useState(
-    userTypes?.find(
-      (item) => item?.id == citizen?.citizen_info?.citizen_type_id
-    )
+    userTypes?.find((item) => item?.id == citizen?.citizen_type?.id)
   );
   const HandleUpdate = async () => {
     setLoading(true);
     const form = new FormData();
-    form.append("id", citizen?.id ?? "");
-    form.append("name", formInputs.username ?? "");
-    form.append("email", formInputs.email ?? "");
-    form.append("phone", formInputs.phone ?? "");
-    form.append("photo", formInputs.photo ?? "");
+    form.append("id", formInputs?.citizen_info_id ?? "");
     form.append("citizen_type_id", userType?.id ?? "");
     form.append("team_size", formInputs.teamSize ?? "");
     form.append("company_url", formInputs.companyUrl ?? "");
@@ -89,27 +85,28 @@ const ProfileContainer = ({ citizen, userTypes, grade }) => {
     form.append("research_topic", formInputs?.researcher?.research_topic ?? "");
     form.append("research_title", formInputs?.researcher?.research_title ?? "");
     form.append("research_code", formInputs?.researcher?.research_code ?? "");
+    form.append("user_id",citizen?.id ?? "")
 
     try {
-      const response = await updateCitizenData(form);
+      const response = await updateCitizenTypeInfo(form);
       setEdit(false);
       if (response.status == true) {
         setLoading(false);
         // console.log("user profile update response: ", response);
         toast.success(response.message);
-        const user = {
-          id: response.data.id,
-          name: response.data.name,
-          role: response.data.role,
-          email: response.data.email,
-          phone: response.data.phone,
-          status: response.data.status,
-          photo: response.data.photo ?? null,
-          type: response.data.type,
-        };
+        // const user = {
+        //   id: response.data.id ,
+        //   name: response.data.name,
+        //   role: response.data.role,
+        //   email: response.data.email,
+        //   phone: response.data.phone,
+        //   status: response.data.status,
+        //   photo: response.data.photo ?? null,
+        //   type: response.data.type,
+        // };
 
-        const userinfo = JSON.stringify(user);
-        document.cookie = `user=${userinfo};path=/;max-age=31536000;SameSite=Strict;Secure;`;
+        // const userinfo = JSON.stringify(user);
+        // document.cookie = `user=${userinfo};path=/;max-age=31536000;SameSite=Strict;Secure;`;
 
         // window.location.reload();
       } else {
@@ -125,7 +122,46 @@ const ProfileContainer = ({ citizen, userTypes, grade }) => {
   const HandleUserType = (id) => {
     const userType = userTypes.find((item) => item.id == id);
     setUserType(userType);
-    setFormInputs((prev) => ({ ...prev, type: userType?.slug }));
+    setFormInputs((prev) => ({ ...prev, type: userType?.id }));
+  };
+
+  const handleProfileUpdate = async () => {
+    setLoading(true);
+    const form = new FormData();
+    form.append("id", citizen?.id ?? "");
+    form.append("name", formInputs.username ?? "");
+    form.append("phone", formInputs.phone ?? "");
+    form.append("photo", formInputs.photo ?? "");
+    try {
+      const response = await updateCitizenProfile(form);
+      setEdit(false);
+      if (response.status == true) {
+        setLoading(false);
+        // console.log("user profile update response: ", response);
+        toast.success(response.message);
+        const user = {
+          id: response.data.id,
+          name: response.data.name ?? null,
+          role: response.data.role ?? null,
+          email: response.data.email ?? null,
+          phone: response.data.phone ?? null,
+          status: response.data.status ?? null,
+          photo: response.data.photo ?? null,
+          type: response.data.type ?? null,
+        };
+
+        const userinfo = JSON.stringify(user);
+        document.cookie = `user=${userinfo};path=/;max-age=31536000;SameSite=Strict;Secure;`;
+
+        // window.location.reload();
+      } else {
+        setLoading(false);
+        toast.error(response.message);
+      }
+    } catch (error) {
+      setLoading(false);
+      toast.error(error.message);
+    }
   };
 
   return (
@@ -148,129 +184,150 @@ const ProfileContainer = ({ citizen, userTypes, grade }) => {
           )}
         </div>
         <div className="bg-white w-full p-4 rounded-md shadow-lg">
-          <div className="flex flex-wrap items-center gap-4 border border-gray-300 p-4 rounded-md overflow-hidden mb-5">
-            <div className="relative group">
-              {formInputs?.photo != null ? (
-                typeof formInputs.photo == "object" ? (
-                  <Image
-                    className="w-20 h-20 rounded-full"
-                    width={1000}
-                    height={1000}
-                    src={URL.createObjectURL(formInputs.photo)}
-                    alt="Profile Picture"
-                  />
+          <div className="w-full border border-gray-300 p-4 rounded-md ">
+            <div className="flex flex-wrap items-center gap-4 border border-gray-300 p-4 rounded-md overflow-hidden mb-5">
+              <div className="relative group">
+                {formInputs?.photo != null ? (
+                  typeof formInputs.photo == "object" ? (
+                    <Image
+                      className="w-20 h-20 rounded-full"
+                      width={1000}
+                      height={1000}
+                      src={URL.createObjectURL(formInputs.photo)}
+                      alt="Profile Picture"
+                    />
+                  ) : (
+                    <Image
+                      className="w-20 h-20 rounded-full"
+                      width={1000}
+                      height={1000}
+                      src={process.env.NEXT_PUBLIC_IMAGE_URL + formInputs.photo}
+                      alt="Profile Picture"
+                    />
+                  )
                 ) : (
                   <Image
                     className="w-20 h-20 rounded-full"
                     width={1000}
                     height={1000}
-                    src={process.env.NEXT_PUBLIC_IMAGE_URL + formInputs.photo}
+                    src={relative_image_path("dummy_image1.jpg")}
                     alt="Profile Picture"
                   />
-                )
-              ) : (
-                <Image
-                  className="w-20 h-20 rounded-full"
-                  width={1000}
-                  height={1000}
-                  src={relative_image_path("dummy_image1.jpg")}
-                  alt="Profile Picture"
-                />
-              )}
+                )}
 
-              {edit && (
-                <div
-                  onClick={() =>
-                    document.getElementById("my_modal_1").showModal()
-                  }
-                  className="hidden absolute top-0 left-0 w-full h-full group-hover:flex items-center justify-center bg-black bg-opacity-50 rounded-full cursor-pointer"
-                >
-                  <button>
-                    <FaCamera size={20} className="text-white" />
-                  </button>
+                {edit && (
+                  <div
+                    onClick={() =>
+                      document.getElementById("my_modal_1").showModal()
+                    }
+                    className="hidden absolute top-0 left-0 w-full h-full group-hover:flex items-center justify-center bg-black bg-opacity-50 rounded-full cursor-pointer"
+                  >
+                    <button>
+                      <FaCamera size={20} className="text-white" />
+                    </button>
+                  </div>
+                )}
+              </div>
+
+              <div className="text-gray-500">
+                <p>{formInputs?.username}</p>
+                <p>{formInputs?.email}</p>
+              </div>
+            </div>
+            <div className="border border-gray-300 p-4 rounded-md mb-5">
+              <h3 className="text-20 font-mono font-bold text-[#151D48] pb-3 overflow-hidden">
+                Personal Information
+              </h3>
+              <div className="grid grid-cols-1 lg:grid-cols-3 gap-2 lg:gap-4">
+                <div>
+                  <p
+                    className={`text-gray-500 text-14 ${
+                      edit && "after:content-['_*'] after:text-red-500"
+                    }`}
+                  >
+                    Name:
+                  </p>
+
+                  {edit ? (
+                    <input
+                      type="text"
+                      value={formInputs?.username}
+                      onChange={(e) =>
+                        setFormInputs({
+                          ...formInputs,
+                          username: e.target.value,
+                        })
+                      }
+                      className="outline-none border border-gray-300 px-2 py-1 rounded"
+                    />
+                  ) : (
+                    <p className="text-gray-700">{formInputs?.username}</p>
+                  )}
                 </div>
-              )}
+                <div>
+                  <p
+                    className={`text-gray-500 text-14 ${
+                      edit && "after:content-['_*'] after:text-red-500"
+                    }`}
+                  >
+                    Phone:
+                  </p>
+                  {edit ? (
+                    <input
+                      type="text"
+                      value={formInputs?.phone}
+                      onChange={(e) =>
+                        setFormInputs({ ...formInputs, phone: e.target.value })
+                      }
+                      className="outline-none border border-gray-300 px-2 py-1 rounded"
+                    />
+                  ) : (
+                    <p className="text-gray-700">{formInputs?.phone}</p>
+                  )}
+                </div>
+                <div>
+                  <p
+                    className={`text-gray-500 text-14 ${
+                      edit && "after:content-['_*'] after:text-red-500"
+                    }`}
+                  >
+                    Email:
+                  </p>
+                  {edit ? (
+                    <input
+                      type="text"
+                      value={formInputs?.email}
+                      onChange={(e) =>
+                        setFormInputs({ ...formInputs, email: e.target.value })
+                      }
+                      className="outline-none border border-gray-300 px-2 py-1 rounded"
+                    />
+                  ) : (
+                    <p className="text-gray-700">{formInputs?.email}</p>
+                  )}
+                </div>
+              </div>
             </div>
-
-            <div className="text-gray-500">
-              <p>{formInputs?.username}</p>
-              <p>{formInputs?.email}</p>
-            </div>
+            {edit && (
+              <div className="flex justify-end gap-4 pt-2">
+                <button
+                  onClick={() => setEdit(false)}
+                  className="bg-gray-200 text-gray-700 border border-gray-400 rounded text-14 lg:text-16 px-2 py-1 lg:px-4 "
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={() => handleProfileUpdate()}
+                  className="bg-primary text-white border border-primary rounded text-14 lg:text-16 px-2 py-1 lg:px-4 "
+                >
+                  Profile Update
+                </button>
+              </div>
+            )}
           </div>
-          <div className="border border-gray-300 p-4 rounded-md mb-5">
+          <div className="border border-gray-300 p-4 rounded-md mb-2 mt-3">
             <h3 className="text-20 font-mono font-bold text-[#151D48] pb-3 overflow-hidden">
-              Personal Information
-            </h3>
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-2 lg:gap-4">
-              <div>
-                <p
-                  className={`text-gray-500 text-14 ${
-                    edit && "after:content-['_*'] after:text-red-500"
-                  }`}
-                >
-                  Name:
-                </p>
-
-                {edit ? (
-                  <input
-                    type="text"
-                    value={formInputs?.username}
-                    onChange={(e) =>
-                      setFormInputs({ ...formInputs, username: e.target.value })
-                    }
-                    className="outline-none border border-gray-300 px-2 py-1 rounded"
-                  />
-                ) : (
-                  <p className="text-gray-700">{formInputs?.username}</p>
-                )}
-              </div>
-              <div>
-                <p
-                  className={`text-gray-500 text-14 ${
-                    edit && "after:content-['_*'] after:text-red-500"
-                  }`}
-                >
-                  Phone:
-                </p>
-                {edit ? (
-                  <input
-                    type="text"
-                    value={formInputs?.phone}
-                    onChange={(e) =>
-                      setFormInputs({ ...formInputs, phone: e.target.value })
-                    }
-                    className="outline-none border border-gray-300 px-2 py-1 rounded"
-                  />
-                ) : (
-                  <p className="text-gray-700">{formInputs?.phone}</p>
-                )}
-              </div>
-              <div>
-                <p
-                  className={`text-gray-500 text-14 ${
-                    edit && "after:content-['_*'] after:text-red-500"
-                  }`}
-                >
-                  Email:
-                </p>
-                {edit ? (
-                  <input
-                    type="text"
-                    value={formInputs?.email}
-                    onChange={(e) =>
-                      setFormInputs({ ...formInputs, email: e.target.value })
-                    }
-                    className="outline-none border border-gray-300 px-2 py-1 rounded"
-                  />
-                ) : (
-                  <p className="text-gray-700">{formInputs?.email}</p>
-                )}
-              </div>
-            </div>
-          </div>
-          <div className="border border-gray-300 p-4 rounded-md mb-2">
-            <h3 className="text-20 font-mono font-bold text-[#151D48] pb-3 overflow-hidden">
-              Other Information
+              Citizen Type Information
             </h3>
 
             <div className="">
@@ -297,8 +354,10 @@ const ProfileContainer = ({ citizen, userTypes, grade }) => {
                         );
                       })}
                     </select>
+                  ) : formInputs?.type ? (
+                    formInputs?.type
                   ) : (
-                    formInputs?.type ? formInputs?.type : "N/A"
+                    "N/A"
                   )}
                 </div>
               </div>
@@ -565,15 +624,15 @@ const ProfileContainer = ({ citizen, userTypes, grade }) => {
             <div className="flex justify-end gap-4 pt-6">
               <button
                 onClick={() => setEdit(false)}
-                className="bg-gray-200 text-gray-700 border border-gray-400 rounded text-14 lg:text-16 px-2 py-1 lg:px-4 lg:py-2"
+                className="bg-gray-200 text-gray-700 border border-gray-400 rounded text-14 lg:text-16 px-2 py-1 lg:px-4"
               >
                 Cancel
               </button>
               <button
                 onClick={() => HandleUpdate()}
-                className="bg-primary text-white border border-primary rounded text-14 lg:text-16 px-2 py-1 lg:px-4 lg:py-2"
+                className="bg-primary text-white border border-primary rounded text-14 lg:text-16 px-2 py-1 lg:px-4 "
               >
-                Save
+                Update
               </button>
             </div>
           )}
@@ -582,6 +641,7 @@ const ProfileContainer = ({ citizen, userTypes, grade }) => {
         </div>
       </section>
 
+      {/* image upload modal */}
       <dialog id="my_modal_1" className="modal">
         <div className="modal-box bg-white">
           <h3 className="font-bold text-lg pb-5">Select Image</h3>

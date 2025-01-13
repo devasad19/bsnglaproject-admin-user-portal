@@ -210,16 +210,17 @@ const DashboardContainer = ({ data }) => {
                     {data?.totalPayments}
                   </span>
                 </div>
-                <div className="my-3 text-red-500">
-                  Today Payments{" "}
-                  <span className="text-gray-800 font-bold float-right">
-                    {data?.todayPayments}
-                  </span>
-                </div>
+                
                 <div className="my-3 text-yellow-500">
                   Last Month Payments{" "}
                   <span className="text-gray-800 font-bold float-right">
                     {data?.lastMonthPayments}
+                  </span>
+                </div>
+                <div className="my-3 text-red-500">
+                  Today Payments{" "}
+                  <span className="text-gray-800 font-bold float-right">
+                    {data?.todayPayments}
                   </span>
                 </div>
               </div>

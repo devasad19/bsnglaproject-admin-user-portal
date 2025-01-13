@@ -9,6 +9,7 @@ import html2canvas from "html2canvas";
 import { jsPDF } from "jspdf";
 import { getInvoiceDetails } from "@/app/(user)/_api/accountService";
 import PaymentHisSkeleton from "@/app/(user)/component/PaymentHistorySkeleton/PaymentHisSkeleton";
+import { convertNumberToWords } from "@/utilis/ConvertNumbertoword";
 
 const Home = ({ params }) => {
   /* const doc = new jsPDF();
@@ -180,7 +181,7 @@ const Home = ({ params }) => {
                         </tbody>
                       </table>
                       <div className="border-b border-gray-500 h-10 flex items-center">
-                        <p>Taka in Words: </p>
+                        <p>Taka in Words: {convertNumberToWords(data?.total)}</p>
                       </div>
                     </div>
                     <div className="flex justify-between">

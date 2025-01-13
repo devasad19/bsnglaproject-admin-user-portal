@@ -18,7 +18,7 @@ const SystemUserList = ({ users, rolesList }: any) => {
   const addUserForm = useRef(null);
   const updateUserModal = useRef(null);
   const updateUserForm = useRef(null);
-  const[loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [formValue, setFormValue] = useState<any>({
     name: "",
     email: "",
@@ -49,7 +49,7 @@ const SystemUserList = ({ users, rolesList }: any) => {
         password_confirmation: c_password,
       };
       // console.log({ submitValue });
-      
+
       const resUser = await createUserApi(submitValue);
       // console.log({ resUser });
 
@@ -107,7 +107,9 @@ const SystemUserList = ({ users, rolesList }: any) => {
         status: finedUser?.status,
         id: finedUser?.id,
       });
-      modelOpen(updateUserModal);
+      if (updateUserModal.current) {
+        modelOpen(updateUserModal);
+      }
     }
   };
 
@@ -177,7 +179,11 @@ const SystemUserList = ({ users, rolesList }: any) => {
               </form> */}
               <div>
                 <button
-                  onClick={() => modelOpen(addUserModal)}
+                  onClick={() => {
+                    if (addUserModal.current) {
+                      modelOpen(addUserModal);
+                    }
+                  }}
                   className="btn btn-sm btn-secondary"
                 >
                   Add USer
@@ -208,13 +214,30 @@ const SystemUserList = ({ users, rolesList }: any) => {
                       </td>
                       <td>
                         <div className="flex items-center justify-center">
-                          <Image
-                            src={relative_image_path("profileImage.png")}
-                            className="w-[2.125em] h-[2.125em] rounded-full"
-                            width={1000}
-                            height={1000}
-                            alt="Bangla"
-                          />
+                          {item.photo ? (
+                            <Image
+                              src={`${process.env.NEXT_PUBLIC_IMAGE_URL}${item.photo}`}
+                              alt="Bangla"
+                              className="w-[2.125em] h-[2.125em] rounded-full"
+                              width={34}
+                              height={34}
+                              placeholder="blur"
+                              blurDataURL="/path-to-blur-placeholder.jpg"
+                              loading="lazy"
+                            />
+                          ) : (
+                            <Image
+                              src={relative_image_path("profileImage.png")}
+                              className="w-[2.125em] h-[2.125em] rounded-full"
+                              width={1000}
+                              height={1000}
+                              alt="Bangla"
+                              placeholder="blur"
+                              blurDataURL="/path-to-blur-placeholder.jpg"
+                              loading="lazy"
+                            />
+                          )}
+
                           <div className="flex flex-col text-left">
                             <span className="ml-2 text-13">{item?.name}</span>
                             <span className="ml-2 text-[11px] text-[#868686]">
@@ -225,7 +248,11 @@ const SystemUserList = ({ users, rolesList }: any) => {
                       </td>
                       <td>{item?.phone}</td>
                       <td>{item?.role?.name || ""}</td>
-                      <td className={`font-medium text-13 ${item?.status == 0 ? "text-red-500" : "text-green-500"}`}>
+                      <td
+                        className={`font-medium text-13 ${
+                          item?.status == 0 ? "text-red-500" : "text-green-500"
+                        }`}
+                      >
                         {item?.status == 1 ? "Active" : "Inactive"}
                       </td>
                       <td>
@@ -568,7 +595,7 @@ const SystemUserList = ({ users, rolesList }: any) => {
                   Active
                 </option>
                 <option value="0" selected={formValue.status == 0}>
-                  InActive
+                  Inactive
                 </option>
               </select>
             </fieldset>
@@ -598,9 +625,7 @@ const SystemUserList = ({ users, rolesList }: any) => {
               </button>
             </div>
           </div>
-          {
-            loading && <ApiLoading/>
-          }
+          {loading && <ApiLoading />}
         </form>
       </Modal>
     </>
