@@ -4,19 +4,27 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { formatDateToDDMMYYYY, CalculateDaysBetweenDates } from "@/helper";
 import { getAdminPurchaseServiceDetails } from "@/app/(admin)/_api";
+import { useSearchParams } from "next/navigation";
 
 const Home = ({ params: { id } }) => {
   const [data, setData] = useState();
   const [loading, setLoading] = useState(true);
 
+  const user_id = useSearchParams().get("user");
+
   useEffect(() => {
-    getAdminPurchaseServiceDetails(id)
-      .then((response) => {
-        setData(response?.data);
-        setLoading(false);
-      })
-      .catch((error) => console.log(error));
-  }, [id]);
+    if (id && user_id) {
+      getAdminPurchaseServiceDetails(id, user_id)
+        .then((response) => {
+          setData(response?.data);
+          setLoading(false);
+        })
+        .catch((error) => console.log(error));
+    }
+  }, [id, user_id]);
+
+  console.log({id, user_id});
+  
 
   console.log("data details: ", data);
   return (

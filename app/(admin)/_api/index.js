@@ -1,4 +1,3 @@
-
 import axios from "axios";
 import Cookies from "js-cookie";
 
@@ -331,10 +330,12 @@ export const DeleteSlider = async (id) => {
   }
 };
 
-export const getAdminPurchaseServiceDetails = async (id) => {
+export const getAdminPurchaseServiceDetails = async (id, userId) => {
   try {
     const data = await axios
-      .get(`${process.env.NEXT_PUBLIC_API_URL}/admin/get-service-orders/${id}`)
+      .get(
+        `${process.env.NEXT_PUBLIC_API_URL}/admin/get-service-orders/${id}/${userId}`
+      )
       .then((res) => {
         return res?.data;
       })
@@ -368,47 +369,52 @@ export const getCitizenList = async () => {
   }
 };
 
-// get single citizen user by citizen type in not null 
-export const getSingleCitizenUserNotNull = async(id)=>{
+// get single citizen user by citizen type in not null
+export const getSingleCitizenUserNotNull = async (id) => {
   try {
-    const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/citizen/user/${id}`);
+    const response = await axios.get(
+      `${process.env.NEXT_PUBLIC_API_URL}/citizen/user/${id}`
+    );
     return response?.data;
   } catch (error) {
     return error;
   }
-}
+};
 
-export const updateCitizenUserStatus = async (payload)=>{
+export const updateCitizenUserStatus = async (payload) => {
   try {
-    const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/admin/update/citizen-info`,payload);
+    const response = await axios.post(
+      `${process.env.NEXT_PUBLIC_API_URL}/admin/update/citizen-info`,
+      payload
+    );
     return response?.data;
   } catch (error) {
     return error;
   }
-}
+};
 
-
-export const getSingleCitizen = async (id)=>{
+export const getSingleCitizen = async (id) => {
   try {
-    const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/user/details/${id}`);
+    const response = await axios.get(
+      `${process.env.NEXT_PUBLIC_API_URL}/user/details/${id}`
+    );
     return response?.data;
   } catch (error) {
     return error;
   }
-} 
+};
 
-
-// get single citizen list 
-export const getSingleCitizenList = async (id)=>{
+// get single citizen list
+export const getSingleCitizenList = async (id) => {
   try {
-    const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/user/details/${id}`);
+    const response = await axios.get(
+      `${process.env.NEXT_PUBLIC_API_URL}/user/details/${id}`
+    );
     return response?.data;
   } catch (error) {
     return error;
   }
-} 
-
-
+};
 
 export const updateServiceBanglaResource = async (payload, id) => {
   try {
@@ -629,7 +635,10 @@ export const deleteService = async (id) => {
 //update citizen type in user
 export const updateCitizenTypes = async (payload) => {
   try {
-    const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/update/citizen/admin`,payload);
+    const response = await axios.post(
+      `${process.env.NEXT_PUBLIC_API_URL}/update/citizen/admin`,
+      payload
+    );
     return response?.data;
   } catch (error) {
     console.log(error);

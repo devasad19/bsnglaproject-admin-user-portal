@@ -97,18 +97,20 @@ const UpdateServiceResource = ({ id }) => {
         id,
         formData
       );
-      console.log("response", response);
+      // console.log("response", response);
 
       if (response?.status) {
-        toast.success("Service Updated Successfully");
+        toast.success(response?.message);
         router.push("/admin/services");
       } else {
-        console.log("Response did not indicate success:", response);
-        toast.error("Service Update Failed");
+        // console.log("Response did not indicate success:", response);
+        toast.error(response?.message);
       }
     } catch (error) {
-      console.log("Error during service update:", error);
-      toast.error("Service Update Failed");
+      // console.log("Error during service update:", error);
+      // toast.error("Service Update Failed");
+      toast.error(error?.response?.data?.message);
+
     } finally {
       setIsLoading(false);
     }

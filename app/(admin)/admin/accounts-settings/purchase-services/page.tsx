@@ -25,6 +25,7 @@ const PurchaaseServicePage = () => {
       })
       .catch((err) => console.log(err));
   }, []);
+  console.log({ soldServices });
 
   return (
     <section>
@@ -40,7 +41,6 @@ const PurchaaseServicePage = () => {
               <th className="text-center">SL</th>
               <th className="text-center">Name</th>
               <th className="text-center">Description</th>
-
               <th className="text-center">Status</th>
               <th className="text-center">Date</th>
               <th className="text-center">Details</th>
@@ -127,6 +127,7 @@ const PurchaaseServicePage = () => {
                     <Link
                       href={{
                         pathname: `/admin/accounts-settings/purchase-services/${item?.service_id}`,
+                        query: { user: item?.user_id }, // Query parameters
                       }}
                       className="text-14 border border-primary bg-primary hover:text-white px-2 py-1 rounded-md ms-2"
                       shallow

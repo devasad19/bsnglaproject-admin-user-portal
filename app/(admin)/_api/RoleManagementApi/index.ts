@@ -19,10 +19,7 @@ export const createRolePermission = async (data: any) => {
     return response.data;
   } catch (error) {
     console.log(error);
-    return {
-      status:false,
-      error:error
-    }
+    return error;
   }
 };
 

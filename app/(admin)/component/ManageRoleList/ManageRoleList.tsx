@@ -33,9 +33,14 @@ const ManageRoleList = ({
   const updateModalForm = useRef<any>(null);
   const permissionManageForm = useRef<any>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const[loading,setLoading] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(false);
   const [permission, setPermission] = useState<any>([]);
-  const [singleEdit, setSingleEdit] = useState<any>(null);
+  const [singleEdit, setSingleEdit] = useState<any>({
+    id: "",
+    name: "",
+    name_bn: "",
+    status: "",
+  });
   const [singleManagePermission, setSingleManagePermission] =
     useState<any>(null);
   const [getAllPermission, setGetAllPermission] = useState<any>(null);
@@ -49,19 +54,6 @@ const ManageRoleList = ({
     name_en: "",
     name_bn: "",
   });
-
-  // console.log({ user });
-
-  useEffect(() => {
-    getAllPermission?.forEach((element: any) => {
-      setUpdatedPermission((prev: any) => [
-        ...prev,
-        element?.permission_id,
-      ]);
-    });
-  },[getAllPermission])
-
-
 
   const handleRolePermission = async (e: any) => {
     e.preventDefault();
@@ -109,10 +101,10 @@ const ManageRoleList = ({
         permissions: JSON.stringify(permission),
       };
 
-      // console.log(payload);
+      console.log(payload);
 
       const response = await createRolePermission(payload);
-      console.log(response);
+      // console.log(response);
 
       if (response.status === true) {
         setIsLoading(false);
@@ -128,10 +120,10 @@ const ManageRoleList = ({
         setIsLoading(false);
         toast.error(response.message);
       }
-    } catch (error) {
+    } catch (error: any) {
       setIsLoading(false);
       console.log("catch block :", error);
-      toast.error((error as Error).message);
+      toast.error(error.message);
     } finally {
       setIsLoading(false);
     }
@@ -142,7 +134,12 @@ const ManageRoleList = ({
       const singleItem = allRolePermissionList.find(
         (item: any) => item.id === id
       );
-      setSingleEdit(singleItem);
+      setSingleEdit({
+        id: singleItem?.id,
+        name: singleItem?.name,
+        name_bn: singleItem?.name_bn,
+        status: singleItem?.status,
+      });
       modelOpen(updateModal);
     }
   };
@@ -154,9 +151,9 @@ const ManageRoleList = ({
       name_en: "",
       name_bn: "",
     });
-    const banglaName = e.target.bnName.value;
-    const englishName = e.target.enName.value;
-    const status = e.target.status.value;
+    const banglaName = singleEdit?.name_bn;
+    const englishName = singleEdit?.name;
+    const status = singleEdit?.status;
 
     if (!banglaName && !englishName) {
       setIsLoading(false);
@@ -196,7 +193,7 @@ const ManageRoleList = ({
 
       const res = await rolePermissionNameUpdate(payload);
       if (res?.status) {
-        setIsLoading(false);  
+        setIsLoading(false);
         modelClose(updateModal, updateModalForm);
         toast.success(res?.message);
       } else {
@@ -217,11 +214,19 @@ const ManageRoleList = ({
         const response = await singlePermissionRoleGet(id);
         if (response.status) {
           setLoading(false);
-          console.log(response.data);
+          console.log("single data :", response.data);
           setGetAllPermission(response?.data?.role?.user_permissions);
           setSingleManagePermission(response.data);
-          
-          
+          if (response?.data?.role?.user_permissions?.length > 0) {
+            response?.data?.role?.user_permissions?.forEach((element: any) => {
+              setUpdatedPermission((prev: any) => [
+                ...prev,
+                element?.permission_id,
+              ]);
+            });
+            // setUpdatedPermission(response?.data?.role?.user_permissions);
+          }
+
           modelOpen(permissionManageModal);
         } else {
           setLoading(false);
@@ -243,27 +248,27 @@ const ManageRoleList = ({
 
     const banglaName = e.target.bnName.value;
     const englishName = e.target.enName.value;
-    
+
     try {
-      const payload ={
+      const payload = {
         name_bn: banglaName,
         name_en: englishName,
         permissions: JSON.stringify(updatedPermission),
         role_id: singleManagePermission?.role?.id,
-        user_id:user?.id,
-        guard_name:"api"
-      }
-      console.log({payload});
-      
+        user_id: user?.id,
+        guard_name: "api",
+      };
+      console.log({ payload });
+
       const response = await singleRoleManageUpdate(payload);
       // console.log(response);
 
       if (response.status === true) {
         setIsLoading(false);
         toast.success(response.message);
+        setUpdatedPermission([]);
         modelClose(permissionManageModal, permissionManageForm);
         e.target.reset();
-        
       } else {
         // console.log("else block :", error);
         setIsLoading(false);
@@ -278,8 +283,7 @@ const ManageRoleList = ({
     }
   };
 
-
-  const handleDelete = (id:any) => {
+  const handleDelete = (id: any) => {
     if (id) {
       Swal.fire({
         title: "Are you sure?",
@@ -294,7 +298,7 @@ const ManageRoleList = ({
           const rolePermissionDel = deleteRolePermission(id)
             .then((data) => {
               // console.log(data);
-              
+
               if (data.status) {
                 Swal.fire("Deleted!", data.message, "success");
               } else {
@@ -307,13 +311,14 @@ const ManageRoleList = ({
             });
         }
       });
-    }else{
+    } else {
       Swal.fire("Error!", "Something went wrong.", "error");
     }
   };
 
   // console.log({isLoading});
-  
+
+  console.log({ updatedPermission, getAllPermission });
 
   return (
     <>
@@ -321,7 +326,11 @@ const ManageRoleList = ({
         <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 pb-10">
           <h3 className="text-24 font-bold">Role Permission List</h3>
           <button
-            onClick={() => modelOpen(addModal)}
+            onClick={() => {
+              if (addModal?.current) {
+                modelOpen(addModal);
+              }
+            }}
             className="bg-primary text-white px-4 py-2 rounded-md"
           >
             Create Role Permission
@@ -553,6 +562,7 @@ const ManageRoleList = ({
       <Modal
         modalRef={permissionManageModal}
         modalForm={permissionManageForm}
+        arrDataCloseEmty={setUpdatedPermission}
         title="Update Permission"
       >
         <form
@@ -601,72 +611,66 @@ const ManageRoleList = ({
             </fieldset>
           </div>
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-          <>
-                {allParentPermissionList?.length > 0 ? (
-                  allParentPermissionList?.map((pItem: any, index: number) => {
-                    return (
-                      <div
-                        key={index}
-                        className="border border-gray-300 rounded-md"
-                      >
-                        <div>
-                          <h3 className="bg-gradient-to-r from-indigo-500 to-blue-500 py-3 text-center rounded-t-md">
-                            {pItem?.name ?? ""}
-                          </h3>
-                        </div>
-                        <ul className="p-2">
-                          {pItem?.permissions?.length > 0 ? (
-                            pItem?.permissions?.map(
-                              (cItem: any, cIndex: number) => {
-                                return (
-                                  <li
-                                    key={cIndex}
-                                    className="flex items-center gap-2"
-                                  >
-                                    <input
-                                      type="checkbox"
-                                      onChange={() => {
-                                        if (
-                                          updatedPermission?.some(
-                                            (item: any) => item == cItem.id
-                                          )
-                                        ) {
-                                          setUpdatedPermission((prev: any) => {
-                                            return prev.filter(
-                                              (item: any) => item != cItem.id
-                                            );
-                                          });
-                                        } else {
-                                          setUpdatedPermission((prev: any) => [
-                                            ...prev,
-                                            cItem.id,
-                                          ]);
-                                        }
-                                      }}
-                                      checked={updatedPermission?.some(
-                                        (item: any) => {
-                                          return item == cItem.id;
-                                        }
-                                      )}
-                                    />
-                                    <label htmlFor="">
-                                      {cItem?.display_name ?? ""}
-                                    </label>
-                                  </li>
-                                );
-                              }
-                            )
-                          ) : (
-                            <></>
-                          )}
-                        </ul>
+            <>
+              {allParentPermissionList?.length > 0 ? (
+                allParentPermissionList?.map((pItem: any, index: number) => {
+                  return (
+                    <div
+                      key={index}
+                      className="border border-gray-300 rounded-md"
+                    >
+                      <div>
+                        <h3 className="bg-gradient-to-r from-indigo-500 to-blue-500 py-3 text-center rounded-t-md">
+                          {pItem?.name ?? ""}
+                        </h3>
                       </div>
-                    );
-                  })
-                ) : (
-                  <></>
-                )}
-              </>
+                      <ul className="p-2">
+                        {pItem?.permissions?.length > 0 ? (
+                          pItem?.permissions?.map(
+                            (cItem: any, cIndex: number) => {
+                              const isChecked = updatedPermission.includes(
+                                cItem.id
+                              ); // Simplified check logic
+                              return (
+                                <li
+                                  key={cIndex}
+                                  className="flex items-center gap-2"
+                                >
+                                  <input
+                                    type="checkbox"
+                                    onChange={(e) => {
+                                      const checked = e.target.checked;
+                                      setUpdatedPermission((prev: any) => {
+                                        if (checked) {
+                                          return [...prev, cItem.id];
+                                        } else {
+                                          return prev.filter(
+                                            (item: any) => item !== cItem.id
+                                          );
+                                        }
+                                      });
+                                    }}
+                                    value={cItem.id}
+                                    checked={isChecked} // Directly use isChecked
+                                  />
+                                  <label htmlFor="">
+                                    {cItem?.display_name ?? ""}
+                                  </label>
+                                </li>
+                              );
+                            }
+                          )
+                        ) : (
+                          <></>
+                        )}
+                      </ul>
+                    </div>
+                  );
+                })
+              ) : (
+                <></>
+              )}
+            </>
           </div>
           <div className="pt-6 flex justify-end">
             <div className="flex items-center gap-4">
@@ -675,6 +679,7 @@ const ManageRoleList = ({
                 className="btn"
                 onClick={() => {
                   setSubmitError(null);
+                  setUpdatedPermission([]);
                   modelClose(permissionManageModal, permissionManageForm);
                 }}
               >
@@ -690,6 +695,7 @@ const ManageRoleList = ({
           </div>
         </form>
       </Modal>
+
       {/* edit modal start */}
       <Modal
         modalRef={updateModal}
@@ -717,7 +723,13 @@ const ManageRoleList = ({
                   type="text"
                   id="NameBangla"
                   className="w-full outline-none text-14 py-1  rounded"
-                  defaultValue={singleEdit?.name_bn}
+                  value={singleEdit?.name_bn}
+                  onChange={(e) => {
+                    setSingleEdit((prev: any) => ({
+                      ...prev,
+                      name_bn: e.target.value,
+                    }));
+                  }}
                   name="bnName"
                   placeholder="Enter Role Name in Bangla"
                 />
@@ -740,7 +752,13 @@ const ManageRoleList = ({
                   type="text"
                   id="NameEnglish"
                   className="w-full outline-none text-14 py-1  rounded"
-                  defaultValue={singleEdit?.name}
+                  value={singleEdit?.name}
+                  onChange={(e) => {
+                    setSingleEdit((prev: any) => ({
+                      ...prev,
+                      name: e.target.value,
+                    }));
+                  }}
                   placeholder="Enter Role Name in English"
                   name="enName"
                 />
@@ -761,13 +779,20 @@ const ManageRoleList = ({
               <select
                 name="status"
                 id="status"
+                value={singleEdit?.status}
+                onChange={(e) => {
+                  setSingleEdit((prev: any) => ({
+                    ...prev,
+                    status: e.target.value,
+                  }));
+                }}
                 className="w-full outline-none text-14 py-1  rounded"
               >
                 <option value="1" selected={singleEdit?.status == 1}>
                   Active
                 </option>
                 <option value="0" selected={singleEdit?.status == 0}>
-                  InActive
+                  Inactive
                 </option>
               </select>
             </fieldset>

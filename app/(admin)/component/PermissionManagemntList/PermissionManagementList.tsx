@@ -129,7 +129,7 @@ const PermissionManagementList = ({
         display_name,
         permission_parent_id: parent_id,
       };
-      console.log(permissionData);
+      // console.log(permissionData);
 
       const response = await createSinglePermission(permissionData);
       // console.log(response);
@@ -142,10 +142,12 @@ const PermissionManagementList = ({
           display_name: "",
         });
 
-        toast.success("Permission Created Successfully");
+        toast.success(response?.message);
+      }else{
+        toast.error(response?.message);
       }
-    } catch (error) {
-      toast.error("Failed to Create Permission");
+    } catch (error:any) {
+      toast.error(error.message);
     }
   };
 

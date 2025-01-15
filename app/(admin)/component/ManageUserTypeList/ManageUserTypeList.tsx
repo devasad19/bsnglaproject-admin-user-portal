@@ -27,7 +27,7 @@ const ManageUserTypeList = ({ userType }: any) => {
   const updateModelForm = useRef<any>(null);
   const permissionModal = useRef<any>(null);
   const permissionModalForm = useRef<any>(null);
-  
+
   const [error, setError] = useState<any>({
     bnName: "",
     enName: "",
@@ -90,7 +90,7 @@ const ManageUserTypeList = ({ userType }: any) => {
             name_bn: findUser.name_bn,
             name_en: findUser?.name_en,
             status: findUser?.status,
-          })
+          });
           // setSingleUserTypeInfo(singleUserType?.data);
           modelOpen(updateModal, updateModelForm);
         } else {
@@ -108,7 +108,7 @@ const ManageUserTypeList = ({ userType }: any) => {
         console.log(err)
       );
       setTypeId(id);
-      console.log({singlePermission});
+      console.log({ singlePermission });
       setPermissionName(singlePermission?.data.name_en);
 
       setSelected(singlePermission?.data?.charge);
@@ -240,7 +240,6 @@ const ManageUserTypeList = ({ userType }: any) => {
       Swal.fire("Error!", "Something went wrong.", "error");
     }
   };
-  
 
   return (
     <>
@@ -300,11 +299,11 @@ const ManageUserTypeList = ({ userType }: any) => {
                     <td className="text-center border-r border-gray-200">1</td>
                     <td className="text-center border-r border-gray-200">
                       {item?.status == "1" ? (
-                        <span className="bg-green-500 text-white px-2 py-1 rounded-md">
+                        <span className="bg-green-500 text-white px-2 py-1 rounded-md text-12">
                           Active
                         </span>
                       ) : (
-                        <span className="bg-red-500 text-white px-2 py-1 rounded-md">
+                        <span className="bg-red-500 text-white px-2 py-1 rounded-md text-12">
                           Inactive
                         </span>
                       )}
@@ -497,192 +496,199 @@ const ManageUserTypeList = ({ userType }: any) => {
         title={`Citizen Type Permission Manage`}
       >
         <div>
-          <h2 className="text-16 font-bold py-3">Citizen Type : {permissionName}</h2>
-        
+          <h2 className="text-16 font-bold py-3">
+            Citizen Type : {permissionName}
+          </h2>
 
-        <form onSubmit={handleSubmit(HandleCitizenPermission)}>
-          <div>
-            <table className="border w-full">
-              <tbody>
-                <tr className="bg-slate-300">
-                  <td className="text-center py-3">Feature Name</td>
-                  <td className="text-center py-3 border-l">Configuration</td>
-                </tr>
-                <tr className="border-t">
-                  <td className="text-center py-3">Charge</td>
-                  <td className="text-center py-3 border-l">
-                    <div className="flex items-center justify-center gap-6">
-                      <div className="flex items-center gap-3">
-                        <input
-                          type="checkbox"
-                          id="charge_apply"
-                          className="w-4 h-4"
-                          checked={selected == "1"}
-                          onChange={() => handleCheckboxChange("1")}
-                        />
-                        <label htmlFor="charge"> Charge Apply</label>
+          <form onSubmit={handleSubmit(HandleCitizenPermission)}>
+            <div>
+              <table className="border w-full">
+                <tbody>
+                  <tr className="bg-slate-300">
+                    <td className="text-center py-3">Feature Name</td>
+                    <td className="text-center py-3 border-l">Configuration</td>
+                  </tr>
+                  <tr className="border-t">
+                    <td className="text-center py-3">Charge</td>
+                    <td className="text-center py-3 border-l">
+                      <div className="flex items-center justify-center gap-6">
+                        <div className="flex items-center gap-3">
+                          <input
+                            type="checkbox"
+                            id="charge_apply"
+                            className="w-4 h-4"
+                            checked={selected == "1"}
+                            onChange={() => handleCheckboxChange("1")}
+                          />
+                          <label htmlFor="charge"> Charge Apply</label>
+                        </div>
+                        <div className="flex items-center gap-3">
+                          <input
+                            type="checkbox"
+                            id="charge_no"
+                            className="w-4 h-4"
+                            checked={selected == "0"}
+                            onChange={() => handleCheckboxChange("0")}
+                          />
+                          <label htmlFor="charge">No Charge</label>
+                        </div>
                       </div>
-                      <div className="flex items-center gap-3">
-                        <input
-                          type="checkbox"
-                          id="charge_no"
-                          className="w-4 h-4"
-                          checked={selected == "0"}
-                          onChange={() => handleCheckboxChange("0")}
-                        />
-                        <label htmlFor="charge">No Charge</label>
+                    </td>
+                  </tr>
+                  <tr className="border-t">
+                    <td className="text-center py-3">
+                      Discount(in percentage)
+                    </td>
+                    <td className="text-center py-3 border-l">
+                      <div className="flex items-end justify-center">
+                        <div className="w-2/3">
+                          <input
+                            type="number"
+                            {...register("discount", {
+                              required: "Discount is required",
+                              min: {
+                                value: 0,
+                                message: "Discount must be greater than 0",
+                              },
+                              max: {
+                                value: 100,
+                                message: "Discount must be less than 100",
+                              },
+                            })}
+                            className="w-full border py-2 px-3 outline-none rounded"
+                            placeholder="Enter percentage"
+                          />
+                          {errors.discount && (
+                            <p className="text-red-500 text-12 px-2 pt-1 text-start">
+                              {errors.discount.message as string}
+                            </p>
+                          )}
+                        </div>
                       </div>
-                    </div>
-                  </td>
-                </tr>
-                <tr className="border-t">
-                  <td className="text-center py-3">Discount(in percentage)</td>
-                  <td className="text-center py-3 border-l">
-                    <div className="flex items-end justify-center">
-                      <div className="w-2/3">
-                        <input
-                          type="number"
-                          {...register("discount", {
-                            required: "Discount is required",
-                            min: {
-                              value: 0,
-                              message: "Discount must be greater than 0",
-                            },
-                            max: {
-                              value: 100,
-                              message: "Discount must be less than 100",
-                            },
-                          })}
-                          className="w-full border py-2 px-3 outline-none rounded"
-                          placeholder="Enter percentage"
-                        />
-                        {errors.discount && (
-                          <p className="text-red-500 text-12 px-2 pt-1 text-start">
-                            {errors.discount.message as string}
-                          </p>
-                        )}
+                    </td>
+                  </tr>
+                  <tr className="border-t">
+                    <td className="text-center py-3">Max File upload (MB)</td>
+                    <td className="text-center py-3 border-l">
+                      <div className="flex items-end justify-center">
+                        <div className="w-2/3">
+                          <input
+                            type="number"
+                            className="w-full border py-2 px-3 outline-none rounded"
+                            {...register("maxFile", {
+                              required: "Max File is required",
+                              min: {
+                                value: 1,
+                                message: "Max File must be greater than 0",
+                              },
+                              max: {
+                                value: 256,
+                                message: "Max File must be less than 256",
+                              },
+                            })}
+                            placeholder="Enter Max File"
+                          />
+                          {errors.maxFile && (
+                            <p className="text-red-500 text-12 px-2 pt-1 text-start">
+                              {errors.maxFile.message as string}
+                            </p>
+                          )}
+                        </div>
                       </div>
-                    </div>
-                  </td>
-                </tr>
-                <tr className="border-t">
-                  <td className="text-center py-3">Max File upload (MB)</td>
-                  <td className="text-center py-3 border-l">
-                    <div className="flex items-end justify-center">
-                      <div className="w-2/3">
-                        <input
-                          type="number"
-                          className="w-full border py-2 px-3 outline-none rounded"
-                          {...register("maxFile", {
-                            required: "Max File is required",
-                            min: {
-                              value: 1,
-                              message: "Max File must be greater than 0",
-                            },
-                            max: {
-                              value: 256,
-                              message: "Max File must be less than 256",
-                            },
-                          })}
-                          placeholder="Enter Max File"
-                        />
-                        {errors.maxFile && (
-                          <p className="text-red-500 text-12 px-2 pt-1 text-start">
-                            {errors.maxFile.message as string}
-                          </p>
-                        )}
+                    </td>
+                  </tr>
+                  <tr className="border-t">
+                    <td className="text-center py-3">Max word limit (count)</td>
+                    <td className="text-center py-3 border-l">
+                      <div className="flex items-end justify-center">
+                        <div className="w-2/3">
+                          <input
+                            type="number"
+                            className="w-full border py-2 px-3 outline-none rounded"
+                            {...register("maxWord", {
+                              required: "Max word limit is required",
+                              min: {
+                                value: 1,
+                                message:
+                                  "Max word limit must be greater than 0",
+                              },
+                              max: {
+                                value: 1000,
+                                message:
+                                  "Max word limit must be less than 1000",
+                              },
+                            })}
+                            placeholder="Enter Max word limit"
+                          />
+                          {errors.maxWord && (
+                            <p className="text-red-500 text-12 px-2 pt-1 text-start">
+                              {errors.maxWord.message as string}
+                            </p>
+                          )}
+                        </div>
                       </div>
-                    </div>
-                  </td>
-                </tr>
-                <tr className="border-t">
-                  <td className="text-center py-3">Max word limit (count)</td>
-                  <td className="text-center py-3 border-l">
-                    <div className="flex items-end justify-center">
-                      <div className="w-2/3">
-                        <input
-                          type="number"
-                          className="w-full border py-2 px-3 outline-none rounded"
-                          {...register("maxWord", {
-                            required: "Max word limit is required",
-                            min: {
-                              value: 1,
-                              message: "Max word limit must be greater than 0",
-                            },
-                            max: {
-                              value: 1000,
-                              message: "Max word limit must be less than 1000",
-                            },
-                          })}
-                          placeholder="Enter Max word limit"
-                        />
-                        {errors.maxWord && (
-                          <p className="text-red-500 text-12 px-2 pt-1 text-start">
-                            {errors.maxWord.message as string}
-                          </p>
-                        )}
-                      </div>
-                    </div>
-                  </td>
-                </tr>
-                <tr className="border-t">
-                  <td className="text-center py-3">
-                    <h1 className="text-16 leading-4">Features </h1>
-                    <span className="text-15 leading-4">
-                      (select to open/free features for this type)
-                    </span>
-                  </td>
-                  <td className="flex items-center justify-center py-3 border-l">
-                    <div>
-                      {featureNames?.length > 0 ? (
-                        featureNames?.map(
-                          (featureName: TFeatureName, index: number) => (
-                            <div
-                              key={index}
-                              className="flex items-center gap-2"
-                            >
-                              <input
-                                checked={selectFeatureName.includes(
-                                  featureName.id
-                                )}
-                                type="checkbox"
-                                id="charge"
-                                className="w-4 h-4"
-                                onChange={() => {
-                                  handleFeatureName(featureName.id);
-                                }}
-                              />
-                              <label htmlFor="charge">{featureName.name}</label>
-                            </div>
+                    </td>
+                  </tr>
+                  <tr className="border-t">
+                    <td className="text-center py-3">
+                      <h1 className="text-16 leading-4">Features </h1>
+                      <span className="text-15 leading-4">
+                        (select to open/free features for this type)
+                      </span>
+                    </td>
+                    <td className="flex items-center justify-center py-3 border-l">
+                      <div>
+                        {featureNames?.length > 0 ? (
+                          featureNames?.map(
+                            (featureName: TFeatureName, index: number) => (
+                              <div
+                                key={index}
+                                className="flex items-center gap-2"
+                              >
+                                <input
+                                  checked={selectFeatureName.includes(
+                                    featureName.id
+                                  )}
+                                  type="checkbox"
+                                  id="charge"
+                                  className="w-4 h-4"
+                                  onChange={() => {
+                                    handleFeatureName(featureName.id);
+                                  }}
+                                />
+                                <label htmlFor="charge">
+                                  {featureName.name}
+                                </label>
+                              </div>
+                            )
                           )
-                        )
-                      ) : (
-                        <FeaturesNameSkeleton />
-                      )}
-                    </div>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-          <div className="flex justify-end gap-3 mt-7">
-            <button
-              type="button"
-              onClick={() => {
-                modelClose(permissionModal, permissionModalForm);
-              }}
-              className="bg-red-500 text-white px-4 py-2 rounded-md"
-            >
-              Cancel
-            </button>
-            <button
-              type="submit"
-              className="bg-blue-500 text-white px-4 py-2 rounded-md"
-            >
-              Update
-            </button>
-          </div>
-        </form>
+                        ) : (
+                          <FeaturesNameSkeleton />
+                        )}
+                      </div>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div className="flex justify-end gap-3 mt-7">
+              <button
+                type="button"
+                onClick={() => {
+                  modelClose(permissionModal, permissionModalForm);
+                }}
+                className="bg-red-500 text-white px-4 py-2 rounded-md"
+              >
+                Cancel
+              </button>
+              <button
+                type="submit"
+                className="bg-blue-500 text-white px-4 py-2 rounded-md"
+              >
+                Update
+              </button>
+            </div>
+          </form>
         </div>
       </Modal>
     </>

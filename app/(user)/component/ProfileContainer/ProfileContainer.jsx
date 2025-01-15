@@ -6,11 +6,11 @@ import { relative_image_path } from "@/helper";
 import { toast } from "react-toastify";
 
 import { FaCamera, FaRegEdit } from "react-icons/fa";
-import { updateCitizenData, updateCitizenProfile, updateCitizenTypeInfo } from "../../_api/user";
+import { updateCitizenProfile, updateCitizenTypeInfo } from "../../_api/user";
 import UserApiLoading from "../UserAPiLoading/UserApiLoading";
 
 const ProfileContainer = ({ citizen, userTypes, grade }) => {
-  // console.log({citizen});
+  console.log({ citizen });
 
   const [edit, setEdit] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -36,7 +36,7 @@ const ProfileContainer = ({ citizen, userTypes, grade }) => {
       research_title: citizen?.citizen_info?.research_title ?? "",
       research_code: citizen?.citizen_info?.research_code ?? "",
     },
-    citizen_info_id:citizen?.citizen_info?.id
+    citizen_info_id: citizen?.citizen_info?.id,
   });
   useEffect(() => {
     setFormInputs({
@@ -61,7 +61,7 @@ const ProfileContainer = ({ citizen, userTypes, grade }) => {
         research_title: citizen?.citizen_info?.research_title ?? "",
         research_code: citizen?.citizen_info?.research_code ?? "",
       },
-      citizen_info_id:citizen?.citizen_info?.id
+      citizen_info_id: citizen?.citizen_info?.id,
     });
   }, [citizen, userTypes]);
 
@@ -70,45 +70,30 @@ const ProfileContainer = ({ citizen, userTypes, grade }) => {
   );
   const HandleUpdate = async () => {
     setLoading(true);
-    const form = new FormData();
-    form.append("id", formInputs?.citizen_info_id ?? "");
-    form.append("citizen_type_id", userType?.id ?? "");
-    form.append("team_size", formInputs.teamSize ?? "");
-    form.append("company_url", formInputs.companyUrl ?? "");
-    form.append("ministry_name", formInputs?.govt?.name_of_ministry ?? "");
-    form.append(
-      "ministry_department",
-      formInputs?.govt?.department_of_ministry ?? ""
-    );
-    form.append("job_position", formInputs?.govt?.job_position ?? "");
-    form.append("grade", formInputs?.govt?.grade ?? "");
-    form.append("research_topic", formInputs?.researcher?.research_topic ?? "");
-    form.append("research_title", formInputs?.researcher?.research_title ?? "");
-    form.append("research_code", formInputs?.researcher?.research_code ?? "");
-    form.append("user_id",citizen?.id ?? "")
+    console.log("form inputs", formInputs);
 
+    console.log("type id", userType?.id);
+
+    const payload = {
+      id: formInputs?.citizen_info_id ?? "",
+      citizen_type_id: userType?.id ?? "",
+      team_size: formInputs.teamSize ?? "",
+      company_url: formInputs.companyUrl ?? "",
+      ministry_name: formInputs?.govt?.name_of_ministry ?? "",
+      ministry_department: formInputs?.govt?.department_of_ministry ?? "",
+      job_position: formInputs?.govt?.job_position ?? "",
+      grade: formInputs?.govt?.grade ?? "",
+      research_topic: formInputs?.researcher?.research_topic ?? "",
+      research_title: formInputs?.researcher?.research_title ?? "",
+      research_code: formInputs?.researcher?.research_code ?? "",
+      user_id: citizen?.id ?? "",
+    };
     try {
-      const response = await updateCitizenTypeInfo(form);
+      const response = await updateCitizenTypeInfo(payload);
       setEdit(false);
       if (response.status == true) {
         setLoading(false);
-        // console.log("user profile update response: ", response);
         toast.success(response.message);
-        // const user = {
-        //   id: response.data.id ,
-        //   name: response.data.name,
-        //   role: response.data.role,
-        //   email: response.data.email,
-        //   phone: response.data.phone,
-        //   status: response.data.status,
-        //   photo: response.data.photo ?? null,
-        //   type: response.data.type,
-        // };
-
-        // const userinfo = JSON.stringify(user);
-        // document.cookie = `user=${userinfo};path=/;max-age=31536000;SameSite=Strict;Secure;`;
-
-        // window.location.reload();
       } else {
         setLoading(false);
         toast.error(response.message);
@@ -300,7 +285,8 @@ const ProfileContainer = ({ citizen, userTypes, grade }) => {
                       onChange={(e) =>
                         setFormInputs({ ...formInputs, email: e.target.value })
                       }
-                      className="outline-none border border-gray-300 px-2 py-1 rounded"
+                      className="outline-none border border-gray-300 px-2 py-1 rounded bg-gray-200 cursor-not-allowed"
+                      disabled
                     />
                   ) : (
                     <p className="text-gray-700">{formInputs?.email}</p>

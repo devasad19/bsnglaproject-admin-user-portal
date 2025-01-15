@@ -20,7 +20,7 @@ const Sidebar = () => {
   // const [user, setUser] = useState(null);
   const [isOpen, setIsOpen] = useState(true);
   const {user}= useHomeContext();
-  console.log({user});
+  // console.log({user});
   
 
   const [isToggleOpen, setIsToggleOpen] = useState({
@@ -476,7 +476,7 @@ const Sidebar = () => {
                 <div className="flex items-center gap-2">
                   <span className="">
                     <svg
-                      className={`w-5 h-5 fill-current transition-colors duration-300
+                      className={`w-5 h-5 fill-current group-hover:text-white transition-colors duration-300
                       ${
                         isOpen && pathname.includes("/admin/setting")
                           ? "text-white"
@@ -508,7 +508,7 @@ const Sidebar = () => {
                   } ${isToggleOpen.setting ? "rotate-180" : ""}`}
                 >
                   <svg
-                    className={`w-3 h-3 fill-current text-primary  transition-colors duration-300 ${
+                    className={`w-3 h-3 fill-current group-hover:text-white text-primary  transition-colors duration-300 ${
                       isOpen &&
                       pathname.includes("/admin/setting") &&
                       "text-white"

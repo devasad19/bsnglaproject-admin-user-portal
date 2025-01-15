@@ -3,13 +3,17 @@ import { relative_image_path } from "@/helper";
 import Image from "next/image";
 import React, { useEffect, useState } from "react";
 import { FaCamera, FaRegEdit } from "react-icons/fa";
-import { getSingleCitizenUserNotNull, updateCitizenUserStatus } from "../../_api";
+import {
+  getSingleCitizenUserNotNull,
+  updateCitizenUserStatus,
+} from "../../_api";
 import { toast } from "react-toastify";
 
 const CitizenInfoData = ({ id }: { id: string }) => {
-  const [user, setUser] = useState<any>(null);
+  const [singleUser, setSingleUser] = useState<any>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [isFetch, setIsFetch] = useState(false);
+  console.log({ id });
 
   const fetchCitizenTypes = async () => {
     setIsLoading(true);
@@ -17,42 +21,46 @@ const CitizenInfoData = ({ id }: { id: string }) => {
     try {
       if (id) {
         const fetchUser = await getSingleCitizenUserNotNull(id);
-        setUser(fetchUser?.data);
-        setIsLoading(false);
+        if (fetchUser.status) {
+          setSingleUser(fetchUser?.data);
+          setIsLoading(false);
+        } else {
+          setIsLoading(false);
+          toast.error(fetchUser?.message);
+        }
       }
-    } catch (error) {
+    } catch (error: any) {
       setIsLoading(false);
-      toast.error("Something went wrong");
+      toast.error(error.message);
     }
   };
 
   useEffect(() => {
     fetchCitizenTypes();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [id,isFetch]);
+  }, [id, isFetch]);
   // console.log({ user });
 
- const handleApprove = async () => {
-    if(user){
-        
-        try {
-          const updateInfo ={
-            user_id:user.id,
-            citizen_type_id:user.citizen_type_id,
-        }
-          const response = await updateCitizenUserStatus(updateInfo);
-          if(response.status){
-            toast.success("User Approved Successfully");
-            setIsFetch(!isFetch);
-          }else{
-            toast.error("Something went wrong");
-          }
-        } catch (error) {
+  const handleApprove = async () => {
+    if (singleUser) {
+      try {
+        const updateInfo = {
+          user_id: singleUser.id,
+          citizen_type_id: singleUser.citizen_info?.citizen_type?.id,
+          status: 1,
+        };
+        const response = await updateCitizenUserStatus(updateInfo);
+        if (response.status) {
+          toast.success("User Approved Successfully");
+          setIsFetch(!isFetch);
+        } else {
           toast.error("Something went wrong");
         }
+      } catch (error) {
+        toast.error("Something went wrong");
+      }
     }
-    
- }
+  };
 
   return (
     <div>
@@ -60,13 +68,23 @@ const CitizenInfoData = ({ id }: { id: string }) => {
         <div className="bg-white w-full p-4 rounded-md shadow-lg pb-8">
           <div className="flex flex-wrap items-center gap-4 border border-gray-300 p-4 rounded-md overflow-hidden mb-5">
             <div className="relative group">
-              <Image
-                className="w-20 h-20 rounded-full"
-                width={1000}
-                height={1000}
-                src={relative_image_path("dummy_image1.jpg")}
-                alt="Profile Picture"
-              />
+              {singleUser?.photo ? (
+                <Image
+                  className="w-20 h-20 rounded-full"
+                  width={1000}
+                  height={1000}
+                  src={process.env.NEXT_PUBLIC_IMAGE_URL + singleUser?.photo}
+                  alt="Profile Picture"
+                />
+              ) : (
+                <Image
+                  className="w-20 h-20 rounded-full"
+                  width={1000}
+                  height={1000}
+                  src={relative_image_path("dummy_image1.jpg")}
+                  alt="Profile Picture"
+                />
+              )}
 
               <div className="hidden absolute top-0 left-0 w-full h-full group-hover:flex items-center justify-center bg-black bg-opacity-50 rounded-full cursor-pointer">
                 <button>
@@ -77,7 +95,7 @@ const CitizenInfoData = ({ id }: { id: string }) => {
 
             <div className="text-gray-500">
               <p>username</p>
-              <p>email: {user?.email || ""}</p>
+              <p>email: {singleUser?.email || ""}</p>
             </div>
           </div>
           <div className="border border-gray-300 p-4 rounded-md mb-5">
@@ -87,7 +105,7 @@ const CitizenInfoData = ({ id }: { id: string }) => {
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-2 lg:gap-4">
               <div>
                 <p className={`text-gray-500 text-14 `}>Name:</p>
-                <p className="text-gray-700">{user?.name || ""}</p>
+                <p className="text-gray-700">{singleUser?.name || ""}</p>
               </div>
               <div>
                 <p
@@ -97,18 +115,18 @@ const CitizenInfoData = ({ id }: { id: string }) => {
                   Phone:
                 </p>
 
-                <p className="text-gray-700">{user?.phone || ""}</p>
+                <p className="text-gray-700">{singleUser?.phone || ""}</p>
               </div>
               <div>
                 <p className={`text-gray-500 text-14`}>Email:</p>
 
-                <p className="text-gray-700">{user?.email || ""}</p>
+                <p className="text-gray-700">{singleUser?.email || ""}</p>
               </div>
             </div>
           </div>
           <div className="border border-gray-300 p-4 rounded-md mb-2">
             <h3 className="text-20 font-mono font-bold text-[#151D48] pb-3 overflow-hidden">
-              Citizen Request Info
+              Requested Citizen Info
             </h3>
 
             <div className="">
@@ -118,7 +136,7 @@ const CitizenInfoData = ({ id }: { id: string }) => {
                     <p className="text-gray-500 text-14">
                       Citizen Type:
                       <span className="text-gray-800 text-16 ms-3">
-                        {user?.citizen_type?.name_en ?? ""}
+                        {singleUser?.citizen_info?.citizen_type?.name_en ?? ""}
                       </span>
                     </p>
                     <div className="flex items-center gap-2">
@@ -127,12 +145,12 @@ const CitizenInfoData = ({ id }: { id: string }) => {
                       </span>
                       <button
                         className={` text-white text-14 font-medium px-2 py-1 rounded ${
-                          user?.citizen_info?.status === 1
+                          singleUser?.citizen_info?.status === 1
                             ? "bg-primary"
                             : "bg-blue-500"
                         }`}
                       >
-                        {user?.citizen_info?.status === 1
+                        {singleUser?.citizen_info?.status === 1
                           ? "Approved"
                           : "Pending"}
                       </button>
@@ -148,7 +166,7 @@ const CitizenInfoData = ({ id }: { id: string }) => {
                   </p>
                   <input
                     disabled={true}
-                    value={user?.citizen_info?.team_size}
+                    value={singleUser?.citizen_info?.team_size}
                     type="number"
                     className="outline-none border border-gray-300 px-2 py-1 rounded"
                     placeholder="Enter Team Size"
@@ -158,7 +176,7 @@ const CitizenInfoData = ({ id }: { id: string }) => {
                   <p className="text-gray-500 text-14 "> Company url</p>
                   <input
                     disabled={true}
-                    value={user?.citizen_info?.company_url}
+                    value={singleUser?.citizen_info?.company_url}
                     type="text"
                     className="outline-none border border-gray-300 px-2 py-1 rounded"
                     placeholder="Enter Company URL"
@@ -166,9 +184,8 @@ const CitizenInfoData = ({ id }: { id: string }) => {
                 </div>
               </div>
 
-              {user?.citizen_type?.slug === "govt_user" && (
+              {singleUser?.citizen_type?.slug === "govt_user" && (
                 <>
-                  
                   <div className="grid grid-cols-1 lg:grid-cols-2 gap-2">
                     <div className="flex flex-col  gap-2">
                       <p className="text-gray-500 text-14 after:content-['_*'] after:text-red-500">
@@ -176,7 +193,7 @@ const CitizenInfoData = ({ id }: { id: string }) => {
                       </p>
                       <input
                         disabled={true}
-                        value={user?.citizen_info?.ministry_name}
+                        value={singleUser?.citizen_info?.ministry_name}
                         type="number"
                         className="outline-none border border-gray-300 px-2 py-1 rounded"
                         placeholder="Enter Team Size"
@@ -188,7 +205,7 @@ const CitizenInfoData = ({ id }: { id: string }) => {
                       </p>
                       <input
                         disabled={true}
-                        value={user?.citizen_info?.ministry_department}
+                        value={singleUser?.citizen_info?.ministry_department}
                         type="text"
                         className="outline-none border border-gray-300 px-2 py-1 rounded"
                         placeholder="Enter Company URL"
@@ -198,7 +215,7 @@ const CitizenInfoData = ({ id }: { id: string }) => {
                       <p className="text-gray-500 text-14 ">job position</p>
                       <input
                         disabled={true}
-                        value={user?.citizen_info?.job_position}
+                        value={singleUser?.citizen_info?.job_position}
                         type="text"
                         className="outline-none border border-gray-300 px-2 py-1 rounded"
                         placeholder="Enter Company URL"
@@ -208,20 +225,18 @@ const CitizenInfoData = ({ id }: { id: string }) => {
                       <p className="text-gray-500 text-14 ">Grade</p>
                       <input
                         disabled={true}
-                        value={user?.citizen_info?.grade}
+                        value={singleUser?.citizen_info?.grade}
                         type="text"
                         className="outline-none border border-gray-300 px-2 py-1 rounded"
                         placeholder="Enter Company URL"
                       />
                     </div>
                   </div>
-                  
                 </>
               )}
 
-              {user?.citizen_type?.slug === "researcher" && (
+              {singleUser?.citizen_type?.slug === "researcher" && (
                 <>
-                  
                   <div className="grid grid-cols-1 lg:grid-cols-2 gap-2">
                     <div className="flex flex-col  gap-2">
                       <p className="text-gray-500 text-14 after:content-['_*'] after:text-red-500">
@@ -229,7 +244,7 @@ const CitizenInfoData = ({ id }: { id: string }) => {
                       </p>
                       <input
                         disabled={true}
-                        value={user?.citizen_info?.ministry_name}
+                        value={singleUser?.citizen_info?.ministry_name}
                         type="number"
                         className="outline-none border border-gray-300 px-2 py-1 rounded"
                         placeholder="Enter Team Size"
@@ -239,7 +254,7 @@ const CitizenInfoData = ({ id }: { id: string }) => {
                       <p className="text-gray-500 text-14 ">Research Topic</p>
                       <input
                         disabled={true}
-                        value={user?.citizen_info?.research_topic}
+                        value={singleUser?.citizen_info?.research_topic}
                         type="text"
                         className="outline-none border border-gray-300 px-2 py-1 rounded"
                         placeholder="Enter Company URL"
@@ -249,7 +264,7 @@ const CitizenInfoData = ({ id }: { id: string }) => {
                       <p className="text-gray-500 text-14 ">Research Title</p>
                       <input
                         disabled={true}
-                        value={user?.citizen_info?.research_title}
+                        value={singleUser?.citizen_info?.research_title}
                         type="text"
                         className="outline-none border border-gray-300 px-2 py-1 rounded"
                         placeholder="Enter Company URL"
@@ -259,25 +274,24 @@ const CitizenInfoData = ({ id }: { id: string }) => {
                       <p className="text-gray-500 text-14 ">Research Code</p>
                       <input
                         disabled={true}
-                        value={user?.citizen_info?.research_code}
+                        value={singleUser?.citizen_info?.research_code}
                         type="text"
                         className="outline-none border border-gray-300 px-2 py-1 rounded"
                         placeholder="Enter Company URL"
                       />
                     </div>
                   </div>
-                  
                 </>
               )}
             </div>
           </div>
-          {user?.citizen_info?.status == 0 && (
+          {singleUser?.citizen_info?.status == 0 && (
             <>
               <div className="flex items-end justify-end mt-4">
                 <button
-                onClick={()=>{
-                    handleApprove()
-                }}
+                  onClick={() => {
+                    handleApprove();
+                  }}
                   className={` text-white text-16 font-medium px-5 py-2 rounded bg-primary`}
                 >
                   Approve

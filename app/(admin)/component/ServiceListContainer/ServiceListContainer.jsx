@@ -38,10 +38,6 @@ const ServiceListContainer = ({ services }) => {
     if (currentPage > 1) setCurrentPage(currentPage - 1);
   };
 
-  const handlePageClick = (pageIndex) => {
-    setCurrentPage(pageIndex);
-  };
-
   const handleNextClick = () => {
     if (currentPage < totalPages) setCurrentPage(currentPage + 1);
   };
@@ -61,8 +57,6 @@ const ServiceListContainer = ({ services }) => {
     }
   };
 
-  // console.log({totalPages,displayedItems,itemsPerPage,currentPage});
-  // console.log({ displayedItems, servicesFilter });
 
   const handleDelete = (id) => {
     if (id) {
@@ -159,7 +153,7 @@ const ServiceListContainer = ({ services }) => {
           />
         </div>
       </div>
-      <div className="w-full overflow-x-auto bg-white  rounded-md">
+      <div className="w-full overflow-x-auto bg-white  rounded-md pb-3">
         <table className="w-full">
           <thead className="border-b border-gray-200  bg-primary text-white  h-10 text-12 md:text-15">
             <tr>
