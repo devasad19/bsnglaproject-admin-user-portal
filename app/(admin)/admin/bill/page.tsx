@@ -28,12 +28,13 @@ const Home = (): JSX.Element => {
     loadPayments();
   }, [page, limit]);
 
-  console.log({payments});
-  
- 
+  console.log({ payments });
+
   return (
     <section>
-      <h3 className="text-32 font-mono font-bold text-[#151D48] pb-5">Citizen Payment Lists</h3>
+      <h3 className="text-32 font-mono font-bold text-[#151D48] pb-5">
+        Citizen Payment Lists
+      </h3>
       <div className="w-full overflow-x-auto bg-white p-7 rounded-md">
         {/* <div className="w-full flex items-center justify-between py-4">
           <div>
@@ -78,23 +79,21 @@ const Home = (): JSX.Element => {
               <th className="text-center">User Name</th>
               <th className="text-center">Date</th>
               <th className="text-center">Status</th>
+              <th className="text-center">Options</th>
             </tr>
           </thead>
           <tbody className="[&>tr]:border-b [&>tr]:border-gray-200 [&>tr]:text-left [&>tr]:h-12">
             {payments?.length > 0 ? (
               payments?.map((item: any, index: number) => (
                 <tr key={index}>
-                <td className="px-3">
-                  <span className="border border-gray-300 px-2 py-1 rounded-md">
-                    {index + 1}
-                  </span>
-                </td>
+                  <td className="px-3">
+                    <span className="border border-gray-300 px-2 py-1 rounded-md">
+                      {index + 1}
+                    </span>
+                  </td>
                   <td className="px-2 border-r border-gray-200">
-                    <Link
-                      href={{
-                        pathname: `/admin/invoice/${item?.id}`,
-                      }}
-                      shallow
+                    <div
+                      
                       className="flex items-center gap-2 text-14"
                     >
                       <span>
@@ -107,7 +106,7 @@ const Home = (): JSX.Element => {
                         </svg>
                       </span>
                       <span>Billing no. {item?.id}</span>
-                    </Link>
+                    </div>
                   </td>
                   <td className="px-2 border-r border-gray-200 text-center">
                     {item?.service ? item?.service?.name : ""}
@@ -115,10 +114,6 @@ const Home = (): JSX.Element => {
                   <td className="px-2 border-r border-gray-200 text-center">
                     {item?.amount} tk
                   </td>
-
-                  {/* <td className="px-2 border-r border-gray-200 text-center">
-                    Basic
-                  </td> */}
                   <td className="px-2 border-r border-gray-200 text-center">
                     {item?.user?.name}
                   </td>
@@ -130,17 +125,24 @@ const Home = (): JSX.Element => {
                     })}
                   </td>
                   <td className="px-2 border-r border-gray-200 text-center">
-                    {/* {item?.status == 1 ? "PAID" : "UNPAID"} */}
-                    {
-                      item?.payment_status
-                    }
+                    {item?.payment_status}
+                  </td>
+                  <td className="px-2 border-r border-gray-200 text-center">
+                    <Link
+                      href={{
+                        pathname: `/admin/invoice/${item?.id}`,
+                      }}
+                      className="text-13 px-2 py-1 bg-blue-400 rounded-md text-white"
+                    >
+                      Invoice
+                    </Link>
                   </td>
                 </tr>
               ))
             ) : (
               <>
                 <tr>
-                  <td colSpan={7}>
+                  <td colSpan={8}>
                     <Skeleton width="100%" count={10} height={50} />
                   </td>
                 </tr>

@@ -318,7 +318,7 @@ const ManageRoleList = ({
 
   // console.log({isLoading});
 
-  console.log({ updatedPermission, getAllPermission });
+  // console.log({ updatedPermission, getAllPermission });
 
   return (
     <>
