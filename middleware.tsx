@@ -10,7 +10,6 @@ export const middleware = (request: NextRequest)=>{
     if (user) {
       userInfo = JSON?.parse(user?.value || '{}');
     }
-
     if(envConfig == 'dev'){
       redirectUrl = new URL('http://localhost:3000/signin', request.url);
     }else{

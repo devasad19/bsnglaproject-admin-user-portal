@@ -11,8 +11,7 @@ const Sidebar = () => {
   const pathname = usePathname();
   // const [user, setUser] = useState(null);
   const [isOpen, setIsOpen] = useState(true);
-  const {user}= useHomeContext();
-
+  const { user } = useHomeContext();
 
   // useEffect(() => {
   //   const userCookie = document.cookie.split(';').find(c => c.trim().startsWith('user='));
@@ -21,30 +20,34 @@ const Sidebar = () => {
   //   }
   // }, []);
 
-
   const HandleLogout = () => {
-    document.cookie = "token=; path=/; domain=localhost; expires=Thu, 01 Jan 1970 00:00:00 UTC;";
-    document.cookie = "user=; path=/; domain=localhost; expires=Thu, 01 Jan 1970 00:00:00 UTC;";
+    document.cookie =
+      "token=; path=/; domain=localhost; expires=Thu, 01 Jan 1970 00:00:00 UTC;";
+    document.cookie =
+      "user=; path=/; domain=localhost; expires=Thu, 01 Jan 1970 00:00:00 UTC;";
     // window.location.href='http://localhost:3000/signin';
-    window.location.href='https://service.bangla.gov.bd/signin';
-  }
+    window.location.href = "https://service.bangla.gov.bd/signin";
+  };
 
   // console.log('user cookie: ',process.env.NEXT_PUBLIC_PORTAL_URL);
   return (
     <>
       <div className="min-h-screen flex flex-col justify-between">
         <div
-          className={`p-4 bg-white transition-all duration-500  ${isOpen ? "w-60" : "w-12"
-            }`}
+          className={`p-4 bg-white transition-all duration-500  ${
+            isOpen ? "w-60" : "w-12"
+          }`}
         >
           <div className="flex flex-col items-center">
             <div
-              className={`w-full flex items-center pb-5 ${isOpen ? "justify-between" : "justify-end"
-                }`}
+              className={`w-full flex items-center pb-5 ${
+                isOpen ? "justify-between" : "justify-end"
+              }`}
             >
               <Image
-                className={`w-24 transition-all duration-500 ${isOpen ? "opacity-100 block" : "opacity-0 hidden"
-                  }`}
+                className={`w-24 transition-all duration-500 ${
+                  isOpen ? "opacity-100 block" : "opacity-0 hidden"
+                }`}
                 src={relative_image_path("logo.png")}
                 loading="eager"
                 width={1000}
@@ -75,12 +78,14 @@ const Sidebar = () => {
               </button>
             </div>
             <ul
-              className={`[&>li]:text-slate-900   [&>li]:rounded-md [&>li]:transition-all [&>li]:duration-500 [&>*]:text-12 flex flex-col gap-2 w-full ${isOpen ? "[&>li]:px-3 [&>li]:py-2" : "[&>li]:py-1"
-                }`}
+              className={`[&>li]:text-slate-900   [&>li]:rounded-md [&>li]:transition-all [&>li]:duration-500 [&>*]:text-12 flex flex-col gap-2 w-full ${
+                isOpen ? "[&>li]:px-3 [&>li]:py-2" : "[&>li]:py-1"
+              }`}
             >
               <li
-                className={`hover:bg-primary group ${pathname == "/user" ? "bg-primary" : ""
-                  }`}
+                className={`hover:bg-primary group ${
+                  pathname == "/user" ? "bg-primary" : ""
+                }`}
               >
                 <Link
                   href={{
@@ -88,8 +93,9 @@ const Sidebar = () => {
                   }}
                   shallow
                   title="Dashboard"
-                  className={`flex items-center gap-2 group-hover:text-white ${pathname == "/user" ? "text-white" : "text-primary"
-                    }`}
+                  className={`flex items-center gap-2 group-hover:text-white ${
+                    pathname == "/user" ? "text-white" : "text-primary"
+                  }`}
                 >
                   <span>
                     <svg
@@ -171,8 +177,9 @@ const Sidebar = () => {
                 </Link>
               </li> */}
               <li
-                className={`hover:bg-primary group ${pathname.includes("comment") ? "bg-primary" : ""
-                  }`}
+                className={`hover:bg-primary group ${
+                  pathname.includes("comment") ? "bg-primary" : ""
+                }`}
               >
                 <Link
                   href={{
@@ -180,8 +187,9 @@ const Sidebar = () => {
                   }}
                   shallow
                   title="Comment"
-                  className={`flex items-center gap-2 group-hover:text-white ${pathname.includes("comment") ? "text-white" : "text-primary"
-                    }`}
+                  className={`flex items-center gap-2 group-hover:text-white ${
+                    pathname.includes("comment") ? "text-white" : "text-primary"
+                  }`}
                 >
                   <span>
                     <svg
@@ -195,14 +203,16 @@ const Sidebar = () => {
                       <path d="M12 0.5C5.37188 0.5 0 4.86406 0 10.25C0 12.575 1.00313 14.7031 2.67188 16.3766C2.08594 18.7391 0.126563 20.8438 0.103125 20.8672C0 20.975 -0.028125 21.1344 0.0328125 21.275C0.09375 21.4156 0.225 21.5 0.375 21.5C3.48281 21.5 5.8125 20.0094 6.96563 19.0906C8.49844 19.6672 10.2 20 12 20C18.6281 20 24 15.6359 24 10.25C24 4.86406 18.6281 0.5 12 0.5ZM6 11.75C5.17031 11.75 4.5 11.0797 4.5 10.25C4.5 9.42031 5.17031 8.75 6 8.75C6.82969 8.75 7.5 9.42031 7.5 10.25C7.5 11.0797 6.82969 11.75 6 11.75ZM12 11.75C11.1703 11.75 10.5 11.0797 10.5 10.25C10.5 9.42031 11.1703 8.75 12 8.75C12.8297 8.75 13.5 9.42031 13.5 10.25C13.5 11.0797 12.8297 11.75 12 11.75ZM18 11.75C17.1703 11.75 16.5 11.0797 16.5 10.25C16.5 9.42031 17.1703 8.75 18 8.75C18.8297 8.75 19.5 9.42031 19.5 10.25C19.5 11.0797 18.8297 11.75 18 11.75Z" />
                     </svg>
                   </span>
-                  <span className={isOpen ? "block" : "hidden"}>Service Feedback</span>
+                  <span className={isOpen ? "block" : "hidden"}>
+                    Service Feedback
+                  </span>
                 </Link>
               </li>
 
-
               <li
-                className={`group flex gap-2 ${pathname.includes("accounts-settings") ? "bg-primary" : ""
-                  }`}
+                className={`group flex gap-2 ${
+                  pathname.includes("accounts-settings") ? "bg-primary" : ""
+                }`}
               >
                 {isOpen && (
                   <Accordion
@@ -210,10 +220,11 @@ const Sidebar = () => {
                     active={pathname.includes("accounts-settings")}
                     icon={
                       <svg
-                        className={`w-5 h-5 fill-current ${pathname.includes("accounts-settings")
-                          ? "text-white"
-                          : "text-primary"
-                          }`}
+                        className={`w-5 h-5 fill-current ${
+                          pathname.includes("accounts-settings")
+                            ? "text-white"
+                            : "text-primary"
+                        }`}
                         xmlns="http://www.w3.org/2000/svg"
                         viewBox="0 0 640 512"
                       >
@@ -227,9 +238,11 @@ const Sidebar = () => {
                           pathname: "/user/accounts-settings/purchase-services",
                         }}
                         shallow
-                        className={`text-14 hover:bg-green-500 hover:text-white p-2 rounded ${pathname.includes("purchase-services")
-                          ? "bg-green-500 text-white"
-                          : ""}`}
+                        className={`text-14 hover:bg-green-500 hover:text-white p-2 rounded ${
+                          pathname.includes("purchase-services")
+                            ? "bg-green-500 text-white"
+                            : ""
+                        }`}
                       >
                         Purchase Services
                       </Link>
@@ -238,9 +251,11 @@ const Sidebar = () => {
                           pathname: "/user/accounts-settings/payment-history",
                         }}
                         shallow
-                        className={`text-14 hover:bg-green-500 hover:text-white p-2 rounded ${pathname.includes("payment-history")
-                          ? "bg-green-500 text-white"
-                          : ""}`}
+                        className={`text-14 hover:bg-green-500 hover:text-white p-2 rounded ${
+                          pathname.includes("payment-history")
+                            ? "bg-green-500 text-white"
+                            : ""
+                        }`}
                       >
                         Payment History
                       </Link>
@@ -250,8 +265,9 @@ const Sidebar = () => {
               </li>
 
               <li
-                className={`group flex gap-2 ${pathname.includes("profile-settings") ? "bg-primary" : ""
-                  }`}
+                className={`group flex gap-2 ${
+                  pathname.includes("profile-settings") ? "bg-primary" : ""
+                }`}
               >
                 {isOpen && (
                   <Accordion
@@ -259,10 +275,11 @@ const Sidebar = () => {
                     active={pathname.includes("profile-settings")}
                     icon={
                       <svg
-                        className={`w-5 h-5 fill-current ${pathname.includes("profile-settings")
-                          ? "text-white"
-                          : "text-primary"
-                          }`}
+                        className={`w-5 h-5 fill-current ${
+                          pathname.includes("profile-settings")
+                            ? "text-white"
+                            : "text-primary"
+                        }`}
                         xmlns="http://www.w3.org/2000/svg"
                         viewBox="0 0 640 512"
                       >
@@ -276,9 +293,11 @@ const Sidebar = () => {
                           pathname: "/user/profile-settings/manage-profile",
                         }}
                         shallow
-                        className={`text-14 hover:bg-green-500 hover:text-white p-2 rounded ${pathname.includes("manage-profile")
-                          ? "bg-green-500 text-white"
-                          : ""}`}
+                        className={`text-14 hover:bg-green-500 hover:text-white p-2 rounded ${
+                          pathname.includes("manage-profile")
+                            ? "bg-green-500 text-white"
+                            : ""
+                        }`}
                       >
                         Manage Profile
                       </Link>
@@ -287,9 +306,11 @@ const Sidebar = () => {
                           pathname: "/user/profile-settings/change-password",
                         }}
                         shallow
-                        className={`text-14 hover:bg-green-500 hover:text-white p-2 rounded ${pathname.includes("change-password")
-                          ? "bg-green-500 text-white"
-                          : ""}`}
+                        className={`text-14 hover:bg-green-500 hover:text-white p-2 rounded ${
+                          pathname.includes("change-password")
+                            ? "bg-green-500 text-white"
+                            : ""
+                        }`}
                       >
                         Change Password
                       </Link>
@@ -297,10 +318,6 @@ const Sidebar = () => {
                   </Accordion>
                 )}
               </li>
-
-
-
-
 
               {/* <li
                 className={`hover:bg-primary group flex gap-2 ${pathname.includes("profile-settings") ? "bg-primary" : ""
@@ -346,22 +363,34 @@ const Sidebar = () => {
                   </Accordion>
                 )}
               </li> */}
-
-
-
             </ul>
           </div>
         </div>
         <div className="bg-emerald-700 text-white p-4 flex items-center justify-between gap-4">
           {isOpen && (
             <div className="flex items-center gap-2">
-              <Image
-                className="w-10 h-10 rounded-md"
-                src={user?.photo ? process.env.NEXT_PUBLIC_IMAGE_URL + user?.photo : relative_image_path('dummy_image1.jpg')}
-                width={1000}
-                height={1000}
-                alt="Bangla"
-              />
+              {user?.photo ? (
+                <Image
+                  className="w-10 h-10 rounded-md"
+                  src={
+                    user?.photo
+                      ? process.env.NEXT_PUBLIC_IMAGE_URL + user?.photo
+                      : relative_image_path("dummy_image1.jpg")
+                  }
+                  width={1000}
+                  height={1000}
+                  alt="Bangla"
+                />
+              ) : (
+                <Image
+                  className="w-10 h-10 rounded-md"
+                  src={relative_image_path("dummy_image1.jpg")}
+                  width={1000}
+                  height={1000}
+                  alt="Bangla"
+                />
+              )}
+
               <div>
                 <h3> {user ? user?.name : ""} </h3>
                 <p className="text-12">{user ? user?.type : ""}</p>

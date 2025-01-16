@@ -69,9 +69,10 @@ const Home = ({ params }) => {
       .finally(() => setLoading(false));
   }, [params?.id]);
 
+  console.log({ data, plan });
+
   return (
     <>
-      
       <section>
         {data && plan ? (
           <div className="w-full">
@@ -154,22 +155,27 @@ const Home = ({ params }) => {
                           </tr>
                         </thead>
                         <tbody>
-                          <tr className="h-52">
-                            <td className="border border-gray-500">1</td>
-                            <td className="border border-gray-500">
-                              {data?.service_name}
-                            </td>
-                            <td className="border border-gray-500">
-                              {data?.feature_name}
-                            </td>
-                            <td className="border border-gray-500">
-                              {plan[0]?.price}
-                            </td>
-                            <td className="border border-gray-500">1</td>
-                            <td className="border border-gray-500">
-                              {plan[0]?.price}
-                            </td>
-                          </tr>
+                          {plan?.length > 0 &&
+                            plan.map((item, index) => (
+                              <tr className="h-14" key={index}>
+                                <td className="border border-gray-500">
+                                  {index + 1}
+                                </td>
+                                <td className="border border-gray-500">
+                                  {data?.service_name}
+                                </td>
+                                <td className="border border-gray-500">
+                                  {data?.feature_name}
+                                </td>
+                                <td className="border border-gray-500">
+                                  {item?.price || 0}
+                                </td>
+                                <td className="border border-gray-500">1</td>
+                                <td className="border border-gray-500">
+                                  {item?.price || 0}
+                                </td>
+                              </tr>
+                            ))}
                           <tr className="border border-gray-500 h-10">
                             <td></td>
                             <td></td>
@@ -181,7 +187,9 @@ const Home = ({ params }) => {
                         </tbody>
                       </table>
                       <div className="border-b border-gray-500 h-10 flex items-center">
-                        <p>Taka in Words: {convertNumberToWords(data?.total)}</p>
+                        <p>
+                          Taka in Words: {convertNumberToWords(data?.total)}
+                        </p>
                       </div>
                     </div>
                     <div className="flex justify-between">

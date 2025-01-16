@@ -89,7 +89,9 @@ const Home = () => {
                   </td>
                   <td>
                     <Link
-                      href={"/pdfs/dummy.pdf"}
+                      href={{
+                        pathname: `/user/accounts-settings/payment-history/${item?.id}`,
+                      }}
                       className="text-gray-500 font-bold flex items-center gap-1"
                       download={true}
                       rel="noopener noreferrer"

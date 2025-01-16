@@ -8,6 +8,7 @@ import TableSkeleton from "@/app/_components/TableSkeleton/TableSkeleton";
 import { useRouter } from "next/navigation";
 import { getBoughtServices } from "@/app/(user)/_api/accountService";
 import { useHomeContext } from "@/ContextProvider/Home.Context";
+import { toast } from "react-toastify";
 
 const Home = () => {
   const router = useRouter();
@@ -27,6 +28,7 @@ const Home = () => {
         })
         .catch((error) => {
           setIsLoading(false);
+          toast.error(error?.message);
           console.error("Error fetching data:", error);
         });
     }
@@ -56,6 +58,9 @@ const Home = () => {
   const handleRedirect = (id) => {
     router.replace("https://service.bangla.gov.bd/services/" + id);
   };
+
+  console.log("services", services);
+  
 
   return (
     <section className="w-full h-full">
@@ -150,7 +155,7 @@ const Home = () => {
                           <li>
                             <button
                               onClick={() => {
-                                handleRedirect(item?.id);
+                                handleRedirect(item?.service_id);
                                 setActiveDropdown(null); // Close dropdown after action
                               }}
                             >

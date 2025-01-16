@@ -5,6 +5,7 @@ import axios from "axios";
 import Cookies from "js-cookie";
 import React, { useEffect, useState } from "react";
 import { createContext } from "react";
+import { toast } from "react-toastify";
 
 type TContextType = {
   setFeatureSelectedInfoAll?: any;
@@ -12,61 +13,43 @@ type TContextType = {
   featureTotalPrice?: any;
   setFeatureTotalPrice?: any;
   user: TUser | {};
+  refresh: boolean;
+  setRefresh: any;
 };
 
-export const MyContext = createContext<TContextType | null>(null);
+export const MyContext = createContext<TContextType | undefined>(undefined);
 
 const ContextProvider = ({ children }: any) => {
   const [featureSelectedInfoAll, setFeatureSelectedInfoAll] = useState<any>([]);
   const [featureTotalPrice, setFeatureTotalPrice] = useState<number>(0);
   const [loading, setLoading] = useState<boolean>(false);
   const [user, setUser] = useState<TUser | {}>({});
+  const [refresh, setRefresh] = useState<boolean>(false);
 
-  // useEffect(() => {
-  //   setLoading(true);
-  //   const token = Cookies.get("token");
-  //   const user: string | undefined = Cookies.get("user");
-  //   const userInfo: any = {};
-  //   if (token && userInfo) {
-  //     axios
-  //       .get(
-  //         `${process.env.NEXT_PUBLIC_API_URL}/user/details/${userInfo?.id}`,
-  //         {
-  //           headers: {
-  //             Authorization: `Bearer ${token}`,
-  //           },
-  //         }
-  //       )
-  //       .then((res) => {
-  //         console.log("GLobal Context :", res.data.data);
-  //         setUser(res.data.data);
-  //         setLoading(false);
-  //       })
-  //       .catch((err) => {
-  //         setLoading(false);
-  //         // console.log(err);
-  //       });
-  //   }
-  // }, []);
+  
 
   const fetchData = async () => {
-      let userData: any = Cookies.get("user");
-      if (userData) {
-        userData = JSON?.parse(userData);
+    let userData: any = Cookies.get("user");
+    if (userData) {
+      userData = JSON?.parse(userData);
+    }
+    try {
+      if (userData?.id) {
+        const response = await getUserDetails(userData?.id);
+        setUser(response.data.data);
+      } else {
+        toast.error("User not found");
+        setUser({});
       }
-      try {
-        const res = await getUserDetails(userData?.id);
-        if (res?.data) {
-          setUser(res.data);
-        }
-      } catch (error) {
-        console.error("Error fetching active icons:", error);
-      }
-    };
-  
-    useEffect(() => {
-      fetchData();
-    }, []);
+    } catch (error: any) {
+      setUser({});
+      toast.error(error.message);
+    }
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, [refresh]);
 
   const contextValue: TContextType = {
     setFeatureSelectedInfoAll,
@@ -74,6 +57,8 @@ const ContextProvider = ({ children }: any) => {
     setFeatureTotalPrice,
     featureTotalPrice,
     user,
+    setRefresh,
+    refresh
   };
   return (
     <MyContext.Provider value={contextValue}>{children}</MyContext.Provider>

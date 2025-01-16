@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import Image from "next/image";
 import { relative_image_path } from "@/helper";
 import { toast } from "react-toastify";
@@ -8,8 +8,11 @@ import { toast } from "react-toastify";
 import { FaCamera, FaRegEdit } from "react-icons/fa";
 import { updateCitizenProfile, updateCitizenTypeInfo } from "../../_api/user";
 import UserApiLoading from "../UserAPiLoading/UserApiLoading";
+import { MyContext } from "@/ContextProvider/ContextProvider";
 
 const ProfileContainer = ({ citizen, userTypes, grade }) => {
+  const {refresh,setRefresh} = useContext(MyContext);
+  
   console.log({ citizen });
 
   const [edit, setEdit] = useState(false);
@@ -124,19 +127,20 @@ const ProfileContainer = ({ citizen, userTypes, grade }) => {
         setLoading(false);
         // console.log("user profile update response: ", response);
         toast.success(response.message);
-        const user = {
-          id: response.data.id,
-          name: response.data.name ?? null,
-          role: response.data.role ?? null,
-          email: response.data.email ?? null,
-          phone: response.data.phone ?? null,
-          status: response.data.status ?? null,
-          photo: response.data.photo ?? null,
-          type: response.data.type ?? null,
-        };
+        // const user = {
+        //   id: response.data.id,
+        //   name: response.data.name ?? null,
+        //   role: response.data.role ?? null,
+        //   email: response.data.email ?? null,
+        //   phone: response.data.phone ?? null,
+        //   status: response.data.status ?? null,
+        //   photo: response.data.photo ?? null,
+        //   type: response.data.type ?? null,
+        // };
 
-        const userinfo = JSON.stringify(user);
-        document.cookie = `user=${userinfo};path=/;max-age=31536000;SameSite=Strict;Secure;`;
+        // const userinfo = JSON.stringify(user);
+        // document.cookie = `user=${userinfo};path=/;max-age=31536000;SameSite=Strict;Secure;`;
+        setRefresh(!refresh);
 
         // window.location.reload();
       } else {
@@ -172,7 +176,7 @@ const ProfileContainer = ({ citizen, userTypes, grade }) => {
           <div className="w-full border border-gray-300 p-4 rounded-md ">
             <div className="flex flex-wrap items-center gap-4 border border-gray-300 p-4 rounded-md overflow-hidden mb-5">
               <div className="relative group">
-                {formInputs?.photo != null ? (
+                {formInputs?.photo ? (
                   typeof formInputs.photo == "object" ? (
                     <Image
                       className="w-20 h-20 rounded-full"

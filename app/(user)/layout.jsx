@@ -8,8 +8,6 @@ const Layout = async ({ children }) => {
   if (!userinfo) {
     redirect(process.env.NEXT_PUBLIC_PORTAL_URL + "/signin");
   }
-
-
   return (
     <HomeContextProvider>
     <section className="2xl:container 2xl:mx-auto flex">
