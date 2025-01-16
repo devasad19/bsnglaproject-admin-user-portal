@@ -256,7 +256,7 @@ const PermissionManagementList = ({
     }
 
   };
-  console.log({ updateSinglePermission });
+  console.log({ permissionsData });
 
   return (
     <>
@@ -306,12 +306,12 @@ const PermissionManagementList = ({
                         <td>
                           <span
                             className={`px-2 py-1 rounded-md ${
-                              item.isActive
+                              item.status == "1"
                                 ? "bg-green-500 text-white"
                                 : "bg-violet-500 text-white"
                             }`}
                           >
-                            {item.isActive ? "Active" : "Inactive"}
+                            {item.status == "1" ? "Active" : "Inactive"}
                           </span>
                         </td>
                         <td className="flex items-center justify-center my-2">

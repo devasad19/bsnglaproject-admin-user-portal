@@ -1,7 +1,7 @@
 "use client";
 import { useContext, useState, useEffect } from "react";
 import Image from "next/image";
-import { relative_image_path } from "@/helper";
+import { oneLatterUppercase, relative_image_path } from "@/helper";
 import Link from "next/link";
 import Accordion from "@/app/_components/Accordion/Accordion";
 import { usePathname } from "next/navigation";
@@ -44,16 +44,17 @@ const Sidebar = () => {
                 isOpen ? "justify-between" : "justify-end"
               }`}
             >
-              <Image
-                className={`w-24 transition-all duration-500 ${
-                  isOpen ? "opacity-100 block" : "opacity-0 hidden"
-                }`}
-                src={relative_image_path("logo.png")}
-                loading="eager"
-                width={1000}
-                height={1000}
-                alt="Bangla"
-              />
+              <Link href={`https://service.bangla.gov.bd/`}>
+                <Image
+                  className={`w-24 transition-all duration-500 ${
+                    isOpen ? "opacity-100 block" : "opacity-0 hidden"
+                  }`}
+                  src={relative_image_path("logo.png")}
+                  width={1000}
+                  height={1000}
+                  alt="Bangla"
+                />
+              </Link>
               <button
                 onClick={() => setIsOpen(!isOpen)}
                 className="text-green-950"
@@ -372,11 +373,7 @@ const Sidebar = () => {
               {user?.photo ? (
                 <Image
                   className="w-10 h-10 rounded-md"
-                  src={
-                    user?.photo
-                      ? process.env.NEXT_PUBLIC_IMAGE_URL + user?.photo
-                      : relative_image_path("dummy_image1.jpg")
-                  }
+                  src={process.env.NEXT_PUBLIC_IMAGE_URL + user?.photo}
                   width={1000}
                   height={1000}
                   alt="Bangla"
@@ -384,7 +381,10 @@ const Sidebar = () => {
               ) : (
                 <Image
                   className="w-10 h-10 rounded-md"
-                  src={relative_image_path("dummy_image1.jpg")}
+                  src={
+                    process.env.NEXT_PUBLIC_IMAGE_URL +
+                    process.env.NEXT_PUBLIC_DEFAULT_IMAGE
+                  }
                   width={1000}
                   height={1000}
                   alt="Bangla"
@@ -392,8 +392,10 @@ const Sidebar = () => {
               )}
 
               <div>
-                <h3> {user ? user?.name : ""} </h3>
-                <p className="text-12">{user ? user?.type : ""}</p>
+                <h3> {oneLatterUppercase(user ? user?.name : "")} </h3>
+                <p className="text-12">
+                  {oneLatterUppercase(user ? user?.type : "")}
+                </p>
               </div>
             </div>
           )}

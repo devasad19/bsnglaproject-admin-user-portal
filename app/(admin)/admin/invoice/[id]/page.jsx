@@ -1,6 +1,6 @@
 "use client";
 import Image from "next/image";
-import { formatDate, relative_image_path } from "@/helper";
+import { formatDate, relative_image_path, textFormat } from "@/helper";
 import { usePDF } from "react-to-pdf";
 import { getSingleOrderByIdApi } from "@/app/(portal)/_api";
 import { useEffect, useRef, useState } from "react";
@@ -224,7 +224,7 @@ const Home = ({ params: { id } }) => {
                     </tbody> */}
                       </table>
                       <div className="border-b border-gray-500 h-10 flex items-center">
-                        <p>Taka in Words:{convertNumberToWords(data?.total)} </p>
+                        <p>Taka in Words: {textFormat(convertNumberToWords(data?.total))} Taka Only</p>
                       </div>
                     </div>
                     <div className="flex justify-between">

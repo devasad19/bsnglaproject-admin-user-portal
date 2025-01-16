@@ -2,7 +2,7 @@
 
 import { useRef, useState, useEffect } from "react";
 import Image from "next/image";
-import { relative_image_path } from "@/helper";
+import { relative_image_path, textFormat } from "@/helper";
 import { usePDF } from "react-to-pdf";
 
 import html2canvas from "html2canvas";
@@ -188,7 +188,9 @@ const Home = ({ params }) => {
                       </table>
                       <div className="border-b border-gray-500 h-10 flex items-center">
                         <p>
-                          Taka in Words: {convertNumberToWords(data?.total)}
+                          Taka in Words:
+                          {textFormat(convertNumberToWords(data?.total))} Taka
+                          Only
                         </p>
                       </div>
                     </div>

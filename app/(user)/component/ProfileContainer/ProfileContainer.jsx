@@ -11,8 +11,8 @@ import UserApiLoading from "../UserAPiLoading/UserApiLoading";
 import { MyContext } from "@/ContextProvider/ContextProvider";
 
 const ProfileContainer = ({ citizen, userTypes, grade }) => {
-  const {refresh,setRefresh} = useContext(MyContext);
-  
+  const { refresh, setRefresh } = useContext(MyContext);
+
   console.log({ citizen });
 
   const [edit, setEdit] = useState(false);
@@ -109,8 +109,9 @@ const ProfileContainer = ({ citizen, userTypes, grade }) => {
 
   const HandleUserType = (id) => {
     const userType = userTypes.find((item) => item.id == id);
+    console.log("user type", userType);
     setUserType(userType);
-    setFormInputs((prev) => ({ ...prev, type: userType?.id }));
+    setFormInputs((prev) => ({ ...prev, type: userType?.slug }));
   };
 
   const handleProfileUpdate = async () => {
@@ -153,6 +154,9 @@ const ProfileContainer = ({ citizen, userTypes, grade }) => {
     }
   };
 
+  console.log("type onchange",formInputs.type);
+  
+
   return (
     <>
       <section>
@@ -177,29 +181,35 @@ const ProfileContainer = ({ citizen, userTypes, grade }) => {
             <div className="flex flex-wrap items-center gap-4 border border-gray-300 p-4 rounded-md overflow-hidden mb-5">
               <div className="relative group">
                 {formInputs?.photo ? (
-                  typeof formInputs.photo == "object" ? (
+                  typeof formInputs.photo === "object" ? (
+                    // When the user uploads a new image
                     <Image
                       className="w-20 h-20 rounded-full"
                       width={1000}
                       height={1000}
-                      src={URL.createObjectURL(formInputs.photo)}
+                      src={URL.createObjectURL(formInputs.photo)} // Converts file object to URL
                       alt="Profile Picture"
                     />
                   ) : (
+                    // When an existing image is already set in the database
                     <Image
                       className="w-20 h-20 rounded-full"
                       width={1000}
                       height={1000}
-                      src={process.env.NEXT_PUBLIC_IMAGE_URL + formInputs.photo}
+                      src={`${process.env.NEXT_PUBLIC_IMAGE_URL}${formInputs.photo}`} // Image from database
                       alt="Profile Picture"
                     />
                   )
                 ) : (
+                  // Default image when no image is provided
                   <Image
                     className="w-20 h-20 rounded-full"
                     width={1000}
                     height={1000}
-                    src={relative_image_path("dummy_image1.jpg")}
+                    src={
+                      process.env.NEXT_PUBLIC_IMAGE_URL +
+                      process.env.NEXT_PUBLIC_DEFAULT_IMAGE
+                    } // Default placeholder image
                     alt="Profile Picture"
                   />
                 )}

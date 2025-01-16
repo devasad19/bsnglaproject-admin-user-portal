@@ -259,8 +259,8 @@ const UpdateServiceDetailsResourceNew = ({
 
   // console.log({ error });
 
-  const descriptionLength = CountWords(formData?.description)
-  console.log({descriptionLength});
+  const descriptionLength = CountWords(formData?.description);
+  console.log({ descriptionLength });
 
   return (
     <>
@@ -739,29 +739,37 @@ const UpdateServiceDetailsResourceNew = ({
                       }
                     />
                     <div className="mt-2">
-                      {typeof formData?.promotion?.left_side?.image ===
-                      "string" ? (
-                        <img
+                      {formData?.promotion?.left_side?.image ? (
+                        typeof formData?.promotion?.left_side?.image === "object" ? (
+                          // When the user uploads a new image
+                          <Image
+                            className="w-20 h-20 rounded-full"
+                            width={1000}
+                            height={1000}
+                            src={URL.createObjectURL(formData?.promotion?.left_side?.image)} // Converts file object to URL
+                            alt="Profile Picture"
+                          />
+                        ) : (
+                          // When an existing image is already set in the database
+                          <Image
+                            className="w-20 h-20 rounded-full"
+                            width={1000}
+                            height={1000}
+                            src={`${process.env.NEXT_PUBLIC_IMAGE_URL}${formData?.promotion?.left_side?.image}`} // Image from database
+                            alt="Profile Picture"
+                          />
+                        )
+                      ) : (
+                        // Default image when no image is provided
+                        <Image
+                          className="w-20 h-20 rounded-full"
+                          width={1000}
+                          height={1000}
                           src={
                             process.env.NEXT_PUBLIC_IMAGE_URL +
-                            formData?.promotion?.left_side?.image
-                          }
-                          className="w-24 h-24 rounded-md object-cover"
-                          alt="Left Side"
-                        />
-                      ) : formData?.promotion?.left_side?.image ? (
-                        <img
-                          src={URL.createObjectURL(
-                            formData?.promotion?.left_side?.image
-                          )}
-                          className="w-24 h-24 rounded-md object-cover"
-                          alt="Left Side"
-                        />
-                      ) : (
-                        <img
-                          src={relative_image_path + "default.png"}
-                          className="w-24 h-24 rounded-md object-cover"
-                          alt="Left Side"
+                            process.env.NEXT_PUBLIC_DEFAULT_IMAGE
+                          } // Default placeholder image
+                          alt="Profile Picture"
                         />
                       )}
                     </div>
@@ -832,27 +840,60 @@ const UpdateServiceDetailsResourceNew = ({
                         })
                       }
                     />
-                    <div className="mt-2">
-                      {typeof formData?.promotion?.right_side?.image ===
-                      "string" ? (
-                        <img
-                          src={
-                            process.env.NEXT_PUBLIC_IMAGE_URL +
-                            formData?.promotion?.right_side?.image
-                          }
-                          className="w-24 h-24 rounded-md object-cover"
-                          alt="Right Side"
-                        />
-                      ) : (
-                        formData?.promotion?.right_side?.image && (
-                          <img
-                            src={URL.createObjectURL(
+
+                    {/* <div className="mt-2">
+                      <Image
+                        src={
+                          typeof formData?.promotion?.right_side?.image ==
+                          "string"
+                            ? process.env.NEXT_PUBLIC_IMAGE_URL +
                               formData?.promotion?.right_side?.image
-                            )}
-                            className="w-24 h-24 rounded-md object-cover"
-                            alt="Right Side"
+                            : formData?.promotion?.right_side?.image
+                            ? URL.createObjectURL(
+                                formData?.promotion?.right_side?.image
+                              )
+                            : process.env.NEXT_PUBLIC_IMAGE_URL +
+                              process.env.NEXT_PUBLIC_DEFAULT_IMAGE
+                        }
+                        width={100}
+                        height={100}
+                        className="w-24 h-24 rounded-md object-cover"
+                        alt="Right Side"
+                      />
+                    </div> */}
+                    <div className="mt-2">
+                      {formData?.promotion?.right_side?.image ? (
+                        typeof formData?.promotion?.right_side?.image === "object" ? (
+                          // When the user uploads a new image
+                          <Image
+                            className="w-20 h-20 rounded-full"
+                            width={1000}
+                            height={1000}
+                            src={URL.createObjectURL(formData?.promotion?.right_side?.image)} // Converts file object to URL
+                            alt="Profile Picture"
+                          />
+                        ) : (
+                          // When an existing image is already set in the database
+                          <Image
+                            className="w-20 h-20 rounded-full"
+                            width={1000}
+                            height={1000}
+                            src={`${process.env.NEXT_PUBLIC_IMAGE_URL}${formData?.promotion?.right_side?.image}`} // Image from database
+                            alt="Profile Picture"
                           />
                         )
+                      ) : (
+                        // Default image when no image is provided
+                        <Image
+                          className="w-20 h-20 rounded-full"
+                          width={1000}
+                          height={1000}
+                          src={
+                            process.env.NEXT_PUBLIC_IMAGE_URL +
+                            process.env.NEXT_PUBLIC_DEFAULT_IMAGE
+                          } // Default placeholder image
+                          alt="Profile Picture"
+                        />
                       )}
                     </div>
                   </div>
@@ -978,7 +1019,6 @@ const UpdateServiceDetailsResourceNew = ({
                     )}
                   </div>
 
-                 
                   <div className="py-2">
                     <p>Left Side Description:</p>
                     <CustomEditor
@@ -1054,35 +1094,42 @@ const UpdateServiceDetailsResourceNew = ({
                         </p>
                       )}
                     </div>
-
-                    {typeof item?.right_img == "string" && (
-                      <div>
-                        <img
-                          src={
-                            process.env.NEXT_PUBLIC_IMAGE_URL + item?.right_img
-                          }
-                          height={50}
-                          width={50}
-                          alt="Bangla"
-                        />
-                      </div>
-                    )}
-
-                    {typeof item?.right_img == "object" && (
-                      <div>
+                    <div className="mt-2">
+                      {item?.right_img ? (
+                        typeof item?.right_img === "object" ? (
+                          // When the user uploads a new image
+                          <Image
+                            className="w-20 h-20 rounded-full"
+                            width={1000}
+                            height={1000}
+                            src={URL.createObjectURL(item?.right_img)} // Converts file object to URL
+                            alt="Profile Picture"
+                          />
+                        ) : (
+                          // When an existing image is already set in the database
+                          <Image
+                            className="w-20 h-20 rounded-full"
+                            width={1000}
+                            height={1000}
+                            src={`${process.env.NEXT_PUBLIC_IMAGE_URL}${item?.right_img}`} // Image from database
+                            alt="Profile Picture"
+                          />
+                        )
+                      ) : (
+                        // Default image when no image is provided
                         <Image
-                          className="w-[70px] h-[70px]"
+                          className="w-20 h-20 rounded-full"
+                          width={1000}
+                          height={1000}
                           src={
-                            item?.right_img instanceof Blob
-                              ? URL.createObjectURL(item?.right_img)
-                              : "/default-image.jpg"
-                          }
-                          height={100}
-                          width={100}
-                          alt="Bangla"
+                            process.env.NEXT_PUBLIC_IMAGE_URL +
+                            process.env.NEXT_PUBLIC_DEFAULT_IMAGE
+                          } // Default placeholder image
+                          alt="Profile Picture"
                         />
-                      </div>
-                    )}
+                      )}
+                    </div>
+
                   </div>
                 </fieldset>
 
@@ -1108,8 +1155,10 @@ const UpdateServiceDetailsResourceNew = ({
 
         <div className="border border-gray-300 rounded">
           <div className="bg-gray-300 flex items-center justify-between p-2">
-          {/* Four Column section */}
-            <h3 className="text-primary font-semibold">Distribution Cards items</h3>
+            {/* Four Column section */}
+            <h3 className="text-primary font-semibold">
+              Distribution Cards items
+            </h3>
             <button
               onClick={() =>
                 setFormData({
@@ -1193,44 +1242,40 @@ const UpdateServiceDetailsResourceNew = ({
                         }
                       /> */}
                       <div className="flex items-center flex-wrap gap-2 p-2">
-                              {allIcons?.map((iconItem, iconIndex) => (
-                                <div
-                                  key={iconIndex}
-                                  className="flex flex-col items-center w-[40px] border border-primary p-1 rounded-md cursor-pointer relative"
-                                  title={iconItem?.name}
-                                  onClick={() => {
-                                    setFormData({
-                                      ...formData,
-                                      fourCol: formData?.fourCol?.map((item, i) =>
-                                        i === index
-                                          ? { ...item, icon: iconItem?.id }
-                                          : item
-                                      ),
-                                    })
-                                  }}
-                                >
-                                  <Image
-                                    src={`${process.env.NEXT_PUBLIC_IMAGE_URL}${iconItem?.icon}`}
-                                    alt={iconItem?.name || "Icon"}
-                                    width={20}
-                                    height={20}
-                                    className="w-[20px] h-[20px]"
-                                  />
-                                  <span className="text-10 text-center text-primary">
-                                    {iconItem?.name?.length < 4
-                                      ? iconItem?.name
-                                      : iconItem?.name?.slice(0, 3) + ".." ||
-                                        ""}
-                                  </span>
-                                  {
-                                    item?.icon == iconItem?.id && (
-                                      <FaCheckCircle className="absolute top-0 right-0 text-primary" />
-                                    )
-                                  }
-                                </div>
-                                
-                              ))}
-                            </div>
+                        {allIcons?.map((iconItem, iconIndex) => (
+                          <div
+                            key={iconIndex}
+                            className="flex flex-col items-center w-[40px] border border-primary p-1 rounded-md cursor-pointer relative"
+                            title={iconItem?.name}
+                            onClick={() => {
+                              setFormData({
+                                ...formData,
+                                fourCol: formData?.fourCol?.map((item, i) =>
+                                  i === index
+                                    ? { ...item, icon: iconItem?.id }
+                                    : item
+                                ),
+                              });
+                            }}
+                          >
+                            <Image
+                              src={`${process.env.NEXT_PUBLIC_IMAGE_URL}${iconItem?.icon}`}
+                              alt={iconItem?.name || "Icon"}
+                              width={20}
+                              height={20}
+                              className="w-[20px] h-[20px]"
+                            />
+                            <span className="text-10 text-center text-primary">
+                              {iconItem?.name?.length < 4
+                                ? iconItem?.name
+                                : iconItem?.name?.slice(0, 3) + ".." || ""}
+                            </span>
+                            {item?.icon == iconItem?.id && (
+                              <FaCheckCircle className="absolute top-0 right-0 text-primary" />
+                            )}
+                          </div>
+                        ))}
+                      </div>
                     </div>
 
                     {/* {typeof item?.icon == "string" ? (
@@ -1607,13 +1652,10 @@ const UpdateServiceDetailsResourceNew = ({
                                       : iconItem?.name?.slice(0, 3) + ".." ||
                                         ""}
                                   </span>
-                                  {
-                                    item?.icon == iconItem?.id && (
-                                      <FaCheckCircle className="absolute top-0 right-0 text-primary" />
-                                    )
-                                  }
+                                  {item?.icon == iconItem?.id && (
+                                    <FaCheckCircle className="absolute top-0 right-0 text-primary" />
+                                  )}
                                 </div>
-                                
                               ))}
                             </div>
                           </div>
@@ -2010,38 +2052,43 @@ const UpdateServiceDetailsResourceNew = ({
                     />
                   </fieldset>
 
-                  <div>
-                    {typeof formData?.user_doc?.video?.thumbnail ==
-                      "string" && (
-                      <div>
-                        <img
+                  <div className="mt-2">
+                      {formData?.user_doc?.video?.thumbnail ? (
+                        typeof formData?.user_doc?.video?.thumbnail === "object" ? (
+                          // When the user uploads a new image
+                          <Image
+                            className="w-20 h-20 rounded-full"
+                            width={1000}
+                            height={1000}
+                            src={URL.createObjectURL(formData?.user_doc?.video?.thumbnail)} // Converts file object to URL
+                            alt="Profile Picture"
+                          />
+                        ) : (
+                          // When an existing image is already set in the database
+                          <Image
+                            className="w-20 h-20 rounded-full"
+                            width={1000}
+                            height={1000}
+                            src={`${process.env.NEXT_PUBLIC_IMAGE_URL}${formData?.user_doc?.video?.thumbnail}`} // Image from database
+                            alt="Profile Picture"
+                          />
+                        )
+                      ) : (
+                        // Default image when no image is provided
+                        <Image
+                          className="w-20 h-20 rounded-full"
+                          width={1000}
+                          height={1000}
                           src={
                             process.env.NEXT_PUBLIC_IMAGE_URL +
-                            formData?.user_doc?.video?.thumbnail
-                          }
-                          height={100}
-                          width={100}
-                          alt="Bangla"
-                          className="w-12 h-12"
+                            process.env.NEXT_PUBLIC_DEFAULT_IMAGE
+                          } // Default placeholder image
+                          alt="Profile Picture"
                         />
-                      </div>
-                    )}
+                      )}
+                    </div>
 
-                    {typeof formData?.user_doc?.video?.thumbnail ==
-                      "object" && (
-                      <div>
-                        <img
-                          src={URL.createObjectURL(
-                            formData?.user_doc?.video?.thumbnail
-                          )}
-                          height={100}
-                          width={100}
-                          alt="Bangla"
-                          className="w-12 h-12"
-                        />
-                      </div>
-                    )}
-                  </div>
+                 
                 </div>
 
                 {error?.user_doc?.video?.thumbnail?.status && (
@@ -2165,7 +2212,7 @@ const UpdateServiceDetailsResourceNew = ({
                                     </div>
                                   </div>
                                   <div className="flex gap-2">
-                                    <div className="flex flex-col gap-2">
+                                    <div className="flex  gap-2">
                                       <p>Module:</p>
                                       <div className="">
                                         <input
@@ -2531,10 +2578,8 @@ const UpdateServiceDetailsResourceNew = ({
           </div>
         </div>
 
-        <div className="flex justify-between pt-5">
-          <p className="text-14">
-            <span className="text-red-500">* </span>
-          </p>
+        <div className="flex justify-end pt-5">
+         
           <button
             type="submit"
             className="px-4 py-2 bg-violet-700 text-white active:scale-90 transition-all duration-400 rounded-md"

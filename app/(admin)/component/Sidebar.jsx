@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useContext } from "react";
 import Image from "next/image";
-import { relative_image_path } from "@/helper";
+import { oneLatterUppercase, relative_image_path, textFormat } from "@/helper";
 import Link from "next/link";
 import Accordion from "@/app/_components/Accordion/Accordion";
 import { usePathname } from "next/navigation";
@@ -19,9 +19,8 @@ const Sidebar = () => {
   const pathname = usePathname();
   // const [user, setUser] = useState(null);
   const [isOpen, setIsOpen] = useState(true);
-  const {user}= useHomeContext();
+  const { user } = useHomeContext();
   // console.log({user});
-  
 
   const [isToggleOpen, setIsToggleOpen] = useState({
     userManagement: false,
@@ -89,20 +88,19 @@ const Sidebar = () => {
   // }, []);
 
   const HandleLogout = () => {
-
     const isLocalhost = window.location.hostname === "localhost";
     if (isLocalhost) {
       document.cookie =
         "token=; path = /; domain=localhost; expires = Thu, 01 Jan 1970 00:00:00 UTC;";
       document.cookie =
         "user=; path = /; domain=localhost; expires = Thu, 01 Jan 1970 00:00:00 UTC;";
-        window.location.href = "http://localhost:3000/signin";
+      window.location.href = "http://localhost:3000/signin";
     } else {
       document.cookie =
         "token=; path = /; domain=.bangla.gov.bd; expires = Thu, 01 Jan 1970 00:00:00 UTC;";
       document.cookie =
         "user=; path = /; domain=.bangla.gov.bd; expires = Thu, 01 Jan 1970 00:00:00 UTC;";
-        window.location.href = "https://service.bangla.gov.bd/signin";
+      window.location.href = "https://service.bangla.gov.bd/signin";
     }
 
     // document.cookie =
@@ -127,15 +125,18 @@ const Sidebar = () => {
                 isOpen ? "justify-between" : "justify-end"
               }`}
             >
-              <Image
-                className={`w-24 transition-all duration-500 ${
-                  isOpen ? "opacity-100 block" : "opacity-0 hidden"
-                }`}
-                src={relative_image_path("logo.png")}
-                width={1000}
-                height={1000}
-                alt="Bangla"
-              />
+              <Link href={`https://service.bangla.gov.bd/`}>
+                <Image
+                  className={`w-24 transition-all duration-500 ${
+                    isOpen ? "opacity-100 block" : "opacity-0 hidden"
+                  }`}
+                  src={relative_image_path("logo.png")}
+                  width={1000}
+                  height={1000}
+                  alt="Bangla"
+                />
+              </Link>
+
               <button
                 onClick={() => setIsOpen(!isOpen)}
                 className="text-green-950"
@@ -218,7 +219,7 @@ const Sidebar = () => {
                   } ${
                     (isOpen && pathname == "/admin/services") ||
                     pathname == "/admin/services/create" ||
-                    pathname.includes("/admin/services/edit/")||
+                    pathname.includes("/admin/services/edit/") ||
                     pathname.includes("/admin/services")
                       ? "text-white"
                       : "text-primary"
@@ -269,19 +270,21 @@ const Sidebar = () => {
                 className={`${
                   isOpen && "hover:bg-primary"
                 }  group flex items-center justify-between   ${
-                   (pathname.includes("/admin/manage-citizen") || pathname.includes("/admin/manage-user-type") || pathname.includes("/admin/citizen-info"))
+                  pathname.includes("/admin/manage-citizen") ||
+                  pathname.includes("/admin/manage-user-type") ||
+                  pathname.includes("/admin/citizen-info")
                     ? "bg-primary text-white"
                     : "text-primary bg-white"
                 } cursor-pointer ${
-                   isToggleOpen.userManagement
-                    ? "border-b-2 border-primary"
-                    : ""
+                  isToggleOpen.userManagement ? "border-b-2 border-primary" : ""
                 }`}
               >
                 <div className="flex items-center gap-2">
                   <span
                     className={`${
-                      isOpen && (pathname.includes("/admin/manage-citizen") || pathname.includes("/admin/citizen-info"))
+                      isOpen &&
+                      (pathname.includes("/admin/manage-citizen") ||
+                        pathname.includes("/admin/citizen-info"))
                         ? "text-white"
                         : "text-primary"
                     }`}
@@ -289,7 +292,9 @@ const Sidebar = () => {
                     <FaUsersCog
                       size={20}
                       className={`group-hover:text-white ${
-                         (pathname.includes("/admin/manage-citizen") || pathname.includes("/admin/manage-user-type") || pathname.includes("/admin/citizen-info"))
+                        pathname.includes("/admin/manage-citizen") ||
+                        pathname.includes("/admin/manage-user-type") ||
+                        pathname.includes("/admin/citizen-info")
                           ? "text-white"
                           : "text-primary"
                       }`}
@@ -319,9 +324,8 @@ const Sidebar = () => {
                   <svg
                     className={`w-3 h-3 fill-current text-primary group-hover:text-white transition-colors duration-300 ${
                       (pathname.startsWith("/admin/manage-citizen") ||
-                        pathname.includes("/admin/manage-user-type") || 
-                        pathname.includes("/admin/citizen-info")
-                      ) &&
+                        pathname.includes("/admin/manage-user-type") ||
+                        pathname.includes("/admin/citizen-info")) &&
                       "text-white"
                     }`}
                     xmlns="http://www.w3.org/2000/svg"
@@ -340,8 +344,8 @@ const Sidebar = () => {
                       }}
                       shallow
                       className={`text-14 hover:bg-green-500 px-2 py-1 rounded hover:text-white ${
-                        (pathname.includes("/admin/manage-citizen") ||
-                        pathname.includes("/admin/citizen-info"))
+                        pathname.includes("/admin/manage-citizen") ||
+                        pathname.includes("/admin/citizen-info")
                           ? "bg-green-500 text-white font-semibold"
                           : "text-black"
                       }`}
@@ -385,7 +389,6 @@ const Sidebar = () => {
                         : "text-primary"
                     }
                   >
-                   
                     <RiAdminLine
                       size={20}
                       className={`group-hover:text-white ${
@@ -562,7 +565,7 @@ const Sidebar = () => {
                     >
                       Manage Footer Content
                     </Link>
-                    <Link
+                    {/* <Link
                       href={{
                         pathname: "/admin/setting/hero-section",
                       }}
@@ -574,7 +577,7 @@ const Sidebar = () => {
                       }`}
                     >
                       Banner Right Section
-                    </Link>
+                    </Link> */}
                     <Link
                       href={{
                         pathname: "/admin/setting/system-icon",
@@ -586,7 +589,7 @@ const Sidebar = () => {
                           : "text-black"
                       }`}
                     >
-                        System Icon Management
+                      System Icon Management
                     </Link>
                     <Link
                       href={{
@@ -599,7 +602,7 @@ const Sidebar = () => {
                           : "text-black"
                       }`}
                     >
-                        System Colors Management
+                      System Colors Management
                     </Link>
                   </div>
                 </NewAccordion>
@@ -609,8 +612,9 @@ const Sidebar = () => {
                 className={`${
                   isOpen ? "hover:bg-primary" : ""
                 } group flex items-center  justify-between ${
-                  
-                  (pathname.includes("/admin/accounts-settings") || pathname.includes("/admin/bill") || pathname.includes("/admin/invoice")) &&
+                  (pathname.includes("/admin/accounts-settings") ||
+                    pathname.includes("/admin/bill") ||
+                    pathname.includes("/admin/invoice")) &&
                   "bg-primary"
                 } cursor-pointer ${
                   isOpen && isToggleOpen.accountsSettings
@@ -622,7 +626,9 @@ const Sidebar = () => {
                   <FaComputer
                     size={20}
                     className={`group-hover:text-white transition-colors duration-300 ${
-                      (pathname.includes("/admin/accounts-settings") || pathname.includes("/admin/bill") || pathname.includes("/admin/invoice"))
+                      pathname.includes("/admin/accounts-settings") ||
+                      pathname.includes("/admin/bill") ||
+                      pathname.includes("/admin/invoice")
                         ? "text-white"
                         : "text-primary"
                     }`}
@@ -632,7 +638,9 @@ const Sidebar = () => {
                     className={`text-15 text-primary group-hover:text-white  ${
                       isOpen ? "block" : "hidden"
                     } ${
-                      (pathname.includes("/admin/accounts-settings") || pathname.includes("/admin/bill") || pathname.includes("/admin/invoice")) &&
+                      (pathname.includes("/admin/accounts-settings") ||
+                        pathname.includes("/admin/bill") ||
+                        pathname.includes("/admin/invoice")) &&
                       "text-white"
                     }`}
                   >
@@ -649,7 +657,9 @@ const Sidebar = () => {
                 >
                   <svg
                     className={`w-3 h-3 fill-current text-primary group-hover:text-white transition-colors duration-300 ${
-                      (pathname.includes("/admin/accounts-settings") || pathname.includes("/admin/bill") || pathname.includes("/admin/invoice")) &&
+                      (pathname.includes("/admin/accounts-settings") ||
+                        pathname.includes("/admin/bill") ||
+                        pathname.includes("/admin/invoice")) &&
                       "text-white"
                     }`}
                     xmlns="http://www.w3.org/2000/svg"
@@ -683,7 +693,8 @@ const Sidebar = () => {
                       }}
                       shallow
                       className={`text-14 hover:bg-green-500 px-2 py-1 rounded hover:text-white ${
-                        (pathname.includes("/admin/bill") || pathname.includes("/admin/invoice"))
+                        pathname.includes("/admin/bill") ||
+                        pathname.includes("/admin/invoice")
                           ? "bg-green-500 text-white font-semibold"
                           : "text-black"
                       }`}
@@ -729,14 +740,20 @@ const Sidebar = () => {
             <div className="flex items-center gap-2">
               <Image
                 className="w-10 h-10 rounded-md"
-                src={user?.photo ? process.env.NEXT_PUBLIC_IMAGE_URL + user?.photo : relative_image_path('dummy_image1.jpg')}
+                src={
+                  user?.photo
+                    ? process.env.NEXT_PUBLIC_IMAGE_URL + user?.photo
+                    : relative_image_path("dummy_image1.jpg")
+                }
                 width={1000}
                 height={1000}
                 alt="Bangla"
               />
               <div>
-                <h3>{user ? user?.name : ""}</h3>
-                <p className="text-12">{user ? user?.type : ""}</p>
+                <h3>{oneLatterUppercase(user ? user?.name : "")}</h3>
+                <p className="text-12">
+                  {oneLatterUppercase(user ? user?.type : "")}
+                </p>
               </div>
             </div>
           )}

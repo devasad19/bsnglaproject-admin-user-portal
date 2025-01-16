@@ -43,7 +43,7 @@ const ContextProvider = ({ children }: any) => {
       }
     } catch (error: any) {
       setUser({});
-      toast.error(error.message);
+      toast.error(error?.message);
     }
   };
 
