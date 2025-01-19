@@ -18,6 +18,7 @@ import Modal from "@/app/_components/Modal/Modal";
 import { toast } from "react-toastify";
 import Link from "next/link";
 import TableSkeleton from "@/app/_components/TableSkeleton/TableSkeleton";
+import Pagination from "@/app/_components/Pagination/Pagination";
 
 const Home = (): JSX.Element => {
   const [citizen, setCitizen] = useState([]);
@@ -30,7 +31,54 @@ const Home = (): JSX.Element => {
     citizen_type_id: "",
     status: "",
   });
+  const [userFilter, setUserFilter] = useState([]);
   const [isFetch, setIsFetch] = useState(false);
+  const [searchByName, setSearchByName] = useState("");
+
+  // pagination start
+  const itemsPerPage = 8; // Customize items per page
+  const [currentPage, setCurrentPage] = useState(1);
+
+  // Calculate total pages
+  const totalPages = Math.ceil(userFilter?.length / itemsPerPage);
+
+  // Get items for the current page
+  const displayedItems = userFilter?.slice(
+    (currentPage - 1) * itemsPerPage,
+    currentPage * itemsPerPage
+  );
+
+  // Handlers for pagination
+  const handlePreviousClick = () => {
+    if (currentPage > 1) setCurrentPage(currentPage - 1);
+  };
+
+  const handleNextClick = () => {
+    if (currentPage < totalPages) setCurrentPage(currentPage + 1);
+  };
+
+  const handleSearch = (e: any) => {
+    const value = e.target.value; // Get input value directly
+    setSearchByName(value);
+
+    if (value.trim().length > 0) {
+      const filteredUser = citizen?.filter(
+        (item: any) =>
+          item.name.toLowerCase().includes(value.toLowerCase()) ||
+          item.email.toLowerCase().includes(value.toLowerCase())
+      );
+      // console.log({filteredUser});
+      if (filteredUser.length > 0) {
+        setUserFilter(filteredUser);
+        setCurrentPage(1);
+      } else {
+        setUserFilter([]);
+        setCurrentPage(1);
+      }
+    } else {
+      setUserFilter(citizen); // Reset to full list if search is empty
+    }
+  };
 
   const fetchCitizenTypes = async () => {
     try {
@@ -46,6 +94,7 @@ const Home = (): JSX.Element => {
       setIsLoading(true);
       const response = await getCitizenList();
       setCitizen(response?.data);
+      setUserFilter(response?.data);
       setIsLoading(false);
     } catch (error) {
       console.log(error);
@@ -99,13 +148,34 @@ const Home = (): JSX.Element => {
     }
   };
 
-  console.log({ citizen });
+  console.log({ citizen,displayedItems });
   // console.log({citizenTypes});
 
   return (
     <>
-      <section className="bg-white rounded-lg p-4 shadow-lg">
-        <h3 className="mb-4 text-24 font-bold">Citizens List</h3>
+      <section className="bg-white w-full  rounded-lg p-4 shadow-lg">
+        <div className="flex items-center justify-between">
+          <h3 className="mb-4 text-24 font-bold">Citizens List</h3>
+          <div className="bg-white rounded-md shadow-md text-[#515151] flex items-center gap-2 px-2 py-1 lg:py-0">
+            <label htmlFor="userSearch">
+              <svg
+                className="w-4 h-4 fill-current"
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 512 512"
+              >
+                <path d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352a144 144 0 1 0 0-288 144 144 0 1 0 0 288z" />
+              </svg>
+            </label>
+            <input
+              id="userSearch"
+              type="text"
+              onChange={handleSearch}
+              value={searchByName}
+              placeholder="Search By Name or Email"
+              className="outline-none"
+            />
+          </div>
+        </div>
         <div className="overflow-x-auto">
           <table className="w-full">
             <thead>
@@ -122,12 +192,12 @@ const Home = (): JSX.Element => {
             </thead>
             <tbody className="text-center">
               {isLoading && <TableSkeleton col={8} row={10}></TableSkeleton>}
-              {citizen?.length > 0 ? (
-                citizen?.map((item: any, index: any) => (
+              {displayedItems?.length > 0 ? (
+                displayedItems?.map((item: any, index: any) => (
                   <tr key={index} className="h-16 border-b border-gray-300">
                     <td className="px-3">
                       <span className="border border-gray-300 px-2 py-1 rounded-md">
-                        {index + 1}
+                      {(currentPage - 1) * itemsPerPage + index + 1}
                       </span>
                     </td>
                     <td>
@@ -189,7 +259,6 @@ const Home = (): JSX.Element => {
                           item?.status == 0 ? "text-red-500" : "text-primary"
                         }`}
                       >
-                        
                         {item?.status == 1 ? "Active" : "Inactive"}
                       </span>
                     </td>
@@ -233,6 +302,15 @@ const Home = (): JSX.Element => {
               )}
             </tbody>
           </table>
+          <Pagination
+          handlePreviousClick={handlePreviousClick}
+          currentPage={currentPage}
+          totalPages={totalPages}
+          setCurrentPage={setCurrentPage}
+          handleNextClick={handleNextClick}
+          displayedItems={displayedItems}
+          handlePageClick={(page: number) => setCurrentPage(page)}
+        />
         </div>
       </section>
 

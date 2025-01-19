@@ -12,6 +12,7 @@ import {
 } from "../../_api/ManageSystemUserApi";
 import Swal from "sweetalert2";
 import ApiLoading from "../ApiLoading/ApiLoading";
+import Pagination from "@/app/_components/Pagination/Pagination";
 
 const SystemUserList = ({ users, rolesList }: any) => {
   const addUserModal = useRef(null);
@@ -19,6 +20,7 @@ const SystemUserList = ({ users, rolesList }: any) => {
   const updateUserModal = useRef(null);
   const updateUserForm = useRef(null);
   const [loading, setLoading] = useState(false);
+  const [userFilter, setUserFilter] = useState(users);
   const [formValue, setFormValue] = useState<any>({
     name: "",
     email: "",
@@ -27,7 +29,50 @@ const SystemUserList = ({ users, rolesList }: any) => {
     status: "",
     id: "",
   });
-  console.log({ users });
+
+  const [searchByName, setSearchByName] = useState("");
+
+   // pagination start
+   const itemsPerPage = 8; // Customize items per page
+   const [currentPage, setCurrentPage] = useState(1);
+ 
+   // Calculate total pages
+   const totalPages = Math.ceil(userFilter.length / itemsPerPage);
+ 
+   // Get items for the current page
+   const displayedItems = userFilter.slice(
+     (currentPage - 1) * itemsPerPage,
+     currentPage * itemsPerPage
+   );
+ 
+   // Handlers for pagination
+   const handlePreviousClick = () => {
+     if (currentPage > 1) setCurrentPage(currentPage - 1);
+   };
+ 
+   const handleNextClick = () => {
+     if (currentPage < totalPages) setCurrentPage(currentPage + 1);
+   };
+ 
+   const handleSearch = (e:any) => {
+     const value = e.target.value; // Get input value directly
+     setSearchByName(value);
+ 
+     if (value.trim().length > 0) {
+      const filteredUser = userFilter.filter((item: any) =>
+        item.name.toLowerCase().includes(value.toLowerCase()) ||
+        item.email.toLowerCase().includes(value.toLowerCase())
+      );
+      // console.log({filteredUser});
+      
+       setUserFilter(filteredUser);
+       setCurrentPage(1);
+     } else {
+      setUserFilter(users); // Reset to full list if search is empty
+     }
+   };
+
+  
 
   const {
     register,
@@ -144,7 +189,7 @@ const SystemUserList = ({ users, rolesList }: any) => {
     }
   };
 
-  // console.log({formValue});
+  console.log({searchByName});
 
   return (
     <>
@@ -157,7 +202,7 @@ const SystemUserList = ({ users, rolesList }: any) => {
       
             </div>
             <div className="flex flex-col items-center lg:flex-row gap-4">
-              {/* <form className="bg-white rounded-md shadow-md text-[#515151] flex items-center gap-2 px-2 py-1 lg:py-0">
+              <form className="bg-white rounded-md shadow-md text-[#515151] flex items-center gap-2 px-2 py-1 lg:py-0">
                 <label htmlFor="userSearch">
                   <svg
                     className="w-4 h-4 fill-current"
@@ -170,10 +215,12 @@ const SystemUserList = ({ users, rolesList }: any) => {
                 <input
                   id="userSearch"
                   type="text"
-                  placeholder="Search for your keyword"
+                  onChange={handleSearch}
+                  value={searchByName}
+                  placeholder="Search By Name or Email"
                   className="outline-none"
                 />
-              </form> */}
+              </form>
               <div>
                 <button
                   onClick={() => {
@@ -201,12 +248,12 @@ const SystemUserList = ({ users, rolesList }: any) => {
                 </tr>
               </thead>
               <tbody className="text-center">
-                {users?.length > 0 ? (
-                  users.map((item: any, index: any) => (
+                {displayedItems?.length > 0 ? (
+                  displayedItems.map((item: any, index: any) => (
                     <tr key={index} className="h-16 border-b border-gray-300">
                       <td className="px-3">
                         <span className="border border-gray-300 px-2 py-1 rounded-md">
-                          {index + 1}
+                        {(currentPage - 1) * itemsPerPage + index + 1}
                         </span>
                       </td>
                       <td>
@@ -289,35 +336,15 @@ const SystemUserList = ({ users, rolesList }: any) => {
                 )}
               </tbody>
             </table>
-            {/* <div className="pt-10 flex justify-center">
-                <div className="flex items-center gap-2">
-                  <button className="p-1 active:scale-90 transition-all duration-400 rounded-md border border-gray-300 bg-primary text-white">
-                    Prev
-                  </button>
-                  <button className="px-2 py-1 active:scale-90 transition-all duration-400 rounded-md border border-gray-300 bg-primary text-white">
-                    1
-                  </button>
-                  <button className="px-2 py-1 active:scale-90 transition-all duration-400 rounded-md border border-gray-300 ">
-                    2
-                  </button>
-                  <button className="px-2 py-1 active:scale-90 transition-all duration-400 rounded-md border border-gray-300 ">
-                    3
-                  </button>
-                  <span>...</span>
-                  <button className="px-2 py-1 active:scale-90 transition-all duration-400 rounded-md border border-gray-300 ">
-                    8
-                  </button>
-                  <button className="px-2 py-1 active:scale-90 transition-all duration-400 rounded-md border border-gray-300 ">
-                    9
-                  </button>
-                  <button className="px-2 py-1 active:scale-90 transition-all duration-400 rounded-md border border-gray-300 ">
-                    10
-                  </button>
-                  <button className="p-1 active:scale-90 transition-all duration-400 rounded-md border border-gray-300 bg-primary text-white">
-                    Next
-                  </button>
-                </div>
-              </div> */}
+            <Pagination
+          handlePreviousClick={handlePreviousClick}
+          currentPage={currentPage}
+          totalPages={totalPages}
+          setCurrentPage={setCurrentPage}
+          handleNextClick={handleNextClick}
+          displayedItems={displayedItems}
+          handlePageClick={(page: number) => setCurrentPage(page)}
+        />
           </div>
         </div>
       </section>
@@ -395,7 +422,7 @@ const SystemUserList = ({ users, rolesList }: any) => {
               <select
                 {...register("role", { required: true })}
                 className="bg-white py-1"
-                disabled={rolesList.length < 1}
+                disabled={rolesList?.length < 1}
               >
                 <option value="" className="text-gray-400">
                   --Select Role--

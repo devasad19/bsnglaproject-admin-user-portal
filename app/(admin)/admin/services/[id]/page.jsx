@@ -16,6 +16,7 @@ import Skeleton from "react-loading-skeleton";
 
 import { toast } from "react-toastify";
 import Swal from "sweetalert2";
+import { da } from "@faker-js/faker";
 
 const Home = ({ params }) => {
   const [service, setService] = useState([]);
@@ -39,6 +40,7 @@ const Home = ({ params }) => {
     service_id: "",
     limits: [""],
     validities: [""],
+    days: ["365"],
   });
 
   const [errors, setErrors] = useState({});
@@ -60,6 +62,8 @@ const Home = ({ params }) => {
 
   const handleInputChange = (e) => {
     const { name, value, type, checked } = e.target;
+    console.log({ name, value, type, checked });
+
     let newValue = type === "checkbox" ? checked : value;
     setFormData((prevData) => ({
       ...prevData,
@@ -116,25 +120,33 @@ const Home = ({ params }) => {
       e.target.querySelectorAll('input[name="validaty[]"]')
     ).map((input) => input.value);
 
-    const validationErrors = {};
-    Object.keys(formData).forEach((key) => {
-      const error = validateField(key, formData[key]);
-      if (error) validationErrors[key] = error;
-    });
+    let days = Array.from(
+      e.target.querySelectorAll('input[name="days[]"]')
+    ).map((input) => input.value);
 
-    if (Object.keys(validationErrors).length > 0) {
-      setErrors(validationErrors);
-      toast.error("Please fix the errors in the form");
-      return;
-    }
+    // const validationErrors = {};
+    // Object.keys(formData).forEach((key) => {
+    //   const error = validateField(key, formData[key]);
+    //   if (error) validationErrors[key] = error;
+    // });
+
+    // if (Object.keys(validationErrors).length > 0) {
+    //   setErrors(validationErrors);
+    //   toast.error("Please fix the errors in the form");
+    //   return;
+    // }
 
     // Combine the limits and validities into an array of objects
     let plans = limits.map((limit, index) => {
       return {
         limit: limit,
         validaty: validities[index],
+        expire_days: days[index],
       };
     });
+
+    // console.log({plans});
+    // return;
 
     let uploadData = {
       service_id,
@@ -144,11 +156,13 @@ const Home = ({ params }) => {
       plans: plans,
       status: 1,
     };
+    // console.log({uploadData});
+    // return;
 
     const featureData = await uploadFeatureData(uploadData);
     if (featureData) {
       setRefesh(!refesh);
-      toast.success("Feature Added Successfully");
+      toast.success(featureData?.message);
       setFeaturePlan([]);
       setFormData({
         feature_name: "",
@@ -160,7 +174,7 @@ const Home = ({ params }) => {
       }); // Clear the form data
       modelClose(featureModal, featureForm);
     } else {
-      toast.error("Feature Not Added");
+      toast.error(featureData?.message);
     }
   };
 
@@ -241,7 +255,7 @@ const Home = ({ params }) => {
     }
   };
 
-  console.log({service});
+  console.log({ features });
 
   return (
     <>
@@ -259,9 +273,10 @@ const Home = ({ params }) => {
               <h1 className="text-18 font-mono font-bold text-[#151D48]">
                 {service?.name}
               </h1>
-              <p className="pb-5 text-14 text-justify"  dangerouslySetInnerHTML={{ __html: service?.description }}>
-                
-              </p>
+              <p
+                className="pb-5 text-14 text-justify"
+                dangerouslySetInnerHTML={{ __html: service?.description }}
+              ></p>
             </div>
           </div>
 
@@ -274,8 +289,12 @@ const Home = ({ params }) => {
             {serviceStatus ? "Active" : "Inactive"}
           </button> */}
         </div>
-        <div className="pb-5">
-          <div className="flex flex-col lg:flex-row lg:items-center justify-end pb-5">
+
+        <div className="w-full">
+          <div className="flex items-center justify-between gap-2 py-3">
+            <h1 className="text-20 font-bold text-[#151D48]">
+              Service Features Details:
+            </h1>
             <div className="flex items-center gap-2">
               <button
                 onClick={() => handleCreateFeature()}
@@ -285,11 +304,6 @@ const Home = ({ params }) => {
               </button>
             </div>
           </div>
-        </div>
-        <div className="w-full">
-          <h1 className="text-20 font-bold text-[#151D48]">
-            Service Features Details:
-          </h1>
           <div className="bg-white p-4 rounded-md flex flex-col gap-3">
             <div className="w-full ">
               <div className="w-full overflow-x-auto">
@@ -321,6 +335,8 @@ const Home = ({ params }) => {
                         const plans = JSON.parse(feature?.plans || "[]");
                         const limits = plans.map((plan) => plan.limit);
                         const units = plans.map((plan) => plan.validaty);
+                        const days = plans.map((plan) => plan.expire_days);
+                        console.log({ days });
 
                         return (
                           <tr key={feature.id || featureIndex}>
@@ -341,7 +357,7 @@ const Home = ({ params }) => {
                                               : "border-l border-b"
                                           }  border-gray-500 p-2`}
                                         >
-                                          {limit}
+                                          {limit} {feature.unit}
                                         </th>
                                       ))
                                     ) : (
@@ -359,7 +375,30 @@ const Home = ({ params }) => {
                                             index === 0 ? "" : "border-l"
                                           }  border-gray-500 p-2`}
                                         >
-                                          {unit}
+                                          {unit} TK
+                                        </td>
+                                      ))
+                                    ) : (
+                                      <td
+                                        className="p-2"
+                                        colSpan={limits.length || 1}
+                                      >
+                                        No Data
+                                      </td>
+                                    )}
+                                  </tr>
+                                </tbody>
+                                <tbody>
+                                  <tr>
+                                    {plans.length > 0 && days.length > 0 ? (
+                                      days.map((day, index) => (
+                                        <td
+                                          key={`unit-${index}`}
+                                          className={`${
+                                            index === 0 ? "" : "border-l"
+                                          }  border-gray-500 p-2 border-t`}
+                                        >
+                                          {day} Days
                                         </td>
                                       ))
                                     ) : (
@@ -462,14 +501,12 @@ const Home = ({ params }) => {
                       Plans Value Unit
                     </label>
                   </legend>
-                  <input
-                    name="plan"
-                    type="text"
-                    className="outline-none w-full"
-                    placeholder="days"
-                    value={formData.plan}
-                    onChange={handleInputChange}
-                  />
+                  <select className="outline-none w-full" name="plan">
+                    <option value="Days">Days</option>
+                    <option value="MB">MB</option>
+                    <option value="Min">Min</option>
+                    <option value="Audio">Audio</option>
+                  </select>
                 </fieldset>
                 {errors.plan && (
                   <span className="text-red-500 text-12 pt-1">
@@ -546,6 +583,25 @@ const Home = ({ params }) => {
                       </fieldset>
                       {/* {errors.validities && <span className="text-red-500 text-12 pt-1">{errors.validities}</span>} */}
                     </div>
+                    <div>
+                      <fieldset className="border border-primary px-2 rounded">
+                        <legend>
+                          <label htmlFor="" className="text-14">
+                            Days
+                          </label>
+                        </legend>
+                        <input
+                          type="text"
+                          name="days[]"
+                          className="outline-none w-full"
+                          // value={formData.validities}
+                          defaultValue={365}
+                          required
+                          // value={100}
+                        />
+                      </fieldset>
+                      {/* {errors.validities && <span className="text-red-500 text-12 pt-1">{errors.validities}</span>} */}
+                    </div>
                     <button
                       type="button"
                       onClick={() => {
@@ -589,7 +645,7 @@ const Home = ({ params }) => {
               }}
               className="bg-red-500 text-white px-4 py-2 rounded"
             >
-              close
+              Close
             </button>
             <button
               // onClick={(e) => {
