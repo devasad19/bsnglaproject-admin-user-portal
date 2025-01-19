@@ -105,6 +105,7 @@ const Home = (): JSX.Element => {
   return (
     <>
       <section className="bg-white rounded-lg p-4 shadow-lg">
+        <h3 className="mb-4 text-24 font-bold">Citizens List</h3>
         <div className="overflow-x-auto">
           <table className="w-full">
             <thead>
