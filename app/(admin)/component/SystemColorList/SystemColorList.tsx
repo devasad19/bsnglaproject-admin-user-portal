@@ -157,7 +157,7 @@ const SystemColorList = ({ systemColorData }: any) => {
                       >
                         <td>{index + 1}</td>
                         <td>{item?.name || ""}</td>
-                        <td>
+                        <td className="items-center flex justify-center">
                           <div className="flex items-center gap-2">
                             <span>{item?.color || ""}</span>
                             {item?.color && (
