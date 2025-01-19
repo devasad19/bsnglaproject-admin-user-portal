@@ -313,3 +313,9 @@ export const oneLatterUppercase = (name)=>{
   const capitalizedName = name?.charAt(0)?.toUpperCase() + name?.slice(1)
   return capitalizedName;
 }
+
+export const wordCapitalizewithUnderscore = (name)=>{
+  const capitalizedName = name?.split("_").map(word => word?.charAt(0)?.toUpperCase() + word?.slice(1)).join(" ")
+  return capitalizedName;
+}
+   
