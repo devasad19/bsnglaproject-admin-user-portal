@@ -155,7 +155,7 @@ const Home = (): JSX.Element => {
     <>
       <section className="bg-white w-full  rounded-lg p-4 shadow-lg">
         <div className="flex items-center justify-between">
-          <h3 className="mb-4 text-24 font-bold">Citizens List</h3>
+          <h3 className="mb-4 text-24 font-bold">Citizen List</h3>
           <div className="bg-white rounded-md shadow-md text-[#515151] flex items-center gap-2 px-2 py-1 lg:py-0">
             <label htmlFor="userSearch">
               <svg

@@ -30,21 +30,18 @@ const months = [
   "চৈত্র",
 ];
 
-
-
 export const formatDateToDDMMYYYY = (dateString) => {
   // Parse the date string
   const date = new Date(dateString);
 
   // Extract day, month, and year
-  const day = String(date.getUTCDate()).padStart(2, '0');
-  const month = String(date.getUTCMonth() + 1).padStart(2, '0'); // Months are 0-indexed
+  const day = String(date.getUTCDate()).padStart(2, "0");
+  const month = String(date.getUTCMonth() + 1).padStart(2, "0"); // Months are 0-indexed
   const year = date.getUTCFullYear();
 
   // Return the formatted date as DD-MM-YYYY
   return `${day}-${month}-${year}`;
-}
-
+};
 
 export const CalculateDaysBetweenDates = (date1, date2) => {
   // Parse the dates using the ISO 8601 format
@@ -56,8 +53,7 @@ export const CalculateDaysBetweenDates = (date1, date2) => {
 
   // Convert milliseconds to days
   return Math.floor(diffMs / (1000 * 60 * 60 * 24));
-}
-
+};
 
 export const CountWords = (str) => {
   str = str.trim();
@@ -76,17 +72,16 @@ export const GetFileSize = (fileInput) => {
 };
 
 export const sanitizeYoutubeUrl = (url) => {
-  console.log('youtube from function: ', url);
+  console.log("youtube from function: ", url);
 
-
-  const equalSignIndex = url.indexOf('=');
+  const equalSignIndex = url.indexOf("=");
 
   // Check if there is an equal sign in the URL
   if (equalSignIndex === -1) {
-    return ''; // No equal sign found
+    return ""; // No equal sign found
   }
 
-  const secondEqualSignIndex = url.indexOf('=', equalSignIndex + 1);
+  const secondEqualSignIndex = url.indexOf("=", equalSignIndex + 1);
 
   if (secondEqualSignIndex === -1) {
     // Only one equal sign found
@@ -95,7 +90,7 @@ export const sanitizeYoutubeUrl = (url) => {
     // Two equal signs found
     return url.slice(equalSignIndex + 1, secondEqualSignIndex); // Return substring between the two equal signs
   }
-}
+};
 
 export function en2bn(englishNumber) {
   const englishToBanglaMap = {
@@ -118,7 +113,7 @@ export function en2bn(englishNumber) {
     .join("");
 
   return convertedNumber;
-};
+}
 
 export const relative_image_path = (path) => {
   return "/images/" + path;
@@ -132,7 +127,7 @@ export function dDate($d) {
   let banglaCalendar = myDate.bangla; // {month:1, year:1429, date: 23};
   let dDate = `${banglaDate}, ${banglaMonth} ${banglaYear}`;
   return dDate;
-};
+}
 
 export const dateName = ($d) => {
   const date = new Date($d);
@@ -232,9 +227,7 @@ export const modelClose = (modalRef, modalForm) => {
 //model open
 export const modelOpen = (modalRef, updateModelForm) => {
   if (modalRef.current) modalRef.current.showModal();
-}
-
-
+};
 
 export const sweetAlert = () => {
   Swal.fire({
@@ -272,7 +265,7 @@ export const sweetAlert = () => {
         .catch((err) => console.log(err));
     }
   });
-}
+};
 
 export const replaceSpaces = (str) => {
   return str.replaceAll(" ", "_");
@@ -280,20 +273,32 @@ export const replaceSpaces = (str) => {
 
 export const replaceUnderscore = (str) => {
   return str.replaceAll("_", " ");
-}
-
+};
 
 export const formatDate = (dateString) => {
   const date = new Date(dateString);
 
-  const day = String(date.getDate()).padStart(2, '0'); // 01, 02, ...
-  const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+  const day = String(date.getDate()).padStart(2, "0"); // 01, 02, ...
+  const monthNames = [
+    "Jan",
+    "Feb",
+    "Mar",
+    "Apr",
+    "May",
+    "Jun",
+    "Jul",
+    "Aug",
+    "Sep",
+    "Oct",
+    "Nov",
+    "Dec",
+  ];
   const month = monthNames[date.getMonth()]; // Jan, Feb, ...
   const year = date.getFullYear(); // 2025
 
   const hours = date.getHours();
-  const minutes = String(date.getMinutes()).padStart(2, '0'); // 00, 01, ...
-  const seconds = String(date.getSeconds()).padStart(2, '0'); // 00, 01, ...
+  const minutes = String(date.getMinutes()).padStart(2, "0"); // 00, 01, ...
+  const seconds = String(date.getSeconds()).padStart(2, "0"); // 00, 01, ...
   const ampm = hours >= 12 ? "PM" : "AM";
 
   const formattedHours = hours % 12 || 12; // Convert 24-hour to 12-hour format
@@ -301,15 +306,31 @@ export const formatDate = (dateString) => {
   return `${day}-${month}-${year}, ${formattedHours}:${minutes}:${seconds} ${ampm}`;
 };
 
-export const textFormat = (name) =>{
+export const textFormat = (name) => {
   const capitalizedName = name
-  .split(" ")
-  .map(word => word?.charAt(0)?.toUpperCase() + word?.slice(1))
-  .join(" ");
+    .split(" ")
+    .map((word) => word?.charAt(0)?.toUpperCase() + word?.slice(1))
+    .join(" ");
   return capitalizedName;
-}
+};
 
-export const oneLatterUppercase = (name)=>{
-  const capitalizedName = name?.charAt(0)?.toUpperCase() + name?.slice(1)
+export const oneLatterUppercase = (name) => {
+  const capitalizedName = name?.charAt(0)?.toUpperCase() + name?.slice(1);
   return capitalizedName;
-}
+};
+
+export const wordCapitalizewithUnderscore = (name) => {
+  const capitalizedName = name
+    ?.split("_")
+    .map((word) => word?.charAt(0)?.toUpperCase() + word?.slice(1))
+    .join(" ");
+  return capitalizedName;
+};
+
+export const remainingDaysCalculate = (date) => {
+  const expirationDate = new Date(date);
+  const today = new Date();
+  const timeDifference = expirationDate.getTime() - today.getTime();
+  const remainingDays = Math.ceil(timeDifference / (1000 * 60 * 60 * 24));
+  return remainingDays;
+};

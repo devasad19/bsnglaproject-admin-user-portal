@@ -116,10 +116,21 @@ const ServiceListContainer = ({ services }) => {
 
   return (
     <section>
-      <div className="flex flex-wrap justify-between">
-        <h3 className="text-32 font-mono font-bold text-[#151D48] pb-5">
+      <div className="flex flex-wrap justify-between pb-1">
+        <h3 className="text-32 font-mono font-bold text-[#151D48]">
           Service List
         </h3>
+      </div>
+      <div className="py-2 flex flex-wrap justify-between pb-4">
+        <div className="flex items-center gap-2">
+          <input
+            type="text"
+            className="border border-gray-300 px-2 py-1 rounded-md"
+            placeholder="Search by Service name"
+            value={searchByName}
+            onChange={(e) => handleSearch(e)}
+          />
+        </div>
         <div>
           <Link
             href={{
@@ -139,17 +150,6 @@ const ServiceListContainer = ({ services }) => {
             </span>
             <span>Create Service</span>
           </Link>
-        </div>
-      </div>
-      <div className="py-2">
-        <div className="flex items-center gap-2">
-          <input
-            type="text"
-            className="border border-gray-300 px-2 py-1 rounded-md"
-            placeholder="Search by Service name"
-            value={searchByName}
-            onChange={(e) => handleSearch(e)}
-          />
         </div>
       </div>
       <div className="w-full overflow-x-auto bg-white  rounded-md pb-3">

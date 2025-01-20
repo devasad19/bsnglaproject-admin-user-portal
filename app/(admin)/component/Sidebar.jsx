@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useContext } from "react";
 import Image from "next/image";
-import { oneLatterUppercase, relative_image_path, textFormat } from "@/helper";
+import { oneLatterUppercase, wordCapitalizewithUnderscore, relative_image_path, textFormat } from "@/helper";
 import Link from "next/link";
 import Accordion from "@/app/_components/Accordion/Accordion";
 import { usePathname } from "next/navigation";
@@ -752,7 +752,7 @@ const Sidebar = () => {
               <div>
                 <h3>{oneLatterUppercase(user ? user?.name : "")}</h3>
                 <p className="text-12">
-                  {oneLatterUppercase(user ? user?.type : "")}
+                  {wordCapitalizewithUnderscore(user ? user?.type : "")}
                 </p>
               </div>
             </div>

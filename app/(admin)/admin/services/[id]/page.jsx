@@ -111,9 +111,9 @@ const Home = ({ params }) => {
 
     // Get the array values for limit and validaty
 
-    if(!f_name){
+    if (!f_name) {
       setErrors({
-        feature_name: "Feature Name is required !"
+        feature_name: "Feature Name is required !",
       });
       return;
     }
@@ -125,9 +125,9 @@ const Home = ({ params }) => {
       e.target.querySelectorAll('input[name="validaty[]"]')
     ).map((input) => input.value);
 
-    let days = Array.from(
-      e.target.querySelectorAll('input[name="days[]"]')
-    ).map((input) => input.value);
+    // let days = Array.from(
+    //   e.target.querySelectorAll('input[name="days[]"]')
+    // ).map((input) => input.value);
 
     // const validationErrors = {};
     // Object.keys(formData).forEach((key) => {
@@ -146,40 +146,39 @@ const Home = ({ params }) => {
       return {
         limit: limit,
         validaty: validities[index],
-        expire_days: days[index],
       };
     });
-
-    // console.log({plans});
-    // return;
-
-    let uploadData = {
-      service_id,
-      name: f_name,
-      unit: f_type,
-      is_public: f_value ? 1 : 0,
-      plans: plans,
-      status: 1,
-    };
-    // console.log({uploadData});
-    // return;
-
-    const featureData = await uploadFeatureData(uploadData);
-    if (featureData) {
-      setRefesh(!refesh);
-      toast.success(featureData?.message);
-      setFeaturePlan([]);
-      setFormData({
-        feature_name: "",
-        plan: "",
-        is_public: false,
-        service_id: "",
-        limits: [""],
-        validities: [""],
-      }); // Clear the form data
-      modelClose(featureModal, featureForm);
-    } else {
-      toast.error(featureData?.message);
+    try {
+      let uploadData = {
+        service_id,
+        name: f_name,
+        unit: f_type,
+        is_public: f_value ? 1 : 0,
+        plans: plans,
+        status: 1,
+      };
+      // console.log({uploadData});
+      // return;
+  
+      const featureData = await uploadFeatureData(uploadData);
+      if (featureData) {
+        setRefesh(!refesh);
+        toast.success(featureData?.message);
+        setFeaturePlan([]);
+        setFormData({
+          feature_name: "",
+          plan: "",
+          is_public: false,
+          service_id: "",
+          limits: [""],
+          validities: [""],
+        }); // Clear the form data
+        modelClose(featureModal, featureForm);
+      } else {
+        toast.error(featureData?.message);
+      }
+    } catch (error) {
+      toast.error(error?.message);
     }
   };
 
@@ -227,16 +226,16 @@ const Home = ({ params }) => {
     let validities = Array.from(
       e.target.querySelectorAll('input[name^="validaty-"]')
     ).map((input) => input.value);
-    let days = Array.from(
-      e.target.querySelectorAll('input[name^="expire_days-"]')
-    ).map((input) => input.value);
+    // let days = Array.from(
+    //   e.target.querySelectorAll('input[name^="expire_days-"]')
+    // ).map((input) => input.value);
 
     // Combine the limits and validities into an array of objects
     let plans = limits.map((limit, index) => {
       return {
         limit: limit,
         validaty: validities[index],
-        expire_days: days[index],
+        // expire_days: days[index],
       };
     });
 
@@ -251,7 +250,6 @@ const Home = ({ params }) => {
     };
     // console.log({uploadData});
     // return;
-    
 
     const featureUpdateData = await updateFeatureDataById(
       featureUpdateItem?.id,
@@ -347,8 +345,6 @@ const Home = ({ params }) => {
                         const plans = JSON.parse(feature?.plans || "[]");
                         const limits = plans.map((plan) => plan.limit);
                         const units = plans.map((plan) => plan.validaty);
-                        const days = plans.map((plan) => plan.expire_days);
-                        console.log({ days });
 
                         return (
                           <tr key={feature.id || featureIndex}>
@@ -388,29 +384,6 @@ const Home = ({ params }) => {
                                           }  border-gray-500 p-2`}
                                         >
                                           {unit} TK
-                                        </td>
-                                      ))
-                                    ) : (
-                                      <td
-                                        className="p-2"
-                                        colSpan={limits.length || 1}
-                                      >
-                                        No Data
-                                      </td>
-                                    )}
-                                  </tr>
-                                </tbody>
-                                <tbody>
-                                  <tr>
-                                    {plans.length > 0 && days.length > 0 ? (
-                                      days.map((day, index) => (
-                                        <td
-                                          key={`unit-${index}`}
-                                          className={`${
-                                            index === 0 ? "" : "border-l"
-                                          }  border-gray-500 p-2 border-t`}
-                                        >
-                                          {day} Days
                                         </td>
                                       ))
                                     ) : (
@@ -595,25 +568,7 @@ const Home = ({ params }) => {
                       </fieldset>
                       {/* {errors.validities && <span className="text-red-500 text-12 pt-1">{errors.validities}</span>} */}
                     </div>
-                    <div>
-                      <fieldset className="border border-primary px-2 rounded">
-                        <legend>
-                          <label htmlFor="" className="text-14">
-                            Days
-                          </label>
-                        </legend>
-                        <input
-                          type="text"
-                          name="days[]"
-                          className="outline-none w-full"
-                          // value={formData.validities}
-                          defaultValue={365}
-                          required
-                          // value={100}
-                        />
-                      </fieldset>
-                      {/* {errors.validities && <span className="text-red-500 text-12 pt-1">{errors.validities}</span>} */}
-                    </div>
+
                     <button
                       type="button"
                       onClick={() => {
@@ -708,7 +663,7 @@ const Home = ({ params }) => {
               />
             </fieldset>
             <div className="flex items-center justify-between gap-2">
-              <fieldset className="border border-primary px-2 rounded grow">
+              {/* <fieldset className="border border-primary px-2 rounded grow">
                 <legend>
                   <label htmlFor="feature_name" className="text-14">
                     Plans Value Unit
@@ -726,7 +681,20 @@ const Home = ({ params }) => {
                   className="outline-none w-full"
                   placeholder="days"
                 />
-              </fieldset>
+              </fieldset> */}
+              <fieldset className="border border-primary px-2 rounded grow">
+                  <legend>
+                    <label htmlFor="feature_name" className="text-14">
+                      Plans Value Unit
+                    </label>
+                  </legend>
+                  <select className="outline-none w-full" name="plan">
+                    <option value="Days" selected={featureUpdateItem?.unit == "Days"}>Days</option>
+                    <option value="MB" selected={featureUpdateItem?.unit == "MB"}>MB</option>
+                    <option value="Min" selected={featureUpdateItem?.unit == "Min"}>Min</option>
+                    <option value="Audio" selected={featureUpdateItem?.unit == "Audio"}>Audio</option>
+                  </select>
+                </fieldset>
               <div className="flex items-center gap-2">
                 <input
                   type="checkbox"
@@ -825,34 +793,6 @@ const Home = ({ params }) => {
                           }
                         />
                       </fieldset>
-                      <div>
-                      <fieldset className="border border-primary px-2 rounded">
-                        <legend>
-                          <label htmlFor="" className="text-14">
-                            Days
-                          </label>
-                        </legend>
-                        <input
-                          type="text"
-                          name={`expire_days-${index}`}
-                          className="outline-none w-full"
-                          defaultValue={item?.expire_days ? item?.expire_days : 365}
-                          // defaultValue={365}
-                          onChange={(e) =>
-                            setUpdateFeaturePlan((prev) =>
-                              prev.map((p, idx) =>
-                                idx === index
-                                  ? { ...p, expire_days: e.target.value }
-                                  : p
-                              )
-                            )
-                          }
-                          required
-                          // value={100}
-                        />
-                      </fieldset>
-                      {/* {errors.validities && <span className="text-red-500 text-12 pt-1">{errors.validities}</span>} */}
-                    </div>
 
                       {/* Optional delete button */}
                       <button

@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import Skeleton from "react-loading-skeleton";
 import { getSoldServices } from "@/app/(admin)/_api";
+import { remainingDaysCalculate } from "@/helper";
 
 const PurchaaseServicePage = () => {
   const [services, setServices] = useState<any>([]);
@@ -42,7 +43,8 @@ const PurchaaseServicePage = () => {
               <th className="text-center">Name</th>
               <th className="text-center">Description</th>
               <th className="text-center">Status</th>
-              <th className="text-center">Date</th>
+              <th className="text-center">Expire Date</th>
+              <th className="text-center">Remaining Days</th>
               <th className="text-center">Details</th>
             </tr>
           </thead>
@@ -94,23 +96,22 @@ const PurchaaseServicePage = () => {
                       </td>
                       <td
                         className={`text-center ${
-                          item?.status === "1" && "text-green-500"
-                        } ${item?.status === "0" && "text-red-500"} ${
-                          item?.status === "3" && "text-gray-500"
+                          remainingDaysCalculate(item?.expiry_date) > 0 ?"text-green-500" :"text-red-500" 
                         }`}
                       >
-                        {item?.status === "1" && "Active"}
-                        {item?.status === "0" && "Inactive"}
+                        {
+                          remainingDaysCalculate(item?.expiry_date) > 0 ? "Active" : "Expired"
+                        }
                       </td>
                       <td className="text-center">
-                        {new Date(item?.created_at).toLocaleDateString(
-                          "en-GB",
-                          {
-                            day: "numeric",
-                            month: "long",
-                            year: "numeric",
-                          }
-                        )}
+                        {
+                          item?.expiry_date
+                        }
+                      </td>
+                      <td className="text-center">
+                        {
+                          remainingDaysCalculate(item?.expiry_date) > 0 ? remainingDaysCalculate(item?.expiry_date) : "0"
+                        }
                       </td>
                       <td className="text-center cursor-pointer">
                         <Link
