@@ -296,7 +296,7 @@ const ManageUserTypeList = ({ userType }: any) => {
                     <td className="px-2 border-r border-gray-200">
                       {item?.name_en}
                     </td>
-                    <td className="text-center border-r border-gray-200">1</td>
+                    <td className="text-center border-r border-gray-200">{item?.citizens_count ?? ""}</td>
                     <td className="text-center border-r border-gray-200">
                       {item?.status == "1" ? (
                         <span className="bg-green-500 text-white px-2 py-1 rounded-md text-12">
