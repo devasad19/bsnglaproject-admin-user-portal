@@ -4,6 +4,7 @@ import { useRef, useState, useEffect } from "react";
 import Image from "next/image";
 import { relative_image_path, textFormat } from "@/helper";
 import { usePDF } from "react-to-pdf";
+import Logo from "../../../../../../public/images/logo.png";
 
 import html2canvas from "html2canvas";
 import { jsPDF } from "jspdf";
@@ -32,7 +33,10 @@ const Home = ({ params }) => {
     if (!div) return;
 
     // Capture the div as a canvas image
-    const canvas = await html2canvas(div);
+    const canvas = await html2canvas(div, {
+      useCORS: true,
+      scale: 2,
+    });
     const imgData = canvas.toDataURL("image/png");
 
     // Generate PDF
@@ -104,14 +108,17 @@ const Home = ({ params }) => {
                   className="w-2/3 bg-white p-6 shadow-lg rounded-md"
                 >
                   <div className="pb-5">
-                    <div className="w-24 flex flex-col items-center gap-1 pb-3">
-                      <Image
-                        src={relative_image_path("logo.png")}
-                        className="h-10"
-                        width={1000}
-                        height={1000}
-                        alt="Bangla"
-                      />
+                    <div className="w-24 h-auto flex flex-col items-center gap-1 pb-3">
+                      <div className="w-full">
+                        <Image
+                          src={relative_image_path("logo.png")}
+                          // src={Logo}
+                          className="h-10 w-full"
+                          width={40}
+                          height={40}
+                          alt="Bangla"
+                        />
+                      </div>
                       <p className="">Bangla Project</p>
                     </div>
                     <div className="grid grid-cols-2 pb-5">

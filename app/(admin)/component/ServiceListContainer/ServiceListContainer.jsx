@@ -57,7 +57,6 @@ const ServiceListContainer = ({ services }) => {
     }
   };
 
-
   const handleDelete = (id) => {
     if (id) {
       Swal.fire({
@@ -187,7 +186,7 @@ const ServiceListContainer = ({ services }) => {
                   <tr key={index}>
                     <td className="px-3">
                       <span className="border border-gray-300 px-2 py-1 rounded-md">
-                        {index + 1}
+                        {(currentPage - 1) * itemsPerPage + index + 1}
                       </span>
                     </td>
                     <td className="px-2 border-r border-gray-200">

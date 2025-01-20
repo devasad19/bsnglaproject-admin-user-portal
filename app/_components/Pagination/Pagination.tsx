@@ -2,12 +2,12 @@ import React from "react";
 
 interface PaginationProps {
     displayedItems: any[];
-    handlePreviousClick: () => void;
+    handlePreviousClick:any;
     currentPage: number;
     totalPages: number;
     setCurrentPage:any;
     handlePageClick: (pageIndex: number) => void;
-    handleNextClick: () => void;
+    handleNextClick:any;
 }
 
 const Pagination = ({
