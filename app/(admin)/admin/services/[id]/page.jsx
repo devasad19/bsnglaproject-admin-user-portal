@@ -51,9 +51,6 @@ const Home = ({ params }) => {
       case "feature_name":
         if (!value.trim()) error = "Feature Name is required";
         break;
-      case "plan":
-        if (!value.trim()) error = "Feature Type is required";
-        break;
       default:
         break;
     }
@@ -113,6 +110,14 @@ const Home = ({ params }) => {
     let service_id = e.target.service_id.value;
 
     // Get the array values for limit and validaty
+
+    if(!f_name){
+      setErrors({
+        feature_name: "Feature Name is required !"
+      });
+      return;
+    }
+
     let limits = Array.from(
       e.target.querySelectorAll('input[name="limit[]"]')
     ).map((input) => input.value);
@@ -222,12 +227,16 @@ const Home = ({ params }) => {
     let validities = Array.from(
       e.target.querySelectorAll('input[name^="validaty-"]')
     ).map((input) => input.value);
+    let days = Array.from(
+      e.target.querySelectorAll('input[name^="expire_days-"]')
+    ).map((input) => input.value);
 
     // Combine the limits and validities into an array of objects
     let plans = limits.map((limit, index) => {
       return {
         limit: limit,
         validaty: validities[index],
+        expire_days: days[index],
       };
     });
 
@@ -240,6 +249,9 @@ const Home = ({ params }) => {
       plans: plans,
       status: "imagedata",
     };
+    // console.log({uploadData});
+    // return;
+    
 
     const featureUpdateData = await updateFeatureDataById(
       featureUpdateItem?.id,
@@ -255,7 +267,7 @@ const Home = ({ params }) => {
     }
   };
 
-  console.log({ features });
+  // console.log({updateFeaturePlan });
 
   return (
     <>
@@ -813,6 +825,34 @@ const Home = ({ params }) => {
                           }
                         />
                       </fieldset>
+                      <div>
+                      <fieldset className="border border-primary px-2 rounded">
+                        <legend>
+                          <label htmlFor="" className="text-14">
+                            Days
+                          </label>
+                        </legend>
+                        <input
+                          type="text"
+                          name={`expire_days-${index}`}
+                          className="outline-none w-full"
+                          defaultValue={item?.expire_days ? item?.expire_days : 365}
+                          // defaultValue={365}
+                          onChange={(e) =>
+                            setUpdateFeaturePlan((prev) =>
+                              prev.map((p, idx) =>
+                                idx === index
+                                  ? { ...p, expire_days: e.target.value }
+                                  : p
+                              )
+                            )
+                          }
+                          required
+                          // value={100}
+                        />
+                      </fieldset>
+                      {/* {errors.validities && <span className="text-red-500 text-12 pt-1">{errors.validities}</span>} */}
+                    </div>
 
                       {/* Optional delete button */}
                       <button
@@ -847,7 +887,7 @@ const Home = ({ params }) => {
               }}
               className="bg-red-500 text-white px-4 py-2 rounded"
             >
-              close
+              Close
             </button>
             <button
               // onClick={(e) => {
