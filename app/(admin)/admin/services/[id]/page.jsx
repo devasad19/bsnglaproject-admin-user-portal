@@ -144,6 +144,7 @@ const Home = ({ params }) => {
     // Combine the limits and validities into an array of objects
     let plans = limits.map((limit, index) => {
       return {
+        id:index+1,
         limit: limit,
         validaty: validities[index],
       };
@@ -161,7 +162,7 @@ const Home = ({ params }) => {
       // return;
   
       const featureData = await uploadFeatureData(uploadData);
-      if (featureData) {
+      if (featureData?.status) {
         setRefesh(!refesh);
         toast.success(featureData?.message);
         setFeaturePlan([]);
@@ -233,6 +234,7 @@ const Home = ({ params }) => {
     // Combine the limits and validities into an array of objects
     let plans = limits.map((limit, index) => {
       return {
+        id:index+1,
         limit: limit,
         validaty: validities[index],
         // expire_days: days[index],

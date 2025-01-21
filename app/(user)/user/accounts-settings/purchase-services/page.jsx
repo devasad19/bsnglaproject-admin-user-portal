@@ -3,7 +3,11 @@ import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 
 import Image from "next/image";
-import { relative_image_path, remainingDaysCalculate } from "@/helper";
+import {
+  relative_image_path,
+  remainingDaysCalculate,
+  remainingMonthsAndDays,
+} from "@/helper";
 import TableSkeleton from "@/app/_components/TableSkeleton/TableSkeleton";
 import { useRouter } from "next/navigation";
 import { getBoughtServices } from "@/app/(user)/_api/accountService";
@@ -125,18 +129,35 @@ const Home = () => {
 
                       <td
                         className={`text-center ${
-                          remainingDaysCalculate(item?.expiry_date) > 0 ?"text-green-500" :"text-red-500" 
+                          remainingDaysCalculate(item?.expiry_date) > 0
+                            ? "text-green-500"
+                            : "text-red-500"
                         }`}
                       >
-                        {
-                          remainingDaysCalculate(item?.expiry_date) > 0 ? "Active" : "Expired"
-                        }
+                        {remainingDaysCalculate(item?.expiry_date) > 0
+                          ? "Active"
+                          : "Expired"}
                       </td>
                       <td className="text-center">{item?.expiry_date}</td>
                       <td className="text-center">
-                        {remainingDaysCalculate(item?.expiry_date) > 0
-                          ? remainingDaysCalculate(item?.expiry_date)
-                          : "0"}
+                        {remainingDaysCalculate(item?.expiry_date) > 0 ? (
+                          <>
+                            {remainingMonthsAndDays(item?.expiry_date).months >
+                            0
+                              ? `${
+                                  remainingMonthsAndDays(item?.expiry_date)
+                                    .months
+                                } Months`
+                              : ""}
+                            {remainingMonthsAndDays(item?.expiry_date).days > 0
+                              ? ` ${
+                                  remainingMonthsAndDays(item?.expiry_date).days
+                                } Days`
+                              : ""}
+                          </>
+                        ) : (
+                          "0"
+                        )}
                       </td>
                       <td className="text-center cursor-pointer">
                         <details
@@ -163,6 +184,7 @@ const Home = () => {
                                 Service Details
                               </button>
                             </li>
+                            
                             <li>
                               <Link
                                 href={{
@@ -171,6 +193,16 @@ const Home = () => {
                                 shallow
                               >
                                 Purchase Info
+                              </Link>
+                            </li>
+                            <li>
+                              <Link
+                                href={{
+                                  pathname: `/user/services/${item?.service_id}`,
+                                }}
+                                shallow
+                              >
+                                Upgrade Package
                               </Link>
                             </li>
                           </ul>

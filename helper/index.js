@@ -334,3 +334,26 @@ export const remainingDaysCalculate = (date) => {
   const remainingDays = Math.ceil(timeDifference / (1000 * 60 * 60 * 24));
   return remainingDays;
 };
+
+export const remainingMonthsAndDays = (date) => {
+  const expirationDate = new Date(date);
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  expirationDate.setHours(0, 0, 0, 0);
+  if (expirationDate < today) {
+    return { months: 0, days: 0 };
+  }
+  let months = 0;
+  let days = 0;
+  while (today < expirationDate) {
+    today.setMonth(today.getMonth() + 1);
+    if (today <= expirationDate) {
+      months++;
+    } else {
+      today.setMonth(today.getMonth() - 1);
+      break;
+    }
+  }
+  days = Math.ceil((expirationDate - today) / (1000 * 60 * 60 * 24));
+  return { months, days };
+};
