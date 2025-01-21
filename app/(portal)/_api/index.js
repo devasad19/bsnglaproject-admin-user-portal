@@ -39,7 +39,7 @@ export const getServices = async () => {
 };
 
 //3. get single service by service id
-export const getSingleService = async (id) => {
+export const getSingleService = async (id,userId) => {
   try {
     const service = await fetch(
       `${process.env.NEXT_PUBLIC_API_URL}/service/${id}`
@@ -253,12 +253,12 @@ export const getSingleOrderByIdApi = async (id) => {
 };
 
 // get single order by service id
-export const getSingleOrderByServiceId = async (serviceId) => {
+export const getSingleOrderByServiceId = async (serviceId,userId) => {
   try {
-    const singleOrderByserviceId = await axios.get(
-      `${process.env.NEXT_PUBLIC_API_URL}/order/by-service-id/${serviceId}`
+    const singleOrderByServiceId = await axios.get(
+      `${process.env.NEXT_PUBLIC_API_URL}/order/by-service-id/${serviceId}/${userId}`
     );
-    return singleOrderByserviceId.data;
+    return singleOrderByServiceId.data;
   } catch (error) {
     console.log(error);
     return error;

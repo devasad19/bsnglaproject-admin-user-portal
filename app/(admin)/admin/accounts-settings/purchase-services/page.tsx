@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import Skeleton from "react-loading-skeleton";
 import { getSoldServices } from "@/app/(admin)/_api";
-import { remainingDaysCalculate } from "@/helper";
+import { remainingDaysCalculate, remainingMonthsAndDays } from "@/helper";
 
 const PurchaaseServicePage = () => {
   const [services, setServices] = useState<any>([]);
@@ -110,7 +110,14 @@ const PurchaaseServicePage = () => {
                       </td>
                       <td className="text-center">
                         {
-                          remainingDaysCalculate(item?.expiry_date) > 0 ? remainingDaysCalculate(item?.expiry_date) : "0"
+                          remainingDaysCalculate(item?.expiry_date) > 0 ? <>
+                            {
+                              remainingMonthsAndDays(item?.expiry_date).months > 0 ? `${remainingMonthsAndDays(item?.expiry_date).months} Months` : ""
+                            }
+                            {
+                              remainingMonthsAndDays(item?.expiry_date).days > 0 ? ` ${remainingMonthsAndDays(item?.expiry_date).days} Days` : ""
+                            }
+                          </>  : "0"
                         }
                       </td>
                       <td className="text-center cursor-pointer">
