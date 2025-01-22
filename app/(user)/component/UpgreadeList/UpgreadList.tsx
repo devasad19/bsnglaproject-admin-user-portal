@@ -9,32 +9,41 @@ import {
 } from "@/app/(portal)/_api";
 import { useHomeContext } from "@/ContextProvider/Home.Context";
 
+
 interface Tprops {
   id: any;
   validities: any;
 }
 interface TFeature {
-    plans: string;
-    name: string;
-    unit: string;
-  }
+  plans: string;
+  name: string;
+  unit: string;
+}
 
 const UpgreadList = ({ id, validities }: Tprops) => {
-   const context = useHomeContext();
-   const user = context?.user;
+  const context = useHomeContext();
+  const user = context?.user;
   const [service, setService] = useState<any>({});
-  
 
   const [features, setFeatures] = useState<TFeature[]>([]);
   const [orderData, setOrderData] = useState<any>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [selectedPrices, setSelectedPrices] = useState<any>([]);
   const [activePlans, setActivePlans] = useState<any>([]);
+  const [activeValidaty, setActiveValidataty] = useState<any>({});
   const [selectedFeatureInfo, setSelectedFeatureInfo] = useState<any>([]);
   const [index, setIndex] = useState<any>({});
   const [totalPrice, setTotalPrice] = useState<any>(0);
   const [error, setError] = useState<any>("");
+  const [percentagePrice, setPercentagePrice] = useState<any>(0);
   // const [isLoading,setIsLoading] = useState(false);
+
+  const handleDayClick = (id: any) => {
+    const selectedIndexDay = validities.find(
+      (validitie: any) => validitie.id == id
+    );
+    setActiveValidataty(selectedIndexDay);
+  };
 
   const handlePlanClick = (
     featureIndex: any,
@@ -59,21 +68,20 @@ const UpgreadList = ({ id, validities }: Tprops) => {
       return updatedPrices;
     });
   };
-console.log({user});
 
   useEffect(() => {
     try {
       setIsLoading(true);
-      if(user?.id){
+      if (user?.id) {
         getSingleService(id)
-        .then((data) => (setIsLoading(false), setService(data)))
-        .catch((err) => console.log(err));
-      getFeaturesByServiceId(id).then(
-        (data) => (setIsLoading(false), setFeatures(data?.data))
-      );
-      getSingleOrderByServiceId(id, user?.id).then(
-        (data) => (setIsLoading(false), setOrderData(data?.data))
-      );
+          .then((data) => (setIsLoading(false), setService(data)))
+          .catch((err) => console.log(err));
+        getFeaturesByServiceId(id).then(
+          (data) => (setIsLoading(false), setFeatures(data?.data))
+        );
+        getSingleOrderByServiceId(id, user?.id).then(
+          (data) => (setIsLoading(false), setOrderData(data?.data))
+        );
       }
     } catch (error) {
       setError("Failed to load data. Please try again later.");
@@ -85,11 +93,11 @@ console.log({user});
   const maxPlanLength = Math.max(
     ...features?.map((fItem) => JSON.parse(fItem?.plans || "[]").length)
   );
-  const ordersPlans = JSON.parse(orderData?.plans || "[]");
-  const TotalAmountOld = ordersPlans?.reduce(
-    (acc: any, curr: any) => acc + (Number(curr?.price) || 0),
-    0
-  );
+  const ordersPlans = JSON.parse(orderData?.feature || "[]");
+  // const TotalAmountOld = ordersPlans?.reduce(
+  //   (acc: any, curr: any) => acc + (Number(curr?.price) || 0),
+  //   0
+  // );
 
   const updatedTotalAmount = selectedPrices?.reduce(
     (sum: any, price: any) => sum + (Number(price) || 0),
@@ -98,64 +106,172 @@ console.log({user});
   useEffect(() => {
     const initialActivePlans: any = [];
     const initialSelectedPrices: any = [];
+    const initialSelectedFeatureInfo: any = [];
     let initialTotalPrice = 0;
-
     if (features?.length > 0) {
-      features?.forEach((fItem, fIndex) => {
+      features.forEach((fItem: any, fIndex) => {
         const plans = JSON.parse(fItem?.plans || "[]");
-        plans?.forEach((pItem: any, pIndex: number) => {
+        plans.forEach((pItem: any, pIndex: number) => {
           const matchingOrder = ordersPlans?.find(
             (element: any) =>
-              element?.data === pItem?.limit &&
-              element?.price === pItem?.validaty
+              String(element?.feature_id) === String(fItem.id) &&
+              String(element?.id) === String(pItem?.id)
           );
           if (matchingOrder) {
             initialActivePlans[fIndex] = pIndex;
             initialSelectedPrices[fIndex] = pItem?.validaty;
-            initialTotalPrice += pItem?.validaty || 0;
+            initialTotalPrice += Number(pItem?.validaty || 0);
+            initialSelectedFeatureInfo[fIndex] = {
+              selectIndexFeatureData: fItem,
+              price: pItem?.validaty,
+              planName: pItem?.limit,
+            };
           }
         });
       });
+      validities?.forEach((validity: any) => {
+        const matchingOrder = ordersPlans?.find((element: any) => {
+          return element?.id == validity?.id && element?.name == "Validity";
+        });
+        if (matchingOrder) {
+          setActiveValidataty(validity);
+          initialTotalPrice += Number(matchingOrder?.price || 0);
+        }
+      });
     }
-
     setActivePlans(initialActivePlans || []);
-    setSelectedPrices(initialSelectedPrices || 0);
+    setSelectedPrices(initialSelectedPrices || []);
     setTotalPrice(initialTotalPrice || 0);
+    setSelectedFeatureInfo(initialSelectedFeatureInfo || []);
   }, [features]);
 
-  const handlePayment = (id: any) => {
-    // if (!user) {
-    //   toast.warn("Please login first");
-    //   setIsLoading(false);
-    //   return;
-    // }
+  useEffect(() => {
+    if (activeValidaty?.day && updatedTotalAmount) {
+      // console.log({ activeDay, totalPrice });
 
-    // const { name, email, phone, address, division, zila, thana, companyUrl } =
-    //   data;
+      setPercentagePrice(
+        Math.round(
+          Number(
+            ((Number(activeValidaty?.rate) / 100) * updatedTotalAmount).toFixed(
+              2
+            )
+          )
+        )
+      );
+    } else {
+      setPercentagePrice(0);
+    }
+  }, [updatedTotalAmount, activeValidaty]);
 
-    let plans = [];
+  console.log({ percentagePrice });
 
-    // if (featureSelectedInfoAll.length > 0) {
-    //   plans = featureSelectedInfoAll.map((item) => ({
-    //     id: item?.selectIndexFeatureData?.id,
-    //     name: item?.selectIndexFeatureData?.name,
-    //     data: item?.planName,
-    //     price: item?.price,
-    //     unit: item?.selectIndexFeatureData?.unit,
-    //   }));
-    // }
-    // const orderInfo = {
-    //   user_id: user?.id,
-    //   service_id: id,
-    //   plans,
-    //   total: featureTotalPrice,
-    //   offer: "",
-    //   discount: 0,
-    //   status: 1,
-    // };
-  };
-  console.log({features,orderData, ordersPlans, TotalAmountOld, updatedTotalAmount, activePlans});
-  
+  // const handleOrderNow = async () => {
+  //   setIsLoading(true);
+  //   let plans: any = [];
+  //   const newSelectedInfoAll = [
+  //     {
+  //       selectIndexFeatureData: {
+  //         id: "",
+  //         name: "Validity",
+  //         unit: "Day",
+  //       },
+  //       planId: activeValidaty?.id,
+  //       planName: activeValidaty?.day,
+  //       price: percentagePrice,
+  //     },
+  //     ...selectedFeatureInfo,
+  //   ];
+  //   if (newSelectedInfoAll.length > 0) {
+  //     plans = newSelectedInfoAll.map((item) => ({
+  //       id: item?.planId,
+  //       feature_id: item?.selectIndexFeatureData?.id,
+  //       name: item?.selectIndexFeatureData?.name,
+  //       data: item?.planName,
+  //       price: item?.price,
+  //       unit: item?.selectIndexFeatureData?.unit,
+  //     }));
+  //   }
+  //   const orderInfo = {
+  //     user_id: user?.id,
+  //     order_id: orderData?.order_id,
+  //     payment_id: orderData?.payment_id,
+  //     service_id: id,
+  //     feature: JSON.stringify(plans),
+  //     expiry_date: activeValidaty?.day,
+  //     offer: orderData?.offer,
+  //     offer_type: orderData?.offer,
+  //     discount: orderData?.discount,
+  //     status: 1,
+  //   };
+  //   console.log({ orderInfo });
+  //   return;
+  //   const res = await upgradePackage(orderInfo);
+  //   if (res?.data?.id) {
+      
+
+    
+  //       // reset();
+  //       try {
+  //         let paymentInfo = {
+  //           user_id: user?.id,
+  //           order_id: res?.data?.id,
+  //           payment_type: "mobile_banking",
+  //           amount: Number(updatedTotalAmount + percentagePrice),
+  //           account_number: 344345678,
+  //           account_holder_name: "John Doe", //this will be dynamic later
+  //           bank_name: "dbbl",
+  //           transaction_date: new Date(),
+  //           payment_status: "pending",
+  //           status: 0,
+  //           transaction_id: 1, // last defined
+  //           feature: plans,
+  //           discount: 0,
+  //           offer: 10,
+  //           offer_type: "percent",
+  //           validite_days: activeValidaty?.day,
+  //           service_id: id,
+  //         };
+  //         // console.log({paymentInfo});
+  //         const paymentResponse = await paymentPostApi(paymentInfo);
+  //         const transId = paymentResponse?.data?.transaction_id;
+  //         const response = await fetch(
+  //           `${process.env.NEXT_PUBLIC_API_URL}/ekpay/get-token?trnsID=${transId}`,
+  //           {
+  //             method: "POST",
+  //             headers: {
+  //               Accept: "application/json",
+  //               "Content-Type": "application/json",
+  //             },
+  //           }
+  //         );
+  //         const data = await response.json();
+  //         if (data && paymentResponse?.status === true) {
+  //           setIsLoading(false);
+
+  //           let url =
+  //             "https://sandbox.ekpay.gov.bd/ekpaypg/v1?sToken=" +
+  //             JSON.parse(data.response).secure_token +
+  //             "&trnsID=" +
+  //             data.trans_id +
+  //             "&amount=" +
+  //             Number(updatedTotalAmount + percentagePrice);
+
+  //           location.href = url;
+  //         } else {
+  //           setIsLoading(false);
+  //           toast.error(paymentResponse?.message);
+  //           console.log("Unsuccessful Response HTTP response status code-200");
+  //         }
+  //       } catch (error) {
+  //         setIsLoading(false);
+  //         console.log(`The error is: ${error}`);
+  //       }
+      
+  //   }
+  // };
+
+ 
+
   return (
     <>
       <section>
@@ -172,23 +288,26 @@ console.log({user});
             <p dangerouslySetInnerHTML={{ __html: service?.description }}></p>
           </div>
         </div>
-        <div className="max-[768px]:w-[165vw] lg:w-auto flex justify-center items-center overflow-x-auto">
-          <div className="w-full lg:w-[70%] flex  bg-white p-4">
+        <div className="max-[768px]:w-[180vw] lg:w-auto flex justify-center items-center overflow-x-auto">
+          <div className="w-full lg:w-[80%] flex  bg-white p-4">
             <div className="min-h-[20vh] w-full">
               <table className="w-full">
                 <thead className="w-full bg-primary py-4 text-white">
                   <tr className="text-center">
                     <th className="py-4">Feature Name</th>
-                    <th colSpan={5} className="py-4">
+                    <th colSpan={4} className="py-4">
                       Plans
                     </th>
+                    <th className="py-4">Price (TK)</th>
                   </tr>
                 </thead>
                 <tbody>
                   <tr>
-                    <td className="text-center w-[40%] py-6 border border-l border-gray-200">
+                    <td className="text-center w-[30%] py-6 border border-l border-gray-200">
                       <div>
-                        <h1 className="text-16 font-semibold">Validaty</h1>
+                        <h1 className="text-16 font-semibold">
+                          Validaty (Days)
+                        </h1>
                       </div>
                     </td>
                     {validities && validities?.length > 0
@@ -199,14 +318,29 @@ console.log({user});
                               className="border border-gray-200 w-12 h-28"
                             >
                               <div className="text-center flex items-center justify-center">
-                                <h1 className="text-16 font-semibold w-20 h-20 border border-gray-300 rounded-full flex items-center justify-center cursor-pointer">
-                                  {vItem?.day + " " + "Days"}
+                                <h1
+                                  onClick={() => {
+                                    handleDayClick(vItem?.id);
+                                  }}
+                                  className={`text-16 font-semibold w-20 h-20 border ${
+                                    activeValidaty?.id === vItem?.id
+                                      ? "border-primary"
+                                      : "border-gray-300"
+                                  } rounded-full flex items-center justify-center cursor-pointer`}
+                                >
+                                  {vItem?.day}
                                 </h1>
                               </div>
                             </td>
                           );
                         })
                       : ""}
+                    <td className="border border-gray-200 w-12 h-28">
+                      <div className="text-center flex items-center justify-center">
+                        {percentagePrice}
+                        {/* {activeValidaty?.rate} */}
+                      </div>
+                    </td>
                   </tr>
                   {isLoading && (
                     <tr>
@@ -224,7 +358,7 @@ console.log({user});
                           <td className="text-center w-[40%] py-6 border border-l border-gray-200">
                             <div>
                               <h1 className="text-16 font-semibold">
-                                {fItem?.name}
+                                {fItem?.name}( {fItem?.unit} )
                               </h1>
                             </div>
                           </td>
@@ -254,7 +388,7 @@ console.log({user});
                                           : "border-gray-300"
                                       } rounded-full flex items-center justify-center cursor-pointer`}
                                     >
-                                      {pItem?.limit + " " + fItem?.unit}
+                                      {pItem?.limit}
                                     </h1>
                                   </div>
                                 </td>
@@ -272,6 +406,11 @@ console.log({user});
                               className="border border-gray-200 w-12 h-28"
                             ></td>
                           ))}
+                          <td className="border border-gray-200 w-12 h-28">
+                            <div className="text-center flex items-center justify-center">
+                              {selectedPrices[fIndex] || 0}
+                            </div>
+                          </td>
                         </tr>
                       );
                     })
@@ -282,36 +421,115 @@ console.log({user});
                   )}
                 </tbody>
               </table>
+
               <div className="w-full bg-green-100 text-gray-700 flex items-center justify-between py-4">
-                <div className="w-[60%] flex items-center justify-center">
-                  <h1 className="text-16 font-semibold">Total Amount:</h1>
+                <div className="w-[50%] flex items-center justify-center">
+                  <div className="flex items-center gap-2">
+                    <h1 className="text-16 font-semibold">Total Amount:</h1>
+                    <span>{TotalAmountOld}</span>
+                  </div>
                 </div>
-                <div className="w-[40%] flex items-center justify-center">
-                  <h1 className="text-16 font-semibold">{TotalAmountOld}</h1>
+                <div className="w-[50%] flex items-center justify-center">
+                  <div className="flex items-center gap-2">
+                    <h1 className="text-16 font-semibold">
+                      Total Updated Amount:
+                    </h1>
+                    <span className="text-16 font-semibold">
+                      {percentagePrice + updatedTotalAmount}
+                    </span>
+                  </div>
                 </div>
               </div>
+              <div className="grid grid-cols-3 gap-2 pt-5">
+                <div className="w-full">
+                  <fieldset className="w-full flex flex-col border rounded-md px-2">
+                    <legend>
+                      <label
+                        htmlFor="ServiceName"
+                        className="after:content-['_*'] after:text-red-500"
+                      >
+                        Name
+                      </label>
+                    </legend>
+                    <input
+                      type="text"
+                      value={orderData?.billing_address?.name}
+                      placeholder="Service Name"
+                      className="outline-none px-2 py-1 cursor-not-allowed bg-gray-200/50"
+                      disabled
+                    />
+                  </fieldset>
+                </div>
+                <div className="w-full">
+                  <fieldset className="w-full flex flex-col border rounded-md px-2">
+                    <legend>
+                      <label
+                        htmlFor="ServiceName"
+                        className="after:content-['_*'] after:text-red-500"
+                      >
+                        Email
+                      </label>
+                    </legend>
+                    <input
+                      type="text"
+                      placeholder="Email"
+                      value={orderData?.billing_address?.email}
+                      className="outline-none px-2 py-1 cursor-not-allowed bg-gray-200/50"
+                      disabled
+                    />
+                  </fieldset>
+                </div>
+                <div className="w-full">
+                  <fieldset className="w-full flex flex-col border rounded-md px-2">
+                    <legend>
+                      <label
+                        htmlFor="ServiceName"
+                        className="after:content-['_*'] after:text-red-500"
+                      >
+                        Phone
+                      </label>
+                    </legend>
+                    <input
+                      type="text"
+                      placeholder="Phone"
+                      value={orderData?.billing_address?.phone}
+                      className="outline-none px-2 py-1 cursor-not-allowed bg-gray-200/50"
+                      disabled
+                    />
+                  </fieldset>
+                </div>
+              </div>
+              <div className="w-full">
+                <fieldset className="w-full flex flex-col border rounded-md px-2">
+                  <legend>
+                    <label
+                      htmlFor="ServiceName"
+                      className="after:content-['_*'] after:text-red-500"
+                    >
+                      Address
+                    </label>
+                  </legend>
+                  <textarea
+                    placeholder="Address"
+                    value={orderData?.billing_address?.address}
+                    className="outline-none px-2 py-1 cursor-not-allowed bg-gray-200/50"
+                    disabled
+                  ></textarea>
+                </fieldset>
+              </div>
+              <div className="flex justify-end pt-5">
+                <button
+                  // onClick={(e) => {
+                  //   if (featureTotalPrice === 0) {
+                  //     e.preventDefault();
+                  //   }
+                  // }}
 
-              {updatedTotalAmount != TotalAmountOld &&
-                updatedTotalAmount > 0 && (
-                  <div className="w-full bg-green-100 text-gray-700  boreder-t border-gray-00 flex items-center justify-between py-4">
-                    <div className="w-[60%] flex items-center justify-center">
-                      <h1 className="text-16 font-semibold">
-                        Total Updated Amount:
-                      </h1>
-                    </div>
-                    <div className="w-[40%] flex items-center justify-center">
-                      <h1 className="text-16 font-semibold">
-                        {updatedTotalAmount}{" "}
-                        <button
-                          onClick={() => handlePayment(id)}
-                          className="mt-1 bg-primary text-white rounded px-2 py-1"
-                        >
-                          Update
-                        </button>
-                      </h1>
-                    </div>
-                  </div>
-                )}
+                  className={`text-white font-bold text-[24px] px-8 py-2 rounded bg-[#04684D]`}
+                >
+                  Upgrade Package
+                </button>
+              </div>
             </div>
           </div>
         </div>
