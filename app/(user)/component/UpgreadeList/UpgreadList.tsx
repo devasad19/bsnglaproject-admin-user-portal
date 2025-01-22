@@ -8,7 +8,8 @@ import {
   getSingleService,
 } from "@/app/(portal)/_api";
 import { useHomeContext } from "@/ContextProvider/Home.Context";
-
+import { paymentPostApi, upgradePackage } from "../../_api/OrderPaymentApi";
+import { toast } from "react-toastify";
 
 interface Tprops {
   id: any;
@@ -94,10 +95,10 @@ const UpgreadList = ({ id, validities }: Tprops) => {
     ...features?.map((fItem) => JSON.parse(fItem?.plans || "[]").length)
   );
   const ordersPlans = JSON.parse(orderData?.feature || "[]");
-  // const TotalAmountOld = ordersPlans?.reduce(
-  //   (acc: any, curr: any) => acc + (Number(curr?.price) || 0),
-  //   0
-  // );
+  const TotalAmountOld = ordersPlans?.reduce(
+    (acc: any, curr: any) => acc + (Number(curr?.price) || 0),
+    0
+  );
 
   const updatedTotalAmount = selectedPrices?.reduce(
     (sum: any, price: any) => sum + (Number(price) || 0),
@@ -165,112 +166,106 @@ const UpgreadList = ({ id, validities }: Tprops) => {
 
   console.log({ percentagePrice });
 
-  // const handleOrderNow = async () => {
-  //   setIsLoading(true);
-  //   let plans: any = [];
-  //   const newSelectedInfoAll = [
-  //     {
-  //       selectIndexFeatureData: {
-  //         id: "",
-  //         name: "Validity",
-  //         unit: "Day",
-  //       },
-  //       planId: activeValidaty?.id,
-  //       planName: activeValidaty?.day,
-  //       price: percentagePrice,
-  //     },
-  //     ...selectedFeatureInfo,
-  //   ];
-  //   if (newSelectedInfoAll.length > 0) {
-  //     plans = newSelectedInfoAll.map((item) => ({
-  //       id: item?.planId,
-  //       feature_id: item?.selectIndexFeatureData?.id,
-  //       name: item?.selectIndexFeatureData?.name,
-  //       data: item?.planName,
-  //       price: item?.price,
-  //       unit: item?.selectIndexFeatureData?.unit,
-  //     }));
-  //   }
-  //   const orderInfo = {
-  //     user_id: user?.id,
-  //     order_id: orderData?.order_id,
-  //     payment_id: orderData?.payment_id,
-  //     service_id: id,
-  //     feature: JSON.stringify(plans),
-  //     expiry_date: activeValidaty?.day,
-  //     offer: orderData?.offer,
-  //     offer_type: orderData?.offer,
-  //     discount: orderData?.discount,
-  //     status: 1,
-  //   };
-  //   console.log({ orderInfo });
-  //   return;
-  //   const res = await upgradePackage(orderInfo);
-  //   if (res?.data?.id) {
-      
+  const handleOrderNow = async () => {
+    setIsLoading(true);
+    let plans: any = [];
+    const newSelectedInfoAll = [
+      {
+        selectIndexFeatureData: {
+          id: "",
+          name: "Validity",
+          unit: "Day",
+        },
+        planId: activeValidaty?.id,
+        planName: activeValidaty?.day,
+        price: percentagePrice,
+      },
+      ...selectedFeatureInfo,
+    ];
+    if (newSelectedInfoAll.length > 0) {
+      plans = newSelectedInfoAll.map((item) => ({
+        id: item?.planId,
+        feature_id: item?.selectIndexFeatureData?.id,
+        name: item?.selectIndexFeatureData?.name,
+        data: item?.planName,
+        price: item?.price,
+        unit: item?.selectIndexFeatureData?.unit,
+      }));
+    }
+    const orderInfo = {
+      user_id: user?.id,
+      order_id: orderData?.order_id,
+      payment_id: orderData?.payment_id,
+      service_id: id,
+      feature: plans,
+      expiry_date: activeValidaty?.day,
+      offer: orderData?.offer,
+      offer_type: orderData?.offer,
+      discount: orderData?.discount,
+      status: 1,
+    };
+    console.log({ orderInfo });
+    // return;
+    const res = await upgradePackage(orderInfo);
+    if (res?.data?.id) {
+      // reset();
+      try {
+        let paymentInfo = {
+          user_id: user?.id,
+          order_id: res?.data?.id,
+          payment_type: "mobile_banking",
+          amount: Number(updatedTotalAmount + percentagePrice),
+          account_number: 344345678,
+          account_holder_name: "John Doe", //this will be dynamic later
+          bank_name: "dbbl",
+          transaction_date: new Date(),
+          payment_status: "pending",
+          status: 0,
+          transaction_id: 1, // last defined
+          feature: plans,
+          discount: 0,
+          offer: 10,
+          offer_type: "percent",
+          validite_days: activeValidaty?.day,
+          service_id: id,
+        };
+        // console.log({paymentInfo});
+        const paymentResponse = await paymentPostApi(paymentInfo);
+        const transId = paymentResponse?.data?.transaction_id;
+        const response = await fetch(
+          `${process.env.NEXT_PUBLIC_API_URL}/ekpay/get-token?trnsID=${transId}`,
+          {
+            method: "POST",
+            headers: {
+              Accept: "application/json",
+              "Content-Type": "application/json",
+            },
+          }
+        );
+        const data = await response.json();
+        if (data && paymentResponse?.status === true) {
+          setIsLoading(false);
 
-    
-  //       // reset();
-  //       try {
-  //         let paymentInfo = {
-  //           user_id: user?.id,
-  //           order_id: res?.data?.id,
-  //           payment_type: "mobile_banking",
-  //           amount: Number(updatedTotalAmount + percentagePrice),
-  //           account_number: 344345678,
-  //           account_holder_name: "John Doe", //this will be dynamic later
-  //           bank_name: "dbbl",
-  //           transaction_date: new Date(),
-  //           payment_status: "pending",
-  //           status: 0,
-  //           transaction_id: 1, // last defined
-  //           feature: plans,
-  //           discount: 0,
-  //           offer: 10,
-  //           offer_type: "percent",
-  //           validite_days: activeValidaty?.day,
-  //           service_id: id,
-  //         };
-  //         // console.log({paymentInfo});
-  //         const paymentResponse = await paymentPostApi(paymentInfo);
-  //         const transId = paymentResponse?.data?.transaction_id;
-  //         const response = await fetch(
-  //           `${process.env.NEXT_PUBLIC_API_URL}/ekpay/get-token?trnsID=${transId}`,
-  //           {
-  //             method: "POST",
-  //             headers: {
-  //               Accept: "application/json",
-  //               "Content-Type": "application/json",
-  //             },
-  //           }
-  //         );
-  //         const data = await response.json();
-  //         if (data && paymentResponse?.status === true) {
-  //           setIsLoading(false);
+          let url =
+            "https://sandbox.ekpay.gov.bd/ekpaypg/v1?sToken=" +
+            JSON.parse(data.response).secure_token +
+            "&trnsID=" +
+            data.trans_id +
+            "&amount=" +
+            Number(updatedTotalAmount + percentagePrice);
 
-  //           let url =
-  //             "https://sandbox.ekpay.gov.bd/ekpaypg/v1?sToken=" +
-  //             JSON.parse(data.response).secure_token +
-  //             "&trnsID=" +
-  //             data.trans_id +
-  //             "&amount=" +
-  //             Number(updatedTotalAmount + percentagePrice);
-
-  //           location.href = url;
-  //         } else {
-  //           setIsLoading(false);
-  //           toast.error(paymentResponse?.message);
-  //           console.log("Unsuccessful Response HTTP response status code-200");
-  //         }
-  //       } catch (error) {
-  //         setIsLoading(false);
-  //         console.log(`The error is: ${error}`);
-  //       }
-      
-  //   }
-  // };
-
- 
+          location.href = url;
+        } else {
+          setIsLoading(false);
+          toast.error(paymentResponse?.message);
+          console.log("Unsuccessful Response HTTP response status code-200");
+        }
+      } catch (error) {
+        setIsLoading(false);
+        console.log(`The error is: ${error}`);
+      }
+    }
+  };
 
   return (
     <>
@@ -519,12 +514,9 @@ const UpgreadList = ({ id, validities }: Tprops) => {
               </div>
               <div className="flex justify-end pt-5">
                 <button
-                  // onClick={(e) => {
-                  //   if (featureTotalPrice === 0) {
-                  //     e.preventDefault();
-                  //   }
-                  // }}
-
+                  onClick={(e) => {
+                    handleOrderNow();
+                  }}
                   className={`text-white font-bold text-[24px] px-8 py-2 rounded bg-[#04684D]`}
                 >
                   Upgrade Package
