@@ -73,9 +73,9 @@ const ProfileContainer = ({ citizen, userTypes, grade }) => {
   );
   const HandleUpdate = async () => {
     setLoading(true);
-    console.log("form inputs", formInputs);
+    // console.log("form inputs", formInputs);
 
-    console.log("type id", userType?.id);
+    // console.log("type id", userType?.id);
 
     const payload = {
       id: formInputs?.citizen_info_id ?? "",
@@ -154,8 +154,7 @@ const ProfileContainer = ({ citizen, userTypes, grade }) => {
     }
   };
 
-  console.log("type onchange",formInputs.type);
-  
+  console.log("type ", formInputs.type);
 
   return (
     <>
@@ -396,7 +395,8 @@ const ProfileContainer = ({ citizen, userTypes, grade }) => {
                 </div>
               </div>
 
-              {formInputs?.type == "govt_user" && (
+              {(formInputs?.type == "govt_user" ||
+                formInputs?.type == "Pro bulk govt user") && (
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-2">
                   <div>
                     <fieldset className="flex flex-col border border-gray-400 rounded-md px-2">
@@ -509,7 +509,7 @@ const ProfileContainer = ({ citizen, userTypes, grade }) => {
                 </div>
               )}
 
-              {formInputs?.type == "researcher" && (
+              {(formInputs?.type == "researcher" || formInputs?.type == "Free Researcher Credit") && (
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-2">
                   <div>
                     <fieldset className="flex flex-col border border-gray-400 rounded-md px-2">

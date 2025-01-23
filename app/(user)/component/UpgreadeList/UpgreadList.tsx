@@ -10,12 +10,14 @@ import {
 import { useHomeContext } from "@/ContextProvider/Home.Context";
 import { paymentPostApi, upgradePackage } from "../../_api/OrderPaymentApi";
 import { toast } from "react-toastify";
+import UserApiLoading from "../UserAPiLoading/UserApiLoading";
 
 interface Tprops {
   id: any;
   validities: any;
 }
 interface TFeature {
+  id?: string;
   plans: string;
   name: string;
   unit: string;
@@ -50,9 +52,26 @@ const UpgreadList = ({ id, validities }: Tprops) => {
     featureIndex: any,
     price: any,
     planIndex: any,
-    planName: any
+    planName: any,
+    planId: any
   ) => {
     const selectIndexFeatureData = features[featureIndex];
+    // console.log({ selectIndexFeatureData, price, planName,planId });
+
+    const parseData = JSON.parse(selectIndexFeatureData?.plans || "[]");
+    const matchData = parseData?.find((item: any) => item?.id == planId);
+
+    // console.log({ matchData });
+    const featureSelectedData = {
+      selectIndexFeatureData,
+      price: matchData?.validaty,
+      planName: matchData?.limit,
+      planId: matchData?.id,
+      featureId: selectIndexFeatureData?.id,
+    };
+
+    // console.log({featureSelectedData});
+
     setActivePlans((prevActivePlans: any) => {
       const updatedPlans = [...prevActivePlans];
       updatedPlans[featureIndex] = planIndex; // Set the active plan for this feature
@@ -60,7 +79,7 @@ const UpgreadList = ({ id, validities }: Tprops) => {
     });
     setSelectedFeatureInfo((prevData: any) => {
       const updatedData = [...prevData];
-      updatedData[featureIndex] = { selectIndexFeatureData, price, planName };
+      updatedData[featureIndex] = { featureSelectedData };
       return updatedData;
     });
     setSelectedPrices((prevPrices: any) => {
@@ -122,10 +141,18 @@ const UpgreadList = ({ id, validities }: Tprops) => {
             initialActivePlans[fIndex] = pIndex;
             initialSelectedPrices[fIndex] = pItem?.validaty;
             initialTotalPrice += Number(pItem?.validaty || 0);
-            initialSelectedFeatureInfo[fIndex] = {
+            // console.log({ pItem , fItem});
+
+            const featureSelectedData = {
               selectIndexFeatureData: fItem,
               price: pItem?.validaty,
               planName: pItem?.limit,
+              planId: pItem?.id,
+              featureId: fItem?.id,
+            };
+
+            initialSelectedFeatureInfo[fIndex] = {
+              featureSelectedData,
             };
           }
         });
@@ -164,34 +191,50 @@ const UpgreadList = ({ id, validities }: Tprops) => {
     }
   }, [updatedTotalAmount, activeValidaty]);
 
-  console.log({ percentagePrice });
+  console.log({ selectedFeatureInfo });
 
   const handleOrderNow = async () => {
     setIsLoading(true);
     let plans: any = [];
     const newSelectedInfoAll = [
       {
-        selectIndexFeatureData: {
-          id: "",
-          name: "Validity",
-          unit: "Day",
+        featureSelectedData: {
+          selectIndexFeatureData: {
+            id: "",
+            name: "Validity",
+            unit: "Day",
+          },
+          planId: activeValidaty?.id,
+          planName: activeValidaty?.day,
+          price: percentagePrice,
+          featureId: "",
         },
-        planId: activeValidaty?.id,
-        planName: activeValidaty?.day,
-        price: percentagePrice,
       },
       ...selectedFeatureInfo,
     ];
-    if (newSelectedInfoAll.length > 0) {
-      plans = newSelectedInfoAll.map((item) => ({
-        id: item?.planId,
-        feature_id: item?.selectIndexFeatureData?.id,
-        name: item?.selectIndexFeatureData?.name,
-        data: item?.planName,
-        price: item?.price,
-        unit: item?.selectIndexFeatureData?.unit,
+    // if (newSelectedInfoAll.length > 0) {
+    //   plans = newSelectedInfoAll.map((item) => ({
+    //     id: item?.planId,
+    //     feature_id: item?.selectIndexFeatureData?.id,
+    //     name: item?.selectIndexFeatureData?.name,
+    //     data: item?.planName,
+    //     price: item?.price,
+    //     unit: item?.selectIndexFeatureData?.unit,
+    //   }));
+    // }
+    if (newSelectedInfoAll?.length > 0) {
+      plans = newSelectedInfoAll.map((item: any) => ({
+        id: item?.featureSelectedData.planId,
+        feature_id: item?.featureSelectedData.featureId,
+        name: item?.featureSelectedData.selectIndexFeatureData?.name,
+        data: item?.featureSelectedData.planName,
+        price: item?.featureSelectedData.price,
+        unit: item?.featureSelectedData.selectIndexFeatureData?.unit,
       }));
     }
+    // console.log({plans});
+    // return;
+
     const orderInfo = {
       user_id: user?.id,
       order_id: orderData?.order_id,
@@ -204,7 +247,7 @@ const UpgreadList = ({ id, validities }: Tprops) => {
       discount: orderData?.discount,
       status: 1,
     };
-    console.log({ orderInfo });
+    // console.log({ orderInfo });
     // return;
     const res = await upgradePackage(orderInfo);
     if (res?.data?.id) {
@@ -212,7 +255,7 @@ const UpgreadList = ({ id, validities }: Tprops) => {
       try {
         let paymentInfo = {
           user_id: user?.id,
-          order_id: res?.data?.id,
+          order_id: orderData?.order_id,
           payment_type: "mobile_banking",
           amount: Number(updatedTotalAmount + percentagePrice),
           account_number: 344345678,
@@ -228,6 +271,7 @@ const UpgreadList = ({ id, validities }: Tprops) => {
           offer_type: "percent",
           validite_days: activeValidaty?.day,
           service_id: id,
+          package_upgrade: 1,
         };
         // console.log({paymentInfo});
         const paymentResponse = await paymentPostApi(paymentInfo);
@@ -245,7 +289,6 @@ const UpgreadList = ({ id, validities }: Tprops) => {
         const data = await response.json();
         if (data && paymentResponse?.status === true) {
           setIsLoading(false);
-
           let url =
             "https://sandbox.ekpay.gov.bd/ekpaypg/v1?sToken=" +
             JSON.parse(data.response).secure_token +
@@ -270,6 +313,7 @@ const UpgreadList = ({ id, validities }: Tprops) => {
   return (
     <>
       <section>
+        {isLoading && <UserApiLoading />}
         <div className="flex flex-col lg:flex-row gap-2 bg-white p-4 rounded mb-5">
           <Image
             src={`${process.env.NEXT_PUBLIC_IMAGE_URL}${service?.logo || ""}`}
@@ -337,14 +381,6 @@ const UpgreadList = ({ id, validities }: Tprops) => {
                       </div>
                     </td>
                   </tr>
-                  {isLoading && (
-                    <tr>
-                      <td colSpan={6} className="text-center">
-                        Loading...
-                      </td>
-                    </tr>
-                  )}
-
                   {features && features?.length > 0 ? (
                     features?.map((fItem, fIndex) => {
                       let plans = JSON.parse(fItem.plans || "[]");
@@ -374,7 +410,8 @@ const UpgreadList = ({ id, validities }: Tprops) => {
                                           fIndex,
                                           pItem?.validaty || 0,
                                           planIndex,
-                                          pItem?.limit || 0
+                                          pItem?.limit || 0,
+                                          pItem?.id || 0
                                         )
                                       }
                                       className={`text-16 font-semibold w-20 h-20 border ${
@@ -411,7 +448,12 @@ const UpgreadList = ({ id, validities }: Tprops) => {
                     })
                   ) : (
                     <tr>
-                      <td>Data Not Found</td>
+                      {Array.from({ length: 5 }).map((_, emptyIndex) => (
+                        <td
+                          key={`empty-${emptyIndex}`}
+                          className="border border-gray-200 w-12 h-28"
+                        ></td>
+                      ))}
                     </tr>
                   )}
                 </tbody>

@@ -5,6 +5,7 @@ import Link from "next/link";
 import { getUserOrders } from "@/app/(user)/_api/accountService";
 import TableSkeleton from "@/app/_components/TableSkeleton/TableSkeleton";
 import { useHomeContext } from "@/ContextProvider/Home.Context";
+import { formatDate } from "@/helper";
 
 const Home = () => {
   const [orders, setOrders] = useState();
@@ -41,6 +42,7 @@ const Home = () => {
               <th>Billing Date</th>
               {/* <th>Plan</th> */}
               <th>Status</th>
+              <th>Options</th>
             </tr>
           </thead>
           <tbody>
@@ -72,9 +74,9 @@ const Home = () => {
                       <span>Invoice no {item?.id}</span>
                     </Link>
                   </td>
-                  <td className="text-gray-500 font-bold">{item?.total}</td>
+                  <td className="text-gray-500 font-bold">{item?.total} BDT</td>
                   <td className="text-gray-500 font-bold">
-                    {item?.created_at}
+                    {formatDate(item?.created_at)}
                   </td>
                   <td>
                     {item?.status == 1 ? (
