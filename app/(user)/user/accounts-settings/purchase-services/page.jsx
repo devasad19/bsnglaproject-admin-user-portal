@@ -60,7 +60,8 @@ const Home = () => {
   };
 
   const handleRedirect = (id) => {
-    router.replace("https://service.bangla.gov.bd/services/" + id);
+    // router.replace("https://service.bangla.gov.bd/services/" + id);
+    router.replace(`${process.env.NEXT_PUBLIC_SERVICE_URL}`);
   };
 
   console.log("services", services);

@@ -20,7 +20,7 @@ export const middleware = (request: NextRequest)=>{
     const { pathname } = request.nextUrl;
     // console.log('middleware',{pathname});
     
-    if ((!token || !userInfo) && (pathname.startsWith('/admin') || pathname.startsWith('/user'))) {
+    if ((!token || !userInfo) && (pathname.startsWith('/admin') || pathname.startsWith('/ '))) {
         return NextResponse.redirect(redirectUrl);
     }
     if ((!token && userInfo?.type == 'system_user') && (pathname.startsWith('/admin') || pathname.startsWith('/user'))) {
@@ -37,6 +37,6 @@ export const middleware = (request: NextRequest)=>{
   }
     return NextResponse.next();
 }
-export const config = {
+export const config = { 
     matcher: ['/admin/:path*', '/user/:path*']
   };
