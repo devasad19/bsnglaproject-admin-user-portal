@@ -25,6 +25,7 @@ const Callback = () => {
       try {
         setStatus("অ্যাক্সেস টোকেন অনুরোধ করা হচ্ছে...");
 
+       
         // Step 1: Obtain Access Token
         const tokenResponse = await axiosInstance.post(
           `${process.env.SSO_URL}/oauth/token`,
@@ -51,11 +52,14 @@ const Callback = () => {
           }
         );
 
-        const userData = userResponse.data;
-
+        console.log('userResponse', userResponse);
+      
+        const userData = userResponse?.data?.user_info;
+        console.log('userData', userData)
         if (userData) {
-          await handleSetUserToCookie(userData,accessToken);
+          await handleSetUserToCookie(userData, accessToken);
           // router.replace('/citizen/welcome');
+          console.log('userData, ', userData)
           if (userData?.type === 'system_user') {
             router.push('/admin');
           } else {
@@ -72,32 +76,32 @@ const Callback = () => {
 
     fetchData();
   }, [code, router]);
- 
+
   const handleSetUserToCookie = async (userData, accessToken) => {
     setStatus('নাগরিক তথ্য প্রক্রিয়াকরণ...');
 
     let userInfo;
-    console.log({userData});
-    
-    if (userData?.user_info
+    console.log({ userData });
+
+    if (userData
       ?.type === "admin") {
       userInfo = {
-        id: userData?.user_info?.id,
-        name: userData?.user_info?.name,
-        email: userData?.user_info?.email,
-        type: userData?.user_info?.type,
+        id: userData?.id,
+        name: userData?.name,
+        email: userData?.email,
+        type: userData?.type,
       };
       // console.log("admin user: ", user);
     } else {
       userInfo = {
-        id: userData?.user_info?.id,
-        name: userData?.user_info?.name,
-        role: userData?.user_info?.role,
-        email: userData?.user_info?.email,
-        phone: userData?.user_info?.phone,
-        status: userData?.user_info?.status,
-        photo: userData?.user_info?.photo,
-        type: userData?.user_info?.type,
+        id: userData?.id,
+        name: userData?.name,
+        role: userData?.role,
+        email: userData?.email,
+        phone: userData?.phone,
+        status: userData?.status,
+        photo: userData?.photo,
+        type: userData?.type,
       };
 
       const isLocalhost = window.location.hostname === "localhost";
@@ -133,10 +137,10 @@ const Callback = () => {
 
 
 
-const page = ()=>{
+const page = () => {
   return (
     <Suspense fallback={<div>Loading...</div>}>
-      <Callback/>
+      <Callback />
     </Suspense>
   )
 }

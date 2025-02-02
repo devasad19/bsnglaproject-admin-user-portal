@@ -137,13 +137,13 @@ const Home = (): JSX.Element => {
       if (res?.status) {
         setIsFetch(!isFetch);
         modelClose(userTypeModal, userTypesUpdateForm);
-        toast.success("user type updated successfully");
+        toast.success(res?.message);
         // userTypeModal.current.style.display = 'none';
       } else {
-        toast.error("something went wrong");
+        toast.error(res?.message);
       }
-    } catch (error) {
-      toast.error("something went wrong");
+    } catch (error:any) {
+      toast.error(error?.message);
       console.log(error);
     }
   };

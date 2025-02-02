@@ -21,12 +21,23 @@ const Sidebar = () => {
   // }, []);
 
   const HandleLogout = () => {
-    document.cookie =
-      "token=; path=/; domain=localhost; expires=Thu, 01 Jan 1970 00:00:00 UTC;";
-    document.cookie =
-      "user=; path=/; domain=localhost; expires=Thu, 01 Jan 1970 00:00:00 UTC;";
-    // window.location.href='http://localhost:3000/signin';
-    window.location.href = "https://service.bangla.gov.bd/signin";
+    const isLocalhost = window.location.hostname === "localhost";
+    if (isLocalhost) {
+      document.cookie =
+        "token=; path = /; domain=localhost; expires = Thu, 01 Jan 1970 00:00:00 UTC;";
+      document.cookie =
+        "user=; path = /; domain=localhost; expires = Thu, 01 Jan 1970 00:00:00 UTC;";
+      window.location.href = `${process.env.NEXT_PUBLIC_LOGIN_URL}`;
+    } else {
+      document.cookie =
+        "token=; path = /; domain=.bangla.gov.bd; expires = Thu, 01 Jan 1970 00:00:00 UTC;";
+      document.cookie =
+        "user=; path = /; domain=.bangla.gov.bd; expires = Thu, 01 Jan 1970 00:00:00 UTC;";
+      window.location.href = `${process.env.NEXT_PUBLIC_LOGIN_URL}`;
+    }
+    // document.cookie = "token=; path=/; domain=localhost; expires=Thu, 01 Jan 1970 00:00:00 UTC;";
+    // document.cookie = "user=; path=/; domain=localhost; expires=Thu, 01 Jan 1970 00:00:00 UTC;";
+    // window.location.reload();
   };
 
   // console.log('user cookie: ',process.env.NEXT_PUBLIC_PORTAL_URL);
@@ -44,7 +55,7 @@ const Sidebar = () => {
                 isOpen ? "justify-between" : "justify-end"
               }`}
             >
-              <Link href={`https://service.bangla.gov.bd/`}>
+              <Link href={`${process.env.NEXT_PUBLIC_PORTAL_URL}`}>
                 <Image
                   className={`w-24 transition-all duration-500 ${
                     isOpen ? "opacity-100 block" : "opacity-0 hidden"

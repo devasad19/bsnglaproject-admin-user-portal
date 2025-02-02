@@ -12,13 +12,18 @@ import {
   deleteServiceCodeApi,
   publishUnpublishService,
 } from "../../_api/ServiceApi";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Pagination from "@/app/_components/Pagination/Pagination";
 
 const ServiceListContainer = ({ services }) => {
   const router = useRouter();
   const [searchByName, setSearchByName] = useState("");
   const [servicesFilter, setServicesFilter] = useState(services);
+  const [refetch, setRefetch] = useState(false);
+
+  useEffect(() => {
+    setServicesFilter(services);
+  }, [services, refetch]);
 
   // pagination start
   const itemsPerPage = 10; // Customize items per page
@@ -72,7 +77,7 @@ const ServiceListContainer = ({ services }) => {
           const serviceDeleteData = deleteServiceCodeApi(id)
             .then((data) => {
               if (data) {
-                // setRefetch(!refetch);
+                setRefetch(!refetch);
                 Swal.fire("Deleted!", "Your file has been deleted.", "success");
                 // window.location.reload();
               } else {
@@ -88,29 +93,24 @@ const ServiceListContainer = ({ services }) => {
   };
 
   const UpdateServicePublishStatus = async (id, status) => {
-    console.log(id, status);
+    // console.log(id, status);
 
     try {
       const response = await publishUnpublishService(id, status);
-      console.log(response);
+      // console.log(response);
 
       if (response?.status === true) {
+        setRefetch(!refetch);
         toast.success("Service status updated successfully");
       } else {
-        toast.error("Service status update failed");
+        toast.error(response?.message);
       }
     } catch (error) {
-      toast.error("Service status update failed");
+      toast.error(error?.message);
     }
   };
 
   const handleRedirect = (id) => {
-    // console.log(devPosition);
-    // if(devPosition === "development"){
-    //   router.replace(`${process.env.NEXT_PUBLIC_DEV_PORTAL_URL}/services/${id}`);
-    // }else{
-    //   router.replace(`${process.env.NEXT_PUBLIC_SERVER_PORTAL_URL}/services/${id}`);
-    // }
     router.replace("https://service.bangla.gov.bd/services/" + id);
   };
 

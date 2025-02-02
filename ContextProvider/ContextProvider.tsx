@@ -38,7 +38,7 @@ const ContextProvider = ({ children }: any) => {
         const response = await getUserDetails(userData?.id);
         setUser(response.data.data);
       } else {
-        toast.error("User not found");
+        // toast.error("User not found");
         setUser({});
       }
     } catch (error: any) {

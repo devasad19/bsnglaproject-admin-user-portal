@@ -67,7 +67,7 @@ const UserDashboard = ({ stats }: { stats: any }) => {
                   💰
                 </div>
                 <div>
-                  <h3 className="text-lg font-semibold">Total Payments</h3>
+                  <h3 className="text-lg font-semibold">Total Payments (Tk)</h3>
                   <p className="text-2xl font-bold text-gray-700">
                     {stats?.totalPayments}
                   </p>
