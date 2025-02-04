@@ -32,6 +32,11 @@ const ProfileContainer = ({ citizen, userTypes, grade }) => {
       department_of_ministry: citizen?.citizen_info?.ministry_department ?? "",
       job_position: citizen?.citizen_info?.job_position ?? "",
       grade: citizen?.citizen_info?.grade ?? "",
+      // token_code: citizen?.citizen_info?.token_code ?? "",
+      organization_name: citizen?.citizen_info?.organization_name ?? "",
+      office_email: citizen?.citizen_info?.office_email ?? "",
+      office_address: citizen?.citizen_info?.office_address ?? "",
+      ip_address: citizen?.citizen_info?.ip_address ?? ""  
     },
     researcher: {
       name_of_ministry: citizen?.citizen_info?.ministry_name ?? "",
@@ -90,7 +95,14 @@ const ProfileContainer = ({ citizen, userTypes, grade }) => {
       research_title: formInputs?.researcher?.research_title ?? "",
       research_code: formInputs?.researcher?.research_code ?? "",
       user_id: citizen?.id ?? "",
+      organization_name: formInputs?.govt?.organization_name ?? "",
+      office_email: formInputs?.govt?.office_email ?? "",
+      office_address: formInputs?.govt?.office_address ?? "",
+      ip_address: formInputs?.govt?.ip_address ?? "",
+
     };
+    console.log({payload});
+    
     try {
       const response = await updateCitizenTypeInfo(payload);
       setEdit(false);
@@ -378,7 +390,7 @@ const ProfileContainer = ({ citizen, userTypes, grade }) => {
                   />
                 </div>
                 <div className="flex flex-col  gap-2">
-                  <p className="text-gray-500 text-14 ">Company URL:</p>
+                  <p className="text-gray-500 text-14 ">Organization Url :</p>
                   <input
                     disabled={!edit}
                     value={formInputs?.companyUrl}
@@ -398,7 +410,7 @@ const ProfileContainer = ({ citizen, userTypes, grade }) => {
               {(formInputs?.type == "govt_user" ||
                 formInputs?.type == "Pro bulk govt user") && (
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-2">
-                  <div>
+                  {/* <div>
                     <fieldset className="flex flex-col border border-gray-400 rounded-md px-2">
                       <legend>
                         <label className="text-gray-500 text-12">
@@ -423,7 +435,7 @@ const ProfileContainer = ({ citizen, userTypes, grade }) => {
                         placeholder="Enter Name of Ministry"
                       />
                     </fieldset>
-                  </div>
+                  </div> */}
                   <div>
                     <fieldset className="flex flex-col border border-gray-400 rounded-md px-2">
                       <legend>
@@ -506,10 +518,141 @@ const ProfileContainer = ({ citizen, userTypes, grade }) => {
                       </select>
                     </fieldset>
                   </div>
+                  <div>
+                    <fieldset className="flex flex-col border border-gray-400 rounded-md px-2">
+                      <legend>
+                        <label className="text-gray-500 text-12">
+                         Organization Name
+                        </label>
+                      </legend>
+
+                      <input
+                        disabled={!edit}
+                        value={formInputs?.govt?.organization_name}
+                        onChange={(e) =>
+                          setFormInputs({
+                            ...formInputs,
+                            govt: {
+                              ...formInputs.govt,
+                              organization_name: e.target.value,
+                            },
+                          })
+                        }
+                        type="text"
+                        className="w-full outline-none text-14 py-1"
+                        placeholder="Enter Organization Name"
+                      />
+                    </fieldset>
+                  </div>
+                  <div>
+                    <fieldset className="flex flex-col border border-gray-400 rounded-md px-2">
+                      <legend>
+                        <label className="text-gray-500 text-12">
+                          Office Email
+                        </label>
+                      </legend>
+
+                      <input
+                        disabled={!edit}
+                        value={formInputs?.govt?.office_email}
+                        onChange={(e) =>
+                          setFormInputs({
+                            ...formInputs,
+                            govt: {
+                              ...formInputs.govt,
+                              office_email: e.target.value,
+                            },
+                          })
+                        }
+                        type="email"
+                        className="w-full outline-none text-14 py-1"
+                        placeholder="Enter Office Email"
+                      />
+                    </fieldset>
+                  </div>
+                  <div>
+                    <fieldset className="flex flex-col border border-gray-400 rounded-md px-2">
+                      <legend>
+                        <label className="text-gray-500 text-12">
+                         Office Address
+                        </label>
+                      </legend>
+
+                      <textarea value={formInputs?.govt?.office_address}
+                      disabled={!edit}
+                        onChange={(e) =>
+                          setFormInputs({
+                            ...formInputs,
+                            govt: {
+                              ...formInputs.govt,
+                              office_address: e.target.value,
+                            },
+                          })
+                        }  className="w-full outline-none text-14 py-1"
+                        placeholder="Enter Office Address">
+
+                      </textarea>
+
+                      
+                    </fieldset>
+                  </div>
+                  <div>
+                    <fieldset className="flex flex-col border border-gray-400 rounded-md px-2">
+                      <legend>
+                        <label className="text-gray-500 text-12">
+                          IP Address
+                        </label>
+                      </legend>
+
+                      <input
+                        disabled={!edit}
+                        value={formInputs?.govt?.ip_address}
+                        onChange={(e) =>
+                          setFormInputs({
+                            ...formInputs,
+                            govt: {
+                              ...formInputs.govt,
+                              ip_address: e.target.value,
+                            },
+                          })
+                        }
+                        type="text"
+                        className="w-full outline-none text-14 py-1"
+                        placeholder=" Enter IP Address"
+                      />
+                    </fieldset>
+                  </div>
+                  {/* <div>
+                    <fieldset className="flex flex-col border border-gray-400 rounded-md px-2">
+                      <legend>
+                        <label className="text-gray-500 text-12">
+                          Token
+                        </label>
+                      </legend>
+
+                      <input
+                        disabled={!edit}
+                        value={formInputs?.govt?.department_of_ministry}
+                        onChange={(e) =>
+                          setFormInputs({
+                            ...formInputs,
+                            govt: {
+                              ...formInputs.govt,
+                              department_of_ministry: e.target.value,
+                            },
+                          })
+                        }
+                        type="text"
+                        className="w-full outline-none text-14 py-1"
+                        placeholder="Enter Department of Ministry"
+                      />
+                    </fieldset>
+                  </div> */}
                 </div>
               )}
 
-              {(formInputs?.type == "researcher" || formInputs?.type == "Free Researcher Credit") && (
+              {(formInputs?.type == "researcher" ||
+                formInputs?.type == "Free Researcher Credit") && (
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-2">
                   <div>
                     <fieldset className="flex flex-col border border-gray-400 rounded-md px-2">

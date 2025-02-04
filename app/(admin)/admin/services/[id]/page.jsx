@@ -9,7 +9,7 @@ import {
   uploadFeatureData,
   deleteFeature,
   updateFeatureDataById,
-} from "@/app/(portal)/_api";
+} from "@/app/(portal)/_api"; 
 import Modal from "@/app/_components/Modal/Modal";
 
 import Skeleton from "react-loading-skeleton";
@@ -344,12 +344,12 @@ const Home = ({ params }) => {
                     {features?.length > 0 ? (
                       features?.map((feature, featureIndex) => {
                         // Parse plans data
-                        const plans = JSON.parse(feature?.plans || "[]");
-                        const limits = plans.map((plan) => plan.limit);
-                        const units = plans.map((plan) => plan.validaty);
+                        const plans = JSON?.parse(feature?.plans || "[]");
+                        const limits = plans?.map((plan) => plan.limit);
+                        const units = plans?.map((plan) => plan.validaty);
 
                         return (
-                          <tr key={feature.id || featureIndex}>
+                          <tr key={feature?.id || featureIndex}>
                             <td className="border-2 border-gray-500 p-2">
                               {feature.name}
                             </td>
@@ -357,7 +357,7 @@ const Home = ({ params }) => {
                               <table className="w-full">
                                 <thead>
                                   <tr>
-                                    {plans.length > 0 && limits.length > 0 ? (
+                                    {plans?.length > 0 && limits?.length > 0 ? (
                                       limits.map((limit, index) => (
                                         <th
                                           key={`limit-${index}`}
@@ -367,7 +367,7 @@ const Home = ({ params }) => {
                                               : "border-l border-b"
                                           }  border-gray-500 p-2`}
                                         >
-                                          {limit} {feature.unit}
+                                          {limit} {feature?.unit}
                                         </th>
                                       ))
                                     ) : (
@@ -377,8 +377,8 @@ const Home = ({ params }) => {
                                 </thead>
                                 <tbody>
                                   <tr>
-                                    {plans.length > 0 && units.length > 0 ? (
-                                      units.map((unit, index) => (
+                                    {plans?.length > 0 && units?.length > 0 ? (
+                                      units?.map((unit, index) => (
                                         <td
                                           key={`unit-${index}`}
                                           className={`${
@@ -401,10 +401,10 @@ const Home = ({ params }) => {
                               </table>
                             </td>
                             <td className="border-2 border-gray-500 p-2">
-                              {feature.unit}
+                              {feature?.unit}
                             </td>
                             <td className="border-2 border-gray-500 p-2">
-                              {feature.is_public === "1" ? "Free" : "Paid"}
+                              {feature?.is_public === "1" ? "Free" : "Paid"}
                             </td>
                             <td className="border-2 border-gray-500 px-2">
                               <div className="flex flex-col gap-2">
