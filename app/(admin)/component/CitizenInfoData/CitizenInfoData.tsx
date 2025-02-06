@@ -62,6 +62,9 @@ const CitizenInfoData = ({ id }: { id: string }) => {
     }
   };
 
+  console.log({ singleUser });
+  
+
   return (
     <div>
       <section>
@@ -173,7 +176,7 @@ const CitizenInfoData = ({ id }: { id: string }) => {
                   />
                 </div>
                 <div className="flex flex-col  gap-2">
-                  <p className="text-gray-500 text-14 "> Company url</p>
+                  <p className="text-gray-500 text-14 "> Organization url</p>
                   <input
                     disabled={true}
                     value={singleUser?.citizen_info?.company_url}
@@ -184,17 +187,18 @@ const CitizenInfoData = ({ id }: { id: string }) => {
                 </div>
               </div>
 
-              {singleUser?.citizen_type?.slug === "govt_user" && (
+              {singleUser?.citizen_info?.citizen_type?.slug === "govt_user" && (
                 <>
                   <div className="grid grid-cols-1 lg:grid-cols-2 gap-2">
                     <div className="flex flex-col  gap-2">
                       <p className="text-gray-500 text-14 after:content-['_*'] after:text-red-500">
-                        Name Of Ministry
+                      Organization Name
                       </p>
                       <input
                         disabled={true}
-                        value={singleUser?.citizen_info?.ministry_name}
-                        type="number"
+                        value={singleUser?.citizen_info?.organization_name
+                        }
+                        type="text"
                         className="outline-none border border-gray-300 px-2 py-1 rounded"
                         placeholder="Enter Team Size"
                       />
@@ -231,6 +235,58 @@ const CitizenInfoData = ({ id }: { id: string }) => {
                         placeholder="Enter Company URL"
                       />
                     </div>
+                  </div>
+                
+                  <div>
+                    <fieldset className="flex flex-col border border-gray-400 rounded-md px-2">
+                      <legend>
+                        <label className="text-gray-500 text-12">
+                          Office Email
+                        </label>
+                      </legend>
+
+                      <input
+                        disabled={true}
+                        value={singleUser?.citizen_info?.office_email}
+                        type="email"
+                        className="w-full outline-none text-14 py-1"
+                        placeholder="Enter Office Email"
+                      />
+                    </fieldset>
+                  </div>
+                  <div>
+                    <fieldset className="flex flex-col border border-gray-400 rounded-md px-2">
+                      <legend>
+                        <label className="text-gray-500 text-12">
+                         Office Address
+                        </label>
+                      </legend>
+
+                      <textarea 
+                        disabled={true}
+                        value={singleUser?.citizen_info?.office_address}
+                        className="w-full outline-none text-14 py-1"
+                        placeholder="Enter Office Address">
+
+                      </textarea>
+                    </fieldset>
+                  </div>
+                  <div>
+                    <fieldset className="flex flex-col border border-gray-400 rounded-md px-2">
+                      <legend>
+                        <label className="text-gray-500 text-12">
+                          IP Address
+                        </label>
+                      </legend>
+
+                      <input
+                        disabled={true}
+                        value={singleUser?.citizen_info?.ip_address}
+                        type="text"
+                        className="w-full outline-none text-14 py-1"
+                        placeholder=" Enter IP Address"
+                      />
+                    </fieldset>
                   </div>
                 </>
               )}

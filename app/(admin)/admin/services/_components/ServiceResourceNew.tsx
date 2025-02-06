@@ -45,11 +45,11 @@ const ServiceResourceNew = () => {
     // console.log({ newType });
     setCustomError(null);
 
-    if (type.length < 1) {
-      setIsLoading(false);
-      setCustomError("Please select at least one type");
-      return;
-    }
+    // if (type.length < 1) {
+    //   setIsLoading(false);
+    //   setCustomError("Please select at least one type");
+    //   return;
+    // }
     const {
       component,
       description,
@@ -61,11 +61,11 @@ const ServiceResourceNew = () => {
       visit_type,
       resource_file,
       description_title,
+      purchase_service_link
     } = data;
 
     // console.log({visit_link});
     // return;
-    
 
     let paid_status = {
       free: data.free ? 1 : 0,
@@ -79,16 +79,17 @@ const ServiceResourceNew = () => {
       formData.append("name", name);
       formData.append("description", description);
       formData.append("component", component);
-      formData.append("logo", logo[0]);
+      formData.append("logo", logo[0] || '');
       formData.append("paid_status", JSON.stringify(paid_status));
       formData.append("production_status", production_status);
       formData.append("release_date", release_date);
       formData.append("visit_link", visit_link || "");
       formData.append("visit_type", visit_type);
       formData.append("completion_status", "1");
-      formData.append("resource_file", resource_file[0] || "");
+      formData.append("resource_file", resource_file[0] || '');
       formData.append("description_title", description_title);
       formData.append("status", "1");
+      formData.append("purchase_service_link", purchase_service_link || "");
       formData.append("type", JSON.stringify(newType));
 
       const response: any = await createService(formData);
@@ -98,16 +99,18 @@ const ServiceResourceNew = () => {
         reset();
         toast.success("Service Created Successfully");
         router.push("/admin/services");
+      }else{
+        setIsLoading(false);
+        toast.error(response.message);
       }
-      setIsLoading(false);
-    } catch (error) {
+      // setIsLoading(false);
+    } catch (error:any) {
       console.log(error);
       setIsLoading(false);
-      toast.error("Service Creation Failed");
+      toast.error(error.message);
     } finally {
       setIsLoading(false);
     }
-    
   };
 
   const handleToggleType = (value: string) => {
@@ -169,35 +172,38 @@ const ServiceResourceNew = () => {
               <legend>
                 <label
                   htmlFor="ServiceName"
-                  className="after:content-['_*'] after:text-red-500"
+                  //className="after:content-['_*'] after:text-red-500"
                 >
                   Description Title
                 </label>
               </legend>
               <input
-                {...register("description_title", {
-                  required: "Description Title is required",
-                  validate: {
-                    maxWords: (value) => {
-                      const wordCount = value.trim().split(/\s+/).length;
-                      if (wordCount > 8) {
-                        return "Description cannot exceed 8 words";
-                      }
-                      return true;
-                    },
-                  },
-                })}
+                {...register(
+                  "description_title"
+                  //   {
+                  //   required: "Description Title is required",
+                  //   validate: {
+                  //     maxWords: (value) => {
+                  //       const wordCount = value.trim().split(/\s+/).length;
+                  //       if (wordCount > 8) {
+                  //         return "Description cannot exceed 8 words";
+                  //       }
+                  //       return true;
+                  //     },
+                  //   },
+                  // }
+                )}
                 id="description_title"
                 type="text"
                 placeholder="Description Title"
                 className="outline-none p-2"
               />
             </fieldset>
-            {errors.description_title && (
+            {/* {errors.description_title && (
               <p className="text-red-500 text-12 px-2 pt-1">
                 {errors.description_title.message as string}
               </p>
-            )}
+            )} */}
           </div>
 
           <div>
@@ -205,7 +211,7 @@ const ServiceResourceNew = () => {
               <legend>
                 <label
                   htmlFor="ServiceName"
-                  className="after:content-['_*'] after:text-red-500"
+                  //className="after:content-['_*'] after:text-red-500"
                 >
                   Description
                 </label>
@@ -215,18 +221,18 @@ const ServiceResourceNew = () => {
                 name="description"
                 control={control}
                 defaultValue=""
-                rules={{
-                  required: "Description is required",
-                  validate: {
-                    maxWords: (value) => {
-                      const wordCount = value.trim().split(/\s+/).length;
-                      if (wordCount > 30) {
-                        return "Description cannot exceed 30 words";
-                      }
-                      return true;
-                    },
-                  },
-                }}
+                // rules={{
+                //   required: "Description is required",
+                //   validate: {
+                //     maxWords: (value) => {
+                //       const wordCount = value.trim().split(/\s+/).length;
+                //       if (wordCount > 30) {
+                //         return "Description cannot exceed 30 words";
+                //       }
+                //       return true;
+                //     },
+                //   },
+                // }}
                 render={({
                   field: { onChange, value },
                   fieldState: { error },
@@ -239,11 +245,11 @@ const ServiceResourceNew = () => {
                       }}
                       data={value}
                     />
-                    {errors.description && (
+                    {/* {errors.description && (
                       <p className="text-red-500 text-12 px-2 pt-1">
                         {errors.description.message as string}
                       </p>
-                    )}
+                    )} */}
                   </>
                 )}
               />
@@ -253,7 +259,9 @@ const ServiceResourceNew = () => {
           <div>
             <fieldset className="flex flex-col border rounded-md p-2">
               <legend>
-                <label className="after:content-['_*'] after:text-red-500">
+                <label
+                // className="after:content-['_*'] after:text-red-500"
+                >
                   Type
                 </label>
               </legend>
@@ -278,9 +286,9 @@ const ServiceResourceNew = () => {
                 ))}
               </div>
             </fieldset>
-            {customError && (
+            {/* {customError && (
               <p className="text-red-500 text-12 px-2 pt-1">{customError}</p>
-            )}
+            )} */}
           </div>
 
           <div>
@@ -288,16 +296,19 @@ const ServiceResourceNew = () => {
               <legend>
                 <label
                   htmlFor="ServiceName"
-                  className="after:content-['_*'] after:text-red-500"
+                  //className="after:content-['_*'] after:text-red-500"
                 >
                   Production Status
                 </label>
               </legend>
 
               <select
-                {...register("production_status", {
-                  required: "Production Status is required",
-                })}
+                {...register(
+                  "production_status"
+                  //   {
+                  //   required: "Production Status is required",
+                  // }
+                )}
                 className="outline-none p-2 bg-white"
               >
                 <option value="Live">Live</option>
@@ -305,11 +316,11 @@ const ServiceResourceNew = () => {
                 <option value="On Test">On Test</option>
               </select>
             </fieldset>
-            {errors.production_status && (
+            {/* {errors.production_status && (
               <p className="text-red-500 text-12 px-2 pt-1">
                 {errors.production_status.message as string}
               </p>
-            )}
+            )} */}
           </div>
 
           <div>
@@ -317,7 +328,7 @@ const ServiceResourceNew = () => {
               <legend>
                 <label
                   htmlFor="ServiceName"
-                  className="after:content-['_*'] after:text-red-500"
+                  //className="after:content-['_*'] after:text-red-500"
                 >
                   Release Date
                 </label>
@@ -325,17 +336,20 @@ const ServiceResourceNew = () => {
 
               <input
                 type="date"
-                {...register("release_date", {
-                  required: "Release Date is required",
-                })}
+                {...register(
+                  "release_date"
+                  //   {
+                  //   required: "Release Date is required",
+                  // }
+                )}
                 className="outline-none p-2 bg-white"
               />
             </fieldset>
-            {errors.release_date && (
+            {/* {errors.release_date && (
               <p className="text-red-500 text-12 px-2 pt-1">
                 {errors.release_date.message as string}
               </p>
-            )}
+            )} */}
           </div>
 
           {serviceImg && (
@@ -353,16 +367,19 @@ const ServiceResourceNew = () => {
               <legend>
                 <label
                   htmlFor="ServiceName"
-                  className="after:content-['_*'] after:text-red-500"
+                  //className="after:content-['_*'] after:text-red-500"
                 >
                   Logo
                 </label>
               </legend>
 
               <input
-                {...register("logo", {
-                  required: "Logo is required",
-                })}
+                {...register(
+                  "logo"
+                  //   {
+                  //   required: "Logo is required",
+                  // }
+                )}
                 id="file"
                 type="file"
                 onChange={(e) => {
@@ -374,11 +391,11 @@ const ServiceResourceNew = () => {
                 accept="image/*"
               />
             </fieldset>
-            {errors.logo && (
+            {/* {errors.logo && (
               <p className="text-red-500 text-12 px-2 pt-1">
                 {errors.logo.message as string}
               </p>
-            )}
+            )} */}
           </div>
 
           <div>
@@ -386,7 +403,7 @@ const ServiceResourceNew = () => {
               <legend>
                 <label
                   htmlFor="ServiceName"
-                  className="after:content-['_*'] after:text-red-500"
+                  //className="after:content-['_*'] after:text-red-500"
                 >
                   Paid Status
                 </label>
@@ -414,11 +431,11 @@ const ServiceResourceNew = () => {
                 </div>
               </div>
             </fieldset>
-            {errors.paid_status && (
+            {/* {errors.paid_status && (
               <p className="text-red-500 text-12 px-2 pt-1">
                 {errors.paid_status.message as string}
               </p>
-            )}
+            )} */}
           </div>
 
           <div>
@@ -426,7 +443,7 @@ const ServiceResourceNew = () => {
               <legend>
                 <label
                   htmlFor="ServiceName"
-                  className="after:content-['_*'] after:text-red-500"
+                  //className="after:content-['_*'] after:text-red-500"
                 >
                   Components
                 </label>
@@ -434,18 +451,50 @@ const ServiceResourceNew = () => {
 
               <input
                 type="text"
-                {...register("component", {
-                  required: "Components is required",
-                })}
+                {...register(
+                  "component"
+                  //    {
+                  //   required: "Components is required",
+                  // }
+                )}
                 className="outline-none p-2 bg-white"
                 placeholder="Enter Components"
               />
             </fieldset>
-            {errors.component && (
+            {/* {errors.component && (
               <p className="text-red-500 text-12 px-2 pt-1">
                 {errors.component.message as string}
               </p>
-            )}
+            )} */}
+          </div>
+          <div>
+            <fieldset className="flex flex-col border rounded-md px-2">
+              <legend>
+                <label
+                  htmlFor="ServiceName"
+                  //className="after:content-['_*'] after:text-red-500"
+                >
+                  Purchase Service Link
+                </label>
+              </legend>
+
+              <input
+                type="text"
+                {...register(
+                  "purchase_service_link"
+                  //    {
+                  //   required: "Purchase Service Link is required",
+                  // }
+                )}
+                className="outline-none p-2 bg-white"
+                placeholder="Enter Purchase Service Link"
+              />
+            </fieldset>
+            {/* {errors.purchase_service_link && (
+              <p className="text-red-500 text-12 px-2 pt-1">
+                {errors.purchase_service_link.message as string}
+              </p>
+            )} */}
           </div>
 
           <div>
@@ -453,16 +502,19 @@ const ServiceResourceNew = () => {
               <legend>
                 <label
                   htmlFor="ServiceName"
-                  className="after:content-['_*'] after:text-red-500"
+                  // className="after:content-['_*'] after:text-red-500"
                 >
                   User Access
                 </label>
               </legend>
 
               <select
-                {...register("visit_type", {
-                  required: "Button is required",
-                })}
+                {...register(
+                  "visit_type"
+                  //   {
+                  //   required: "Button is required",
+                  // }
+                )}
                 onChange={(e) => setShowItem(e.target.value)}
                 id=""
                 className="outline-none p-2 bg-white"
@@ -472,11 +524,11 @@ const ServiceResourceNew = () => {
                 <option value="Subscribe">Subscribe</option>
               </select>
             </fieldset>
-            {errors.visit_type && (
+            {/* {errors.visit_type && (
               <p className="text-red-500 text-12 px-2 pt-1">
                 {errors.visit_type.message as string}
               </p>
-            )}
+            )} */}
           </div>
 
           {showItem == "Visit" || showItem == "Subscribe" ? (
@@ -485,7 +537,7 @@ const ServiceResourceNew = () => {
                 <legend>
                   <label
                     htmlFor="ServiceName"
-                    className="after:content-['_*'] after:text-red-500"
+                    //className="after:content-['_*'] after:text-red-500"
                   >
                     {showItem} Link
                   </label>
@@ -493,18 +545,21 @@ const ServiceResourceNew = () => {
 
                 <input
                   type="text"
-                  {...register("visit_link", {
-                    required: "Visit Link is required",
-                  })}
+                  {...register(
+                    "visit_link"
+                    //   {
+                    //   required: "Visit Link is required",
+                    // }
+                  )}
                   className="w-full outline-none p-2"
                   placeholder="Enter Link"
                 />
               </fieldset>
-              {errors.visit_link && (
+              {/* {errors.visit_link && (
                 <p className="text-red-500 text-12 px-2 pt-1">
                   {errors.visit_link.message as string}
                 </p>
-              )}
+              )} */}
             </div>
           ) : (
             <>
@@ -522,16 +577,19 @@ const ServiceResourceNew = () => {
                   <legend>
                     <label
                       htmlFor="ServiceName"
-                      className="after:content-['_*'] after:text-red-500"
+                      //className="after:content-['_*'] after:text-red-500"
                     >
                       Resource Download
                     </label>
                   </legend>
 
                   <input
-                    {...register("resource_file", {
-                      required: "Resource File is required",
-                    })}
+                    {...register(
+                      "resource_file"
+                      //   {
+                      //   required: "Resource File is required",
+                      // }
+                    )}
                     id="file"
                     type="file"
                     onChange={(e) => {
@@ -544,19 +602,19 @@ const ServiceResourceNew = () => {
                     size={500000}
                   />
                 </fieldset>
-                {errors.resource_file && (
+                {/* {errors.resource_file && (
                   <p className="text-red-500 text-12 px-2 pt-1">
                     {errors.resource_file.message as string}
                   </p>
-                )}
+                )} */}
               </div>
             </>
           )}
 
-          <div className="flex justify-between pt-5">
-            <p className="text-14">
+          <div className="flex justify-end pt-5">
+            {/* <p className="text-14">
               <span className="text-red-500">*</span> Required
-            </p>
+            </p> */}
             {isLoading ? (
               <button
                 type="button"

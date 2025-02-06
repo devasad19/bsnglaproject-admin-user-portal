@@ -5,10 +5,13 @@ import { useEffect, useState } from "react";
 interface userStateProps {
   user: any;
   setUser: any;
+  setRefresh: any;
+  refresh: any;
 }
 
 export default function useLoginUser(): userStateProps {
   const [user, setUser] = useState<any>({});
+  const [refresh, setRefresh] = useState<boolean>(false);
 
   const fetchData = async () => {
     let userData: any = Cookies.get("user");
@@ -27,7 +30,7 @@ export default function useLoginUser(): userStateProps {
 
   useEffect(() => {
     fetchData();
-  }, []);
+  }, [ refresh ]);
 
-  return { user, setUser };
+  return { user, setUser, setRefresh, refresh };
 }

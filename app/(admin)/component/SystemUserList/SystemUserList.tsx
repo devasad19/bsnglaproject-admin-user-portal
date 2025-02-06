@@ -2,7 +2,7 @@
 import { modelClose, modelOpen, relative_image_path } from "@/helper";
 import Image from "next/image";
 import Modal from "@/app/_components/Modal/Modal";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 import {
@@ -29,6 +29,10 @@ const SystemUserList = ({ users, rolesList }: any) => {
     status: "",
     id: "",
   });
+
+  useEffect(() => {
+    setUserFilter(users);
+  }, [users]);
 
   const [searchByName, setSearchByName] = useState("");
 

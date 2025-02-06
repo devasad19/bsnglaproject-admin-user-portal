@@ -111,7 +111,7 @@ const ServiceListContainer = ({ services }) => {
   };
 
   const handleRedirect = (id) => {
-    router.replace("https://service.bangla.gov.bd/services/" + id);
+    router.replace(`${process.env.NEXT_PUBLIC_PORTAL_URL}/services/` + id);
   };
 
   return (
@@ -234,7 +234,7 @@ const ServiceListContainer = ({ services }) => {
                       </div>
                     </td>
                     <td className="text-center border-r border-gray-200 px-2">
-                      {item?.completion_status == 3 ? (
+                      {/* {item?.completion_status == 3 ? (
                         <>
                           <button
                             onClick={() =>
@@ -258,7 +258,24 @@ const ServiceListContainer = ({ services }) => {
                         <button className="bg-white border border-red-500 text-red-500 text-center text-sm w-[6em] py-1 rounded">
                           Incomplete
                         </button>
-                      )}
+                      )} */}
+                      <button
+                        onClick={() =>
+                          UpdateServicePublishStatus(
+                            item?.id,
+                            item?.status == 1 ? 0 : 1
+                          )
+                        }
+                        className={`relative w-14 h-6 rounded-full transition-colors duration-300 ${
+                          item?.status == 1 ? "bg-green-500" : "bg-gray-400"
+                        }`}
+                      >
+                        <span
+                          className={`absolute top-1 left-1 w-4 h-4 rounded-full bg-white shadow-md transform transition-transform duration-300 ${
+                            item?.status == 1 ? "translate-x-8" : ""
+                          }`}
+                        ></span>
+                      </button>
                     </td>
                     <td className="px-1">
                       <div className="w-full flex  items-center justify-center gap-2">

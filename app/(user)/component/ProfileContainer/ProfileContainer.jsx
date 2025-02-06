@@ -36,7 +36,7 @@ const ProfileContainer = ({ citizen, userTypes, grade }) => {
       organization_name: citizen?.citizen_info?.organization_name ?? "",
       office_email: citizen?.citizen_info?.office_email ?? "",
       office_address: citizen?.citizen_info?.office_address ?? "",
-      ip_address: citizen?.citizen_info?.ip_address ?? ""  
+      ip_address: citizen?.citizen_info?.ip_address ?? "",
     },
     researcher: {
       name_of_ministry: citizen?.citizen_info?.ministry_name ?? "",
@@ -62,6 +62,10 @@ const ProfileContainer = ({ citizen, userTypes, grade }) => {
           citizen?.citizen_info?.ministry_department ?? "",
         job_position: citizen?.citizen_info?.job_position ?? "",
         grade: citizen?.citizen_info?.grade ?? "",
+        organization_name: citizen?.citizen_info?.organization_name ?? "",
+        office_email: citizen?.citizen_info?.office_email ?? "",
+        office_address: citizen?.citizen_info?.office_address ?? "",
+        ip_address: citizen?.citizen_info?.ip_address ?? "",
       },
       researcher: {
         name_of_ministry: citizen?.citizen_info?.ministry_name ?? "",
@@ -71,7 +75,7 @@ const ProfileContainer = ({ citizen, userTypes, grade }) => {
       },
       citizen_info_id: citizen?.citizen_info?.id,
     });
-  }, [citizen, userTypes]);
+  }, [citizen, userTypes, edit]);
 
   const [userType, setUserType] = useState(
     userTypes?.find((item) => item?.id == citizen?.citizen_type?.id)
@@ -99,10 +103,9 @@ const ProfileContainer = ({ citizen, userTypes, grade }) => {
       office_email: formInputs?.govt?.office_email ?? "",
       office_address: formInputs?.govt?.office_address ?? "",
       ip_address: formInputs?.govt?.ip_address ?? "",
-
     };
-    console.log({payload});
-    
+    console.log({ payload });
+
     try {
       const response = await updateCitizenTypeInfo(payload);
       setEdit(false);
@@ -166,7 +169,7 @@ const ProfileContainer = ({ citizen, userTypes, grade }) => {
     }
   };
 
-  console.log("type ", formInputs.type);
+  console.log("type ", formInputs);
 
   return (
     <>
@@ -522,7 +525,7 @@ const ProfileContainer = ({ citizen, userTypes, grade }) => {
                     <fieldset className="flex flex-col border border-gray-400 rounded-md px-2">
                       <legend>
                         <label className="text-gray-500 text-12">
-                         Organization Name
+                          Organization Name
                         </label>
                       </legend>
 
@@ -574,12 +577,13 @@ const ProfileContainer = ({ citizen, userTypes, grade }) => {
                     <fieldset className="flex flex-col border border-gray-400 rounded-md px-2">
                       <legend>
                         <label className="text-gray-500 text-12">
-                         Office Address
+                          Office Address
                         </label>
                       </legend>
 
-                      <textarea value={formInputs?.govt?.office_address}
-                      disabled={!edit}
+                      <textarea
+                        value={formInputs?.govt?.office_address}
+                        disabled={!edit}
                         onChange={(e) =>
                           setFormInputs({
                             ...formInputs,
@@ -588,12 +592,10 @@ const ProfileContainer = ({ citizen, userTypes, grade }) => {
                               office_address: e.target.value,
                             },
                           })
-                        }  className="w-full outline-none text-14 py-1"
-                        placeholder="Enter Office Address">
-
-                      </textarea>
-
-                      
+                        }
+                        className="w-full outline-none text-14 py-1"
+                        placeholder="Enter Office Address"
+                      ></textarea>
                     </fieldset>
                   </div>
                   <div>
@@ -775,7 +777,7 @@ const ProfileContainer = ({ citizen, userTypes, grade }) => {
                 onClick={() => HandleUpdate()}
                 className="bg-primary text-white border border-primary rounded text-14 lg:text-16 px-2 py-1 lg:px-4 "
               >
-                Update
+                Send Request
               </button>
             </div>
           )}

@@ -3,7 +3,7 @@ import { ReactNode } from "react";
 
 
 export const metadata = {
-  title: 'লিজ এবং সেটেলমেন্ট মেনেজমেন্ট ব্যবস্থাপনা সিস্টেম',
+  title: 'বাংলা প্রকল্প ব্যবস্থাপনা সিস্টেম',
   icons: {
     icon: '/assets/images/favicon.png',
   },

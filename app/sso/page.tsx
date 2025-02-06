@@ -25,32 +25,32 @@
 
 // export default SSO;
 
-'use client'
+"use client";
 import { setCookie } from "nookies";
 import { useRouter, redirect } from "next/navigation";
 import { useEffect } from "react";
 
 const SSO = () => {
-    
-    const router = useRouter();
+  const router = useRouter();
 
-    useEffect(() => {
-        const state = Math.random().toString(36).slice(2) + Math.random().toString(36).slice(2);
-        setCookie(null, 'state', state);
+  useEffect(() => {
+    const state =
+      Math.random().toString(36).slice(2) + Math.random().toString(36).slice(2);
+    setCookie(null, "state", state);
 
-        const params = new URLSearchParams({
-            client_id: process.env.SSO_CLIENT_ID as string,
-            redirect_uri: `${process.env.LDTAX_PORTAL_BASE}/callback`,
-            response_type: 'code',
-            scope: 'view-user',
-            state: state
-        });
+    const params = new URLSearchParams({
+      client_id: process.env.SSO_CLIENT_ID as string,
+      redirect_uri: `${process.env.LDTAX_PORTAL_BASE}/callback`,
+      response_type: "code",
+      scope: "view-user",
+      state: state,
+    });
 
-        // redirect(`${process.env.SSO_URL}/oauth/authorize?${params.toString()}`);
-        router.push(`${process.env.SSO_URL}/oauth/authorize?${params.toString()}`);
-    }, [router]);
+    // redirect(`${process.env.SSO_URL}/oauth/authorize?${params.toString()}`);
+    router.push(`${process.env.SSO_URL}/oauth/authorize?${params.toString()}`);
+  }, [router]);
 
-    return null;
-}
+  return null;
+};
 
 export default SSO;

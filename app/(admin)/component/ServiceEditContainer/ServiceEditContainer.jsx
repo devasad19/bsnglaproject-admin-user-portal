@@ -25,7 +25,7 @@ const ServiceEditContainer = ({ id, secondTab,allColors,allIcons }) => {
             </h1>
 
             <div>
-              <div className="grid  grid-cols-1 lg:grid-cols-3 gap-2 pb-5">
+              <div className="grid  grid-cols-1 lg:grid-cols-2 gap-2 pb-5">
                 <button
                   type="button"
                   onClick={() => setTab(0)}
@@ -44,7 +44,7 @@ const ServiceEditContainer = ({ id, secondTab,allColors,allIcons }) => {
                 >
                   Service Details Resource
                 </button>
-                <button
+                {/* <button
                   type="button"
                   onClick={() => setTab(2)}
                   className={`text-white px-4 py-2 rounded ${
@@ -52,7 +52,7 @@ const ServiceEditContainer = ({ id, secondTab,allColors,allIcons }) => {
                   }`}
                 >
                   Bangla Resource
-                </button>
+                </button> */}
               </div>
 
               <div className="flex flex-col gap-4">
@@ -67,11 +67,11 @@ const ServiceEditContainer = ({ id, secondTab,allColors,allIcons }) => {
                       secondTab={secondTab} setTab={setTab} allColors={allColors} allIcons={allIcons}/>
                   </>
                 )}
-                {tab == 2 && (
+                {/* {tab == 2 && (
                   <>
                     <UpdateBanglaResource id={id} />
                   </>
-                )}
+                )} */}
               </div>
             </div>
           </div>

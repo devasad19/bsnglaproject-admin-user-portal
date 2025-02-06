@@ -7,7 +7,10 @@ import { toast } from "react-toastify";
 import CustomEditor from "@/app/_components/CustomEditor/CustomEditor";
 import { FaCheckCircle } from "react-icons/fa";
 import { CountWords, replaceSpaces, replaceUnderscore } from "@/helper";
-import { getSingleServiceResourceCodeApi, updateSingleServiceResourceCodeUpdate } from "@/app/(admin)/_api/ServiceApi";
+import {
+  getSingleServiceResourceCodeApi,
+  updateSingleServiceResourceCodeUpdate,
+} from "@/app/(admin)/_api/ServiceApi";
 
 const UpdateServiceResource = ({ id }) => {
   const router = useRouter();
@@ -34,7 +37,6 @@ const UpdateServiceResource = ({ id }) => {
     setError,
   } = useForm();
 
-  
   const onSubmitServiceResource = async (data) => {
     setIsLoading(true);
     let newType = [];
@@ -45,11 +47,11 @@ const UpdateServiceResource = ({ id }) => {
     // console.log({ newType });
     setCustomError(null);
 
-    if (type.length < 1) {
-      setIsLoading(false);
-      setCustomError("Please select at least one type");
-      return;
-    }
+    // if (type.length < 1) {
+    //   setIsLoading(false);
+    //   setCustomError("Please select at least one type");
+    //   return;
+    // }
 
     let dataJson = JSON.stringify(newType);
     // console.log(dataJson);
@@ -77,7 +79,7 @@ const UpdateServiceResource = ({ id }) => {
       // formData.append("status", status);
       formData.append("component", component);
       formData.append("distribution", distribution);
-      formData.append("logo", typeof logo[0] == "string" ? "" : logo[0]);
+      formData.append("logo", typeof logo[0] == "string" ? "" : logo[0] ?? "");
       formData.append("paid_status", JSON.stringify(paidStatus));
       formData.append("production_status", production_status);
       formData.append("release_date", release_date);
@@ -85,10 +87,11 @@ const UpdateServiceResource = ({ id }) => {
       formData.append("sub_title", sub_title);
       formData.append("visit_link", visit_link || "");
       formData.append("visit_type", visit_type);
+      formData.append("purchase_service_link", data.purchase_service_link || "");
       if (resource_file) {
         formData.append(
           "resource_file",
-          typeof resource_file == "string" ? "" : resource_file[0]
+          typeof resource_file == "string" ? "" : resource_file[0] ?? ""
         );
       }
       formData.append("description_title", description_title);
@@ -109,8 +112,7 @@ const UpdateServiceResource = ({ id }) => {
     } catch (error) {
       // console.log("Error during service update:", error);
       // toast.error("Service Update Failed");
-      toast.error(error?.response?.data?.message);
-
+      toast.error(error?.message);
     } finally {
       setIsLoading(false);
     }
@@ -122,24 +124,24 @@ const UpdateServiceResource = ({ id }) => {
         console.log(res?.data);
         setShowItem(res?.data?.visit_type);
         setServiceResource(res?.data);
-        setValue("name", res?.data?.name);
-        setValue("sub_title", res?.data?.sub_title);
-        setValue("description", res?.data?.description);
+        setValue("name", res?.data?.name || "");
+        setValue("sub_title", res?.data?.sub_title || "");
+        setValue("description", res?.data?.description || "");
         // setValue("type", JSON.parse(res?.data?.type));
-        setValue("production_status", res?.data?.production_status);
-        setValue("component", res?.data?.component);
+        setValue("production_status", res?.data?.production_status || "");
+        setValue("component", res?.data?.component || "");
         // setValue("distribution", res?.data?.distribution);
-        setValue("logo", res?.data?.logo);
-        setValue("release_date", res?.data?.release_date);
-        setValue("paid_status", JSON.parse(res?.data?.paid_status));
-        setValue("visit_link", res?.data?.visit_link);
-        setValue("visit_type", res?.data?.visit_type);
-        setValue("resource_file", res?.data?.resource_file);
+        setValue("logo", res?.data?.logo || "");
+        setValue("release_date", res?.data?.release_date || "");
+        setValue("paid_status", JSON.parse(res?.data?.paid_status) || []);
+        setValue("visit_link", res?.data?.visit_link || "");
+        setValue("visit_type", res?.data?.visit_type || "");
+        setValue("resource_file", res?.data?.resource_file || "");
         setValue("free", JSON.parse(res?.data?.paid_status)?.free);
         setValue("pro", JSON.parse(res?.data?.paid_status)?.pro);
-        setValue("status", res?.data?.status);
-        setValue("description_title", res?.data?.description_title);
-        const types = JSON.parse(res?.data?.type);
+        setValue("status", res?.data?.status || "");
+        setValue("description_title", res?.data?.description_title || "");
+        const types = JSON.parse(res?.data?.type) || [];
         let newType = [];
         types?.forEach((item) => {
           const newReplaceUnderscore = replaceUnderscore(item);
@@ -150,6 +152,7 @@ const UpdateServiceResource = ({ id }) => {
         // setType(JSON.parse(res?.data?.type));
 
         setPaidStatus(JSON.parse(res?.data?.paid_status));
+        setValue("purchase_service_link", res?.data?.purchase_service_link || "");
       })
       .catch((error) => {
         console.log(error);
@@ -168,7 +171,7 @@ const UpdateServiceResource = ({ id }) => {
     }
   };
 
-  console.log({showItem});
+  console.log({ showItem });
 
   return (
     <>
@@ -214,34 +217,37 @@ const UpdateServiceResource = ({ id }) => {
               <legend>
                 <label
                   htmlFor="ServiceName"
-                  className="after:content-['_*'] after:text-red-500"
+                  // className="after:content-['_*'] after:text-red-500"
                 >
                   Description Title
                 </label>
               </legend>
               <input
-                {...register("description_title", {
-                  required: "Description Title is required",
-                  validate: {
-                    maxWords: (value) => {
-                      const wordCount = value.trim().split(/\s+/).length;
-                      if (wordCount > 8) {
-                        return "Description Title cannot exceed 8 words";
-                      }
-                    },
-                  },
-                })}
+                {...register(
+                  "description_title"
+                  //    {
+                  //   required: "Description Title is required",
+                  //   validate: {
+                  //     maxWords: (value) => {
+                  //       const wordCount = value.trim().split(/\s+/).length;
+                  //       if (wordCount > 8) {
+                  //         return "Description Title cannot exceed 8 words";
+                  //       }
+                  //     },
+                  //   },
+                  // }
+                )}
                 id="description_title"
                 type="text"
                 placeholder="Description Title"
                 className="outline-none p-2"
               />
             </fieldset>
-            {errors.description_title && (
+            {/* {errors.description_title && (
               <p className="text-red-500 text-12 px-2 pt-1">
                 {errors.description_title.message}
               </p>
-            )}
+            )} */}
           </div>
 
           <div>
@@ -249,7 +255,7 @@ const UpdateServiceResource = ({ id }) => {
               <legend>
                 <label
                   htmlFor="ServiceName"
-                  className="after:content-['_*'] after:text-red-500"
+                  // className="after:content-['_*'] after:text-red-500"
                 >
                   Description
                 </label>
@@ -259,18 +265,18 @@ const UpdateServiceResource = ({ id }) => {
                 name="description"
                 control={control}
                 defaultValue=""
-                rules={{
-                  required: "Description is required",
-                  validate: {
-                    maxWords: (value) => {
-                      const wordCount = value.trim().split(/\s+/).length;
-                      if (wordCount > 30) {
-                        return "Description cannot exceed 30 words";
-                      }
-                      return true;
-                    },
-                  },
-                }}
+                // rules={{
+                //   required: "Description is required",
+                //   validate: {
+                //     maxWords: (value) => {
+                //       const wordCount = value.trim().split(/\s+/).length;
+                //       if (wordCount > 30) {
+                //         return "Description cannot exceed 30 words";
+                //       }
+                //       return true;
+                //     },
+                //   },
+                // }}
                 render={({
                   field: { onChange, value },
                   fieldState: { error },
@@ -283,11 +289,11 @@ const UpdateServiceResource = ({ id }) => {
                       }}
                       data={value}
                     />
-                    {errors.description && (
+                    {/* {errors.description && (
                       <p className="text-red-500 text-12 px-2 pt-1">
                         {errors.description.message}
                       </p>
-                    )}
+                    )} */}
                   </>
                 )}
               />
@@ -297,7 +303,9 @@ const UpdateServiceResource = ({ id }) => {
           <div>
             <fieldset className="flex flex-col border rounded-md p-2">
               <legend>
-                <label className="after:content-['_*'] after:text-red-500">
+                <label
+                //  className="after:content-['_*'] after:text-red-500"
+                 >
                   Type
                 </label>
               </legend>
@@ -322,9 +330,9 @@ const UpdateServiceResource = ({ id }) => {
                 ))}
               </div>
             </fieldset>
-            {customError && (
+            {/* {customError && (
               <p className="text-red-500 text-12 px-2 pt-1">{customError}</p>
-            )}
+            )} */}
           </div>
 
           <div>
@@ -332,16 +340,19 @@ const UpdateServiceResource = ({ id }) => {
               <legend>
                 <label
                   htmlFor="ServiceName"
-                  className="after:content-['_*'] after:text-red-500"
+                  // className="after:content-['_*'] after:text-red-500"
                 >
                   Production Status
                 </label>
               </legend>
 
               <select
-                {...register("production_status", {
-                  required: "Production Status is required",
-                })}
+                {...register(
+                  "production_status"
+                  //   {
+                  //   required: "Production Status is required",
+                  // }
+                )}
                 className="outline-none p-2 bg-white"
               >
                 <option
@@ -364,11 +375,11 @@ const UpdateServiceResource = ({ id }) => {
                 </option>
               </select>
             </fieldset>
-            {errors.production_status && (
+            {/* {errors.production_status && (
               <p className="text-red-500 text-12 px-2 pt-1">
                 {errors.production_status.message}
               </p>
-            )}
+            )} */}
           </div>
 
           <div>
@@ -376,7 +387,7 @@ const UpdateServiceResource = ({ id }) => {
               <legend>
                 <label
                   htmlFor="ServiceName"
-                  className="after:content-['_*'] after:text-red-500"
+                  // className="after:content-['_*'] after:text-red-500"
                 >
                   Release Date
                 </label>
@@ -384,17 +395,20 @@ const UpdateServiceResource = ({ id }) => {
 
               <input
                 type="date"
-                {...register("release_date", {
-                  required: "Release Date is required",
-                })}
+                {...register(
+                  "release_date"
+                  //   {
+                  //   required: "Release Date is required",
+                  // }
+                )}
                 className="outline-none p-2 bg-white"
               />
             </fieldset>
-            {errors.release_date && (
+            {/* {errors.release_date && (
               <p className="text-red-500 text-12 px-2 pt-1">
                 {errors.release_date.message}
               </p>
-            )}
+            )} */}
           </div>
 
           <div>
@@ -402,7 +416,7 @@ const UpdateServiceResource = ({ id }) => {
               <legend>
                 <label
                   htmlFor="ServiceName"
-                  className="after:content-['_*'] after:text-red-500"
+                  // className="after:content-['_*'] after:text-red-500"
                 >
                   Logo
                 </label>
@@ -444,11 +458,11 @@ const UpdateServiceResource = ({ id }) => {
                 </div>
               )}
             </fieldset>
-            {errors.logo && (
+            {/* {errors.logo && (
               <p className="text-red-500 text-12 px-2 pt-1">
                 {errors.logo.message}
               </p>
-            )}
+            )} */}
           </div>
 
           <div>
@@ -456,7 +470,7 @@ const UpdateServiceResource = ({ id }) => {
               <legend>
                 <label
                   htmlFor="ServiceName"
-                  className="after:content-['_*'] after:text-red-500"
+                  // className="after:content-['_*'] after:text-red-500"
                 >
                   Paid Status
                 </label>
@@ -513,11 +527,11 @@ const UpdateServiceResource = ({ id }) => {
                 </div>
               </div>
             </fieldset>
-            {errors.paid_status && (
+            {/* {errors.paid_status && (
               <p className="text-red-500 text-12 px-2 pt-1">
                 {errors.paid_status.message}
               </p>
-            )}
+            )} */}
           </div>
 
           <div>
@@ -525,7 +539,7 @@ const UpdateServiceResource = ({ id }) => {
               <legend>
                 <label
                   htmlFor="ServiceName"
-                  className="after:content-['_*'] after:text-red-500"
+                  // className="after:content-['_*'] after:text-red-500"
                 >
                   Components
                 </label>
@@ -533,18 +547,50 @@ const UpdateServiceResource = ({ id }) => {
 
               <input
                 type="text"
-                {...register("component", {
-                  required: "Components is required",
-                })}
+                {...register(
+                  "component"
+                  //   {
+                  //   required: "Components is required",
+                  // }
+                )}
                 className="outline-none p-2 bg-white"
                 placeholder="Enter Components"
               />
             </fieldset>
-            {errors.component && (
+            {/* {errors.component && (
               <p className="text-red-500 text-12 px-2 pt-1">
                 {errors.component.message}
               </p>
-            )}
+            )} */}
+          </div>
+          <div>
+            <fieldset className="flex flex-col border rounded-md px-2">
+              <legend>
+                <label
+                  htmlFor="ServiceName"
+                  // className="after:content-['_*'] after:text-red-500"
+                >
+                  Purchase Service Link
+                </label>
+              </legend>
+
+              <input
+                type="text"
+                {...register(
+                  "purchase_service_link"
+                  //   {
+                  //   required: "Components is required",
+                  // }
+                )}
+                className="outline-none p-2 bg-white"
+                placeholder="Enter Components"
+              />
+            </fieldset>
+            {/* {errors.component && (
+              <p className="text-red-500 text-12 px-2 pt-1">
+                {errors.component.message}
+              </p>
+            )} */}
           </div>
 
           <div>
@@ -552,16 +598,19 @@ const UpdateServiceResource = ({ id }) => {
               <legend>
                 <label
                   htmlFor="ServiceName"
-                  className="after:content-['_*'] after:text-red-500"
+                  // className="after:content-['_*'] after:text-red-500"
                 >
                   user access
                 </label>
               </legend>
 
               <select
-                {...register("visit_type", {
-                  required: "Button is required",
-                })}
+                {...register(
+                  "visit_type"
+                  //   {
+                  //   required: "Button is required",
+                  // }
+                )}
                 onChange={(e) => setShowItem(e.target.value)}
                 className="outline-none p-2 bg-white"
               >
@@ -570,11 +619,11 @@ const UpdateServiceResource = ({ id }) => {
                 <option value="Subscribe">Subscribe</option>
               </select>
             </fieldset>
-            {errors.visit_type && (
+            {/* {errors.visit_type && (
               <p className="text-red-500 text-12 px-2 pt-1">
                 {errors.visit_type.message}
               </p>
-            )}
+            )} */}
           </div>
           {showItem == "Visit" || showItem == "Subscribe" ? (
             <div>
@@ -582,7 +631,7 @@ const UpdateServiceResource = ({ id }) => {
                 <legend>
                   <label
                     htmlFor="ServiceName"
-                    className="after:content-['_*'] after:text-red-500"
+                    // className="after:content-['_*'] after:text-red-500"
                   >
                     {showItem} Link
                   </label>
@@ -590,19 +639,21 @@ const UpdateServiceResource = ({ id }) => {
 
                 <input
                   type="text"
-                  {...register("visit_link", {
-                    required: "Visit Link is required",
-                  })}
-                 
+                  {...register(
+                    "visit_link"
+                    //   {
+                    //   required: "Visit Link is required",
+                    // }
+                  )}
                   className="w-full outline-none p-2"
                   placeholder="Enter Link"
                 />
               </fieldset>
-              {errors.visit_link && (
+              {/* {errors.visit_link && (
                 <p className="text-red-500 text-12 px-2 pt-1">
                   {errors.visit_link.message}
                 </p>
-              )}
+              )} */}
             </div>
           ) : (
             <>
@@ -611,7 +662,7 @@ const UpdateServiceResource = ({ id }) => {
                   <legend>
                     <label
                       htmlFor="ServiceName"
-                      className="after:content-['_*'] after:text-red-500"
+                      // className="after:content-['_*'] after:text-red-500"
                     >
                       Resource Download
                     </label>
@@ -655,11 +706,11 @@ const UpdateServiceResource = ({ id }) => {
                     </div>
                   )}
                 </fieldset>
-                {errors.resource_file && (
+                {/* {errors.resource_file && (
                   <p className="text-red-500 text-12 px-2 pt-1">
                     {errors.resource_file.message}
                   </p>
-                )}
+                )} */}
               </div>
             </>
           )}
@@ -688,10 +739,10 @@ const UpdateServiceResource = ({ id }) => {
                             </p>
                         )}
                     </div> */}
-          <div className="flex justify-between pt-5">
-            <p className="text-14">
+          <div className="flex justify-end pt-5">
+            {/* <p className="text-14">
               <span className="text-red-500">*</span> Required
-            </p>
+            </p> */}
             {isLoading ? (
               <button
                 type="button"

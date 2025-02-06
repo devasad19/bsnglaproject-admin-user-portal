@@ -176,16 +176,50 @@ const Home = () => {
                           </summary>
                           <ul className="menu dropdown-content bg-gray-100 rounded z-[1] w-40 p-1 shadow-md right-0">
                             <li>
-                              <button
+                              {/* <button
                                 onClick={() => {
                                   handleRedirect(item?.service_id);
                                   setActiveDropdown(null); // Close dropdown after action
                                 }}
                               >
                                 Service Details
-                              </button>
+                              </button> */}
+                              {item?.service?.purchase_service_link ? (
+                                <>
+                                  {
+                                  item?.service?.purchase_service_link?.endsWith(
+                                    "/"
+                                  ) ? (
+                                    <Link
+                                      // href={`${item?.service?.purchase_service_link}getLogin/${item?.order_id}`}
+                                      href={`${item?.service?.purchase_service_link}getLogin`}
+                                    >
+                                      Service Details
+                                    </Link>
+                                  ) : (
+                                    <Link
+                                      // href={`${item?.service?.purchase_service_link}/getLogin/${item?.order_id}`}
+                                      href={`${item?.service?.purchase_service_link}/getLogin`}
+                                    >
+                                      Service Details
+                                    </Link>
+                                  )}
+                                </>
+                              ) : (
+                                <Link
+                                  href={`${process.env.NEXT_PUBLIC_PORTAL_URL}/services/${item?.service?.id}`}
+                                >
+                                  Service Details
+                                </Link>
+                              )}
+
+                              {/* <Link
+                                href={`http://stt-bangla.mysoftheaven.com/getLogin`}
+                              >
+                                Service Details
+                              </Link> */}
                             </li>
-                            
+
                             <li>
                               <Link
                                 href={{

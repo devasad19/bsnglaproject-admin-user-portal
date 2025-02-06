@@ -1,6 +1,15 @@
+"use client"
+import { useHomeContext } from "@/ContextProvider/Home.Context";
 import Link from "next/link";
+import { useEffect } from "react";
 
 const DashboardContainer = ({ data }) => {
+const { user,setRefresh,refresh} = useHomeContext();
+
+  useEffect(() => {
+    setRefresh(!refresh);
+  }, [!user]);
+
   return (
     <section>
       <h3 className="text-32 font-mono font-bold text-[#151D48] pb-5">
