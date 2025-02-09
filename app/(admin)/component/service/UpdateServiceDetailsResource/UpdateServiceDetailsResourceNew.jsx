@@ -115,144 +115,265 @@ const UpdateServiceDetailsResourceNew = ({
     setIsLoading(true);
     // console.log("submited all data", formData);
     // return;
-    const res = await Validation(formData, setError);
-    if (!res) {
-      try {
-        const payload = new FormData();
-        payload.append("service_id", id);
-        payload.append("broad_description", formData.description);
+    // const res = await Validation(formData, setError);
+    // if (!res) {
+    //   try {
+    //     const payload = new FormData();
+    //     payload.append("service_id", id);
+    //     payload.append("broad_description", formData.description);
 
-        formData?.mediaImages.forEach((item, index) => {
-          payload.append(`media_images[${index}]`, item);
-        });
+    //     formData?.mediaImages.forEach((item, index) => {
+    //       payload.append(`media_images[${index}]`, item);
+    //     });
 
-        formData?.infoSection.forEach((item, index) => {
-          payload.append(
-            `featurs_and_usages[${index}][bg_color]`,
-            item.bg_color
-          );
-          payload.append(
-            `featurs_and_usages[${index}][left_description]`,
-            item.left_description
-          );
-          payload.append(
-            `featurs_and_usages[${index}][right_description]`,
-            item.right_description
-          );
-          payload.append(
-            `featurs_and_usages[${index}][right_img]`,
-            item.right_img
-          );
-        });
+    //     formData?.infoSection.forEach((item, index) => {
+    //       payload.append(
+    //         `featurs_and_usages[${index}][bg_color]`,
+    //         item.bg_color
+    //       );
+    //       payload.append(
+    //         `featurs_and_usages[${index}][left_description]`,
+    //         item.left_description
+    //       );
+    //       payload.append(
+    //         `featurs_and_usages[${index}][right_description]`,
+    //         item.right_description
+    //       );
+    //       payload.append(
+    //         `featurs_and_usages[${index}][right_img]`,
+    //         item.right_img
+    //       );
+    //     });
 
-        formData?.fourCol?.forEach((item, index) => {
-          payload.append(
-            `distribution_card_items[${index}][item_bg]`,
-            item.item_bg
-          );
-          payload.append(`distribution_card_items[${index}][icon]`, item.icon);
-          payload.append(
-            `distribution_card_items[${index}][title]`,
-            item.title
-          );
-          payload.append(
-            `distribution_card_items[${index}][version]`,
-            item.version
-          );
-          payload.append(
-            `distribution_card_items[${index}][release_date]`,
-            item.release_date
-          );
-          payload.append(
-            `distribution_card_items[${index}][btn_label]`,
-            item.btn_label
-          );
-          payload.append(
-            `distribution_card_items[${index}][btn_bg]`,
-            item.btn_bg
-          );
-          payload.append(
-            `distribution_card_items[${index}][brows_type]`,
-            item.brows_type
-          );
-          payload.append(
-            `distribution_card_items[${index}][brows_file]`,
-            item.brows_file
-          );
-          payload.append(
-            `distribution_card_items[${index}][brows_link]`,
-            item.brows_link
-          );
-        });
+    //     formData?.fourCol?.forEach((item, index) => {
+    //       payload.append(
+    //         `distribution_card_items[${index}][item_bg]`,
+    //         item.item_bg
+    //       );
+    //       payload.append(`distribution_card_items[${index}][icon]`, item.icon);
+    //       payload.append(
+    //         `distribution_card_items[${index}][title]`,
+    //         item.title
+    //       );
+    //       payload.append(
+    //         `distribution_card_items[${index}][version]`,
+    //         item.version
+    //       );
+    //       payload.append(
+    //         `distribution_card_items[${index}][release_date]`,
+    //         item.release_date
+    //       );
+    //       payload.append(
+    //         `distribution_card_items[${index}][btn_label]`,
+    //         item.btn_label
+    //       );
+    //       payload.append(
+    //         `distribution_card_items[${index}][btn_bg]`,
+    //         item.btn_bg
+    //       );
+    //       payload.append(
+    //         `distribution_card_items[${index}][brows_type]`,
+    //         item.brows_type
+    //       );
+    //       payload.append(
+    //         `distribution_card_items[${index}][brows_file]`,
+    //         item.brows_file
+    //       );
+    //       payload.append(
+    //         `distribution_card_items[${index}][brows_link]`,
+    //         item.brows_link
+    //       );
+    //     });
 
-        payload.append("promotion_title", formData?.promotion?.title);
-        payload.append("prom_title_bg", formData?.promotion?.title_bg);
-        payload.append("prom_area_bg", formData?.promotion?.area_bg);
+    //     payload.append("promotion_title", formData?.promotion?.title);
+    //     payload.append("prom_title_bg", formData?.promotion?.title_bg);
+    //     payload.append("prom_area_bg", formData?.promotion?.area_bg);
+    //     payload.append(
+    //       "prom_left_label",
+    //       formData?.promotion?.left_side?.label
+    //     );
+    //     payload.append("prom_left_icon", formData?.promotion?.left_side?.image);
+    //     payload.append(
+    //       "prom_right_label",
+    //       formData?.promotion?.right_side?.label
+    //     );
+    //     payload.append(
+    //       "prom_right_icon",
+    //       formData?.promotion?.right_side?.image
+    //     );
+
+    //     payload.append("domain_name", formData.domain_name);
+    //     payload.append("domain_link", formData.domain_link);
+
+    //     payload.append("user_doc_label", formData.user_doc.label);
+    //     payload.append("user_doc_icon", formData.user_doc.icon);
+    //     payload.append("user_desc", formData.user_doc.short_description);
+    //     payload.append(
+    //       "user_external_links",
+    //       JSON.stringify(formData.user_doc.external_links)
+    //     );
+    //     payload.append("user_youtube_link", formData.user_doc?.video?.link);
+    //     payload.append(
+    //       "user_youtube_thumbnail",
+    //       formData.user_doc?.video?.thumbnail
+    //     );
+    //     payload.append("youtube_video_title", formData.user_doc?.video?.title);
+
+    //     formData.distribution.forEach((item, index) => {
+    //       payload.append(`distribution_items[${index}][label]`, item.label);
+    //       payload.append(`distribution_items[${index}][icon]`, item.icon);
+    //     });
+
+    //     formData.user_doc.module_file.forEach((item, index) => {
+    //       payload.append(`user_modules[${index}][id]`, index + 1);
+    //       payload.append(`user_modules[${index}][label]`, item.label);
+    //       payload.append(`user_modules[${index}][download]`, item.download);
+    //       payload.append(`user_modules[${index}][module]`, item.module);
+    //     });
+
+    //     const response = await updateSingleServiceDetailsResource(payload, id);
+    //     if (response.status === true) {
+    //       toast.success(response.message);
+    //       setTab(1);
+    //     } else {
+    //       setTab(1);
+    //       console.log("else block :", error);
+    //       toast.error(response.message);
+    //     }
+    //   } catch (error) {
+    //     setTab(1);
+    //     console.log("catch block :", error);
+
+    //     toast.error(error.message);
+    //   } finally {
+    //     setTab(1);
+    //     setIsLoading(false);
+    //   }
+    // } else {
+    //   setTab(1);
+    //   setIsLoading(false);
+    //   toast.warn("Validation Error.");
+    // }
+
+    try {
+      const payload = new FormData();
+      payload.append("service_id", id);
+      payload.append("broad_description", formData.description);
+
+      formData?.mediaImages.forEach((item, index) => {
+        payload.append(`media_images[${index}]`, item);
+      });
+
+      formData?.infoSection.forEach((item, index) => {
+        payload.append(`featurs_and_usages[${index}][bg_color]`, item.bg_color);
         payload.append(
-          "prom_left_label",
-          formData?.promotion?.left_side?.label
-        );
-        payload.append("prom_left_icon", formData?.promotion?.left_side?.image);
-        payload.append(
-          "prom_right_label",
-          formData?.promotion?.right_side?.label
+          `featurs_and_usages[${index}][left_description]`,
+          item.left_description
         );
         payload.append(
-          "prom_right_icon",
-          formData?.promotion?.right_side?.image
+          `featurs_and_usages[${index}][right_description]`,
+          item.right_description
         );
-
-        payload.append("domain_name", formData.domain_name);
-        payload.append("domain_link", formData.domain_link);
-
-        payload.append("user_doc_label", formData.user_doc.label);
-        payload.append("user_doc_icon", formData.user_doc.icon);
-        payload.append("user_desc", formData.user_doc.short_description);
         payload.append(
-          "user_external_links",
-          JSON.stringify(formData.user_doc.external_links)
+          `featurs_and_usages[${index}][right_img]`,
+          item.right_img
         );
-        payload.append("user_youtube_link", formData.user_doc?.video?.link);
+      });
+
+      formData?.fourCol?.forEach((item, index) => {
         payload.append(
-          "user_youtube_thumbnail",
-          formData.user_doc?.video?.thumbnail
+          `distribution_card_items[${index}][item_bg]`,
+          item.item_bg
         );
-        payload.append("youtube_video_title", formData.user_doc?.video?.title);
+        payload.append(`distribution_card_items[${index}][icon]`, item.icon);
+        payload.append(`distribution_card_items[${index}][title]`, item.title);
+        payload.append(
+          `distribution_card_items[${index}][version]`,
+          item.version
+        );
+        payload.append(
+          `distribution_card_items[${index}][release_date]`,
+          item.release_date
+        );
+        payload.append(
+          `distribution_card_items[${index}][btn_label]`,
+          item.btn_label
+        );
+        payload.append(
+          `distribution_card_items[${index}][btn_bg]`,
+          item.btn_bg
+        );
+        payload.append(
+          `distribution_card_items[${index}][brows_type]`,
+          item.brows_type
+        );
+        payload.append(
+          `distribution_card_items[${index}][brows_file]`,
+          item.brows_file
+        );
+        payload.append(
+          `distribution_card_items[${index}][brows_link]`,
+          item.brows_link
+        );
+      });
 
-        formData.distribution.forEach((item, index) => {
-          payload.append(`distribution_items[${index}][label]`, item.label);
-          payload.append(`distribution_items[${index}][icon]`, item.icon);
-        });
+      payload.append("promotion_title", formData?.promotion?.title);
+      payload.append("prom_title_bg", formData?.promotion?.title_bg);
+      payload.append("prom_area_bg", formData?.promotion?.area_bg);
+      payload.append("prom_left_label", formData?.promotion?.left_side?.label);
+      payload.append("prom_left_icon", formData?.promotion?.left_side?.image);
+      payload.append(
+        "prom_right_label",
+        formData?.promotion?.right_side?.label
+      );
+      payload.append("prom_right_icon", formData?.promotion?.right_side?.image);
 
-        formData.user_doc.module_file.forEach((item, index) => {
-          payload.append(`user_modules[${index}][id]`, index + 1);
-          payload.append(`user_modules[${index}][label]`, item.label);
-          payload.append(`user_modules[${index}][download]`, item.download);
-          payload.append(`user_modules[${index}][module]`, item.module);
-        });
+      payload.append("domain_name", formData.domain_name);
+      payload.append("domain_link", formData.domain_link);
 
-        const response = await updateSingleServiceDetailsResource(payload, id);
-        if (response.status === true) {
-          toast.success(response.message);
-          setTab(1);
-        } else {
-          setTab(1);
-          console.log("else block :", error);
-          toast.error(response.message);
-        }
-      } catch (error) {
+      payload.append("user_doc_label", formData.user_doc.label);
+      payload.append("user_doc_icon", formData.user_doc.icon);
+      payload.append("user_desc", formData.user_doc.short_description);
+      payload.append(
+        "user_external_links",
+        JSON.stringify(formData.user_doc.external_links)
+      );
+      payload.append("user_youtube_link", formData.user_doc?.video?.link);
+      payload.append(
+        "user_youtube_thumbnail",
+        formData.user_doc?.video?.thumbnail
+      );
+      payload.append("youtube_video_title", formData.user_doc?.video?.title);
+
+      formData.distribution.forEach((item, index) => {
+        payload.append(`distribution_items[${index}][label]`, item.label || "");
+        payload.append(`distribution_items[${index}][icon]`, item.icon || "");
+      });
+
+      formData.user_doc.module_file.forEach((item, index) => {
+        payload.append(`user_modules[${index}][id]`, index + 1 || "");
+        payload.append(`user_modules[${index}][label]`, item.label || "");
+        payload.append(`user_modules[${index}][download]`, item.download || "");
+        payload.append(`user_modules[${index}][module]`, item.module || "");
+      });
+
+      const response = await updateSingleServiceDetailsResource(payload, id);
+      if (response.status === true) {
+        toast.success(response.message);
         setTab(1);
-        console.log("catch block :", error);
-
-        toast.error(error.message);
-      } finally {
+      } else {
         setTab(1);
-        setIsLoading(false);
+        console.log("else block :", error);
+        toast.error(response.message);
       }
-    } else {
+    } catch (error) {
+      setTab(1);
+      console.log("catch block :", error);
+
+      toast.error(error.message);
+    } finally {
       setTab(1);
       setIsLoading(false);
-      toast.warn("Validation Error.");
     }
   };
   // console.log({ formData });
@@ -274,7 +395,7 @@ const UpdateServiceDetailsResourceNew = ({
             <legend>
               <label
                 htmlFor="description"
-                className="after:content-['_*'] after:text-red-500"
+                // className="after:content-['_*'] after:text-red-500"
               >
                 Description For Details Page
               </label>
@@ -302,7 +423,7 @@ const UpdateServiceDetailsResourceNew = ({
             <legend>
               <label
                 htmlFor="mediaImages"
-                className="after:content-['_*'] after:text-red-500"
+                // className="after:content-['_*'] after:text-red-500"
               >
                 Media Images
               </label>
@@ -402,7 +523,7 @@ const UpdateServiceDetailsResourceNew = ({
               <legend>
                 <label
                   htmlFor="promotion_title"
-                  className="after:content-['_*'] after:text-red-500"
+                  // className="after:content-['_*'] after:text-red-500"
                 >
                   Title
                 </label>
@@ -441,7 +562,7 @@ const UpdateServiceDetailsResourceNew = ({
               <legend>
                 <label
                   htmlFor="title_bg"
-                  className="after:content-['_*'] after:text-red-500"
+                  // className="after:content-['_*'] after:text-red-500"
                 >
                   Title Background Color
                 </label>
@@ -680,7 +801,9 @@ const UpdateServiceDetailsResourceNew = ({
             <div className="flex flex-col items-center lg:items-start">
               <fieldset className="w-full  border rounded-md p-4">
                 <legend className="px-2">
-                  <label className="font-bold text-lg after:content-['_*'] after:text-red-500">
+                  <label
+                  // className="font-bold text-lg after:content-['_*'] after:text-red-500"
+                  >
                     Left Side
                   </label>
                 </legend>
@@ -740,13 +863,16 @@ const UpdateServiceDetailsResourceNew = ({
                     />
                     <div className="mt-2">
                       {formData?.promotion?.left_side?.image ? (
-                        typeof formData?.promotion?.left_side?.image === "object" ? (
+                        typeof formData?.promotion?.left_side?.image ===
+                        "object" ? (
                           // When the user uploads a new image
                           <Image
                             className="w-20 h-20 rounded-full"
                             width={1000}
                             height={1000}
-                            src={URL.createObjectURL(formData?.promotion?.left_side?.image)} // Converts file object to URL
+                            src={URL.createObjectURL(
+                              formData?.promotion?.left_side?.image
+                            )} // Converts file object to URL
                             alt="Profile Picture"
                           />
                         ) : (
@@ -782,7 +908,9 @@ const UpdateServiceDetailsResourceNew = ({
             <div className="flex flex-col items-center lg:items-start">
               <fieldset className="w-full  border rounded-md p-4">
                 <legend className="px-2">
-                  <label className="font-bold text-lg after:content-['_*'] after:text-red-500">
+                  <label
+                  // className="font-bold text-lg after:content-['_*'] after:text-red-500"
+                  >
                     Right Side
                   </label>
                 </legend>
@@ -863,13 +991,16 @@ const UpdateServiceDetailsResourceNew = ({
                     </div> */}
                     <div className="mt-2">
                       {formData?.promotion?.right_side?.image ? (
-                        typeof formData?.promotion?.right_side?.image === "object" ? (
+                        typeof formData?.promotion?.right_side?.image ===
+                        "object" ? (
                           // When the user uploads a new image
                           <Image
                             className="w-20 h-20 rounded-full"
                             width={1000}
                             height={1000}
-                            src={URL.createObjectURL(formData?.promotion?.right_side?.image)} // Converts file object to URL
+                            src={URL.createObjectURL(
+                              formData?.promotion?.right_side?.image
+                            )} // Converts file object to URL
                             alt="Profile Picture"
                           />
                         ) : (
@@ -907,7 +1038,7 @@ const UpdateServiceDetailsResourceNew = ({
               <legend>
                 <label
                   htmlFor="area_background"
-                  className="after:content-['_*'] after:text-red-500"
+                  // className="after:content-['_*'] after:text-red-500"
                 >
                   Area Background Color
                 </label>
@@ -1129,7 +1260,6 @@ const UpdateServiceDetailsResourceNew = ({
                         />
                       )}
                     </div>
-
                   </div>
                 </fieldset>
 
@@ -1565,7 +1695,7 @@ const UpdateServiceDetailsResourceNew = ({
                       <legend>
                         <label
                           htmlFor="key"
-                          className="after:content-['_*'] after:text-red-500"
+                          // className="after:content-['_*'] after:text-red-500"
                         >
                           Distribution - {index + 1}
                         </label>
@@ -1834,7 +1964,7 @@ const UpdateServiceDetailsResourceNew = ({
                   <legend>
                     <label
                       htmlFor="user_doc_label"
-                      className="after:content-['_*'] after:text-red-500"
+                      //className="after:content-['_*'] after:text-red-500"
                     >
                       Label
                     </label>
@@ -1870,7 +2000,7 @@ const UpdateServiceDetailsResourceNew = ({
                     <legend>
                       <label
                         htmlFor="user_doc_icon"
-                        className="after:content-['_*'] after:text-red-500"
+                        // className="after:content-['_*'] after:text-red-500"
                       >
                         Icon
                       </label>
@@ -1954,7 +2084,9 @@ const UpdateServiceDetailsResourceNew = ({
               <div>
                 <fieldset className="flex flex-col border rounded-md px-2">
                   <legend>
-                    <label className="after:content-['_*'] after:text-red-500">
+                    <label
+                    //className="after:content-['_*'] after:text-red-500"
+                    >
                       Video Title
                     </label>
                   </legend>
@@ -1990,7 +2122,7 @@ const UpdateServiceDetailsResourceNew = ({
                   <legend>
                     <label
                       htmlFor="video_link"
-                      className="after:content-['_*'] after:text-red-500"
+                      //className="after:content-['_*'] after:text-red-500"
                     >
                       Video Link
                     </label>
@@ -2029,7 +2161,7 @@ const UpdateServiceDetailsResourceNew = ({
                     <legend>
                       <label
                         htmlFor="video_link"
-                        className="after:content-['_*'] after:text-red-500"
+                        // className="after:content-['_*'] after:text-red-500"
                       >
                         Video Thumbnail
                       </label>
@@ -2053,42 +2185,43 @@ const UpdateServiceDetailsResourceNew = ({
                   </fieldset>
 
                   <div className="mt-2">
-                      {formData?.user_doc?.video?.thumbnail ? (
-                        typeof formData?.user_doc?.video?.thumbnail === "object" ? (
-                          // When the user uploads a new image
-                          <Image
-                            className="w-20 h-20 rounded-full"
-                            width={1000}
-                            height={1000}
-                            src={URL.createObjectURL(formData?.user_doc?.video?.thumbnail)} // Converts file object to URL
-                            alt="Profile Picture"
-                          />
-                        ) : (
-                          // When an existing image is already set in the database
-                          <Image
-                            className="w-20 h-20 rounded-full"
-                            width={1000}
-                            height={1000}
-                            src={`${process.env.NEXT_PUBLIC_IMAGE_URL}${formData?.user_doc?.video?.thumbnail}`} // Image from database
-                            alt="Profile Picture"
-                          />
-                        )
-                      ) : (
-                        // Default image when no image is provided
+                    {formData?.user_doc?.video?.thumbnail ? (
+                      typeof formData?.user_doc?.video?.thumbnail ===
+                      "object" ? (
+                        // When the user uploads a new image
                         <Image
                           className="w-20 h-20 rounded-full"
                           width={1000}
                           height={1000}
-                          src={
-                            process.env.NEXT_PUBLIC_IMAGE_URL +
-                            process.env.NEXT_PUBLIC_DEFAULT_IMAGE
-                          } // Default placeholder image
+                          src={URL.createObjectURL(
+                            formData?.user_doc?.video?.thumbnail
+                          )} // Converts file object to URL
                           alt="Profile Picture"
                         />
-                      )}
-                    </div>
-
-                 
+                      ) : (
+                        // When an existing image is already set in the database
+                        <Image
+                          className="w-20 h-20 rounded-full"
+                          width={1000}
+                          height={1000}
+                          src={`${process.env.NEXT_PUBLIC_IMAGE_URL}${formData?.user_doc?.video?.thumbnail}`} // Image from database
+                          alt="Profile Picture"
+                        />
+                      )
+                    ) : (
+                      // Default image when no image is provided
+                      <Image
+                        className="w-20 h-20 rounded-full"
+                        width={1000}
+                        height={1000}
+                        src={
+                          process.env.NEXT_PUBLIC_IMAGE_URL +
+                          process.env.NEXT_PUBLIC_DEFAULT_IMAGE
+                        } // Default placeholder image
+                        alt="Profile Picture"
+                      />
+                    )}
+                  </div>
                 </div>
 
                 {error?.user_doc?.video?.thumbnail?.status && (
@@ -2103,7 +2236,7 @@ const UpdateServiceDetailsResourceNew = ({
                   <legend>
                     <label
                       htmlFor="ServiceName"
-                      className="after:content-['_*'] after:text-red-500"
+                      // className="after:content-['_*'] after:text-red-500"
                     >
                       Short Description
                     </label>
@@ -2177,7 +2310,7 @@ const UpdateServiceDetailsResourceNew = ({
                                 <legend>
                                   <label
                                     htmlFor="key"
-                                    className="after:content-['_*'] after:text-red-500"
+                                    // className="after:content-['_*'] after:text-red-500"
                                   >
                                     Module - {index + 1}
                                   </label>
@@ -2579,7 +2712,6 @@ const UpdateServiceDetailsResourceNew = ({
         </div>
 
         <div className="flex justify-end pt-5">
-         
           <button
             type="submit"
             className="px-4 py-2 bg-violet-700 text-white active:scale-90 transition-all duration-400 rounded-md"

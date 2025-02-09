@@ -74,8 +74,8 @@ const Home = () => {
         </h3>
       </div>
       <div className="w-full h-full overflow-x-auto bg-white p-7 rounded-md">
-        <table className="w-full">
-          <thead className="border-b border-[#151D48] text-[#151D48] h-10 text-12 lg:text-16">
+        <table className="w-full  border-collapse rounded-md overflow-hidden">
+          <thead className="border-b border-[#151D48]  h-10 text-12 bg-[#006A4E] text-white lg:text-16 rounded-md">
             <tr>
               <th className="text-center">SL</th>
               <th className="text-center">Name</th>
@@ -86,7 +86,7 @@ const Home = () => {
               <th className="text-center">Details</th>
             </tr>
           </thead>
-          <tbody className="[&>tr]:border-b [&>tr]:border-[#151D48] [&>tr]:text-left [&>tr]:h-auto text-12 lg:text-16">
+          <tbody className="[&>tr]:border-b [&>tr]:border-gray-300 [&>tr]:text-left [&>tr]:h-auto text-12 lg:text-16">
             {isLoading && <TableSkeleton col={8} row={10}></TableSkeleton>}
             {services?.length > 0 && !isLoading
               ? services?.map((item, index) => {
@@ -97,7 +97,7 @@ const Home = () => {
                           {index + 1}
                         </span>
                       </td>
-                      <td className="px-2">
+                      <td className="px-2 py-2">
                         <div className="flex items-center gap-2 text-14">
                           <Image
                             src={
@@ -176,14 +176,7 @@ const Home = () => {
                           </summary>
                           <ul className="menu dropdown-content bg-gray-100 rounded z-[1] w-40 p-1 shadow-md right-0">
                             <li>
-                              {/* <button
-                                onClick={() => {
-                                  handleRedirect(item?.service_id);
-                                  setActiveDropdown(null); // Close dropdown after action
-                                }}
-                              >
-                                Service Details
-                              </button> */}
+                              
                               {item?.service?.purchase_service_link ? (
                                 <>
                                   {
@@ -191,15 +184,15 @@ const Home = () => {
                                     "/"
                                   ) ? (
                                     <Link
-                                      // href={`${item?.service?.purchase_service_link}getLogin/${item?.order_id}`}
-                                      href={`${item?.service?.purchase_service_link}getLogin`}
+                                      href={`${item?.service?.purchase_service_link}getLogin/${item?.order_id}`}
+                                      // href={`${item?.service?.purchase_service_link}getLogin`}
                                     >
                                       Service Details
                                     </Link>
                                   ) : (
                                     <Link
-                                      // href={`${item?.service?.purchase_service_link}/getLogin/${item?.order_id}`}
-                                      href={`${item?.service?.purchase_service_link}/getLogin`}
+                                      href={`${item?.service?.purchase_service_link}/getLogin/${item?.order_id}`}
+                                      // href={`${item?.service?.purchase_service_link}/getLogin`}
                                     >
                                       Service Details
                                     </Link>
@@ -214,7 +207,7 @@ const Home = () => {
                               )}
 
                               {/* <Link
-                                href={`http://stt-bangla.mysoftheaven.com/getLogin`}
+                                href={`http://localhost:5000/getLogin`}
                               >
                                 Service Details
                               </Link> */}

@@ -96,7 +96,7 @@ const Home = () => {
                   className={`outline-none rounded-md w-full text-13 lg:text-15 placeholder:text-[#979C9E] ${
                     !showPassOld && "text-primary"
                   }`}
-                  placeholder="বর্তমান পাসওয়ার্ড"
+                  placeholder="Old Password"
                   required
                 />
                 <button
@@ -125,7 +125,7 @@ const Home = () => {
                 </button>
               </fieldset>
               <p className="text-red-500 text-10 py-1">
-                Password Has to be atleast 8 characters
+                Password Has to be at least 8 characters
               </p>
             </div>
             <div>
@@ -141,7 +141,7 @@ const Home = () => {
                   className={`outline-none rounded-md w-full text-13 lg:text-15 placeholder:text-[#979C9E] ${
                     !showPassNew && "text-primary"
                   }`}
-                  placeholder="নতুন পাসওয়ার্ড"
+                  placeholder="New Password"
                   required
                 />
                 <button
@@ -170,7 +170,7 @@ const Home = () => {
                 </button>
               </fieldset>
               <p className="text-red-500 text-10 py-1">
-                Password Has to be atleast 8 characters
+                Password Has to be at least 8 characters
               </p>
             </div>
             <div>
@@ -189,7 +189,7 @@ const Home = () => {
                   className={`outline-none rounded-md w-full text-13 lg:text-15 placeholder:text-[#979C9E] ${
                     !showPass && "text-primary"
                   }`}
-                  placeholder="নতুন পাসওয়ার্ড নিশ্চিত করুন "
+                  placeholder="Confirm Password"
                   required
                 />
                 <button
@@ -218,7 +218,7 @@ const Home = () => {
                 </button>
               </fieldset>
               <p className="text-red-500 text-10 py-1">
-                Password Has to be atleast 8 characters
+                Password Has to be at least 8 characters
               </p>
             </div>
           </div>
@@ -227,7 +227,7 @@ const Home = () => {
             type="submit"
             className="bg-primary text-white px-2 py-1 text-14  lg:px-4 lg:py-1 rounded w-[70%]"
           >
-            সংশোধন পাসওয়ার্ড
+            Change Password
           </button>
         </form>
         {

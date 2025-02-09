@@ -250,9 +250,9 @@ const Sidebar = () => {
                           pathname: "/user/accounts-settings/purchase-services",
                         }}
                         shallow
-                        className={`text-14 hover:bg-green-500 hover:text-white p-2 rounded ${
+                        className={`text-14 hover:bg-green-700 hover:text-white p-2 rounded ${
                           pathname.includes("purchase-services")
-                            ? "bg-green-500 text-white"
+                            ? "bg-green-700 text-white"
                             : ""
                         }`}
                       >
@@ -263,9 +263,9 @@ const Sidebar = () => {
                           pathname: "/user/accounts-settings/payment-history",
                         }}
                         shallow
-                        className={`text-14 hover:bg-green-500 hover:text-white p-2 rounded ${
+                        className={`text-14 hover:bg-green-700 hover:text-white p-2 rounded ${
                           pathname.includes("payment-history")
-                            ? "bg-green-500 text-white"
+                            ? "bg-green-700 text-white"
                             : ""
                         }`}
                       >
@@ -305,9 +305,9 @@ const Sidebar = () => {
                           pathname: "/user/profile-settings/manage-profile",
                         }}
                         shallow
-                        className={`text-14 hover:bg-green-500 hover:text-white p-2 rounded ${
+                        className={`text-14 hover:bg-green-700 hover:text-white p-2 rounded ${
                           pathname.includes("manage-profile")
-                            ? "bg-green-500 text-white"
+                            ? "bg-green-700 text-white"
                             : ""
                         }`}
                       >
@@ -318,9 +318,9 @@ const Sidebar = () => {
                           pathname: "/user/profile-settings/change-password",
                         }}
                         shallow
-                        className={`text-14 hover:bg-green-500 hover:text-white p-2 rounded ${
+                        className={`text-14 hover:bg-green-700 hover:text-white p-2 rounded ${
                           pathname.includes("change-password")
-                            ? "bg-green-500 text-white"
+                            ? "bg-green-700 text-white"
                             : ""
                         }`}
                       >

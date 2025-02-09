@@ -78,10 +78,10 @@ export const updateSingleServiceDetailsResource = async (payload:any, id:any) =>
   try {
     const response = await axiosInstance.post(`/update/service-details-resource/${id}`, payload);
     revalidateTag("get-service");
-    console.log(response.data);
+    // console.log(response.data);
     return response.data;
   } catch (error) {
-    console.error("API Error:", error); // Log detailed error
+    // console.error("API Error:", error); // Log detailed error
     return { status: false, error }
   }
   

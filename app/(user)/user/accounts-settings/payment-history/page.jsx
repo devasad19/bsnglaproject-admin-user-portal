@@ -33,10 +33,10 @@ const Home = () => {
       </h1>
 
       <div className="w-full bg-white lg:p-4 rounded-md shadow-lg overflow-x-auto">
-        <table className="w-full text-left">
-          <thead>
+        <table className="w-full text-left  !rounded-md">
+          <thead className="bg-[#006A4E] text-white h-10 ">
             <tr>
-              <th>SL</th>
+              <th className="px-1">SL</th>
               <th>Invoice</th>
               <th>Amount</th>
               <th>Billing Date</th>
@@ -46,10 +46,10 @@ const Home = () => {
             </tr>
           </thead>
           <tbody>
-            {loading && <TableSkeleton col={5} row={10}></TableSkeleton>}
+            {loading && <TableSkeleton col={6} row={10}></TableSkeleton>}
             {orders?.length > 0 ? (
               orders?.map((item, index) => (
-                <tr key={index} className="h-16">
+                <tr key={index} className="h-16 border-b border-gray-300">
                   <td className="px-3">
                     <span className="border border-gray-300 px-2 py-1 rounded-md">
                       {index + 1}

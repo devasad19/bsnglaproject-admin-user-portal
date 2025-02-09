@@ -38,25 +38,25 @@ const Home = () => {
     <>
       <section className="bg-white p-4 rounded shadow-lg">
         <h3 className="text-24 text-slate-900 font-bold pb-5">FeedBacks</h3>
-        <div className="w-full overflow-x-auto">
-          <table className="w-full text-left border border-gray-500">
-            <thead className="h-16 bg-blue-300 text-white">
+        <div className="w-full overflow-x-auto rounded-md">
+          <table className="w-full text-left  rounded-md">
+            <thead className="h-10 bg-[#006A4E] text-white rounded-md">
               <tr>
-                <th className="pl-2 border border-gray-500 w-10">SI</th>
-                <th className="pl-2 border border-gray-500 w-40">
+                <th className="pl-2 border border-gray-500 w-10 text-center">SI</th>
+                <th className="pl-2 border border-gray-500 w-40 text-center">
                   Service Name
                 </th>
                 {/* <th className="pl-2 border border-gray-500 w-52">Username</th> */}
-                <th className="pl-2 border border-gray-500">Comment</th>
-                <th className="pl-2 border border-gray-500 w-44">Rating</th>
-                <th className="pl-2 border border-gray-500 w-36">Datetime</th>
+                <th className="pl-2 border border-gray-500 text-center">Comment</th>
+                <th className="pl-2 border border-gray-500 w-44 text-center">Rating</th>
+                <th className="pl-2 border border-gray-500 w-36 text-center">Datetime</th>
               </tr>
             </thead>
             <tbody className="text-14">
               {loading && <TableSkeleton row={5} col={5} />}
               {data?.length > 0 ? (
                 data.map((item, index) => (
-                  <tr key={index} className="border-b border-gray-500 h-12">
+                  <tr key={index} className="border-b border-gray-300 h-12">
                     <td className="pl-2 border border-gray-500">{index + 1}</td>
                     <td className="pl-2 border border-gray-500">
                       {item?.service?.name}

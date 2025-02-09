@@ -600,7 +600,7 @@ const UpdateServiceResource = ({ id }) => {
                   htmlFor="ServiceName"
                   // className="after:content-['_*'] after:text-red-500"
                 >
-                  user access
+                  User Access
                 </label>
               </legend>
 
@@ -613,7 +613,8 @@ const UpdateServiceResource = ({ id }) => {
                 )}
                 onChange={(e) => setShowItem(e.target.value)}
                 className="outline-none p-2 bg-white"
-              >
+              > 
+                <option value=""> -- Select --</option>
                 <option value="Download">Download</option>
                 <option value="Visit">Visit</option>
                 <option value="Subscribe">Subscribe</option>

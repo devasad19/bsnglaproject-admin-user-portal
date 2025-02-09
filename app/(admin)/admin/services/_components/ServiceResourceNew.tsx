@@ -519,6 +519,7 @@ const ServiceResourceNew = () => {
                 id=""
                 className="outline-none p-2 bg-white"
               >
+                <option value="">-- Select --</option>
                 <option value="Download">Download</option>
                 <option value="Visit">Visit</option>
                 <option value="Subscribe">Subscribe</option>
