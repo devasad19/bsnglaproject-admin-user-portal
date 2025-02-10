@@ -3,7 +3,7 @@ import dynamic from "next/dynamic";
 import { uploadServiceData } from "@/app/(portal)/_api";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useForm, Controller } from "react-hook-form";
 import { toast } from "react-toastify";
 const CustomEditor = dynamic(
@@ -24,6 +24,7 @@ const ServiceResourceNew = () => {
   const [showItem, setShowItem] = useState("");
   const [type, setType] = useState<string[]>([]);
   const [customError, setCustomError] = useState<any>(null);
+  const [wordCount, setWordCount] = useState(0);
 
   const allTypes = ["Software", "Publication", "Font", "Dataset", "AI Model"];
 
@@ -31,9 +32,28 @@ const ServiceResourceNew = () => {
     register,
     handleSubmit,
     reset,
+    setError,
     formState: { errors },
     control,
+    watch,
+    clearErrors,
   } = useForm();
+
+  const description = watch("description");
+  const MAX_WORDS = 30;
+  useEffect(() => {
+    const words = description ? description.trim().split(/\s+/).length : 0;
+    setWordCount(words);
+
+    if (words > MAX_WORDS) {
+      setError("description", {
+        type: "manual",
+        message: "Description cannot exceed 30 words",
+      });
+    } else {
+      clearErrors("description");
+    }
+  }, [description, setError, clearErrors]);
 
   const onSubmitServiceResource = async (data: any) => {
     setIsLoading(true);
@@ -61,7 +81,7 @@ const ServiceResourceNew = () => {
       visit_type,
       resource_file,
       description_title,
-      purchase_service_link
+      purchase_service_link,
     } = data;
 
     // console.log({visit_link});
@@ -73,20 +93,22 @@ const ServiceResourceNew = () => {
     };
 
     // console.log('resource file img:', resourceFileImg.size);
+    // console.log({ data });
+    // return;
 
     try {
       const formData = new FormData();
       formData.append("name", name);
       formData.append("description", description);
       formData.append("component", component);
-      formData.append("logo", logo[0] || '');
+      formData.append("logo", logo[0] || "");
       formData.append("paid_status", JSON.stringify(paid_status));
       formData.append("production_status", production_status);
       formData.append("release_date", release_date);
       formData.append("visit_link", visit_link || "");
       formData.append("visit_type", visit_type);
       formData.append("completion_status", "1");
-      formData.append("resource_file", resource_file[0] || '');
+      formData.append("resource_file", resource_file[0] || "");
       formData.append("description_title", description_title);
       formData.append("status", "1");
       formData.append("purchase_service_link", purchase_service_link || "");
@@ -99,12 +121,12 @@ const ServiceResourceNew = () => {
         reset();
         toast.success("Service Created Successfully");
         router.push("/admin/services");
-      }else{
+      } else {
         setIsLoading(false);
         toast.error(response.message);
       }
       // setIsLoading(false);
-    } catch (error:any) {
+    } catch (error: any) {
       console.log(error);
       setIsLoading(false);
       toast.error(error.message);
@@ -210,8 +232,8 @@ const ServiceResourceNew = () => {
             <fieldset className="flex flex-col border rounded-md px-2">
               <legend>
                 <label
-                  htmlFor="ServiceName"
-                  //className="after:content-['_*'] after:text-red-500"
+                  htmlFor="description"
+                  className="after:content-['_*'] after:text-red-500"
                 >
                   Description
                 </label>
@@ -221,18 +243,18 @@ const ServiceResourceNew = () => {
                 name="description"
                 control={control}
                 defaultValue=""
-                // rules={{
-                //   required: "Description is required",
-                //   validate: {
-                //     maxWords: (value) => {
-                //       const wordCount = value.trim().split(/\s+/).length;
-                //       if (wordCount > 30) {
-                //         return "Description cannot exceed 30 words";
-                //       }
-                //       return true;
-                //     },
-                //   },
-                // }}
+                rules={{
+                  required: "Description is required",
+                  validate: {
+                    maxWords: (value) => {
+                      const wordCount = value.trim().split(/\s+/).length;
+                      if (wordCount > 30) {
+                        return "Description cannot exceed 30 words";
+                      }
+                      return true;
+                    },
+                  },
+                }}
                 render={({
                   field: { onChange, value },
                   fieldState: { error },
@@ -245,11 +267,20 @@ const ServiceResourceNew = () => {
                       }}
                       data={value}
                     />
-                    {/* {errors.description && (
-                      <p className="text-red-500 text-12 px-2 pt-1">
-                        {errors.description.message as string}
+                    <div className="flex justify-between px-2 pt-1 text-sm">
+                      <p
+                        className={`text-${
+                          wordCount > MAX_WORDS ? "red-500" : "gray-500"
+                        }`}
+                      >
+                        Words: {wordCount}/{MAX_WORDS}
                       </p>
-                    )} */}
+                    </div>
+                    {error && (
+                      <p className="text-red-500 text-xs px-2 pt-1">
+                        {error.message}
+                      </p>
+                    )}
                   </>
                 )}
               />
@@ -668,3 +699,53 @@ const ServiceResourceNew = () => {
 };
 
 export default ServiceResourceNew;
+
+// {/* <div>
+//             <fieldset className="flex flex-col border rounded-md px-2">
+//               <legend>
+//                 <label
+//                   htmlFor="ServiceName"
+//                   className="after:content-['_*'] after:text-red-500"
+//                 >
+//                   Description
+//                 </label>
+//               </legend>
+
+//               <Controller
+//                 name="description"
+//                 control={control}
+//                 defaultValue=""
+//                 // rules={{
+//                 //   required: "Description is required",
+//                 //   validate: {
+//                 //     maxWords: (value) => {
+//                 //       const wordCount = value.trim().split(/\s+/).length;
+//                 //       if (wordCount > 30) {
+//                 //         return "Description cannot exceed 30 words";
+//                 //       }
+//                 //       return true;
+//                 //     },
+//                 //   },
+//                 // }}
+//                 render={({
+//                   field: { onChange, value },
+//                   fieldState: { error },
+//                 }) => (
+//                   <>
+//                     <CustomEditor
+//                       onChange={(event, editor) => {
+//                         const data = editor.getData();
+//                         onChange(data);
+//                       }}
+//                       data={value}
+//                     />
+//                     {/* {errors.description && (
+//                       <p className="text-red-500 text-12 px-2 pt-1">
+//                         {errors.description.message as string}
+//                       </p>
+//                     )} */}
+//                   </>
+//                 )}
+//               />
+//             </fieldset>
+//           </div> */}

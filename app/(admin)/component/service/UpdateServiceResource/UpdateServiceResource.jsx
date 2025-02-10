@@ -24,6 +24,7 @@ const UpdateServiceResource = ({ id }) => {
   const [showItem, setShowItem] = useState("");
   const [type, setType] = useState([]);
   const [customError, setCustomError] = useState(null);
+  const [wordCount, setWordCount] = useState(0);
   const allTypes = ["Software", "Publication", "Font", "Dataset", "AI Model"];
 
   const {
@@ -34,7 +35,9 @@ const UpdateServiceResource = ({ id }) => {
     control,
     setValue,
     getValues,
+    clearErrors,
     setError,
+    watch,
   } = useForm();
 
   const onSubmitServiceResource = async (data) => {
@@ -87,7 +90,10 @@ const UpdateServiceResource = ({ id }) => {
       formData.append("sub_title", sub_title);
       formData.append("visit_link", visit_link || "");
       formData.append("visit_type", visit_type);
-      formData.append("purchase_service_link", data.purchase_service_link || "");
+      formData.append(
+        "purchase_service_link",
+        data.purchase_service_link || ""
+      );
       if (resource_file) {
         formData.append(
           "resource_file",
@@ -152,7 +158,10 @@ const UpdateServiceResource = ({ id }) => {
         // setType(JSON.parse(res?.data?.type));
 
         setPaidStatus(JSON.parse(res?.data?.paid_status));
-        setValue("purchase_service_link", res?.data?.purchase_service_link || "");
+        setValue(
+          "purchase_service_link",
+          res?.data?.purchase_service_link || ""
+        );
       })
       .catch((error) => {
         console.log(error);
@@ -171,7 +180,21 @@ const UpdateServiceResource = ({ id }) => {
     }
   };
 
-  console.log({ showItem });
+  const description = watch("description");
+  const MAX_WORDS = 30;
+  useEffect(() => {
+    const words = description ? description.trim().split(/\s+/).length : 0;
+    setWordCount(words);
+
+    if (words > MAX_WORDS) {
+      setError("description", {
+        type: "manual",
+        message: "Description cannot exceed 30 words",
+      });
+    } else {
+      clearErrors("description");
+    }
+  }, [description, setError, clearErrors]);
 
   return (
     <>
@@ -254,8 +277,8 @@ const UpdateServiceResource = ({ id }) => {
             <fieldset className="flex flex-col border rounded-md px-2">
               <legend>
                 <label
-                  htmlFor="ServiceName"
-                  // className="after:content-['_*'] after:text-red-500"
+                  htmlFor="description"
+                  className="after:content-['_*'] after:text-red-500"
                 >
                   Description
                 </label>
@@ -265,18 +288,18 @@ const UpdateServiceResource = ({ id }) => {
                 name="description"
                 control={control}
                 defaultValue=""
-                // rules={{
-                //   required: "Description is required",
-                //   validate: {
-                //     maxWords: (value) => {
-                //       const wordCount = value.trim().split(/\s+/).length;
-                //       if (wordCount > 30) {
-                //         return "Description cannot exceed 30 words";
-                //       }
-                //       return true;
-                //     },
-                //   },
-                // }}
+                rules={{
+                  required: "Description is required",
+                  validate: {
+                    maxWords: (value) => {
+                      const wordCount = value.trim().split(/\s+/).length;
+                      if (wordCount > 30) {
+                        return "Description cannot exceed 30 words";
+                      }
+                      return true;
+                    },
+                  },
+                }}
                 render={({
                   field: { onChange, value },
                   fieldState: { error },
@@ -289,11 +312,20 @@ const UpdateServiceResource = ({ id }) => {
                       }}
                       data={value}
                     />
-                    {/* {errors.description && (
-                      <p className="text-red-500 text-12 px-2 pt-1">
-                        {errors.description.message}
+                    <div className="flex justify-between px-2 pt-1 text-sm">
+                      <p
+                        className={`text-${
+                          wordCount > MAX_WORDS ? "red-500" : "gray-500"
+                        }`}
+                      >
+                        Words: {wordCount}/{MAX_WORDS}
                       </p>
-                    )} */}
+                    </div>
+                    {error && (
+                      <p className="text-red-500 text-xs px-2 pt-1">
+                        {error.message}
+                      </p>
+                    )}
                   </>
                 )}
               />
@@ -305,7 +337,7 @@ const UpdateServiceResource = ({ id }) => {
               <legend>
                 <label
                 //  className="after:content-['_*'] after:text-red-500"
-                 >
+                >
                   Type
                 </label>
               </legend>
@@ -613,7 +645,7 @@ const UpdateServiceResource = ({ id }) => {
                 )}
                 onChange={(e) => setShowItem(e.target.value)}
                 className="outline-none p-2 bg-white"
-              > 
+              >
                 <option value=""> -- Select --</option>
                 <option value="Download">Download</option>
                 <option value="Visit">Visit</option>

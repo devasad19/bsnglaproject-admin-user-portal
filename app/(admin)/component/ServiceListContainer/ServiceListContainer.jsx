@@ -30,10 +30,10 @@ const ServiceListContainer = ({ services }) => {
   const [currentPage, setCurrentPage] = useState(1);
 
   // Calculate total pages
-  const totalPages = Math.ceil(servicesFilter.length / itemsPerPage);
+  const totalPages = Math.ceil(servicesFilter?.length / itemsPerPage);
 
   // Get items for the current page
-  const displayedItems = servicesFilter.slice(
+  const displayedItems = servicesFilter?.slice(
     (currentPage - 1) * itemsPerPage,
     currentPage * itemsPerPage
   );
@@ -52,7 +52,7 @@ const ServiceListContainer = ({ services }) => {
     setSearchByName(value);
 
     if (value.trim().length > 0) {
-      const filteredService = services.filter((service) =>
+      const filteredService = services?.filter((service) =>
         service.name.toLowerCase().includes(value.toLowerCase())
       );
       setServicesFilter(filteredService);

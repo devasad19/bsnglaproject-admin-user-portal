@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { toast } from "react-toastify";
@@ -12,6 +12,8 @@ import { FaPlus } from "react-icons/fa";
 import Validation from "./Validation";
 import { updateSingleServiceDetailsResource } from "@/app/(admin)/_api/ServiceApi";
 
+const MAX_WORDS = 100;
+
 const UpdateServiceDetailsResourceNew = ({
   id,
   secondTab,
@@ -22,6 +24,7 @@ const UpdateServiceDetailsResourceNew = ({
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
   const [formData, setFormData] = useState(secondTab);
+  const [wordCount, setWordCount] = useState(0);
   console.log("icon :", allIcons);
   const [error, setError] = useState({
     description: {
@@ -255,6 +258,11 @@ const UpdateServiceDetailsResourceNew = ({
     //   toast.warn("Validation Error.");
     // }
 
+    if (error?.description?.status) {
+      setIsLoading(false);
+      return;
+    }
+
     try {
       const payload = new FormData();
       payload.append("service_id", id);
@@ -380,8 +388,34 @@ const UpdateServiceDetailsResourceNew = ({
 
   // console.log({ error });
 
-  const descriptionLength = CountWords(formData?.description);
-  console.log({ descriptionLength });
+  // const descriptionLength = CountWords(formData?.description);
+  // console.log({ descriptionLength });
+
+  const handleDescriptionChange = (event, editor) => {
+    const text = editor.getData().trim();
+    const words = text ? text.split(/\s+/).length : 0;
+    setWordCount(words);
+
+    // Update form data
+    setFormData({ ...formData, description: text });
+
+    // Validation: Check if words exceed max limit
+    if (words > MAX_WORDS) {
+      setError({
+        description: {
+          status: true,
+          message: `Description cannot exceed ${MAX_WORDS} words.`,
+        },
+      });
+    } else {
+      setError({ description: { status: false, message: "" } });
+    }
+  };
+
+  useEffect(() => {
+    setFormData(secondTab);
+    handleDescriptionChange(null, { getData: () => secondTab?.description });
+  }, [secondTab]);
 
   return (
     <>
@@ -390,7 +424,7 @@ const UpdateServiceDetailsResourceNew = ({
         className="flex flex-col gap-4"
         encType="multipart/form-data"
       >
-        <div>
+        {/* <div>
           <fieldset className="flex flex-col border rounded-md px-2">
             <legend>
               <label
@@ -416,6 +450,40 @@ const UpdateServiceDetailsResourceNew = ({
               {error?.description?.message}
             </p>
           )}
+        </div> */}
+
+        <div>
+          <fieldset className="flex flex-col border rounded-md px-2">
+            <legend>
+              <label htmlFor="description">Description For Details Page</label>
+            </legend>
+
+            {/* CustomEditor Component */}
+            <CustomEditor
+              onChange={handleDescriptionChange}
+              data={
+                formData?.description === "null" ? "" : formData?.description
+              }
+            />
+
+            {/* Live Word Count */}
+            <div className="flex justify-between px-2 pt-1 text-sm">
+              <p
+                className={`text-${
+                  wordCount > MAX_WORDS ? "red-500" : "gray-500"
+                }`}
+              >
+                Words: {wordCount}/{MAX_WORDS}
+              </p>
+            </div>
+
+            {/* Error Message */}
+            {error?.description?.status && (
+              <p className="text-red-500 text-xs px-2 pt-1">
+                {error.description.message}
+              </p>
+            )}
+          </fieldset>
         </div>
 
         <div>
@@ -840,6 +908,35 @@ const UpdateServiceDetailsResourceNew = ({
                       </p>
                     )}
                   </div>
+                  {/* <div>
+                    <label className="block font-medium mb-1">
+                     Left Label Text Color:
+                    </label>
+                    <div className="flex flex-wrap gap-2 items-center px-1 py-2">
+              {allColors?.map((item, index) => (
+                <button
+                  type="button"
+                  onClick={() => {
+                    setFormData({
+                      ...formData,
+                      promotion: {
+                        ...formData?.promotion,
+                        area_bg: item?.id,
+                      },
+                    });
+                  }}
+                  style={{ backgroundColor: item?.color }}
+                  key={index}
+                  className={`py-1 text-10 px-2 rounded-md flex items-center gap-2`}
+                >
+                  {item?.name}
+                  {formData?.promotion?.area_bg == item?.id && (
+                    <FaCheckCircle className="text-white" />
+                  )}
+                </button>
+              ))}
+            </div>
+                  </div> */}
 
                   {/* Image Input */}
                   <div>
@@ -947,6 +1044,35 @@ const UpdateServiceDetailsResourceNew = ({
                       </p>
                     )}
                   </div>
+                  {/* <div>
+                    <label className="block font-medium mb-1">
+                      Right Label Text Color:
+                    </label>
+                    <div className="flex flex-wrap gap-2 items-center px-1 py-2">
+                      {allColors?.map((item, index) => (
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setFormData({
+                              ...formData,
+                              promotion: {
+                                ...formData?.promotion,
+                                area_bg: item?.id,
+                              },
+                            });
+                          }}
+                          style={{ backgroundColor: item?.color }}
+                          key={index}
+                          className={`py-1 text-10 px-2 rounded-md flex items-center gap-2`}
+                        >
+                          {item?.name}
+                          {formData?.promotion?.area_bg == item?.id && (
+                            <FaCheckCircle className="text-white" />
+                          )}
+                        </button>
+                      ))}
+                    </div>
+                  </div> */}
 
                   {/* Image Input */}
                   <div>
