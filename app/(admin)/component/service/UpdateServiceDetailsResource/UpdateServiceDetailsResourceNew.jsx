@@ -10,6 +10,8 @@ import CustomEditor from "@/app/_components/CustomEditor/CustomEditor";
 import { FaMinus } from "react-icons/fa";
 import { FaPlus } from "react-icons/fa";
 import Validation from "./Validation";
+import PdfImage from "@/public/images/pdf_file.png";
+import ExcelImage from "@/public/images/exe_file.png";
 import { updateSingleServiceDetailsResource } from "@/app/(admin)/_api/ServiceApi";
 
 const MAX_WORDS = 100;
@@ -25,7 +27,7 @@ const UpdateServiceDetailsResourceNew = ({
   const [isLoading, setIsLoading] = useState(false);
   const [formData, setFormData] = useState(secondTab);
   const [wordCount, setWordCount] = useState(0);
-  console.log("icon :", allIcons);
+  // console.log("icon :", allIcons);
   const [error, setError] = useState({
     description: {
       status: false,
@@ -258,10 +260,10 @@ const UpdateServiceDetailsResourceNew = ({
     //   toast.warn("Validation Error.");
     // }
 
-    if (error?.description?.status) {
-      setIsLoading(false);
-      return;
-    }
+    // if (error?.description?.status) {
+    //   setIsLoading(false);
+    //   return;
+    // }
 
     try {
       const payload = new FormData();
@@ -2506,9 +2508,7 @@ const UpdateServiceDetailsResourceNew = ({
                                         item?.module?.includes("pdf") ? (
                                           <div className="mt-5 relative w-[5em] h-[5em]">
                                             <Image
-                                              src={relative_image_path(
-                                                "pdf_file.png"
-                                              )}
+                                              src={PdfImage}
                                               alt="Bangla"
                                               width={100}
                                               height={100}
@@ -2539,9 +2539,7 @@ const UpdateServiceDetailsResourceNew = ({
                                         ) : (
                                           <div className="mt-5 relative w-[5em] h-[5em]">
                                             <Image
-                                              src={relative_image_path(
-                                                "exe_file.png"
-                                              )}
+                                              src={ExcelImage}
                                               alt="Bangla"
                                               width={100}
                                               height={100}

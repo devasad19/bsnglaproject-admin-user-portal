@@ -16,9 +16,11 @@ const Home = async () => {
   let user;
   const userinfo = cookies().get("user");
   if (!userinfo) {
-    typeof window != undefined ? (window.location.href = "/") : " ";
+    if (typeof window !== "undefined") {
+      window.location.href = "/";
+    }
   } else {
-    user = typeof userinfo != undefined ? JSON.parse(userinfo?.value) : "";
+    user = typeof userinfo !== "undefined" ? JSON.parse(userinfo?.value) : "";
   }
   const stats = await getDashboardStats(user?.id)
     .then((res) => res?.data)

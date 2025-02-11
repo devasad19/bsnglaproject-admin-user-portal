@@ -11,22 +11,22 @@ export const middleware = (request: NextRequest)=>{
       userInfo = JSON?.parse(user?.value || '{}');
     }
     if(envConfig == 'dev'){
-      redirectUrl = new URL('http://localhost:3000/signin', request.url);
+      redirectUrl = new URL(process.env.NEXT_PUBLIC_PORTAL_URL || '', request.url);
     }else{
-      redirectUrl = new URL('https://service.bangla.gov.bd/signin', request.url);
+      redirectUrl = new URL(process.env.NEXT_PUBLIC_PORTAL_URL || '', request.url);
     }
     // console.log('middleware',{userInfo,token,envConfig});
     
     const { pathname } = request.nextUrl;
     // console.log('middleware',{pathname});
     
-    if ((!token || !userInfo) && (pathname.startsWith('/admin') || pathname.startsWith('/ '))) {
+    if ((!token || !userInfo) && (pathname.startsWith('/admin') || pathname.startsWith('/'))) {
         return NextResponse.redirect(redirectUrl);
     }
     if ((!token && userInfo?.type == 'system_user') && (pathname.startsWith('/admin') || pathname.startsWith('/user'))) {
         return NextResponse.redirect(redirectUrl);
     }
-    if((!token && userInfo?.type == 'citizen') && pathname.startsWith('/admin')){
+    if((!token && userInfo?.type == 'citizen') && (pathname.startsWith('/admin') || pathname.startsWith('/user'))){
         return NextResponse.redirect(redirectUrl);
     }
     if((token && userInfo?.type == 'system_user') && pathname.startsWith('/user')){

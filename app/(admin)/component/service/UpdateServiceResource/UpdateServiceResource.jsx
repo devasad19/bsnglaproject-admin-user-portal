@@ -288,18 +288,18 @@ const UpdateServiceResource = ({ id }) => {
                 name="description"
                 control={control}
                 defaultValue=""
-                rules={{
-                  required: "Description is required",
-                  validate: {
-                    maxWords: (value) => {
-                      const wordCount = value.trim().split(/\s+/).length;
-                      if (wordCount > 30) {
-                        return "Description cannot exceed 30 words";
-                      }
-                      return true;
-                    },
-                  },
-                }}
+                // rules={{
+                //   required: "Description is required",
+                //   validate: {
+                //     maxWords: (value) => {
+                //       const wordCount = value.trim().split(/\s+/).length;
+                //       if (wordCount > 30) {
+                //         return "Description cannot exceed 30 words";
+                //       }
+                //       return true;
+                //     },
+                //   },
+                // }}
                 render={({
                   field: { onChange, value },
                   fieldState: { error },
