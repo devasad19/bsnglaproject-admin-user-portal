@@ -2,7 +2,12 @@
 
 import { useState, useEffect, useContext } from "react";
 import Image from "next/image";
-import { oneLatterUppercase, wordCapitalizewithUnderscore, relative_image_path, textFormat } from "@/helper";
+import {
+  oneLatterUppercase,
+  wordCapitalizewithUnderscore,
+  relative_image_path,
+  textFormat,
+} from "@/helper";
 import Link from "next/link";
 import Accordion from "@/app/_components/Accordion/Accordion";
 import { usePathname } from "next/navigation";
@@ -241,31 +246,6 @@ const Sidebar = () => {
               </li>
 
               <li
-                className={`${isOpen ? "hover:bg-primary" : ""} group ${
-                  isOpen && pathname == "/admin/user" ? "bg-primary" : ""
-                }`}
-              >
-                <Link
-                  href={{
-                    pathname: "/admin/user",
-                  }}
-                  shallow
-                  title="User"
-                  className={`flex items-center gap-2 ${
-                    isOpen && "group-hover:text-white"
-                  } ${
-                    isOpen && pathname == "/admin/user"
-                      ? "text-white"
-                      : "text-primary"
-                  }`}
-                >
-                  <GrUserSettings size={20} className="fill-current" />
-                  <span className={isOpen ? "block" : "hidden"}>
-                    Manage System Users
-                  </span>
-                </Link>
-              </li>
-              <li
                 onClick={() => toggleAccordionSub("userManagement")}
                 className={`${
                   isOpen && "hover:bg-primary"
@@ -368,6 +348,32 @@ const Sidebar = () => {
                   </div>
                 </NewAccordion>
               )}
+
+              <li
+                className={`${isOpen ? "hover:bg-primary" : ""} group ${
+                  isOpen && pathname == "/admin/user" ? "bg-primary" : ""
+                }`}
+              >
+                <Link
+                  href={{
+                    pathname: "/admin/user",
+                  }}
+                  shallow
+                  title="User"
+                  className={`flex items-center gap-2 ${
+                    isOpen && "group-hover:text-white"
+                  } ${
+                    isOpen && pathname == "/admin/user"
+                      ? "text-white"
+                      : "text-primary"
+                  }`}
+                >
+                  <GrUserSettings size={20} className="fill-current" />
+                  <span className={isOpen ? "block" : "hidden"}>
+                    Manage System Users
+                  </span>
+                </Link>
+              </li>
 
               <li
                 onClick={() => toggleAccordionSub("aclManagement")}

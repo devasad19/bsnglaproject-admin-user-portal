@@ -18,23 +18,52 @@ const Home = ({ params: { id } }) => {
   const { toPDF, targetRef } = usePDF({ filename: "page.pdf" });
   const divRef = useRef();
 
+  // const handleDownloadPDF = async () => {
+  //   const div = divRef.current;
+  //   if (!div) return;
+
+  //   // Capture the div as a canvas image
+  //   const canvas = await html2canvas(div);
+  //   const imgData = canvas.toDataURL("image/png");
+
+  //   // Generate PDF
+  //   const pdf = new jsPDF({
+  //     orientation: "portrait",
+  //     unit: "px",
+  //     format: [canvas.width, canvas.height],
+  //   });
+
+  //   pdf.addImage(imgData, "PNG", 0, 0, canvas.width, canvas.height);
+  //   pdf.save("citizen-invoice.pdf");
+  // };
+
   const handleDownloadPDF = async () => {
     const div = divRef.current;
     if (!div) return;
-
-    // Capture the div as a canvas image
-    const canvas = await html2canvas(div);
-    const imgData = canvas.toDataURL("image/png");
-
-    // Generate PDF
-    const pdf = new jsPDF({
-      orientation: "portrait",
-      unit: "px",
-      format: [canvas.width, canvas.height],
-    });
-
-    pdf.addImage(imgData, "PNG", 0, 0, canvas.width, canvas.height);
-    pdf.save("citizen-invoice.pdf");
+  
+    try {
+      // Capture the div as a high-resolution canvas
+      const canvas = await html2canvas(div, {
+        scale: 2, // Improves image clarity
+        useCORS: true, // Prevents cross-origin issues with images
+        logging: false,
+      });
+  
+      const imgData = canvas.toDataURL("image/png");
+      const pdf = new jsPDF({
+        orientation: "portrait",
+        unit: "mm",
+        format: "a4", // Standard A4 size
+      });
+  
+      const pdfWidth = 210; // A4 width in mm
+      const pdfHeight = (canvas.height * pdfWidth) / canvas.width; // Maintain aspect ratio
+  
+      pdf.addImage(imgData, "PNG", 0, 0, pdfWidth, pdfHeight);
+      pdf.save("citizen-invoice.pdf");
+    } catch (error) {
+      console.error("Error generating PDF:", error);
+    }
   };
 
   const PrintInvoice = () => {

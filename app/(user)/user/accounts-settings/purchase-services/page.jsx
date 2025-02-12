@@ -59,10 +59,10 @@ const Home = () => {
     setActiveDropdown((prev) => (prev === id ? null : id));
   };
 
-  const handleRedirect = (id) => {
-    // router.replace("https://service.bangla.gov.bd/services/" + id);
-    router.replace(`${process.env.NEXT_PUBLIC_SERVICE_URL}`);
-  };
+  // const handleRedirect = (id) => {
+  //   // router.replace("https://service.bangla.gov.bd/services/" + id);
+  //   router.replace(`${process.env.NEXT_PUBLIC_SERVICE_URL}`);
+  // };
 
   console.log("services", services);
 
@@ -73,8 +73,8 @@ const Home = () => {
           Purchased Services
         </h3>
       </div>
-      <div className="w-full h-full overflow-x-auto bg-white p-7 rounded-md">
-        <table className="w-full  border-collapse rounded-md overflow-hidden">
+      <div className="w-full min-h-screen  bg-white p-7 rounded-md">
+        <table className="w-full h-full  border-collapse rounded-md overflow-hidden">
           <thead className="border-b border-[#151D48]  h-10 text-12 bg-[#006A4E] text-white lg:text-16 rounded-md">
             <tr>
               <th className="text-center">SL</th>
@@ -162,7 +162,9 @@ const Home = () => {
                       </td>
                       <td className="text-center cursor-pointer">
                         <details
-                          className="dropdown"
+                          className={`dropdown ${
+                            activeDropdown === item.id ? "open" : ""
+                          }`}
                           open={activeDropdown === item.id}
                           ref={(el) => (dropdownRefs.current[index] = el)}
                           onClick={(e) => {
@@ -174,25 +176,42 @@ const Home = () => {
                           <summary className="btn m-1 h-auto min-h-1 border-none bg-blue-500 px-4 py-2 rounded text-white hover:bg-blue-500 hover:text-white">
                             Options
                           </summary>
-                          <ul className="menu dropdown-content bg-gray-100 rounded z-[1] w-40 p-1 shadow-md right-0">
+                          <ul
+                            ref={(el) => (dropdownRefs.current[index] = el)}
+                            className={`menu dropdown-content bg-gray-100 rounded z-[50] w-40 p-1 shadow-md right-0 absolute`}
+                            style={{
+                              bottom:
+                                window.innerHeight -
+                                  dropdownRefs.current[
+                                    index
+                                  ]?.getBoundingClientRect().bottom <
+                                150
+                                  ? "100%"
+                                  : "auto",
+                              top:
+                                window.innerHeight -
+                                  dropdownRefs.current[
+                                    index
+                                  ]?.getBoundingClientRect().bottom <
+                                150
+                                  ? "auto"
+                                  : "100%",
+                            }}
+                          >
                             <li>
-                              
                               {item?.service?.purchase_service_link ? (
                                 <>
-                                  {
-                                  item?.service?.purchase_service_link?.endsWith(
+                                  {item?.service?.purchase_service_link?.endsWith(
                                     "/"
                                   ) ? (
                                     <Link
                                       href={`${item?.service?.purchase_service_link}getLogin/${item?.order_id}`}
-                                      // href={`${item?.service?.purchase_service_link}getLogin`}
                                     >
                                       Service Details
                                     </Link>
                                   ) : (
                                     <Link
                                       href={`${item?.service?.purchase_service_link}/getLogin/${item?.order_id}`}
-                                      // href={`${item?.service?.purchase_service_link}/getLogin`}
                                     >
                                       Service Details
                                     </Link>
@@ -205,14 +224,7 @@ const Home = () => {
                                   Service Details
                                 </Link>
                               )}
-
-                              {/* <Link
-                                href={`http://localhost:5000/getLogin`}
-                              >
-                                Service Details
-                              </Link> */}
                             </li>
-
                             <li>
                               <Link
                                 href={{

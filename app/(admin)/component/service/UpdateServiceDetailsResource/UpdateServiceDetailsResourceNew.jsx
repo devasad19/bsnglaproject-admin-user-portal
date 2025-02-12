@@ -367,6 +367,9 @@ const UpdateServiceDetailsResourceNew = ({
         payload.append(`user_modules[${index}][module]`, item.module || "");
       });
 
+      console.log({    });
+      
+
       const response = await updateSingleServiceDetailsResource(payload, id);
       if (response.status === true) {
         toast.success(response.message);

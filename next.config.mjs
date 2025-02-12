@@ -17,7 +17,7 @@ const nextConfig = {
     // production url
     SSO_URL: "https://dev-bangla-dashboard.mysoftheaven.com",
     // dev url
-    //SSO_URL: "http://localhost/bangla-text-backend",
+    // SSO_URL: "http://localhost/bangla-text-backend",
     // dev url
     // SSO_LIVE_URL: "https://dev-bangla-dashboard.mysoftheaven.com",
     // SSO_CLIENT_ID: "3",

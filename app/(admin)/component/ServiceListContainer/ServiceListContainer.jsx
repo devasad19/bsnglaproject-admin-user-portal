@@ -280,7 +280,7 @@ const ServiceListContainer = ({ services }) => {
                     <td className="px-1">
                       <div className="w-full flex  items-center justify-center gap-2">
                         <>
-                          {item?.completion_status == 3 && (
+                          {/* {item?.completion_status == 3 && (
                             <button
                               onClick={() => {
                                 handleRedirect(item?.id);
@@ -290,8 +290,16 @@ const ServiceListContainer = ({ services }) => {
                             >
                               <GrView className="text-white w-4 h-4" />
                             </button>
-                          )}
-
+                          )} */}
+                            <button
+                              onClick={() => {
+                                handleRedirect(item?.id);
+                              }}
+                              shallow
+                              className="px-2 py-1 bg-primary  text-white active:scale-90 transition-all duration-400 rounded-md"
+                            >
+                              <GrView className="text-white w-4 h-4" />
+                            </button>
                           <Link
                             href={{
                               pathname: `/admin/services/edit/${item?.id}`,
