@@ -77,10 +77,12 @@ const Home = async ({ params: { id } }) => {
       left_side: {
         label: response2?.data?.details?.prom_left_label ?? "",
         image: response2?.data?.details?.prom_left_icon ?? "",
+        label_color: response2?.data?.details?.prom_left_label_color ?? "",
       },
       right_side: {
         label: response2?.data?.details?.prom_right_label ?? "",
         image: response2?.data?.details?.prom_right_icon ?? "",
+        label_color: response2?.data?.details?.prom_right_label_color ?? "",
       },
       area_bg: response2?.data?.details?.prom_area_bg ?? "",
     },

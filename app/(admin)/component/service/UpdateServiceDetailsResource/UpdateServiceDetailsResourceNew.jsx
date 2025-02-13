@@ -27,7 +27,7 @@ const UpdateServiceDetailsResourceNew = ({
   const [isLoading, setIsLoading] = useState(false);
   const [formData, setFormData] = useState(secondTab);
   const [wordCount, setWordCount] = useState(0);
-  // console.log("icon :", allIcons);
+  console.log("FormData :", formData);
   const [error, setError] = useState({
     description: {
       status: false,
@@ -331,11 +331,13 @@ const UpdateServiceDetailsResourceNew = ({
       payload.append("prom_title_bg", formData?.promotion?.title_bg);
       payload.append("prom_area_bg", formData?.promotion?.area_bg);
       payload.append("prom_left_label", formData?.promotion?.left_side?.label);
+      payload.append("prom_left_label_color", formData?.promotion?.left_side?.label_color);
       payload.append("prom_left_icon", formData?.promotion?.left_side?.image);
       payload.append(
         "prom_right_label",
         formData?.promotion?.right_side?.label
       );
+      payload.append("prom_right_label_color", formData?.promotion?.right_side?.label_color);
       payload.append("prom_right_icon", formData?.promotion?.right_side?.image);
 
       payload.append("domain_name", formData.domain_name);
@@ -367,8 +369,7 @@ const UpdateServiceDetailsResourceNew = ({
         payload.append(`user_modules[${index}][module]`, item.module || "");
       });
 
-      console.log({    });
-      
+      console.log({});
 
       const response = await updateSingleServiceDetailsResource(payload, id);
       if (response.status === true) {
@@ -913,35 +914,39 @@ const UpdateServiceDetailsResourceNew = ({
                       </p>
                     )}
                   </div>
-                  {/* <div>
+                  <div>
                     <label className="block font-medium mb-1">
-                     Left Label Text Color:
+                      Left Label Text Color:
                     </label>
                     <div className="flex flex-wrap gap-2 items-center px-1 py-2">
-              {allColors?.map((item, index) => (
-                <button
-                  type="button"
-                  onClick={() => {
-                    setFormData({
-                      ...formData,
-                      promotion: {
-                        ...formData?.promotion,
-                        area_bg: item?.id,
-                      },
-                    });
-                  }}
-                  style={{ backgroundColor: item?.color }}
-                  key={index}
-                  className={`py-1 text-10 px-2 rounded-md flex items-center gap-2`}
-                >
-                  {item?.name}
-                  {formData?.promotion?.area_bg == item?.id && (
-                    <FaCheckCircle className="text-white" />
-                  )}
-                </button>
-              ))}
-            </div>
-                  </div> */}
+                      {allColors?.map((item, index) => (
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setFormData({
+                              ...formData,
+                              promotion: {
+                                ...formData?.promotion,
+                                left_side: {
+                                  ...formData?.promotion?.left_side,
+                                  label_color: item?.id,
+                                },
+                              },
+                            });
+                          }}
+                          style={{ backgroundColor: item?.color }}
+                          key={index}
+                          className={`py-1 text-10 px-2 rounded-md flex items-center gap-2`}
+                        >
+                          {item?.name}
+                          {formData?.promotion?.left_side?.label_color ==
+                            item?.id && (
+                            <FaCheckCircle className="text-white" />
+                          )}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
 
                   {/* Image Input */}
                   <div>
@@ -1049,7 +1054,8 @@ const UpdateServiceDetailsResourceNew = ({
                       </p>
                     )}
                   </div>
-                  {/* <div>
+
+                  <div>
                     <label className="block font-medium mb-1">
                       Right Label Text Color:
                     </label>
@@ -1062,7 +1068,10 @@ const UpdateServiceDetailsResourceNew = ({
                               ...formData,
                               promotion: {
                                 ...formData?.promotion,
-                                area_bg: item?.id,
+                                right_side: {
+                                  ...formData?.promotion?.right_side,
+                                  label_color: item?.id,
+                                },
                               },
                             });
                           }}
@@ -1071,13 +1080,14 @@ const UpdateServiceDetailsResourceNew = ({
                           className={`py-1 text-10 px-2 rounded-md flex items-center gap-2`}
                         >
                           {item?.name}
-                          {formData?.promotion?.area_bg == item?.id && (
+                          {formData?.promotion?.right_side?.label_color ==
+                            item?.id && (
                             <FaCheckCircle className="text-white" />
                           )}
                         </button>
                       ))}
                     </div>
-                  </div> */}
+                  </div>
 
                   {/* Image Input */}
                   <div>

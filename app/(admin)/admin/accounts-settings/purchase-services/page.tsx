@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import Skeleton from "react-loading-skeleton";
 import { getSoldServices } from "@/app/(admin)/_api";
-import { remainingDaysCalculate, remainingMonthsAndDays } from "@/helper";
+import { formatDate, remainingDaysCalculate, remainingMonthsAndDays } from "@/helper";
 
 const PurchaaseServicePage = () => {
   const [services, setServices] = useState<any>([]);
@@ -40,18 +40,20 @@ const PurchaaseServicePage = () => {
           <thead className="border-b border-[#151D48] text-[#151D48] h-10 text-12 lg:text-16">
             <tr>
               <th className="text-center">SL</th>
-              <th className="text-center">Name</th>
-              <th className="text-center">Description</th>
-              <th className="text-center">Status</th>
-              <th className="text-center">Expire Date</th>
-              <th className="text-center">Remaining Days</th>
-              <th className="text-center">Details</th>
+              <th className="text-center">User Name</th>
+              <th className="text-center">Service Name</th>
+              <th className="text-center">Transaction Id</th>
+              <th className="text-center">Total Amount</th>
+              <th className="text-center">Payment Type</th>
+              <th className="text-center">Payment Status</th>
+              <th className="text-center">Date</th>
+              <th className="text-center">Options</th>
             </tr>
           </thead>
           <tbody className="[&>tr]:border-b [&>tr]:border-[#151D48] [&>tr]:text-left [&>tr]:h-16 text-12 lg:text-16">
             {isLoading ? (
               <tr>
-                <td colSpan={7}>
+                <td colSpan={9}>
                   <Skeleton width="100%" count={10} height={50} />
                 </td>
               </tr>
@@ -64,6 +66,11 @@ const PurchaaseServicePage = () => {
                         <span className="border border-gray-300 px-2 py-1 rounded-md">
                           {index + 1}
                         </span>
+                      </td>
+                      <td className="px-2">
+                        {
+                          item?.user?.name ?? ""
+                        }
                       </td>
                       <td className="px-2">
                         <div className="flex items-center gap-2 text-14">
@@ -81,44 +88,24 @@ const PurchaaseServicePage = () => {
                           </span>
                         </div>
                       </td>
+                      <td className="text-center">{item?.payment?.invoice_no}</td>
+                      
                       <td className="text-center">
-                        <div
-                          dangerouslySetInnerHTML={{
-                            __html:
-                              item?.service?.description?.length > 25
-                                ? `${item?.service?.description?.substring(
-                                    0,
-                                    25
-                                  )}...`
-                                : item?.service?.description,
-                          }}
-                        />
-                      </td>
-                      <td
-                        className={`text-center ${
-                          remainingDaysCalculate(item?.expiry_date) > 0 ?"text-green-500" :"text-red-500" 
-                        }`}
-                      >
-                        {
-                          remainingDaysCalculate(item?.expiry_date) > 0 ? "Active" : "Expired"
-                        }
+                        BDT {item?.total} TK
+                        </td>
+                      
+                      <td className="text-center">
+                        {item?.payment?.payment_type}
                       </td>
                       <td className="text-center">
-                        {
-                          item?.expiry_date
-                        }
+                        {item?.status == 1 ? (
+                          <span className="text-green-500">Paid</span>
+                        ) : (
+                          <span className="text-red-500">Unpaid</span>
+                        )}
                       </td>
                       <td className="text-center">
-                        {
-                          remainingDaysCalculate(item?.expiry_date) > 0 ? <>
-                            {
-                              remainingMonthsAndDays(item?.expiry_date).months > 0 ? `${remainingMonthsAndDays(item?.expiry_date).months} Months` : ""
-                            }
-                            {
-                              remainingMonthsAndDays(item?.expiry_date).days > 0 ? ` ${remainingMonthsAndDays(item?.expiry_date).days} Days` : ""
-                            }
-                          </>  : "0"
-                        }
+                        {formatDate(item?.created_at)}
                       </td>
                       <td className="text-center cursor-pointer">
                         <Link
