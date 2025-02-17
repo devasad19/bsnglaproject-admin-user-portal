@@ -73,8 +73,8 @@ const Home = () => {
           Purchased Services
         </h3>
       </div>
-      <div className="w-full min-h-screen  bg-white p-7 rounded-md">
-        <table className="w-full h-full  border-collapse rounded-md overflow-hidden">
+      <div className="w-full min-h-screen  bg-white p-7 overflow-hidden rounded-md">
+        <table className="w-full h-full  border-collapse rounded-md ">
           <thead className="border-b border-[#151D48]  h-10 text-12 bg-[#006A4E] text-white lg:text-16 rounded-md">
             <tr>
               <th className="text-center">SL</th>
@@ -249,6 +249,7 @@ const Home = () => {
                         </details>
                       </td>
                     </tr>
+                    
                   );
                 })
               : isLoading == false && (
@@ -258,6 +259,7 @@ const Home = () => {
                     </td>
                   </tr>
                 )}
+                
           </tbody>
         </table>
       </div>

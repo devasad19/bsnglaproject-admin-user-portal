@@ -547,6 +547,19 @@ const Sidebar = () => {
                     </Link>
                     <Link
                       href={{
+                        pathname: "/admin/setting/menu-section",
+                      }}
+                      shallow
+                      className={`text-14 hover:bg-green-500 px-2 py-1 rounded hover:text-white ${
+                        pathname.includes("/admin/setting/menu-section")
+                          ? "bg-green-500 text-white font-semibold"
+                          : "text-black"
+                      }`}
+                    >
+                     Menu Section Management
+                    </Link>
+                    <Link
+                      href={{
                         pathname: "/admin/setting/sidebar-links",
                       }}
                       shallow

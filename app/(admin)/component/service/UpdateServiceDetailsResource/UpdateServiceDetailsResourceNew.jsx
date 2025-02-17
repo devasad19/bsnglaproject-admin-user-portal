@@ -15,6 +15,7 @@ import ExcelImage from "@/public/images/exe_file.png";
 import { updateSingleServiceDetailsResource } from "@/app/(admin)/_api/ServiceApi";
 
 const MAX_WORDS = 100;
+const MAX_CHARACTERS = 200;
 
 const UpdateServiceDetailsResourceNew = ({
   id,
@@ -27,6 +28,8 @@ const UpdateServiceDetailsResourceNew = ({
   const [isLoading, setIsLoading] = useState(false);
   const [formData, setFormData] = useState(secondTab);
   const [wordCount, setWordCount] = useState(0);
+  
+  const [charCount, setCharCount] = useState(0); 
   console.log("FormData :", formData);
   const [error, setError] = useState({
     description: {
@@ -397,31 +400,43 @@ const UpdateServiceDetailsResourceNew = ({
   // const descriptionLength = CountWords(formData?.description);
   // console.log({ descriptionLength });
 
+  const MAX_CHARACTERS = 200;
+
   const handleDescriptionChange = (event, editor) => {
-    const text = editor.getData().trim();
-    const words = text ? text.split(/\s+/).length : 0;
-    setWordCount(words);
-
-    // Update form data
-    setFormData({ ...formData, description: text });
-
-    // Validation: Check if words exceed max limit
-    if (words > MAX_WORDS) {
+    const htmlContent = editor.getData().trim();
+  
+   
+    const textContent =
+      new DOMParser().parseFromString(htmlContent, "text/html").body.textContent || "";
+  
+    
+    const newCharCount = textContent.length; 
+  
+    // Update state
+    setCharCount(newCharCount);
+    setFormData({ ...formData, description: htmlContent });
+  
+    // Validation
+    if (newCharCount > MAX_CHARACTERS) {
       setError({
         description: {
           status: true,
-          message: `Description cannot exceed ${MAX_WORDS} words.`,
+          message: `Description cannot exceed ${MAX_CHARACTERS} characters.`,
         },
       });
     } else {
       setError({ description: { status: false, message: "" } });
     }
   };
+  
 
+
+  // Load initial data
   useEffect(() => {
     setFormData(secondTab);
-    handleDescriptionChange(null, { getData: () => secondTab?.description });
+    handleDescriptionChange(null, { getData: () => secondTab?.description || "" });
   }, [secondTab]);
+  
 
   return (
     <>
@@ -457,40 +472,34 @@ const UpdateServiceDetailsResourceNew = ({
             </p>
           )}
         </div> */}
-
         <div>
-          <fieldset className="flex flex-col border rounded-md px-2">
-            <legend>
-              <label htmlFor="description">Description For Details Page</label>
-            </legend>
+  <fieldset className="flex flex-col border rounded-md px-2">
+    <legend>
+      <label htmlFor="description">Description</label>
+    </legend>
 
-            {/* CustomEditor Component */}
-            <CustomEditor
-              onChange={handleDescriptionChange}
-              data={
-                formData?.description === "null" ? "" : formData?.description
-              }
-            />
+    {/* CustomEditor Component */}
+    <CustomEditor
+      onChange={handleDescriptionChange}
+      data={formData?.description === "null" ? "" : formData?.description}
+    />
 
-            {/* Live Word Count */}
-            <div className="flex justify-between px-2 pt-1 text-sm">
-              <p
-                className={`text-${
-                  wordCount > MAX_WORDS ? "red-500" : "gray-500"
-                }`}
-              >
-                Words: {wordCount}/{MAX_WORDS}
-              </p>
-            </div>
+    {/* Live Character Count */}
+    <div className="flex justify-between px-2 pt-1 text-sm">
+      <p className={charCount > MAX_CHARACTERS ? "text-red-500" : "text-gray-500"}>
+        Characters: {charCount}/{MAX_CHARACTERS}
+      </p>
+    </div>
 
-            {/* Error Message */}
-            {error?.description?.status && (
-              <p className="text-red-500 text-xs px-2 pt-1">
-                {error.description.message}
-              </p>
-            )}
-          </fieldset>
-        </div>
+    {/* Error Message */}
+    {error?.description?.status && (
+      <p className="text-red-500 text-xs px-2 pt-1">{error.description.message}</p>
+    )}
+  </fieldset>
+</div>
+
+
+
 
         <div>
           <fieldset className="flex flex-col border rounded-md px-2">

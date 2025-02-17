@@ -52,6 +52,11 @@ const nextConfig = {
         port: "", // No need to specify port if it's the default (80 for HTTP or 443 for HTTPS)
       },
       {
+        protocol: "http",
+        hostname: "**",
+       port: "", // Change this to the port your backend is running on
+      },
+      {
         protocol: "https",
         hostname: "dev-bangla-dashboard.mysoftheaven.comundefined", // Corrected the hostname
         port: "", // No need to specify port if it's the default (80 for HTTP or 443 for HTTPS)

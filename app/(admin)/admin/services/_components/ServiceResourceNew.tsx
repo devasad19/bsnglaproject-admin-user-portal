@@ -39,16 +39,27 @@ const ServiceResourceNew = () => {
     clearErrors,
   } = useForm();
 
+  // const description = watch("description");
+  const [charCount, setCharCount] = useState(0); // Track character count
   const description = watch("description");
-  const MAX_WORDS = 30;
-  useEffect(() => {
-    const words = description ? description.trim().split(/\s+/).length : 0;
-    setWordCount(words);
+  const MAX_CHARACTERS = 200;
 
-    if (words > MAX_WORDS) {
+  useEffect(() => {
+    // Decode HTML entities and count characters
+    const decodedDescription = description
+      ? new DOMParser().parseFromString(description, "text/html").body
+          .textContent
+      : "";
+    const characters = decodedDescription ? decodedDescription.length : 0;
+
+    console.log({ characters });
+
+    setCharCount(characters);
+
+    if (characters > MAX_CHARACTERS) {
       setError("description", {
         type: "manual",
-        message: "Description cannot exceed 30 words",
+        message: "Description cannot exceed 200 characters",
       });
     } else {
       clearErrors("description");
@@ -228,7 +239,7 @@ const ServiceResourceNew = () => {
             )} */}
           </div>
 
-          <div>
+          {/* <div>
             <fieldset className="flex flex-col border rounded-md px-2">
               <legend>
                 <label
@@ -274,6 +285,52 @@ const ServiceResourceNew = () => {
                         }`}
                       >
                         Words: {wordCount}/{MAX_WORDS}
+                      </p>
+                    </div>
+                    {error && (
+                      <p className="text-red-500 text-xs px-2 pt-1">
+                        {error.message}
+                      </p>
+                    )}
+                  </>
+                )}
+              />
+            </fieldset>
+          </div> */}
+          <div>
+            <fieldset className="flex flex-col border rounded-md px-2">
+              <legend>
+                <label
+                  htmlFor="description"
+                  className="after:content-['_*'] after:text-red-500"
+                >
+                  Description
+                </label>
+              </legend>
+
+              <Controller
+                name="description"
+                control={control}
+                defaultValue=""
+                render={({
+                  field: { onChange, value },
+                  fieldState: { error },
+                }) => (
+                  <>
+                    <CustomEditor
+                      onChange={(event, editor) => {
+                        const data = editor.getData();
+                        onChange(data);
+                      }}
+                      data={value}
+                    />
+                    <div className="flex justify-between px-2 pt-1 text-sm">
+                      <p
+                        className={`text-${
+                          charCount > MAX_CHARACTERS ? "red-500" : "gray-500"
+                        }`}
+                      >
+                        Characters: {charCount}/{MAX_CHARACTERS}
                       </p>
                     </div>
                     {error && (
@@ -700,52 +757,77 @@ const ServiceResourceNew = () => {
 
 export default ServiceResourceNew;
 
-// {/* <div>
-//             <fieldset className="flex flex-col border rounded-md px-2">
-//               <legend>
-//                 <label
-//                   htmlFor="ServiceName"
-//                   className="after:content-['_*'] after:text-red-500"
-//                 >
-//                   Description
-//                 </label>
-//               </legend>
+// const MAX_WORDS = 30;
+// useEffect(() => {
+//   const words = description ? description.trim().split(/\s+/).length : 0;
+//   setWordCount(words);
 
-//               <Controller
-//                 name="description"
-//                 control={control}
-//                 defaultValue=""
-//                 // rules={{
-//                 //   required: "Description is required",
-//                 //   validate: {
-//                 //     maxWords: (value) => {
-//                 //       const wordCount = value.trim().split(/\s+/).length;
-//                 //       if (wordCount > 30) {
-//                 //         return "Description cannot exceed 30 words";
-//                 //       }
-//                 //       return true;
-//                 //     },
-//                 //   },
-//                 // }}
-//                 render={({
-//                   field: { onChange, value },
-//                   fieldState: { error },
-//                 }) => (
-//                   <>
-//                     <CustomEditor
-//                       onChange={(event, editor) => {
-//                         const data = editor.getData();
-//                         onChange(data);
-//                       }}
-//                       data={value}
-//                     />
-//                     {/* {errors.description && (
-//                       <p className="text-red-500 text-12 px-2 pt-1">
-//                         {errors.description.message as string}
-//                       </p>
-//                     )} */}
-//                   </>
-//                 )}
-//               />
-//             </fieldset>
-//           </div> */}
+//   if (words > MAX_WORDS) {
+//     setError("description", {
+//       type: "manual",
+//       message: "Description cannot exceed 30 words",
+//     });
+//   } else {
+//     clearErrors("description");
+//   }
+// }, [description, setError, clearErrors]);
+
+
+{/* <div>
+<fieldset className="flex flex-col border rounded-md px-2">
+  <legend>
+    <label
+      htmlFor="description"
+      className="after:content-['_*'] after:text-red-500"
+    >
+      Description
+    </label>
+  </legend>
+
+  <Controller
+    name="description"
+    control={control}
+    defaultValue=""
+    // rules={{
+    //   required: "Description is required",
+    //   validate: {
+    //     maxWords: (value) => {
+    //       const wordCount = value.trim().split(/\s+/).length;
+    //       if (wordCount > 30) {
+    //         return "Description cannot exceed 30 words";
+    //       }
+    //       return true;
+    //     },
+    //   },
+    // }}
+    render={({
+      field: { onChange, value },
+      fieldState: { error },
+    }) => (
+      <>
+        <CustomEditor
+          onChange={(event, editor) => {
+            const data = editor.getData();
+            onChange(data);
+          }}
+          data={value}
+        />
+        <div className="flex justify-between px-2 pt-1 text-sm">
+          <p
+            className={`text-${
+              wordCount > MAX_WORDS ? "red-500" : "gray-500"
+            }`}
+          >
+            Words: {wordCount}/{MAX_WORDS}
+          </p>
+        </div>
+        {error && (
+          <p className="text-red-500 text-xs px-2 pt-1">
+            {error.message}
+          </p>
+        )}
+      </>
+    )}
+  />
+</fieldset>
+</div> */}
