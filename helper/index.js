@@ -357,3 +357,7 @@ export const remainingMonthsAndDays = (date) => {
   days = Math.ceil((expirationDate - today) / (1000 * 60 * 60 * 24));
   return { months, days };
 };
+
+export const filterDateFormat = (date) => {
+  return date ? date.toISOString().split("T")[0] : "";
+};

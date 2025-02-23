@@ -36,7 +36,7 @@ const Home = (): JSX.Element => {
         Citizen Payment Lists
       </h3>
       <div className="w-full overflow-x-auto bg-white p-7 rounded-md">
-        {/* <div className="w-full flex items-center justify-between py-4">
+        <div className="w-full flex items-center justify-between py-4">
           <div>
             <input
               type="text"
@@ -67,7 +67,7 @@ const Home = (): JSX.Element => {
               </option>
             </select>
           </div>
-        </div> */}
+        </div>
         <table className="w-full">
           <thead className="border-b   border-gray-200 rounded  bg-primary text-white  h-10 text-12 lg:text-16">
             <tr>
@@ -150,7 +150,7 @@ const Home = (): JSX.Element => {
             )}
           </tbody>
         </table>
-        {/* <div className="pt-10 flex justify-center">
+        <div className="pt-10 flex justify-center">
           <div className="flex items-center gap-2">
             {page !== 1 && (
               <button
@@ -184,7 +184,7 @@ const Home = (): JSX.Element => {
               </button>
             )}
           </div>
-        </div> */}
+        </div>
       </div>
     </section>
   );

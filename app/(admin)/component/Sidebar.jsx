@@ -19,6 +19,7 @@ import { VscFeedback } from "react-icons/vsc";
 import { RiAdminLine } from "react-icons/ri";
 import { FaComputer } from "react-icons/fa6";
 import { useHomeContext } from "@/ContextProvider/Home.Context";
+import { BiCustomize } from "react-icons/bi";
 
 const Sidebar = () => {
   const pathname = usePathname();
@@ -203,12 +204,13 @@ const Sidebar = () => {
                   <span className={isOpen ? "block" : "hidden"}>Dashboard</span>
                 </Link>
               </li>
+
               <li
                 className={`${isOpen ? "hover:bg-primary" : ""} group ${
                   (isOpen && pathname === "/admin/services") ||
                   pathname === "/admin/services/create" ||
-                  pathname.includes("/admin/services/edit/") ||
-                  pathname.includes("/admin/services")
+                  pathname.startsWith("/admin/services/edit/") ||
+                  pathname =="/admin/services"
                     ? "bg-primary"
                     : ""
                 }`}
@@ -224,8 +226,8 @@ const Sidebar = () => {
                   } ${
                     (isOpen && pathname == "/admin/services") ||
                     pathname == "/admin/services/create" ||
-                    pathname.includes("/admin/services/edit/") ||
-                    pathname.includes("/admin/services")
+                    pathname.startsWith("/admin/services/edit/") ||
+                    pathname =="/admin/services"
                       ? "text-white"
                       : "text-primary"
                   }`}
@@ -241,6 +243,36 @@ const Sidebar = () => {
                   </span>
                   <span className={isOpen ? "block" : "hidden"}>
                     Manage Services
+                  </span>
+                </Link>
+              </li>
+              <li
+                className={`${isOpen ? "hover:bg-primary" : ""} group ${
+                  (isOpen && pathname === "/admin/services/customize")
+                  
+                    ? "bg-primary"
+                    : ""
+                }`}
+              >
+                <Link
+                  href={{
+                    pathname: "/admin/services/customize",
+                  }}
+                  shallow
+                  title="Service Customize"
+                  className={`flex items-center gap-2 ${
+                    isOpen && "group-hover:text-white"
+                  } ${
+                    (isOpen && pathname == "/admin/services/customize") 
+                      ? "text-white"
+                      : "text-primary"
+                  }`}
+                >
+                  <span>
+                    <BiCustomize size={20} className="fill-current" />
+                  </span>
+                  <span className={isOpen ? "block" : "hidden"}>
+                    Service Customize
                   </span>
                 </Link>
               </li>
@@ -556,7 +588,7 @@ const Sidebar = () => {
                           : "text-black"
                       }`}
                     >
-                     Menu Section Management
+                      Menu Section Management
                     </Link>
                     <Link
                       href={{

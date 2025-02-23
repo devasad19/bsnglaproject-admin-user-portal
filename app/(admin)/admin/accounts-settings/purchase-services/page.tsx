@@ -1,32 +1,42 @@
 "use client";
-import { getServices } from "@/app/(portal)/_api";
+
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import Skeleton from "react-loading-skeleton";
 import { getSoldServices } from "@/app/(admin)/_api";
-import { formatDate, remainingDaysCalculate, remainingMonthsAndDays } from "@/helper";
+import { filterDateFormat, formatDate } from "@/helper";
+import ServerPagination from "@/app/_components/ServerPagination/ServerPagination";
+import CustomDatePicker from "@/app/_components/CustomDatePiker/CustomDatePiker";
 
 const PurchaaseServicePage = () => {
-  const [services, setServices] = useState<any>([]);
   const [soldServices, setSoldServices] = useState<any>([]);
   const [parChaseService, setParChaseService] = useState<any>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
-  // const services = await getServices();
+  const [showPage, setShowPage] = useState(1);
+  const [page, setPage] = useState(1);
+  const [limit] = useState(10);
+  const [startDate, setStartDate] = useState<Date | null>(null);
+  const [endDate, setEndDate] = useState<Date | null>(null);
+  const [date, setDate] = useState<any>({});
 
   useEffect(() => {
-    getServices()
+    setIsLoading(true);
+    getSoldServices(page, limit, date.startDate, date.endDate)
       .then((data) => {
-        setServices(data), setIsLoading(false);
+        setSoldServices(data?.data);
+        setShowPage(data?.meta?.total_page);
       })
-      .catch((err) => console.log(err));
-    getSoldServices()
-      .then((data) => {
-        setSoldServices(data?.data), setIsLoading(false);
+      .catch((err) => {
+        console.log(err);
       })
-      .catch((err) => console.log(err));
-  }, []);
-  console.log({ soldServices });
+      .finally(() => {
+        setIsLoading(false); // Stop loading after fetch completes
+      });
+  }, [page, limit, date.startDate && date.endDate]);
+
+  //  filterDateFormat(endDate)
+  console.log(date);
 
   return (
     <section>
@@ -34,8 +44,28 @@ const PurchaaseServicePage = () => {
         <h3 className="text-32 font-mono font-bold text-[#151D48] pb-5">
           Sold Services:
         </h3>
+        <div>
+          <CustomDatePicker
+            setStartDate={setStartDate}
+            startDate={startDate}
+            setEndDate={setEndDate}
+            endDate={endDate}
+          />
+
+          <button
+            className="bg-primary text-white px-3 py-1 rounded-md ms-2"
+            onClick={() => {
+              setDate({
+                startDate: filterDateFormat(startDate),
+                endDate: filterDateFormat(endDate),
+              });
+            }}
+          >
+            Filter
+          </button>
+        </div>
       </div>
-      <div className="w-full overflow-x-auto bg-white p-7 rounded-md">
+      <div className="w-full overflow-x-auto bg-white p-7 rounded-md min-h-[calc(100vh-2vh)]">
         <table className="w-full">
           <thead className="border-b border-[#151D48] text-[#151D48] h-10 text-12 lg:text-16">
             <tr>
@@ -58,74 +88,64 @@ const PurchaaseServicePage = () => {
                 </td>
               </tr>
             ) : (
-              soldServices?.map(
-                (item: any, index: number) =>
-                  item?.service && (
-                    <tr key={index}>
-                      <td className="px-3">
-                        <span className="border border-gray-300 px-2 py-1 rounded-md">
-                          {index + 1}
-                        </span>
-                      </td>
-                      <td className="px-2">
-                        {
-                          item?.user?.name ?? ""
-                        }
-                      </td>
-                      <td className="px-2">
-                        <div className="flex items-center gap-2 text-14">
-                          <span className="flex items-center gap-3">
-                            <Image
-                              className="w-10 h-10 rounded-md"
-                              src={`${process.env.NEXT_PUBLIC_IMAGE_URL}${
-                                item?.service?.logo ?? ""
-                              }`}
-                              height={1000}
-                              width={1000}
-                              alt="Bangla"
-                            />
-                            {item?.service?.name || " "}
-                          </span>
-                        </div>
-                      </td>
-                      <td className="text-center">{item?.payment?.invoice_no}</td>
-                      
-                      <td className="text-center">
-                        BDT {item?.total} TK
-                        </td>
-                      
-                      <td className="text-center">
-                        {item?.payment?.payment_type}
-                      </td>
-                      <td className="text-center">
-                        {item?.status == 1 ? (
-                          <span className="text-green-500">Paid</span>
-                        ) : (
-                          <span className="text-red-500">Unpaid</span>
-                        )}
-                      </td>
-                      <td className="text-center">
-                        {formatDate(item?.created_at)}
-                      </td>
-                      <td className="text-center cursor-pointer">
-                        <Link
-                          href={{
-                            pathname: `/admin/accounts-settings/purchase-services/${item?.service_id}`,
-                            query: { user: item?.user_id }, // Query parameters
-                          }}
-                          className="text-14 border border-primary bg-primary hover:text-white px-2 py-1 rounded-md ms-2"
-                          shallow
-                        >
-                          <span className="text-white">Details</span>
-                        </Link>
-                      </td>
-                    </tr>
-                  )
-              )
+              soldServices?.map((item: any, index: number) => (
+                <tr key={index}>
+                  <td className="px-3">
+                    <span className="border border-gray-300 px-2 py-1 rounded-md">
+                      {(page - 1) * limit + index + 1}
+                    </span>
+                  </td>
+                  <td className="px-2">{item?.user?.name ?? ""}</td>
+                  <td className="px-2">
+                    <div className="flex items-center gap-2 text-14">
+                      <span className="flex items-center gap-3">
+                        <Image
+                          className="w-10 h-10 rounded-md"
+                          src={`${process.env.NEXT_PUBLIC_IMAGE_URL}${
+                            item?.service?.logo ?? ""
+                          }`}
+                          height={1000}
+                          width={1000}
+                          alt="Bangla"
+                        />
+                        {item?.service?.name || " "}
+                      </span>
+                    </div>
+                  </td>
+                  <td className="text-center">{item?.payment?.invoice_no}</td>
+
+                  <td className="text-center">BDT {item?.total} TK</td>
+
+                  <td className="text-center">{item?.payment?.payment_type}</td>
+                  <td className="text-center">
+                    {item?.status == 1 ? (
+                      <span className="text-green-500">Paid</span>
+                    ) : (
+                      <span className="text-red-500">Unpaid</span>
+                    )}
+                  </td>
+                  <td className="text-center">
+                    {formatDate(item?.created_at)}
+                  </td>
+                  <td className="text-center cursor-pointer">
+                    <Link
+                      href={{
+                        pathname: `/admin/accounts-settings/purchase-services/${item?.service_id}`,
+                        query: { user: item?.user_id }, // Query parameters
+                      }}
+                      className="text-14 border border-primary bg-primary hover:text-white px-2 py-1 rounded-md ms-2"
+                      shallow
+                    >
+                      <span className="text-white">Details</span>
+                    </Link>
+                  </td>
+                </tr>
+              ))
             )}
           </tbody>
         </table>
       </div>
+      <ServerPagination page={page} setPage={setPage} showPage={showPage} />
     </section>
   );
 };
