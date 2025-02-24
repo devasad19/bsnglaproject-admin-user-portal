@@ -360,10 +360,10 @@ const UpdateServiceDetailsResourceNew = ({
       );
       payload.append("youtube_video_title", formData.user_doc?.video?.title);
 
-      formData.distribution.forEach((item, index) => {
-        payload.append(`distribution_items[${index}][label]`, item.label || "");
-        payload.append(`distribution_items[${index}][icon]`, item.icon || "");
-      });
+      // formData.distribution.forEach((item, index) => {
+      //   payload.append(`distribution_items[${index}][label]`, item.label || "");
+      //   payload.append(`distribution_items[${index}][icon]`, item.icon || "");
+      // });
 
       formData.user_doc.module_file.forEach((item, index) => {
         payload.append(`user_modules[${index}][id]`, index + 1 || "");
@@ -1001,19 +1001,21 @@ const UpdateServiceDetailsResourceNew = ({
                             alt="Profile Picture"
                           />
                         )
-                      ) : (
-                        // Default image when no image is provided
-                        <Image
-                          className="w-20 h-20 rounded-full"
-                          width={1000}
-                          height={1000}
-                          src={
-                            process.env.NEXT_PUBLIC_IMAGE_URL +
-                            process.env.NEXT_PUBLIC_DEFAULT_IMAGE
-                          } // Default placeholder image
-                          alt="Profile Picture"
-                        />
-                      )}
+                      ) : null
+                      //(
+                      //   // Default image when no image is provided
+                      //   <Image
+                      //     className="w-20 h-20 rounded-full"
+                      //     width={1000}
+                      //     height={1000}
+                      //     src={
+                      //       process.env.NEXT_PUBLIC_IMAGE_URL +
+                      //       process.env.NEXT_PUBLIC_DEFAULT_IMAGE
+                      //     } // Default placeholder image
+                      //     alt="Profile Picture"
+                      //   />
+                      // )
+                      }
                     </div>
                   </div>
                 </div>
@@ -1163,19 +1165,21 @@ const UpdateServiceDetailsResourceNew = ({
                             alt="Profile Picture"
                           />
                         )
-                      ) : (
-                        // Default image when no image is provided
-                        <Image
-                          className="w-20 h-20 rounded-full"
-                          width={1000}
-                          height={1000}
-                          src={
-                            process.env.NEXT_PUBLIC_IMAGE_URL +
-                            process.env.NEXT_PUBLIC_DEFAULT_IMAGE
-                          } // Default placeholder image
-                          alt="Profile Picture"
-                        />
-                      )}
+                      ) : null
+                      // (
+                      //   // Default image when no image is provided
+                      //   <Image
+                      //     className="w-20 h-20 rounded-full"
+                      //     width={1000}
+                      //     height={1000}
+                      //     src={
+                      //       process.env.NEXT_PUBLIC_IMAGE_URL +
+                      //       process.env.NEXT_PUBLIC_DEFAULT_IMAGE
+                      //     } // Default placeholder image
+                      //     alt="Profile Picture"
+                      //   />
+                      // )
+                      }
                     </div>
                   </div>
                 </div>
@@ -1257,8 +1261,8 @@ const UpdateServiceDetailsResourceNew = ({
 
           {formData?.infoSection?.map((item, index) => {
             return (
-              <div key={index} className="w-full flex gap-2">
-                <fieldset className="flex flex-col border rounded-md px-2 w-full">
+              <div key={index} className="w-full flex gap-2 ">
+                <fieldset className="flex flex-col border rounded-md px-2 w-full  py-2">
                   <legend>
                     <label>Section {index + 1}</label>
                   </legend>
@@ -1396,19 +1400,23 @@ const UpdateServiceDetailsResourceNew = ({
                             alt="Profile Picture"
                           />
                         )
-                      ) : (
-                        // Default image when no image is provided
-                        <Image
-                          className="w-20 h-20 rounded-full"
-                          width={1000}
-                          height={1000}
-                          src={
-                            process.env.NEXT_PUBLIC_IMAGE_URL +
-                            process.env.NEXT_PUBLIC_DEFAULT_IMAGE
-                          } // Default placeholder image
-                          alt="Profile Picture"
-                        />
-                      )}
+                      ) : null
+
+                      // (
+                      //   // Default image when no image is provided
+                      //   <Image
+                      //     className="w-20 h-20 rounded-full"
+                      //     width={1000}
+                      //     height={1000}
+                      //     src={
+                      //       process.env.NEXT_PUBLIC_IMAGE_URL +
+                      //       process.env.NEXT_PUBLIC_DEFAULT_IMAGE
+                      //     } // Default placeholder image
+                      //     alt="Profile Picture"
+                      //   />
+                      // )
+
+                      }
                     </div>
                   </div>
                 </fieldset>
@@ -1811,233 +1819,7 @@ const UpdateServiceDetailsResourceNew = ({
           )}
         </div>
 
-        <div className="border border-gray-300 rounded">
-          <div className="bg-gray-300 flex items-center justify-between p-2">
-            <h3 className="text-primary font-semibold">Distribution</h3>
-            <button
-              type="button"
-              onClick={() =>
-                setFormData({
-                  ...formData,
-                  distribution: [
-                    ...formData.distribution,
-                    { label: "", icon: "" },
-                  ],
-                })
-              }
-              className="bg-primary text-white px-4 py-2 rounded"
-            >
-              <svg
-                className="w-4 h-4 fill-current"
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 448 512"
-              >
-                <path d="M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32V224H48c-17.7 0-32 14.3-32 32s14.3 32 32 32H192V432c0 17.7 14.3 32 32 32s32-14.3 32-32V288H400c17.7 0 32-14.3 32-32s-14.3-32-32-32H256V80z" />
-              </svg>
-            </button>
-          </div>
-          {formData?.distribution?.map((item, index) => (
-            <div key={index} className="p-2 ">
-              <div>
-                <div className="flex gap-2">
-                  <div className="flex w-full  items-center justify-between">
-                    <fieldset className="w-full flex flex-col border rounded-md px-2">
-                      <legend>
-                        <label
-                          htmlFor="key"
-                          // className="after:content-['_*'] after:text-red-500"
-                        >
-                          Distribution - {index + 1}
-                        </label>
-                      </legend>
-
-                      <div className="flex flex-col gap-2">
-                        <div className="grid grid-cols-4">
-                          <p>Link:</p>
-                          <div className="col-span-3">
-                            <input
-                              type="text"
-                              placeholder="Enter Link"
-                              className="border border-black w-full px-2 outline-none"
-                              value={item?.label == "null" ? "" : item?.label}
-                              onChange={(e) => {
-                                setFormData({
-                                  ...formData,
-                                  distribution: formData.distribution.map(
-                                    (dist, i) =>
-                                      i === index
-                                        ? { ...dist, label: e.target.value }
-                                        : dist
-                                  ),
-                                });
-                              }}
-                            />
-                          </div>
-                        </div>
-
-                        <div className="flex gap-2">
-                          <div className="grid grid-cols-4">
-                            <p>Icon:</p>
-                            {/* <div className="col-span-3">
-                              <input
-                                type="file"
-                                className="w-full"
-                                onChange={(e) => {
-                                  setFormData({
-                                    ...formData,
-                                    distribution: formData.distribution.map(
-                                      (dist, i) =>
-                                        i === index
-                                          ? {
-                                              ...dist,
-                                              icon: e.target.files?.[0],
-                                            }
-                                          : dist
-                                    ),
-                                  });
-                                }}
-                              />
-                            </div> */}
-                            <div className="flex items-center flex-wrap gap-2 p-2">
-                              {allIcons?.map((iconItem, iconIndex) => (
-                                <div
-                                  key={iconIndex}
-                                  className="flex flex-col items-center w-[40px] border border-primary p-1 rounded-md cursor-pointer relative"
-                                  title={iconItem?.name}
-                                  onClick={() => {
-                                    setFormData({
-                                      ...formData,
-                                      distribution: formData.distribution.map(
-                                        (dist, i) =>
-                                          i === index
-                                            ? {
-                                                ...dist,
-                                                icon: iconItem?.id,
-                                              }
-                                            : dist
-                                      ),
-                                    });
-                                  }}
-                                >
-                                  <Image
-                                    src={`${process.env.NEXT_PUBLIC_IMAGE_URL}${iconItem?.icon}`}
-                                    alt={iconItem?.name || "Icon"}
-                                    width={20}
-                                    height={20}
-                                    className="w-[20px] h-[20px]"
-                                  />
-                                  <span className="text-10 text-center text-primary">
-                                    {iconItem?.name?.length < 4
-                                      ? iconItem?.name
-                                      : iconItem?.name?.slice(0, 3) + ".." ||
-                                        ""}
-                                  </span>
-                                  {item?.icon == iconItem?.id && (
-                                    <FaCheckCircle className="absolute top-0 right-0 text-primary" />
-                                  )}
-                                </div>
-                              ))}
-                            </div>
-                          </div>
-
-                          {/* {item?.icon?.length > 0 && (
-                            <div className="mt-5 relative w-12 h-12">
-                              <Image
-                                src={
-                                  process.env.NEXT_PUBLIC_IMAGE_URL + item?.icon
-                                }
-                                alt="Bangla"
-                                width={50}
-                                height={50}
-                                className="w-12 h-12"
-                              />
-                              <button
-                                className="absolute top-0 right-0 bg-red-500 p-0.5 rounded-full"
-                                onClick={() =>
-                                  setFormData({
-                                    ...formData,
-                                    distribution: formData.distribution.map(
-                                      (dist, i) =>
-                                        i === index
-                                          ? { ...dist, icon: "" }
-                                          : dist
-                                    ),
-                                  })
-                                }
-                                type="button"
-                              >
-                                <FaRegTimesCircle className="w-4 h-4 text-white" />
-                              </button>
-                            </div>
-                          )}
-
-                          {item?.icon instanceof Blob && (
-                            <div className="mt-5 relative w-12 h-12">
-                              <Image
-                                src={URL.createObjectURL(item?.icon)}
-                                alt="Bangla"
-                                width={50}
-                                height={50}
-                                className="w-12 h-12"
-                              />
-                              <button
-                                className="absolute top-0 right-0 bg-red-500 p-0.5 rounded-full"
-                                onClick={() =>
-                                  setFormData({
-                                    ...formData,
-                                    distribution: formData.distribution.map(
-                                      (dist, i) =>
-                                        i === index
-                                          ? { ...dist, icon: "" }
-                                          : dist
-                                    ),
-                                  })
-                                }
-                                type="button"
-                              >
-                                <FaRegTimesCircle className="w-4 h-4 text-white" />
-                              </button>
-                            </div>
-                          )} */}
-                        </div>
-                      </div>
-                    </fieldset>
-                  </div>
-                  <div className="mt-3">
-                    <button
-                      type="button"
-                      onClick={() => {
-                        if (formData.distribution.length != 1) {
-                          setFormData({
-                            ...formData,
-                            distribution: formData.distribution.filter(
-                              (dist, i) => i !== index
-                            ),
-                          });
-                        }
-                      }}
-                      className="border border-primary bg-primary text-white mt-2 px-2 py-1 rounded"
-                    >
-                      <svg
-                        className="w-6 h-6 fill-current"
-                        xmlns="http://www.w3.org/2000/svg"
-                        viewBox="0 0 448 512"
-                      >
-                        <path d="M432 256c0 17.7-14.3 32-32 32L48 288c-17.7 0-32-14.3-32-32s14.3-32 32-32l352 0c17.7 0 32 14.3 32 32z" />
-                      </svg>
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </div>
-          ))}
-
-          {error?.distribution?.status && (
-            <p className="text-red-500 text-12 px-2 pt-1">
-              {error?.distribution?.message}
-            </p>
-          )}
-        </div>
+       
 
         <div className="border border-gray-300 rounded">
           <div className="bg-gray-300 flex items-center justify-between p-2">
@@ -2358,19 +2140,22 @@ const UpdateServiceDetailsResourceNew = ({
                           alt="Profile Picture"
                         />
                       )
-                    ) : (
-                      // Default image when no image is provided
-                      <Image
-                        className="w-20 h-20 rounded-full"
-                        width={1000}
-                        height={1000}
-                        src={
-                          process.env.NEXT_PUBLIC_IMAGE_URL +
-                          process.env.NEXT_PUBLIC_DEFAULT_IMAGE
-                        } // Default placeholder image
-                        alt="Profile Picture"
-                      />
-                    )}
+                    ) : 
+                    null
+                    // (
+                    //   // Default image when no image is provided
+                    //   <Image
+                    //     className="w-20 h-20 rounded-full"
+                    //     width={1000}
+                    //     height={1000}
+                    //     src={
+                    //       process.env.NEXT_PUBLIC_IMAGE_URL +
+                    //       process.env.NEXT_PUBLIC_DEFAULT_IMAGE
+                    //     } // Default placeholder image
+                    //     alt="Profile Picture"
+                    //   />
+                    // )
+                    }
                   </div>
                 </div>
 
@@ -2456,7 +2241,7 @@ const UpdateServiceDetailsResourceNew = ({
                         <div>
                           <div className="flex gap-2">
                             <div className="flex w-full  items-center justify-between">
-                              <fieldset className="w-full flex flex-col border rounded-md px-2">
+                              <fieldset className="w-full flex flex-col border rounded-md px-2 py-2">
                                 <legend>
                                   <label
                                     htmlFor="key"
@@ -2627,7 +2412,7 @@ const UpdateServiceDetailsResourceNew = ({
                                         </div>
                                       ))}
 
-                                    {typeof item?.module === "object" && (
+                                    {/* {typeof item?.module === "object" && (
                                       <div className="mt-5 relative w-[5em] h-[5em]">
                                         <Image
                                           src={
@@ -2659,7 +2444,7 @@ const UpdateServiceDetailsResourceNew = ({
                                           <FaRegTimesCircle className="w-4 h-4 text-white" />
                                         </button>
                                       </div>
-                                    )}
+                                    )} */}
                                   </div>
                                 </div>
                               </fieldset>

@@ -5,6 +5,7 @@ import UpdateServiceResource from "../service/UpdateServiceResource/UpdateServic
 import UpdateBanglaResource from "../service/UpdateBanglaResource/UpdateBanglaResource";
 // import UpdateServiceDetailsResource from "../service/UpdateServiceDetailsResource/UpdateServiceDetailsResource";
  import UpdateServiceDetailsResourceNew from "../service/UpdateServiceDetailsResource/UpdateServiceDetailsResourceNew";
+import { FaBackward } from "react-icons/fa";
 
 const ServiceEditContainer = ({ id, secondTab,allColors,allIcons }) => {
   // console.log("secondTab", secondTab);
@@ -13,6 +14,9 @@ const ServiceEditContainer = ({ id, secondTab,allColors,allIcons }) => {
   return (
     <section className="pb-10">
       <div>
+        <button onClick={() => window.history.back()} className="text-primary flex items-center gap-2">
+          <FaBackward className=" "/> Back
+        </button>
         <h1 className="text-32 font-mono font-bold text-[#151D48] pb-5">
           Edit Service
         </h1>

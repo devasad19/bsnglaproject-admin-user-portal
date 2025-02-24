@@ -112,7 +112,7 @@ const UpdateServiceResource = ({ id }) => {
 
       if (response?.status) {
         toast.success(response?.message);
-        router.push("/admin/services");
+        // router.push("/admin/services");
       } else {
         // console.log("Response did not indicate success:", response);
         toast.error(response?.message);

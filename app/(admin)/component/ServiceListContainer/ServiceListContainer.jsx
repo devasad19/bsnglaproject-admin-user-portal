@@ -15,13 +15,14 @@ import {
 } from "../../_api/ServiceApi";
 import { useEffect, useState } from "react";
 import ServerPagination from "@/app/_components/ServerPagination/ServerPagination";
-import { useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import TableSkeleton from "@/app/_components/TableSkeleton/TableSkeleton";
 import useDebounce from "@/hooks";
 
 const ServiceListContainer = () => {
   const page = useSearchParams().get("page");
   const [services, setServices] = useState([]);
+  const router = useRouter();
   // const [page, setPage] = useState();
   const [limit, setLimit] = useState(10);
   const [total, setTotal] = useState(0);
