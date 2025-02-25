@@ -578,16 +578,11 @@ export const getAdminAllFeedBacks = async (id) => {
   }
 };
 
-export const getSoldServices = async (page, limit, startDate, endDate) => {
+export const getSoldServices = async (params) => {
   try {
     const data = await axios
       .get(`${process.env.NEXT_PUBLIC_API_URL}/admin/sold-serivces`, {
-        params: {
-          page,
-          limit,
-          start_date: startDate,
-          end_date: endDate,
-        },
+        params
       })
       .then((res) => {
         return res?.data;

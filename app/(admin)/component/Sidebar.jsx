@@ -13,7 +13,7 @@ import Accordion from "@/app/_components/Accordion/Accordion";
 import { usePathname } from "next/navigation";
 import { NewAccordion } from "@/app/_components/NewAccordion/NewAccordion";
 import { GrUserSettings } from "react-icons/gr";
-import { FaUsersCog } from "react-icons/fa";
+import { FaRegFileAlt, FaUsersCog } from "react-icons/fa";
 
 import { VscFeedback } from "react-icons/vsc";
 import { RiAdminLine } from "react-icons/ri";
@@ -273,6 +273,38 @@ const Sidebar = () => {
                   </span>
                   <span className={isOpen ? "block" : "hidden"}>
                     Service Customize
+                  </span>
+                </Link>
+              </li>
+
+
+              <li
+                className={`${isOpen ? "hover:bg-primary" : ""} group ${
+                  (isOpen && pathname === "/admin/file-manager")
+                  
+                    ? "bg-primary"
+                    : ""
+                }`}
+              >
+                <Link
+                  href={{
+                    pathname: "/admin/file-manager",
+                  }}
+                  shallow
+                  title="File Manager"
+                  className={`flex items-center gap-2 ${
+                    isOpen && "group-hover:text-white"
+                  } ${
+                    (isOpen && pathname == "/admin/file-manager") 
+                      ? "text-white"
+                      : "text-primary"
+                  }`}
+                >
+                  <span>
+                    <FaRegFileAlt size={20} className="fill-current" />
+                  </span>
+                  <span className={isOpen ? "block" : "hidden"}>
+                    File Manager
                   </span>
                 </Link>
               </li>

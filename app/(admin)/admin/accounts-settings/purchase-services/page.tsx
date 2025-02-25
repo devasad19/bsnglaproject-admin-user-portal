@@ -8,13 +8,15 @@ import { getSoldServices } from "@/app/(admin)/_api";
 import { filterDateFormat, formatDate } from "@/helper";
 import ServerPagination from "@/app/_components/ServerPagination/ServerPagination";
 import CustomDatePicker from "@/app/_components/CustomDatePiker/CustomDatePiker";
+import { useSearchParams } from "next/navigation";
 
 const PurchaaseServicePage = () => {
+  const page = useSearchParams().get("page");
   const [soldServices, setSoldServices] = useState<any>([]);
   const [parChaseService, setParChaseService] = useState<any>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [showPage, setShowPage] = useState(1);
-  const [page, setPage] = useState(1);
+  const [currentPage, setCurrentPage] = useState(page ? parseInt(page) : 1);
   const [limit] = useState(10);
   const [startDate, setStartDate] = useState<Date | null>(null);
   const [endDate, setEndDate] = useState<Date | null>(null);
@@ -22,7 +24,15 @@ const PurchaaseServicePage = () => {
 
   useEffect(() => {
     setIsLoading(true);
-    getSoldServices(page, limit, date.startDate, date.endDate)
+    const param ={
+      page: currentPage,
+      limit: limit,
+      start_date: date.startDate,
+      end_date: date.endDate,
+    }
+    console.log({param});
+    
+    getSoldServices(param)
       .then((data) => {
         setSoldServices(data?.data);
         setShowPage(data?.meta?.total_page);
@@ -33,7 +43,7 @@ const PurchaaseServicePage = () => {
       .finally(() => {
         setIsLoading(false); // Stop loading after fetch completes
       });
-  }, [page, limit, date.startDate && date.endDate]);
+  }, [currentPage, limit, date.startDate && date.endDate]);
 
   //  filterDateFormat(endDate)
   console.log(date);
@@ -92,7 +102,7 @@ const PurchaaseServicePage = () => {
                 <tr key={index}>
                   <td className="px-3">
                     <span className="border border-gray-300 px-2 py-1 rounded-md">
-                      {(page - 1) * limit + index + 1}
+                      {(currentPage - 1) * limit + index + 1}
                     </span>
                   </td>
                   <td className="px-2">{item?.user?.name ?? ""}</td>
@@ -145,7 +155,11 @@ const PurchaaseServicePage = () => {
           </tbody>
         </table>
       </div>
-      <ServerPagination page={page} setPage={setPage} showPage={showPage} />
+      <ServerPagination
+       page={currentPage} 
+       setPage={setCurrentPage} 
+       showPage={showPage} 
+       />
     </section>
   );
 };
