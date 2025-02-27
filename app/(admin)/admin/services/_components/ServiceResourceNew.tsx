@@ -15,6 +15,7 @@ const CustomEditor = dynamic(
 import { FaCheckCircle } from "react-icons/fa";
 import { replaceSpaces } from "@/helper";
 import { createService } from "@/app/(admin)/_api/ServiceApi";
+import { openFileManager } from "@/utilis/FileManagerFun";
 
 const ServiceResourceNew = () => {
   const router = useRouter();
@@ -451,7 +452,7 @@ const ServiceResourceNew = () => {
           )}
 
           <div>
-            <fieldset className="flex flex-col border rounded-md px-2">
+            <fieldset className="flex flex-col border rounded-md px-2 py-1">
               <legend>
                 <label
                   htmlFor="ServiceName"
@@ -460,8 +461,18 @@ const ServiceResourceNew = () => {
                   Logo
                 </label>
               </legend>
+              <div
+                onClick={() => {
+                  openFileManager();
+                }}
+                className="w-1/3 h-8 bg-gray-100 border-dashed border-2 border-gray-300 flex items-center justify-center rounded-md cursor-pointer"
+              >
+                <span className="text-12 text-green-700">
+                  png, jpg, jpeg, gif, bmp, tiff
+                </span>
+              </div>
 
-              <input
+              {/* <input
                 {...register(
                   "logo"
                   //   {
@@ -477,7 +488,7 @@ const ServiceResourceNew = () => {
                 }}
                 // accept="video/mp4, video/ogg, video/avi"
                 accept="image/*"
-              />
+              /> */}
             </fieldset>
             {/* {errors.logo && (
               <p className="text-red-500 text-12 px-2 pt-1">
@@ -772,8 +783,8 @@ export default ServiceResourceNew;
 //   }
 // }, [description, setError, clearErrors]);
 
-
-{/* <div>
+{
+  /* <div>
 <fieldset className="flex flex-col border rounded-md px-2">
   <legend>
     <label
@@ -830,4 +841,5 @@ export default ServiceResourceNew;
     )}
   />
 </fieldset>
-</div> */}
+</div> */
+}

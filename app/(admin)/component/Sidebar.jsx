@@ -33,6 +33,7 @@ const Sidebar = () => {
     setting: false,
     alc: false,
     accountsSettings: false,
+    fileManager: false,
   });
 
   const toggleAccordionSub = (valueName1) => {
@@ -43,6 +44,7 @@ const Sidebar = () => {
           alc: false,
           accountsSettings: false,
           userManagement: false,
+          fileManager: false,
           // Close the other accordion
         };
       }
@@ -52,6 +54,7 @@ const Sidebar = () => {
           accountsSettings: false,
           alc: !prevIsToggleOpen.alc,
           userManagement: false,
+          fileManager: false,
         };
       }
       if (valueName1 === "accounts-settings") {
@@ -60,6 +63,7 @@ const Sidebar = () => {
           alc: false, // Close the other accordion
           accountsSettings: !prevIsToggleOpen.accountsSettings,
           userManagement: false,
+          fileManager: false,
         };
       }
       if (valueName1 === "userManagement") {
@@ -68,6 +72,7 @@ const Sidebar = () => {
           setting: false,
           alc: false,
           accountsSettings: false,
+          fileManager: false,
           // Close the other accordion
         };
       }
@@ -77,7 +82,17 @@ const Sidebar = () => {
           setting: false,
           alc: false,
           accountsSettings: false,
+          fileManager: false,
           // Close the other accordion
+        };
+      }
+      if (valueName1 === "fileManager") {
+        return {
+          fileManager: !prevIsToggleOpen.fileManager,
+          setting: false,
+          alc: false,
+          accountsSettings: false,
+          userManagement: false,
         };
       }
       return prevIsToggleOpen; // Default case if neither match
@@ -210,7 +225,7 @@ const Sidebar = () => {
                   (isOpen && pathname === "/admin/services") ||
                   pathname === "/admin/services/create" ||
                   pathname.startsWith("/admin/services/edit/") ||
-                  pathname =="/admin/services"
+                  pathname == "/admin/services"
                     ? "bg-primary"
                     : ""
                 }`}
@@ -227,7 +242,7 @@ const Sidebar = () => {
                     (isOpen && pathname == "/admin/services") ||
                     pathname == "/admin/services/create" ||
                     pathname.startsWith("/admin/services/edit/") ||
-                    pathname =="/admin/services"
+                    pathname == "/admin/services"
                       ? "text-white"
                       : "text-primary"
                   }`}
@@ -248,8 +263,7 @@ const Sidebar = () => {
               </li>
               <li
                 className={`${isOpen ? "hover:bg-primary" : ""} group ${
-                  (isOpen && pathname === "/admin/services/customize")
-                  
+                  isOpen && pathname === "/admin/services/customize"
                     ? "bg-primary"
                     : ""
                 }`}
@@ -263,7 +277,7 @@ const Sidebar = () => {
                   className={`flex items-center gap-2 ${
                     isOpen && "group-hover:text-white"
                   } ${
-                    (isOpen && pathname == "/admin/services/customize") 
+                    isOpen && pathname == "/admin/services/customize"
                       ? "text-white"
                       : "text-primary"
                   }`}
@@ -277,11 +291,9 @@ const Sidebar = () => {
                 </Link>
               </li>
 
-
               <li
                 className={`${isOpen ? "hover:bg-primary" : ""} group ${
-                  (isOpen && pathname === "/admin/file-manager")
-                  
+                  isOpen && pathname === "/admin/file-manager"
                     ? "bg-primary"
                     : ""
                 }`}
@@ -295,7 +307,7 @@ const Sidebar = () => {
                   className={`flex items-center gap-2 ${
                     isOpen && "group-hover:text-white"
                   } ${
-                    (isOpen && pathname == "/admin/file-manager") 
+                    isOpen && pathname == "/admin/file-manager"
                       ? "text-white"
                       : "text-primary"
                   }`}
@@ -308,6 +320,104 @@ const Sidebar = () => {
                   </span>
                 </Link>
               </li>
+              <li
+                onClick={() => toggleAccordionSub("fileManager")}
+                className={`${
+                  isOpen && "hover:bg-primary"
+                }  group flex items-center justify-between   ${
+                  pathname === "/admin/file-manager/file-lists" ||
+                  pathname === "/admin/file-manager/file-upload"
+                    ? "bg-primary text-white"
+                    : "text-primary bg-white"
+                } cursor-pointer ${
+                  isToggleOpen.fileManager ? "border-b-2 border-primary" : ""
+                }`}
+              >
+                <div className="flex items-center gap-2">
+                  <span
+                    className={`${
+                      isOpen &&
+                      (pathname === "/admin/file-manager/file-lists" ||
+                        pathname === "/admin/file-manager/file-upload")
+                        ? "text-white"
+                        : "text-primary"
+                    }`}
+                  >
+                    <FaUsersCog
+                      size={20}
+                      className={`group-hover:text-white ${
+                        pathname === "/admin/file-manager/file-lists" ||
+                        pathname === "/admin/file-manager/file-upload"
+                          ? "text-white"
+                          : "text-primary"
+                      }`}
+                    />
+                  </span>
+
+                  <span
+                    className={`text-15 text-primary group-hover:text-white  ${
+                      isOpen ? "block" : "hidden"
+                    } ${
+                      pathname === "/admin/file-manager/file-lists" ||
+                      pathname === "/admin/file-manager/file-upload"
+                        ? "text-white"
+                        : "text-primary"
+                    }`}
+                  >
+                    File Management
+                  </span>
+                </div>
+
+                <span
+                  className={`transition-transform duration-300 ${
+                    isOpen ? "block" : "hidden"
+                  } `}
+                >
+                  <svg
+                    className={`w-3 h-3 fill-current text-primary group-hover:text-white transition-colors duration-300 ${
+                      (pathname === "/admin/file-manager/file-lists" ||
+                        pathname === "/admin/file-manager/file-upload") &&
+                      "text-white"
+                    }`}
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 448 512"
+                  >
+                    <path d="M201.4 374.6c12.5 12.5 32.8 12.5 45.3 0l160-160c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L224 306.7 86.6 169.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l160 160z" />
+                  </svg>
+                </span>
+              </li>
+              {isOpen && (
+                <NewAccordion isOpen={isToggleOpen.fileManager}>
+                  <div className="ms-3 flex flex-col gap-1">
+                    <Link
+                      href={{
+                        pathname: "/admin/file-manager/file-upload",
+                      }}
+                      shallow
+                      className={`text-14 hover:bg-green-500 px-2 py-1 rounded hover:text-white ${
+                        pathname === "/admin/file-manager/file-upload"
+                          ? "bg-green-500 text-white font-semibold"
+                          : "text-black"
+                      }`}
+                    >
+                      File Upload
+                    </Link>
+                    <Link
+                      href={{
+                        pathname: "/admin/file-manager/file-lists",
+                      }}
+                      shallow
+                      className={`text-14 hover:bg-green-500 px-2 py-1 rounded hover:text-white ${
+                        pathname == "/admin/file-manager/file-lists"
+                          ? "bg-green-500 text-white font-semibold"
+                          : "text-black"
+                      }`}
+                    >
+                      File List
+                    </Link>
+                  </div>
+                </NewAccordion>
+              )}
 
               <li
                 onClick={() => toggleAccordionSub("userManagement")}
