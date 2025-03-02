@@ -37,6 +37,9 @@ const SSO = () => {
     const state =
       Math.random().toString(36).slice(2) + Math.random().toString(36).slice(2);
     setCookie(null, "state", state);
+    console.log("redirecting url:",process.env.LDTAX_PORTAL_BASE);
+    // return;
+    
 
     const params = new URLSearchParams({
       client_id: process.env.SSO_CLIENT_ID as string,

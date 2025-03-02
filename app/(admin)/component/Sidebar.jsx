@@ -9,7 +9,7 @@ import {
   textFormat,
 } from "@/helper";
 import Link from "next/link";
-import Accordion from "@/app/_components/Accordion/Accordion";
+import { VscGitPullRequestGoToChanges } from "react-icons/vsc";
 import { usePathname } from "next/navigation";
 import { NewAccordion } from "@/app/_components/NewAccordion/NewAccordion";
 import { GrUserSettings } from "react-icons/gr";
@@ -305,6 +305,37 @@ const Sidebar = () => {
                   </span>
                   <span className={isOpen ? "block" : "hidden"}>
                     File Manager
+                  </span>
+                </Link>
+              </li>
+
+              <li
+                className={`${isOpen ? "hover:bg-primary" : ""} group ${
+                  (isOpen && pathname === "/admin/organization/service-request")
+                    ? "bg-primary"
+                    : ""
+                }`}
+              >
+                <Link
+                  href={{
+                    pathname: "/admin/organization/service-request",
+                  }}
+                  shallow
+                  title="Show All Services"
+                  className={`flex items-center gap-2 ${
+                    isOpen && "group-hover:text-white"
+                  } ${
+                    (isOpen && pathname == "/admin/organization/service-request") 
+                      ? "text-white"
+                      : "text-primary"
+                  }`}
+                >
+                  <span>
+                    <VscGitPullRequestGoToChanges size={20} className="fill-current" />
+                    
+                  </span>
+                  <span className={isOpen ? "block" : "hidden"}>
+                    Service Request
                   </span>
                 </Link>
               </li>
