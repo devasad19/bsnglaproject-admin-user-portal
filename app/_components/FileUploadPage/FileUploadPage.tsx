@@ -3,17 +3,53 @@ import Image from "next/image";
 import React, { useState } from "react";
 import FileChoiceIcon from "../FileChoiceIcon/FileChoiceIcon";
 import { openFileManager } from "@/utilis/FileManagerFun";
+import { uploadFileApi } from "@/app/(admin)/_api/fileManagerApi";
+import { toast } from "react-toastify";
+import ApiLoading from "@/app/(admin)/component/ApiLoading/ApiLoading";
 
 const FileUploadPage = () => {
+  const [loading, setLoading] = useState(false);
   const [formValues, setFormValues] = useState({
     caption: "",
     reference: "",
     file: null as File | null,
   });
+
+  const handleFileUploadSubmit = async (e: any) => {
+    e.preventDefault();
+    setLoading(true);
+    const formData = new FormData();
+    formData.append("caption", formValues.caption);
+    formData.append("reference", formValues.reference);
+    formData.append("filename", formValues.file as Blob);
+    try {
+      const response = await uploadFileApi(formData);
+      if (response?.status) {
+        toast.success(response?.message);
+        setLoading(false);
+        setFormValues({
+          caption: "",
+          reference: "",
+          file: null,
+        });
+      } else {
+        setLoading(false);
+        toast.error(response?.message);
+      }
+    } catch (error) {
+      setLoading(false);
+      toast.error("Something went wrong");
+    }
+  };
+
   return (
     <>
-      <div className="flex flex-col items-center justify-center h-screen">
-        <div className="max-w-5xl mx-auto bg-white p-6 shadow rounded-lg">
+      <div className="flex flex-col items-center justify-center h-screen relative">
+        {loading && <ApiLoading />}
+        <form
+          onSubmit={handleFileUploadSubmit}
+          className="max-w-5xl mx-auto bg-white p-6 shadow rounded-lg"
+        >
           <h2 className="text-24 font-semibold mb-4">Insert File</h2>
           <div className="mt-6 grid grid-cols-2 gap-6">
             <div>
@@ -84,21 +120,18 @@ const FileUploadPage = () => {
                   className="outline-none p-2 bg-white"
                 />
               </fieldset>
-              <div className="border p-2 rounded mt-2 h-24 w-40">
-                {formValues.file && (
-                  <FileChoiceIcon file={formValues.file} />
-                )}
+              <div className="border p-2 rounded mt-2 h-24 w-40 flex items-center justify-center">
+                {formValues.file && <FileChoiceIcon file={formValues.file} />}
               </div>
             </div>
           </div>
 
           <div className="mt-6 flex items-center gap-4">
-            <button
-             className="bg-primary text-white px-6 py-2 rounded">
+            <button className="bg-primary text-white px-6 py-2 rounded">
               Upload
             </button>
           </div>
-        </div>
+        </form>
       </div>
     </>
   );

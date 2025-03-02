@@ -5,7 +5,7 @@ const FileChoiceIcon = ({ file }: { file: File | null }) => {
   return (
     <>
       {file && (
-        <div>
+        <>
           {file.type.startsWith("image/") ? (
             <Image
               src={file && URL.createObjectURL(file)}
@@ -15,7 +15,7 @@ const FileChoiceIcon = ({ file }: { file: File | null }) => {
               alt="Placeholder"
             />
           ) : file.type === "application/pdf" ? (
-            <FaFilePdf className="text-red-500 text-3xl" />
+            <FaFilePdf className="text-red-500 text-3xl w-14 h-20" />
           ) : file.type === "application/msword" ||
             file.type ===
               "application/vnd.openxmlformats-officedocument.wordprocessingml.document" ? (
@@ -23,7 +23,7 @@ const FileChoiceIcon = ({ file }: { file: File | null }) => {
           ) : (
             <FaFileAlt className="text-gray-500 text-3xl" />
           )}
-        </div>
+        </>
       )}
     </>
   );

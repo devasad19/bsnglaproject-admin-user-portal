@@ -1,12 +1,12 @@
-import FileList from '@/app/_components/FileList/FileList';
-import React from 'react';
+import FileList from "@/app/_components/FileList/FileList";
+import React from "react";
 
-const page = () => {
-    return (
-        <>
-            <FileList/>
-        </>
-    );
+const page = async () => {
+  return (
+    <>
+      <FileList />
+    </>
+  );
 };
 
 export default page;

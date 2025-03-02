@@ -1,26 +1,31 @@
 "use client";
+import { getAllFiles } from "@/app/(admin)/_api/fileManagerApi";
 import FileUploadViewPage from "@/app/_components/FileUploadViewPage/FileUploadViewPage";
 import { useSearchParams } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 const FileManager = () => {
   const searchParams = useSearchParams();
   const isMultiple = searchParams.get("multiple") === "true";
   const [images, setImages] = useState([]);
   const [selectedImages, setSelectedImages] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [data, setData] = useState([]);
 
-  const data = [
-    { id: 1, title: "Image 1" },
-    { id: 2, title: "Image 2" },
-    { id: 3, title: "Image 3" },
-    { id: 4, title: "Image 4" },
-    { id: 5, title: "Image 5" },
-    { id: 6, title: "Image 6" },
-    { id: 7, title: "Image 7" },
-    { id: 8, title: "Image 8" },
-    { id: 9, title: "Image 9" },
-    { id: 10, title: "Image 10" },
-  ];
+  const fetchFilesApi = async () => {
+      setLoading(true);
+      try {
+        const response = await getAllFiles();
+        setData(response?.data);
+        setLoading(false);
+      } catch (error) {
+        console.log(error);
+        setLoading(false);
+      }
+    };
+    useEffect(() => {
+      fetchFilesApi();
+    }, []);
 
   const handleImageClick = (imageId: number) => {
     if (isMultiple) {
@@ -83,20 +88,20 @@ const FileManager = () => {
                 </button>
               )}
               <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-                {data.map((item) => (
+                {data.map((item:any) => (
                   <div
                     onClick={() => {
-                      handleImageClick(item.id);
+                      handleImageClick(item?.id);
                     }}
-                    key={item.id}
+                    key={item?.id}
                     className="bg-white rounded-lg shadow-sm cursor-pointer"
                   >
                     <div
                       className="p-4"
                       style={{ height: "200px" }}
-                      key={item.id}
+                      key={item?.id}
                     >
-                      <h3 className="text-xl font-bold">{item.title}</h3>
+                      <h3 className="text-xl font-bold">{item?.filename}</h3>
                     </div>
                   </div>
                 ))}

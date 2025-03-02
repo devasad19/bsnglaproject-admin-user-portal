@@ -1,9 +1,28 @@
 "use client";
+import { getAllFiles } from "@/app/(admin)/_api/fileManagerApi";
 import Image from "next/image";
-import React from "react";
-import { text } from "stream/consumers";
+import React, { useEffect, useState } from "react";
+import { CiEdit } from "react-icons/ci";
 
 const FileList = () => {
+  const [files, setFiles] = useState([]);
+  const [loading, setLoading] = useState(false);
+
+  const fetchFilesApi = async () => {
+    setLoading(true);
+    try {
+      const response = await getAllFiles();
+      setFiles(response?.data);
+      setLoading(false);
+    } catch (error) {
+      console.log(error);
+      setLoading(false);
+    }
+  };
+  useEffect(() => {
+    fetchFilesApi();
+  }, []);
+
   return (
     <>
       <section className="container mx-auto px-2 lg:px-12 pt-[30px] relative">
@@ -46,43 +65,52 @@ const FileList = () => {
                   </tr>
                 </thead>
                 <tbody className="text-center">
-                  <tr className="border-b border-gray-500 h-28">
-                    <td>1</td>
-                    <td>
-                      <div className="flex justify-center items-center">
-                        <Image
-                          src={
-                            process.env.NEXT_PUBLIC_IMAGE_URL +
-                            (process.env.NEXT_PUBLIC_DEFAULT_IMAGE ||
-                              "/default-image.png")
-                          }
-                          alt="file"
-                          width={50}
-                          height={50}
-                          className="w-24 h-24"
-                        />
-                      </div>
-                    </td>
-                    <td>All File Lists All File Lists All File Lists</td>
-                    <td>
-                      <input
-                        type="text"
-                        className="w-[300px] rounded-t-sm border border-gray px-2 py-1 focus:outline-none"
-                        value={"text data"}
-                      />
-                    </td>
-                    <td>
-                      <button className="p-1  bg-red-500 text-white active:scale-90 transition-all duration-400 rounded-md">
-                        <svg
-                          className="w-4 h-4 fill-current"
-                          xmlns="http://www.w3.org/2000/svg"
-                          viewBox="0 0 448 512"
-                        >
-                          <path d="M135.2 17.7C140.6 6.8 151.7 0 163.8 0H284.2c12.1 0 23.2 6.8 28.6 17.7L320 32h96c17.7 0 32 14.3 32 32s-14.3 32-32 32H32C14.3 96 0 81.7 0 64S14.3 32 32 32h96l7.2-14.3zM32 128H416V448c0 35.3-28.7 64-64 64H96c-35.3 0-64-28.7-64-64V128zm96 64c-8.8 0-16 7.2-16 16V432c0 8.8 7.2 16 16 16s16-7.2 16-16V208c0-8.8-7.2-16-16-16zm96 0c-8.8 0-16 7.2-16 16V432c0 8.8 7.2 16 16 16s16-7.2 16-16V208c0-8.8-7.2-16-16-16zm96 0c-8.8 0-16 7.2-16 16V432c0 8.8 7.2 16 16 16s16-7.2 16-16V208c0-8.8-7.2-16-16-16z" />
-                        </svg>
-                      </button>
-                    </td>
-                  </tr>
+                  {files?.length > 0 ? (
+                    files.map((file: any, index:number) => (
+                      <tr key={index} className="border-b border-gray-500 h-28">
+                        <td>{index+1}</td>
+                        <td>
+                          <div className="flex justify-center items-center w-24 h-24">
+                            <Image
+                              src={
+                                file?.filepath
+                                  ? (process.env.NEXT_PUBLIC_IMAGE_URL || "") +
+                                    file?.filepath
+                                  : (process.env.NEXT_PUBLIC_IMAGE_URL || "") +
+                                    process.env.NEXT_PUBLIC_DEFAULT_IMAGE
+                              }
+                              alt="file"
+                              width={50}
+                              height={50}
+                              className=""
+                            />
+                          </div>
+                        </td>
+                        <td>{file?.caption || ""}</td>
+                        <td>
+                          <input
+                            type="text"
+                            className="w-[300px] rounded-t-sm border border-gray px-2 py-1 focus:outline-none"
+                            value={
+                              file?.filepath
+                                ? (process.env.NEXT_PUBLIC_IMAGE_URL || "") +
+                                  file?.filepath
+                                : ""
+                            }
+                          />
+                        </td>
+                        <td>
+                          <button className="px-2 py-1  bg-blue-500 text-white active:scale-90 transition-all duration-400 rounded-md">
+                            <CiEdit />
+                          </button>
+                        </td>
+                      </tr>
+                    ))
+                  ) : (
+                    <tr>
+                      <td colSpan={5}>No data found</td>
+                    </tr>
+                  )}
                 </tbody>
               </table>
             </div>
