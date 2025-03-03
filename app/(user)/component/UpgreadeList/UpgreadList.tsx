@@ -363,8 +363,8 @@ const UpgreadList = ({ id, validities }: Tprops) => {
                                   }}
                                   className={`text-16 font-semibold w-20 h-20 border ${
                                     activeValidaty?.id === vItem?.id
-                                      ? "border-primary"
-                                      : "border-gray-300"
+                                      ? "border-2 border-primary"
+                                      : "border border-gray-300"
                                   } rounded-full flex items-center justify-center cursor-pointer`}
                                 >
                                   {vItem?.day}
@@ -414,10 +414,10 @@ const UpgreadList = ({ id, validities }: Tprops) => {
                                           pItem?.id || 0
                                         )
                                       }
-                                      className={`text-16 font-semibold w-20 h-20 border ${
+                                      className={`text-16 font-semibold w-20 h-20  ${
                                         isSelected
-                                          ? "border-primary"
-                                          : "border-gray-300"
+                                          ? "border-2 border-primary"
+                                          : "border border-gray-300"
                                       } rounded-full flex items-center justify-center cursor-pointer`}
                                     >
                                       {pItem?.limit}
@@ -559,7 +559,7 @@ const UpgreadList = ({ id, validities }: Tprops) => {
                   onClick={(e) => {
                     handleOrderNow();
                   }}
-                  className={`text-white font-bold text-[24px] px-8 py-2 rounded bg-[#04684D]`}
+                  className={`text-white font-bold text-18 px-8 py-2 rounded bg-[#04684D]`}
                 >
                   Upgrade Package
                 </button>

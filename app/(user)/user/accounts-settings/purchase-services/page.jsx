@@ -228,7 +228,7 @@ const Home = () => {
                             <li>
                               <Link
                                 href={{
-                                  pathname: `/user/accounts-settings/purchase-services/${item?.id}`,
+                                  pathname: `/user/accounts-settings/purchase-services/${item?.service_id}`,
                                 }}
                                 shallow
                               >

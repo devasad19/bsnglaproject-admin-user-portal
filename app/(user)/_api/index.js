@@ -43,10 +43,11 @@ export const getServiceFeedBacks = async (id) => {
 };
 
 
-export const getServicePurchaseHistory = async (id) =>{
+export const getServicePurchaseHistory = async (id,user_id) =>{
+    // user/service/purchase-history/42/130
     try {
         const data = await axios
-            .get(`${process.env.NEXT_PUBLIC_API_URL}/user/service/purchase-list/${id}`)
+            .get(`${process.env.NEXT_PUBLIC_API_URL}/user/service/purchase-history/${user_id}/${id}`)
             .then((res) => {
                 return res?.data;
             })
